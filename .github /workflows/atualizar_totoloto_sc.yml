@@ -1,0 +1,40 @@
+name: Atualizar Totoloto SC automaticamente
+
+# horario: inverno
+
+on:
+  schedule:
+    - cron: "50 22 * * 3"   # quartas, 22:50 em Portugal no inverno (22:50 UTC)
+    - cron: "50 22 * * 6"   # sábados, 22:50 em Portugal no inverno (22:50 UTC)
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar Chrome
+        uses: browser-actions/setup-chrome@v1
+
+      - name: Instalar dependências Python
+        run: |
+          pip install selenium chromedriver-autoinstaller
+
+      - name: Rodar script de scraping
+        run: python scripts/atualizar_totoloto_sc.py
+
+      - name: Commit e push das alterações
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add dados/
+          git add logs/totoloto_log.txt
+          if ! git diff --cached --quiet; then
+            git commit -m "Atualização automática Totoloto SC"
+            git push
+          else
+            echo "Nenhuma alteração, nada para commitar."
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
