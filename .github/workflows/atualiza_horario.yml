@@ -1,0 +1,25 @@
+name: Atualiza Horário Verão/Inverno
+
+on:
+  schedule:
+    - cron: "10 1 * * *"   # corre todos os dias às 01:10 UTC
+  workflow_dispatch:
+
+jobs:
+  atualizar-ymls:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
+      - name: Install dependencies
+        run: pip install pyyaml
+
+      - name: Executar script de atualização
+        run: python scripts/atualiza_yml.py
