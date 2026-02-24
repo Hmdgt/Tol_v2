@@ -1,0 +1,37 @@
+name: Processamento OCR - Santa Casa
+
+on:
+  push:
+    paths:
+      - 'uploads/**'     # sempre que algo muda na pasta uploads
+
+jobs:
+  ocr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Instalar dependências
+        run: |
+          pip install google-generativeai Pillow
+
+      - name: Executar OCR com Gemini
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python scripts/processar_uploads.py
+
+      - name: Guardar alterações (se existirem)
+        run: |
+          git config --global user.name "Bot OCR"
+          git config --global user.email "bot@github.com"
+          git add apostas/*.json || true
+          git add apostas/registo_processamento.json || true
+          git commit -m "OCR: novos boletins processados" || echo "Nenhuma alteração para commitar"
+          git push
