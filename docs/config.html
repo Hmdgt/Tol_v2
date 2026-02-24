@@ -3,6 +3,81 @@
 <head>
   <meta charset="UTF-8">
   <title>Configurações</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Ionicons -->
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      color: white;
+      font-family: sans-serif;
+      padding: 20px;
+    }
+
+    h2 {
+      margin-top: 10px;
+      font-weight: 300;
+      text-align: center;
+    }
+
+    .container {
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    label {
+      font-size: 16px;
+      opacity: 0.8;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      background: #111;
+      color: white;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 14px;
+      background: #222;
+      border: 1px solid #444;
+      color: white;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:active {
+      background: #333;
+      transform: scale(0.97);
+    }
+
+    #backBtn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      font-size: 32px;
+      opacity: 0.3;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    #backBtn:active {
+      opacity: 0.8;
+    }
+  </style>
+
   <script>
     function saveToken() {
       const token = document.getElementById("token").value;
@@ -13,11 +88,18 @@
 </head>
 
 <body>
+
   <h2>Configurações</h2>
 
-  <label>Token GitHub:</label><br>
-  <input type="password" id="token" style="width:300px;"><br><br>
+  <div class="container">
+    <label>Token GitHub:</label>
+    <input type="password" id="token" placeholder="Introduz o token...">
 
-  <button onclick="saveToken()">Guardar</button>
+    <button onclick="saveToken()">Guardar</button>
+  </div>
+
+  <!-- Botão discreto para voltar -->
+  <ion-icon id="backBtn" name="arrow-back-outline" onclick="window.location='index.html'"></ion-icon>
+
 </body>
 </html>
