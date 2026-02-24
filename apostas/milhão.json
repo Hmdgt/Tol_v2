@@ -1,0 +1,27 @@
+[
+    {
+        "tipo": "Milhão",
+        "data_sorteio": "2025-08-15",
+        "data_emissao": "2025-08-14 14:53:32",
+        "data_aposta": "2025-08-14",
+        "numero_sorteio": "065",
+        "referencia_unica": "726-07294854-M1L",
+        "valor_total": null,
+        "mediador": null,
+        "tipo_aposta": null,
+        "valido": false,
+        "apostas": [
+            {
+                "coluna": null,
+                "numeros": [],
+                "estrelas": [],
+                "numero_da_sorte": null,
+                "numero_dream": null,
+                "codigo": null
+            }
+        ],
+        "imagem_origem": "foto_1771944455536.png",
+        "hash_imagem": "ebb5f93ae86259a71f53c0d47b55f234",
+        "data_processamento": "2026-02-24 16:07:43"
+    }
+]
