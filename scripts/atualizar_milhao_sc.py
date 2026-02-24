@@ -47,7 +47,7 @@ def extrair_m1lhao_sc():
         driver.get(url)
         wait = WebDriverWait(driver, 20)
 
-        # Extrair concurso e data (robusto)
+        # Extrair concurso e data
         span_data_info = wait.until(
             EC.visibility_of_element_located((By.CSS_SELECTOR, "span.dataInfo"))
         )
@@ -106,15 +106,13 @@ def atualizar_resultados():
     pasta_dados = os.path.join(pasta_repo, "dados")
     os.makedirs(pasta_dados, exist_ok=True)
 
-    # Nome do TXT por concurso
-    ficheiro_txt = f"{JOGO}_{resultado['concurso'].replace('/', '_')}.txt"
-    txt_path = os.path.join(pasta_dados, ficheiro_txt)
+    # TXT anual (padronizado)
+    txt_path = os.path.join(pasta_dados, f"{JOGO}_{ano}.txt")
 
-    # Nome do JSON por ano
-    ficheiro_json = f"{JOGO}_{ano}.json"
-    json_path = os.path.join(pasta_dados, ficheiro_json)
+    # JSON anual (incremental)
+    json_path = os.path.join(pasta_dados, f"{JOGO}_{ano}.json")
 
-    # Guardar TXT
+    # Guardar TXT anual
     with open(txt_path, "w", encoding="utf-8") as f:
         f.write(f"Concurso: {resultado['concurso']}\n")
         f.write(f"Data: {resultado['data']}\n")
@@ -127,7 +125,7 @@ def atualizar_resultados():
             f.write(f"{e['nome']}: {e['valor']}\n")
         f.write("-" * 40 + "\n")
 
-    # JSON sem prémios
+    # JSON incremental
     dados = ler_json(json_path, ano)
     lista = dados[str(ano)]
 
@@ -135,7 +133,10 @@ def atualizar_resultados():
         lista.append({
             "concurso": resultado["concurso"],
             "data": resultado["data"],
-            "codigo": resultado["codigo"]
+            "codigo": resultado["codigo"],
+            "premio_nome": resultado["premio_nome"],
+            "vencedores": resultado["vencedores"],
+            "estatisticas": resultado["estatisticas"]
         })
         lista.sort(key=lambda r: r["concurso"])
         dados[str(ano)] = lista
@@ -143,3 +144,18 @@ def atualizar_resultados():
 
 if __name__ == "__main__":
     atualizar_resultados()
+
+    # Criar ficheiro do sorteio mais recente
+    pasta_repo = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    pasta_dados = os.path.join(pasta_repo, "dados")
+    ano = datetime.datetime.now().year
+    json_path = os.path.join(pasta_dados, f"{JOGO}_{ano}.json")
+
+    if os.path.exists(json_path):
+        with open(json_path, "r", encoding="utf-8") as f:
+            dados = json.load(f)
+        lista = dados.get(str(ano), [])
+        if lista:
+            mais_recente = lista[-1]
+            with open(os.path.join(pasta_dados, f"{JOGO}_atual.json"), "w", encoding="utf-8") as f_out:
+                json.dump(mais_recente, f_out, indent=2, ensure_ascii=False)
