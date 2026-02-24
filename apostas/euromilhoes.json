@@ -26,5 +26,32 @@
         "imagem_origem": "foto_1771944455536.png",
         "hash_imagem": "ebb5f93ae86259a71f53c0d47b55f234",
         "data_processamento": "2026-02-24 17:57:26"
+    },
+    {
+        "tipo": "Euromilhões",
+        "data_sorteio": "2026-02-20",
+        "data_aposta": "2026-02-20",
+        "data_emissao": "2026-02-20 08:37:32",
+        "referencia_unica": "551-05455705-M1L",
+        "valor_total": 2.2,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "numeros": [
+                    "04",
+                    "09",
+                    "30",
+                    "33",
+                    "37"
+                ],
+                "estrelas": [
+                    "05"
+                ]
+            }
+        ],
+        "imagem_origem": "foto_1771956049303.png",
+        "hash_imagem": "648d27f914c07ae0cb4046f3415a4bd7",
+        "data_processamento": "2026-02-24 18:01:36"
     }
 ]
