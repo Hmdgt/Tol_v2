@@ -1,0 +1,25 @@
+{
+  "concurso": "001/2026",
+  "data": "30/01/2026",
+  "codigo": "DXC 35552",
+  "premio_nome": "1.º Prémio",
+  "vencedores": "1",
+  "estatisticas": [
+    {
+      "nome": "Receita ilíquida apostas",
+      "valor": "€ 5.620.996,50"
+    },
+    {
+      "nome": "Montante para prémios",
+      "valor": "€ 1.000.000,00"
+    },
+    {
+      "nome": "Nº de Registos",
+      "valor": "10.633.162"
+    },
+    {
+      "nome": "Nº de Códigos atribuídos",
+      "valor": "18.736.655"
+    }
+  ]
+}
