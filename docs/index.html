@@ -6,7 +6,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Ionicons (ícones perfeitos para Android) -->
+  <!-- Ionicons -->
   <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
@@ -29,6 +29,7 @@
       user-select: none;
     }
 
+    /* Botão da câmara */
     #cameraButton {
       width: 150px;
       height: 150px;
@@ -40,11 +41,8 @@
       align-items: center;
       cursor: pointer;
       transition: 0.1s;
-    }
-
-    #cameraButton:active {
-      transform: scale(0.92);
-      border-color: #777;
+      position: absolute;
+      top: 28%;
     }
 
     #cameraButton ion-icon {
@@ -53,6 +51,35 @@
       opacity: 0.9;
     }
 
+    /* Botão da galeria */
+    #galleryButton {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: #111;
+      border: 3px solid #444;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: 0.1s;
+      position: absolute;
+      top: 62%;
+    }
+
+    #galleryButton ion-icon {
+      font-size: 60px;
+      color: white;
+      opacity: 0.9;
+    }
+
+    #cameraButton:active,
+    #galleryButton:active {
+      transform: scale(0.92);
+      border-color: #777;
+    }
+
+    /* Ícone de configurações */
     #settingsBtn {
       position: absolute;
       bottom: 22px;
@@ -76,15 +103,23 @@
 
 <body>
 
-  <!-- Input invisível que abre a câmara -->
+  <!-- Input invisível da câmara -->
   <input type="file" accept="image/*" capture="environment" id="cameraInput">
 
-  <!-- Botão central -->
+  <!-- Input invisível da galeria -->
+  <input type="file" accept="image/*" id="galleryInput">
+
+  <!-- Botão da câmara -->
   <div id="cameraButton">
     <ion-icon name="camera-outline"></ion-icon>
   </div>
 
-  <!-- Ícone de configurações discreto -->
+  <!-- Botão da galeria -->
+  <div id="galleryButton">
+    <ion-icon name="image-outline"></ion-icon>
+  </div>
+
+  <!-- Ícone de configurações -->
   <ion-icon id="settingsBtn" name="settings-outline" onclick="window.location='config.html'"></ion-icon>
 
 </body>
