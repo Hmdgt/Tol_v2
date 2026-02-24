@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Configurações</title>
+  <script>
+    function saveToken() {
+      const token = document.getElementById("token").value;
+      localStorage.setItem("github_token", token);
+      alert("Token guardado no dispositivo.");
+    }
+  </script>
+</head>
+
+<body>
+  <h2>Configurações</h2>
+
+  <label>Token GitHub:</label><br>
+  <input type="password" id="token" style="width:300px;"><br><br>
+
+  <button onclick="saveToken()">Guardar</button>
+</body>
+</html>
