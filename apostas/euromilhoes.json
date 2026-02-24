@@ -1,0 +1,30 @@
+[
+    {
+        "tipo": "Euromilhões",
+        "data_sorteio": "2025-08-15",
+        "data_aposta": "2025-08-14",
+        "data_emissao": "2025-08-14 14:53:32",
+        "referencia_unica": "726-01986439-171",
+        "valor_total": 2.2,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "numeros": [
+                    "07",
+                    "17",
+                    "18",
+                    "23",
+                    "25"
+                ],
+                "estrelas": [
+                    "07",
+                    "08"
+                ]
+            }
+        ],
+        "imagem_origem": "foto_1771944455536.png",
+        "hash_imagem": "ebb5f93ae86259a71f53c0d47b55f234",
+        "data_processamento": "2026-02-24 17:57:26"
+    }
+]
