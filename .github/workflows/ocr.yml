@@ -3,13 +3,12 @@ name: Processamento OCR - Santa Casa
 on:
   push:
     paths:
-      - 'uploads/**'     # corre sempre que algo muda na pasta uploads
-  workflow_dispatch:      # permite correr manualmente no GitHub
+      - 'uploads/**'
+  workflow_dispatch:
 
 jobs:
   ocr:
     runs-on: ubuntu-latest
-    # Adicionamos permissões para o token do GitHub conseguir fazer push das alterações
     permissions:
       contents: write
 
@@ -20,11 +19,11 @@ jobs:
       - name: Configurar Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11' # Atualizado para 3.11
+          python-version: '3.11'
 
       - name: Instalar dependências
         run: |
-          pip install google-genai Pillow # Atualizado para a biblioteca correta
+          pip install google-genai Pillow
 
       - name: Executar OCR com Gemini
         env:
@@ -35,6 +34,7 @@ jobs:
         run: |
           git config --global user.name "Bot OCR"
           git config --global user.email "bot@github.com"
-          git add apostas/*.json || true
+          # Adicionamos todos os ficheiros JSON na pasta apostas (incluindo o registo)
+          git add apostas/*.json
           git commit -m "OCR: novos boletins processados" || echo "Nenhuma alteração para commitar"
           git push
