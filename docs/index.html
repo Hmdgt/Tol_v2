@@ -1,25 +1,91 @@
-<!-- refresh -->
 <!DOCTYPE html>
 <html lang="pt">
 <head>
   <meta charset="UTF-8">
-  <title>Uploader</title>
+  <title>Camera Upload</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Ionicons (ícones perfeitos para Android) -->
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
   <link rel="manifest" href="manifest.json">
   <script src="app.js" defer></script>
   <script src="upload.js" defer></script>
+
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      font-family: sans-serif;
+      overflow: hidden;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    #cameraButton {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: #111;
+      border: 3px solid #444;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: 0.1s;
+    }
+
+    #cameraButton:active {
+      transform: scale(0.92);
+      border-color: #777;
+    }
+
+    #cameraButton ion-icon {
+      font-size: 80px;
+      color: white;
+      opacity: 0.9;
+    }
+
+    #settingsBtn {
+      position: absolute;
+      bottom: 22px;
+      right: 22px;
+      opacity: 0.25;
+      font-size: 30px;
+      color: white;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    #settingsBtn:active {
+      opacity: 0.8;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+  </style>
 </head>
 
 <body>
-  <h2>Enviar Foto</h2>
 
+  <!-- Input invisível que abre a câmara -->
   <input type="file" accept="image/*" capture="environment" id="cameraInput">
-  <br><br>
 
-  <button id="uploadBtn">Enviar para o GitHub</button>
+  <!-- Botão central -->
+  <div id="cameraButton">
+    <ion-icon name="camera-outline"></ion-icon>
+  </div>
 
-  <p id="status"></p>
+  <!-- Ícone de configurações discreto -->
+  <ion-icon id="settingsBtn" name="settings-outline" onclick="window.location='config.html'"></ion-icon>
 
-  <a href="config.html">⚙️ Configurações</a>
 </body>
 </html>
