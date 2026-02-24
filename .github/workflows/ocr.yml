@@ -9,6 +9,9 @@ on:
 jobs:
   ocr:
     runs-on: ubuntu-latest
+    # Adicionamos permissões para o token do GitHub conseguir fazer push das alterações
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout do repositório
@@ -17,11 +20,11 @@ jobs:
       - name: Configurar Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.11' # Atualizado para 3.11
 
       - name: Instalar dependências
         run: |
-          pip install google-generativeai Pillow
+          pip install google-genai Pillow # Atualizado para a biblioteca correta
 
       - name: Executar OCR com Gemini
         env:
@@ -33,6 +36,5 @@ jobs:
           git config --global user.name "Bot OCR"
           git config --global user.email "bot@github.com"
           git add apostas/*.json || true
-          git add apostas/registo_processamento.json || true
           git commit -m "OCR: novos boletins processados" || echo "Nenhuma alteração para commitar"
           git push
