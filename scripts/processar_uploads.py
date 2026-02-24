@@ -1,18 +1,18 @@
-from google import genai  # Atualizado: Novo SDK
+from google import genai  # Novo SDK oficial
 import PIL.Image
 import os
 import json
 import hashlib
 from datetime import datetime
 
-# Configuração Gemini - Versão 2026
+# 1. Configuração do Cliente
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 PASTA_UPLOADS = "uploads/"
 PASTA_DADOS = "apostas/"
 FICHEIRO_REGISTO = "apostas/registo_processamento.json"
 
-# PROMPT MESTRE (Exatamente o teu original)
+# 2. PROMPT MESTRE (O teu original preservado)
 INSTRUCAO = """
 Tu és um sistema de auditoria e extração estruturada de boletins oficiais da Santa Casa da Misericórdia de Lisboa (Portugal).
 
@@ -123,7 +123,7 @@ REGRAS FINAIS
 """
 
 # ---------------------------------------------------------
-# Funções auxiliares (Originais)
+# Funções auxiliares (Preservadas conforme solicitado)
 # ---------------------------------------------------------
 
 def gerar_hash(caminho):
@@ -159,7 +159,6 @@ def guardar_jogo(jogo, img_nome, img_hash):
     else:
         historico = []
 
-    # Evitar duplicados pela referência única
     ref = jogo.get("referencia_unica")
     if ref and any(item.get("referencia_unica") == ref for item in historico):
         print(f"⚠️ Bilhete {ref} já registado.")
@@ -177,7 +176,7 @@ def guardar_jogo(jogo, img_nome, img_hash):
     return True
 
 # ---------------------------------------------------------
-# PROCESSAMENTO PRINCIPAL (Atualizado para o novo SDK)
+# PROCESSAMENTO PRINCIPAL
 # ---------------------------------------------------------
 
 if __name__ == "__main__":
@@ -199,21 +198,19 @@ if __name__ == "__main__":
         try:
             img = PIL.Image.open(caminho)
             
-            # Chamada usando o novo Client e modelo Flash 2.0
+            # Ajustado para gemini-2.5-flash conforme a tua quota disponível
             resposta = client.models.generate_content(
-                model="gemini-2.0-flash",
+                model="gemini-2.5-flash",
                 contents=[INSTRUCAO, img]
             )
             
             texto = limpar_json(resposta.text)
             dados = json.loads(texto)
 
-            # Processar cada jogo encontrado
             for jogo in dados.get("jogos", []):
                 if guardar_jogo(jogo, img_nome, img_hash):
                     print(f"✅ {jogo['tipo']} registado com sucesso.")
 
-            # Atualizar registo global
             registo[img_hash] = {
                 "arquivo": img_nome,
                 "data": datetime.now().isoformat()
