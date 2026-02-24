@@ -4,8 +4,18 @@ name: Atualizar EuroMilhões automaticamente
 
 on:
   schedule:
-    - cron: "0 22 * * 2"   # terça 22:00
-    - cron: "0 22 * * 5"   # sexta 22:00
+    # Terça
+    - cron: "0 21 * * 2"
+    - cron: "0 22 * * 2"
+    - cron: "0 23 * * 2"
+    - cron: "0 10 * * 3"   # backup quarta
+
+    # Sexta
+    - cron: "0 21 * * 5"
+    - cron: "0 22 * * 5"
+    - cron: "0 23 * * 5"
+    - cron: "0 10 * * 6"   # backup sábado
+
   workflow_dispatch:
 
 jobs:
