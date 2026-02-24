@@ -1,29 +1,28 @@
-import google.generativeai as genai
+from google import genai  # Atualizado: Novo SDK
 import PIL.Image
 import os
 import json
 import hashlib
 from datetime import datetime
 
-# Configuração Gemini
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-model = genai.GenerativeModel('gemini-2.0-flash')
+# Configuração Gemini - Versão 2026
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 PASTA_UPLOADS = "uploads/"
 PASTA_DADOS = "apostas/"
 FICHEIRO_REGISTO = "apostas/registo_processamento.json"
 
-# PROMPT MESTRE — focado apenas nos 4 jogos reais
+# PROMPT MESTRE (Exatamente o teu original)
 INSTRUCAO = """
 Tu és um sistema de auditoria e extração estruturada de boletins oficiais da Santa Casa da Misericórdia de Lisboa (Portugal).
 
 A tua função é:
 1. Ler a imagem fornecida.
 2. Identificar automaticamente quais dos seguintes jogos estão presentes:
-   - Euromilhões
-   - Totoloto
-   - EuroDreams
-   - Milhão
+    - Euromilhões
+    - Totoloto
+    - EuroDreams
+    - Milhão
 3. Extrair todos os dados relevantes.
 4. Validar segundo regras oficiais.
 5. Produzir APENAS JSON válido, sem texto adicional.
@@ -124,7 +123,7 @@ REGRAS FINAIS
 """
 
 # ---------------------------------------------------------
-# Funções auxiliares
+# Funções auxiliares (Originais)
 # ---------------------------------------------------------
 
 def gerar_hash(caminho):
@@ -151,6 +150,7 @@ def caminho_json_jogo(nome):
     return os.path.join(PASTA_DADOS, f"{nome}.json")
 
 def guardar_jogo(jogo, img_nome, img_hash):
+    if not jogo.get("tipo"): return False
     caminho = caminho_json_jogo(jogo["tipo"])
 
     if os.path.exists(caminho):
@@ -162,7 +162,7 @@ def guardar_jogo(jogo, img_nome, img_hash):
     # Evitar duplicados pela referência única
     ref = jogo.get("referencia_unica")
     if ref and any(item.get("referencia_unica") == ref for item in historico):
-        print("⚠️ Bilhete já registado.")
+        print(f"⚠️ Bilhete {ref} já registado.")
         return False
 
     jogo["imagem_origem"] = img_nome
@@ -177,11 +177,12 @@ def guardar_jogo(jogo, img_nome, img_hash):
     return True
 
 # ---------------------------------------------------------
-# PROCESSAMENTO PRINCIPAL
+# PROCESSAMENTO PRINCIPAL (Atualizado para o novo SDK)
 # ---------------------------------------------------------
 
 if __name__ == "__main__":
     os.makedirs(PASTA_DADOS, exist_ok=True)
+    os.makedirs(PASTA_UPLOADS, exist_ok=True)
 
     registo = carregar_registo()
     imagens = [f for f in os.listdir(PASTA_UPLOADS) if f.lower().endswith((".jpg", ".jpeg", ".png"))]
@@ -197,7 +198,13 @@ if __name__ == "__main__":
 
         try:
             img = PIL.Image.open(caminho)
-            resposta = model.generate_content([INSTRUCAO, img])
+            
+            # Chamada usando o novo Client e modelo Flash 2.0
+            resposta = client.models.generate_content(
+                model="gemini-2.0-flash",
+                contents=[INSTRUCAO, img]
+            )
+            
             texto = limpar_json(resposta.text)
             dados = json.loads(texto)
 
@@ -216,4 +223,3 @@ if __name__ == "__main__":
             print(f"❌ Erro: {e}")
 
     guardar_registo(registo)
-
