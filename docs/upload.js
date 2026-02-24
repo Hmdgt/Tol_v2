@@ -22,20 +22,24 @@ async function uploadToGitHub(file) {
       content: base64
     };
 
-    const response = await fetch(url, {
-      method: "PUT",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(body)
-    });
+    try {
+      const response = await fetch(url, {
+        method: "PUT",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(body)
+      });
 
-    if (response.ok) {
-      document.getElementById("status").innerText = "✔️ Upload concluído!";
-    } else {
-      const err = await response.json();
-      document.getElementById("status").innerText = "❌ Erro no upload: " + JSON.stringify(err);
+      if (response.ok) {
+        console.log("✔️ Upload concluído:", filename);
+      } else {
+        const err = await response.json();
+        console.error("❌ Erro no upload:", err);
+      }
+    } catch (e) {
+      console.error("❌ Erro de rede:", e);
     }
   };
 }
