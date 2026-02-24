@@ -4,7 +4,14 @@ name: Atualizar M1lhão automaticamente
 
 on:
   schedule:
-    - cron: "0 23 * * 5"   # sexta 23:00
+    # Última sexta-feira do mês
+    - cron: "0 21 * * 5#L"
+    - cron: "0 22 * * 5#L"
+    - cron: "0 23 * * 5#L"
+
+    # Backup no sábado às 10:00
+    - cron: "0 10 * * 6"
+
   workflow_dispatch:
 
 jobs:
