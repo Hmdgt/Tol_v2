@@ -1,0 +1,54 @@
+{
+  "2026": [
+    {
+      "concurso": "016/2026",
+      "data": "23/02/2026",
+      "chave": "1 7 12 25 26 39 + 1",
+      "ordem_saida": "1 25 26 12 39 7 + 1",
+      "premios": [
+        {
+          "premio": "1.º Prémio",
+          "descricao": "6 Números + 1 Nº de Sonho",
+          "vencedores_pt": "0",
+          "vencedores_eu": "0",
+          "valor": "€ 30.000/mês x 30 anos"
+        },
+        {
+          "premio": "2.º Prémio",
+          "descricao": "6 Números",
+          "vencedores_pt": "1",
+          "vencedores_eu": "1",
+          "valor": "€ 2.000/mês x 5 anos"
+        },
+        {
+          "premio": "3.º Prémio",
+          "descricao": "5 Números",
+          "vencedores_pt": "25",
+          "vencedores_eu": "137",
+          "valor": "€ 406,09"
+        },
+        {
+          "premio": "4.º Prémio",
+          "descricao": "4 Números",
+          "vencedores_pt": "626",
+          "vencedores_eu": "4.757",
+          "valor": "€ 32,78"
+        },
+        {
+          "premio": "5.º Prémio",
+          "descricao": "3 Números",
+          "vencedores_pt": "10.072",
+          "vencedores_eu": "68.342",
+          "valor": "€ 4,79"
+        },
+        {
+          "premio": "6.º Prémio",
+          "descricao": "2 Números",
+          "vencedores_pt": "59.939",
+          "vencedores_eu": "392.910",
+          "valor": "€ 2,50"
+        }
+      ]
+    }
+  ]
+}
