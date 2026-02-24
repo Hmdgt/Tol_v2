@@ -23,7 +23,7 @@ jobs:
 
       - name: Instalar dependências
         run: |
-          pip install google-genai Pillow
+          pip install google-genai Pillow opencv-python-headless
 
       - name: Executar OCR com Gemini
         env:
