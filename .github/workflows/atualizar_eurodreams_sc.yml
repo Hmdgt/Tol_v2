@@ -4,8 +4,18 @@ name: Atualizar EuroDreams automaticamente
 
 on:
   schedule:
-    - cron: "0 23 * * 1"   # segunda 23:00
-    - cron: "0 23 * * 4"   # quinta 23:00
+    # Segunda
+    - cron: "0 21 * * 1"
+    - cron: "0 22 * * 1"
+    - cron: "0 23 * * 1"
+    - cron: "0 10 * * 2"   # backup terça
+
+    # Quinta
+    - cron: "0 21 * * 4"
+    - cron: "0 22 * * 4"
+    - cron: "0 23 * * 4"
+    - cron: "0 10 * * 5"   # backup sexta
+
   workflow_dispatch:
 
 jobs:
