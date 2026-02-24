@@ -1,5 +1,3 @@
-# atualizar_totoloto_sc.py
-
 import json
 import os
 import re
@@ -15,7 +13,7 @@ def escrever_log(mensagem, origem):
     pasta_repo = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     pasta_logs = os.path.join(pasta_repo, "logs")
     os.makedirs(pasta_logs, exist_ok=True)
-    log_path = os.path.join(pasta_logs, "totoloto_log.txt")
+    log_path = os.path.join(pasta_logs, "totoloto_sc_log.txt")
     agora = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     with open(log_path, "a", encoding="utf-8") as f:
         f.write(f"[{agora}] [{origem}] {mensagem}\n")
@@ -64,7 +62,7 @@ def extrair_totoloto_sc():
         numeros = list(map(int, partes[0].strip().split()))
         especial = int(partes[1].strip())
 
-        # Extrair prémios (HTML real usa <ul class="colums">)
+        # Extrair prémios
         premios = []
         try:
             listas = driver.find_elements(
@@ -109,10 +107,11 @@ def atualizar_resultados():
     pasta_dados = os.path.join(pasta_repo, "dados")
     os.makedirs(pasta_dados, exist_ok=True)
 
-    json_path = os.path.join(pasta_dados, f"{ano}.json")
+    # JSON anual prefixado
+    json_path = os.path.join(pasta_dados, f"totoloto_sc_{ano}.json")
 
-    # Guardar no TXT (reescreve sempre)
-    txt_path = os.path.join(pasta_dados, f"{ano}.txt")
+    # TXT anual prefixado
+    txt_path = os.path.join(pasta_dados, f"totoloto_sc_{ano}.txt")
     with open(txt_path, "w", encoding="utf-8") as f:
         f.write(f"Concurso: {resultado['concurso']}\n")
         f.write(f"Data: {resultado['data']}\n")
@@ -120,7 +119,6 @@ def atualizar_resultados():
         f.write(f"Especial: {resultado['especial']}\n")
         f.write("-" * 40 + "\n")
 
-        # Adicionar prémios ao TXT
         f.write("Prémios:\n")
         for p in resultado["premios"]:
             f.write(
@@ -129,7 +127,7 @@ def atualizar_resultados():
             )
         f.write("-" * 40 + "\n")
 
-    # Parte original do JSON mantida
+    # JSON anual
     dados = ler_json(json_path, ano)
     lista = dados[str(ano)]
 
@@ -143,18 +141,18 @@ def atualizar_resultados():
         lista.sort(key=lambda r: r["concurso"])
         dados[str(ano)] = lista
         gravar_json(json_path, dados)
-        msg = f"Resultado do concurso {resultado['concurso']} adicionado ao JSON {ano}."
+        msg = f"Resultado do concurso {resultado['concurso']} adicionado ao JSON totoloto_sc_{ano}."
         print(msg)
         escrever_log(msg, "santacasa")
 
 if __name__ == "__main__":
     atualizar_resultados()
 
-    # Criar ficheiro sorteio_atual.json
+    # Criar ficheiro do sorteio mais recente
     pasta_repo = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     pasta_dados = os.path.join(pasta_repo, "dados")
     ano = datetime.datetime.now().year
-    json_path = os.path.join(pasta_dados, f"{ano}.json")
+    json_path = os.path.join(pasta_dados, f"totoloto_sc_{ano}.json")
 
     if os.path.exists(json_path):
         with open(json_path, "r", encoding="utf-8") as f:
@@ -162,5 +160,5 @@ if __name__ == "__main__":
         lista = dados.get(str(ano), [])
         if lista:
             mais_recente = lista[-1]
-            with open(os.path.join(pasta_dados, "sorteio_atual.json"), "w", encoding="utf-8") as f_out:
+            with open(os.path.join(pasta_dados, "totoloto_sc_atual.json"), "w", encoding="utf-8") as f_out:
                 json.dump(mais_recente, f_out, indent=2, ensure_ascii=False)
