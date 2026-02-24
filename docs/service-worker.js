@@ -1,3 +1,7 @@
-self.addEventListener("install", () => {
-  console.log("PWA instalada");
+self.addEventListener("install", event => {
+  self.skipWaiting();
+});
+
+self.addEventListener("activate", event => {
+  clients.claim();
 });
