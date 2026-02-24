@@ -3,7 +3,8 @@ name: Processamento OCR - Santa Casa
 on:
   push:
     paths:
-      - 'uploads/**'     # sempre que algo muda na pasta uploads
+      - 'uploads/**'     # corre sempre que algo muda na pasta uploads
+  workflow_dispatch:      # permite correr manualmente no GitHub
 
 jobs:
   ocr:
