@@ -1,0 +1,38 @@
+name: Detetar Novos Resultados
+
+on:
+  push:
+    paths:
+      - 'resultados/*_recentes.json'  # Quando qualquer *_recentes.json é atualizado
+  workflow_dispatch:
+
+jobs:
+  gerar-notificacoes:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependências
+        run: |
+          pip install Pillow
+
+      - name: Gerar notificações ativas
+        run: python scripts/gerar_notificacoes.py
+
+      - name: Commit das notificações
+        run: |
+          git config --global user.name "Bot Notificações"
+          git config --global user.email "bot@github.com"
+          git add resultados/notificacoes_ativas.json
+          git add resultados/notificacoes_historico.json
+          git commit -m "Atualização de notificações $(date +'%Y-%m-%d %H:%M')" || echo "Nenhuma alteração"
+          git push
