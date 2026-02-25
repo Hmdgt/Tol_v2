@@ -143,28 +143,29 @@ async function marcarComoLida(idNotificacao) {
     }
 }
 
-// 4. Renderizar lista de notificações
+// 4. Renderizar lista de notificações (SÓ NÃO LIDAS)
 async function renderizarNotificacoes() {
     const listaElement = document.getElementById('notificationsList');
     if (!listaElement) return;
     
     const notificacoes = await carregarNotificacoes();
     
-    if (notificacoes.length === 0) {
+    // 🔴 FILTRAR APENAS NÃO LIDAS (lido: false)
+    const naoLidas = notificacoes.filter(n => !n.lido);
+    
+    if (naoLidas.length === 0) {
         listaElement.innerHTML = '<div class="no-notifications">✨ Nenhuma notificação</div>';
         return;
     }
     
     let html = '';
-    for (const notif of notificacoes) {
-        const naoLida = !notif.lido ? '<span class="unread-badge">Nova</span>' : '';
-        
+    for (const notif of naoLidas) {  // ← Só itera sobre não lidas
         html += `
             <div class="notification-card" data-id="${notif.id}" data-lido="${notif.lido}">
                 <div class="notification-header">
                     <ion-icon name="notifications-outline" class="jogo-icon"></ion-icon>
                     <span class="jogo-nome">${notif.jogo || 'Jogo'}</span>
-                    ${naoLida}
+                    <span class="unread-badge">Nova</span>
                     <span class="notification-date">${new Date(notif.data).toLocaleDateString('pt-PT')}</span>
                 </div>
                 <div class="notification-title">${notif.titulo || 'Novo resultado'}</div>
@@ -180,32 +181,31 @@ async function renderizarNotificacoes() {
     document.querySelectorAll('.notification-card').forEach(card => {
         card.addEventListener('click', async () => {
             const id = card.dataset.id;
-            const lido = card.dataset.lido === 'true';
             
-            console.log('🔍 Clicou na notificação:', id, 'lido:', lido);
+            // Desativar clique duplo e mostrar indicador
+            card.style.pointerEvents = 'none';
+            const processing = document.createElement('div');
+            processing.className = 'processing';
+            processing.innerHTML = '⏳ A marcar como lida...';
+            card.appendChild(processing);
             
-            if (!lido) {
-                // Desativar clique duplo
-                card.style.pointerEvents = 'none';
+            // Marcar como lida no GitHub
+            const resultado = await marcarComoLida(id);
+            
+            if (resultado) {
+                // Remover o card da lista
+                card.remove();
                 
-                // Marcar como lida no GitHub
-                const resultado = await marcarComoLida(id);
-                
-                if (resultado) {
-                    // Remover o card da lista (já não está nas ativas)
-                    card.remove();
-                    
-                    // Se não houver mais cards, mostrar mensagem
-                    if (document.querySelectorAll('.notification-card').length === 0) {
-                        document.getElementById('notificationsList').innerHTML = 
-                            '<div class="no-notifications">✨ Nenhuma notificação</div>';
-                    }
-                    
-                    console.log('✅ Notificação removida da lista');
-                } else {
-                    // Reativar clique se falhou
-                    card.style.pointerEvents = 'auto';
+                // Se não houver mais cards, mostrar mensagem
+                if (document.querySelectorAll('.notification-card').length === 0) {
+                    listaElement.innerHTML = '<div class="no-notifications">✨ Nenhuma notificação</div>';
                 }
+                
+                console.log('✅ Notificação removida da lista');
+            } else {
+                // Reativar clique se falhou
+                card.style.pointerEvents = 'auto';
+                processing.remove();
             }
         });
     });
