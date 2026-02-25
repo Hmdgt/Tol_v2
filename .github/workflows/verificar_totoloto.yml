@@ -33,5 +33,6 @@ jobs:
           git config --global user.name "Bot Verificador"
           git config --global user.email "bot@github.com"
           git add resultados/totoloto_verificacoes.json
+          git add resultados/totoloto_recentes.json
           git commit -m "Verificação automática Totoloto $(date +'%Y-%m-%d')" || echo "Nenhuma alteração"
           git push
