@@ -94,13 +94,11 @@ REGRAS ABSOLUTAS:
 PADRÕES EXATOS POR JOGO:
 
 EUROMILHÕES (Regras de Ouro):
-1. Identifica a linha que começa por "1.N", "2.N", etc.
-2. EXTRAÇÃO DE NÚMEROS: Os primeiros 5 números encontrados após o ".N" são os teus 'numeros'.
-3. EXTRAÇÃO DE ESTRELAS:
-   - Procura por um "E" que tenha 2 números à sua direita (na mesma linha ou na linha imediatamente abaixo).
-   - Se encontrares o "E" com 2 números -> extrai para 'estrelas'.
-   - Se o "E" aparecer sozinho no meio dos números (ex: "1.N E 01...") -> IGNORA esse "E" e extrai apenas os 5 números seguintes.
-   - SE leres um total de 7 números seguidos e o campo 'estrelas' estiver vazio -> OS ÚLTIMOS 2 SÃO AS ESTRELAS.
+1. Identifica os blocos de apostas (1., 2., etc.).
+2. NÚMEROS (N): São os 5 números principais.
+3. ESTRELAS (E): São os 2 números que aparecem logo abaixo ou ao lado da letra 'E'.
+4. REGRA DE SEGURANÇA MÁXIMA: Um jogo de Euromilhões NUNCA tem 0 estrelas. Se extraíres 5 números e o campo 'estrelas' estiver vazio, procura na imagem pelos dois números pequenos que faltam (geralmente localizados na linha de baixo ou após um símbolo 'E') e coloca-os no campo 'estrelas'.
+5. Se encontrares 7 números no total para a mesma aposta, os 2 últimos são SEMPRE as estrelas.
 
 EURODREAMS:
 - Linha "N": extrai 6 números.
