@@ -241,15 +241,21 @@ def mostrar_resultado_simples(resultado: dict):
     print("="*70)
 
 def guardar_resultados(resultados: list):
-    """Guarda resultados num ficheiro JSON"""
+    """
+    Guarda resultados em dois formatos:
+    1. INCREMENTAL: histórico completo (nunca apaga)
+    2. SUBSTITUÍDO: apenas os resultados desta execução
+    """
     os.makedirs("resultados", exist_ok=True)
     
+    # ===== 1. FICHEIRO INCREMENTAL (histórico) =====
     if os.path.exists(FICHEIRO_RESULTADOS):
         with open(FICHEIRO_RESULTADOS, "r", encoding="utf-8") as f:
             historico = json.load(f)
     else:
         historico = []
     
+    # Adicionar apenas os NOVOS ao histórico
     novos_adicionados = 0
     for novo in resultados:
         existe = False
@@ -263,12 +269,27 @@ def guardar_resultados(resultados: list):
             historico.append(novo)
             novos_adicionados += 1
     
+    # Guardar histórico completo (INCREMENTAL)
     with open(FICHEIRO_RESULTADOS, "w", encoding="utf-8") as f:
         json.dump(historico, f, indent=2, ensure_ascii=False)
     
-    print(f"\n📁 Resultados guardados em: {FICHEIRO_RESULTADOS}")
-    print(f"📊 Novas verificações: {novos_adicionados}")
+    print(f"\n📁 Histórico guardado em: {FICHEIRO_RESULTADOS}")
+    print(f"📊 Novas verificações no histórico: {novos_adicionados}")
     print(f"📊 Total no histórico: {len(historico)}")
+    
+    # ===== 2. FICHEIRO DE RESULTADOS RECENTES (SUBSTITUÍDO) =====
+    if resultados:
+        # Nome do ficheiro de resultados recentes
+        nome_base = os.path.basename(FICHEIRO_RESULTADOS)
+        nome_recentes = nome_base.replace('_verificacoes', '_recentes')
+        caminho_recentes = os.path.join("resultados", nome_recentes)
+        
+        # Guardar APENAS os resultados desta execução (SUBSTITUI)
+        with open(caminho_recentes, "w", encoding="utf-8") as f:
+            json.dump(resultados, f, indent=2, ensure_ascii=False)
+        
+        print(f"📁 Resultados recentes guardados em: {caminho_recentes}")
+        print(f"📊 Total de resultados recentes: {len(resultados)}")
 
 def gerar_relatorio(resultados: list):
     """Gera relatório sumário"""
