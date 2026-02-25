@@ -1,0 +1,37 @@
+name: Verificar M1lhão
+
+on:
+  push:
+    paths:
+      - 'dados/milhao_*.json'  # Dispara quando qualquer milhao_ANO.json é atualizado
+  workflow_dispatch:
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependências
+        run: |
+          pip install Pillow
+
+      - name: Verificar boletins M1lhão
+        run: python scripts/verificar_milhao.py
+
+      - name: Guardar resultados
+        run: |
+          git config --global user.name "Bot Verificador"
+          git config --global user.email "bot@github.com"
+          git add resultados/milhao_verificacoes.json
+          git commit -m "Verificação automática M1lhão $(date +'%Y-%m-%d')" || echo "Nenhuma alteração"
+          git push
