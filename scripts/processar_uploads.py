@@ -26,19 +26,16 @@ if not GEMINI_KEYS:
 
 print(f"🔑 Carregadas {len(GEMINI_KEYS)} chaves Gemini")
 
-# Cliente inicial (será trocado conforme necessário)
-client = genai.Client(api_key=GEMINI_KEYS[0])
-
-# ===== NOVO: Controlo de cota por chave =====
+# ===== FICHEIROS DE CONTROLO =====
 FICHEIRO_COTA_CHAVES = "apostas/cota_por_chave.json"
 FICHEIRO_REGISTO = "apostas/registo_processamento.json"
 
-# Pastas
+# ===== PASTAS =====
 PASTA_UPLOADS = "uploads/"
 PASTA_DADOS = "apostas/"
 PASTA_PREPROCESSADAS = "preprocessadas/"
 
-# Controlo de taxa (5 por minuto)
+# ===== CONTROLO DE TAXA (5 por minuto) =====
 REQUISICOES_POR_MINUTO = 5
 SEGUNDOS_ENTRE_REQUISICOES = 60 / REQUISICOES_POR_MINUTO
 
@@ -46,6 +43,7 @@ SEGUNDOS_ENTRE_REQUISICOES = 60 / REQUISICOES_POR_MINUTO
 timestamps = deque(maxlen=REQUISICOES_POR_MINUTO)
 lock = threading.Lock()
 
+# ===== FUNÇÕES DE CONTROLO DE CHAVES =====
 def carregar_cota_chaves():
     """Carrega o estado de cada chave"""
     if os.path.exists(FICHEIRO_COTA_CHAVES):
@@ -95,6 +93,20 @@ def registar_uso_chave(key_id, usadas_atualizadas):
     
     guardar_cota_chaves(cota_chaves)
 
+def marcar_chave_esgotada(key_id):
+    """Marca uma chave como esgotada (20/20) após erro 429"""
+    cota_chaves = carregar_cota_chaves()
+    hoje = datetime.now().strftime("%Y-%m-%d")
+    
+    cota_chaves[key_id] = {
+        "data": hoje,
+        "usadas": 20
+    }
+    
+    guardar_cota_chaves(cota_chaves)
+    print(f"   ⚠️ {key_id} marcada como esgotada (20/20)")
+
+# ===== FUNÇÕES DE RATE LIMIT =====
 def esperar_rate_limit():
     """Garante que não excedemos 5 requisições por minuto"""
     with lock:
@@ -113,11 +125,15 @@ def esperar_rate_limit():
         
         timestamps.append(time.time())
 
+# ===== PREPROCESSAMENTO DE IMAGEM =====
 def preprocessar_imagem(caminho, img_nome):
     """Gera 3 versões estratégicas da imagem"""
     os.makedirs(PASTA_PREPROCESSADAS, exist_ok=True)
     
     img = cv2.imread(caminho)
+    if img is None:
+        raise ValueError(f"Imagem não pode ser lida: {caminho}")
+    
     nome_base = os.path.splitext(img_nome)[0]
     versoes = []
     
@@ -143,7 +159,7 @@ def preprocessar_imagem(caminho, img_nome):
     print(f"   📸 Geradas {len(versoes)} versões")
     return versoes
 
-# PROMPT (igual ao seu, mantive igual)
+# ===== PROMPT DO GEMINI =====
 PROMPT_FINAL = """
 Tu és um especialista em extração de boletins da Santa Casa da Misericórdia de Lisboa.
 
@@ -208,21 +224,30 @@ ESTRUTURA JSON OBRIGATÓRIA:
 Retorna APENAS JSON válido, sem texto adicional.
 """
 
+# ===== FUNÇÃO PRINCIPAL DE PROCESSAMENTO =====
 def processar_com_multiplas_chaves():
     """Processa imagens usando múltiplas chaves em rodízio"""
+    # Criar pastas necessárias
     os.makedirs(PASTA_DADOS, exist_ok=True)
     os.makedirs(PASTA_UPLOADS, exist_ok=True)
     os.makedirs(PASTA_PREPROCESSADAS, exist_ok=True)
 
+    # Carregar registo de imagens processadas
     registo = carregar_registo()
+    
+    # Listar imagens na pasta uploads
     imagens = [f for f in os.listdir(PASTA_UPLOADS) if f.lower().endswith((".jpg", ".jpeg", ".png"))]
     
-    # Filtrar apenas imagens não processadas (JÁ EXISTE!)
+    if not imagens:
+        print("📭 Nenhuma imagem encontrada na pasta uploads/")
+        return
+    
+    # Filtrar apenas imagens não processadas
     imagens_nao_processadas = []
     for img_nome in imagens:
         caminho = os.path.join(PASTA_UPLOADS, img_nome)
         img_hash = gerar_hash(caminho)
-        if img_hash not in registo:  # ← VERIFICAÇÃO DE DUPLICADOS
+        if img_hash not in registo:
             imagens_nao_processadas.append((img_nome, caminho, img_hash))
     
     if not imagens_nao_processadas:
@@ -234,18 +259,21 @@ def processar_com_multiplas_chaves():
     print(f"⏱️  Rate limit minuto: {REQUISICOES_POR_MINUTO} req/min\n")
     
     processadas_com_sucesso = 0
-    imagens_falhadas = []
     
-    for idx, (img_nome, caminho, img_hash) in enumerate(imagens_nao_processadas, 1):
-        print(f"[{idx}/{len(imagens_nao_processadas)}] 🚀 {img_nome}")
+    # Processar cada imagem
+    idx = 0
+    while idx < len(imagens_nao_processadas):
+        img_nome, caminho, img_hash = imagens_nao_processadas[idx]
         
-        # ===== OBTER CLIENTE COM CHAVE DISPONÍVEL =====
+        print(f"[{idx+1}/{len(imagens_nao_processadas)}] 🚀 {img_nome}")
+        
+        # OBTER CLIENTE COM CHAVE DISPONÍVEL
         cliente, key_id, usadas_atual = obter_cliente_disponivel()
         
         if not cliente:
             print(f"\n🚫 TODAS AS CHAVES ESGOTADAS! ({len(GEMINI_KEYS)} * 20 = {len(GEMINI_KEYS)*20} requisições)")
             print(f"   Processadas hoje: {processadas_com_sucesso}")
-            print(f"   Restantes: {len(imagens_nao_processadas) - idx + 1} imagens")
+            print(f"   Restantes: {len(imagens_nao_processadas) - idx} imagens")
             break
         
         try:
@@ -267,7 +295,7 @@ def processar_com_multiplas_chaves():
                 }
             )
             
-            # ===== REGISTAR USO DA CHAVE COM SUCESSO =====
+            # REGISTAR USO DA CHAVE COM SUCESSO
             registar_uso_chave(key_id, usadas_atual)
             
             # PROCESSAR resposta
@@ -286,8 +314,10 @@ def processar_com_multiplas_chaves():
                     "jogos": jogos_processados
                 }
                 processadas_com_sucesso += 1
+                idx += 1  # Avança para próxima imagem apenas em caso de sucesso
             else:
                 print(f"   ⚠️ Nenhum jogo válido encontrado")
+                idx += 1  # Avança mesmo sem jogos (imagem processada mas sem dados)
             
             # Guardar registo a cada imagem (segurança)
             guardar_registo(registo)
@@ -295,41 +325,27 @@ def processar_com_multiplas_chaves():
         except Exception as e:
             print(f"   ❌ Erro: {e}")
             
-            # Se for erro de cota, marcar esta chave como esgotada
+            # Se for erro de cota, marcar chave como esgotada e REPETIR a mesma imagem
             if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e):
-                print(f"   ⚠️ {key_id} esgotada! Marcando como 20/20")
-                # Forçar registo como esgotada
-                cota_chaves = carregar_cota_chaves()
-                hoje = datetime.now().strftime("%Y-%m-%d")
-                cota_chaves[key_id] = {"data": hoje, "usadas": 20}
-                guardar_cota_chaves(cota_chaves)
-                
-                # Tentar novamente esta imagem com outra chave
-                print(f"   🔄 A tentar novamente com outra chave...")
-                # O loop vai continuar e na próxima iteração (mesmo índice) 
-                # vai pegar outra chave graças ao continue
-                imagens_falhadas.append((img_nome, caminho, img_hash))
+                marcar_chave_esgotada(key_id)
+                print(f"   🔄 A tentar novamente a mesma imagem com outra chave...")
+                # Não incrementa idx - repete a mesma imagem
             else:
-                # Outros erros, guardar para tentar depois
-                imagens_falhadas.append((img_nome, caminho, img_hash))
+                # Outros erros, avançar para próxima imagem
+                print(f"   ⚠️ Erro não relacionado com cota. A avançar para próxima imagem.")
+                idx += 1
         
-        # Mostrar progresso
+        # Mostrar progresso (se não for a última)
         if idx < len(imagens_nao_processadas):
             print(f"   ⏱️  Aguardar {SEGUNDOS_ENTRE_REQUISICOES:.0f}s...")
     
-    # Relatório final
+    # RELATÓRIO FINAL
     print(f"\n{'='*50}")
     print(f"🏁 PROCESSAMENTO CONCLUÍDO")
     print(f"{'='*50}")
     print(f"✅ Processadas hoje: {processadas_com_sucesso}")
-    print(f"⏳ Falhadas: {len(imagens_falhadas)}")
-    
-    if imagens_falhadas:
-        print(f"\n📋 Imagens com erro (serão tentadas novamente na próxima execução):")
-        for img_nome, _, _ in imagens_falhadas[:5]:  # Mostrar só 5
-            print(f"   - {img_nome}")
-        if len(imagens_falhadas) > 5:
-            print(f"   ... e mais {len(imagens_falhadas) - 5}")
+    print(f"📊 Total na pasta: {len(imagens)} imagens")
+    print(f"📅 Restantes: {len(imagens_nao_processadas) - processadas_com_sucesso} imagens")
     
     # Mostrar estado das chaves
     cota_chaves = carregar_cota_chaves()
@@ -337,28 +353,32 @@ def processar_com_multiplas_chaves():
     print(f"\n🔑 Estado das chaves hoje ({hoje}):")
     for idx in range(len(GEMINI_KEYS)):
         key_id = f"key_{idx+1}"
-        registo = cota_chaves.get(key_id, {"usadas": 0})
-        usadas = registo["usadas"] if registo.get("data") == hoje else 0
+        registo_chave = cota_chaves.get(key_id, {"usadas": 0})
+        usadas = registo_chave["usadas"] if registo_chave.get("data") == hoje else 0
         print(f"   {key_id}: {usadas}/20")
 
-# Funções de apoio (mantive iguais)
+# ===== FUNÇÕES DE APOIO =====
 def gerar_hash(caminho):
+    """Gera hash MD5 de um ficheiro"""
     h = hashlib.md5()
     with open(caminho, "rb") as f:
         h.update(f.read())
     return h.hexdigest()
 
 def carregar_registo():
+    """Carrega registo de imagens processadas"""
     if os.path.exists(FICHEIRO_REGISTO):
         with open(FICHEIRO_REGISTO, "r", encoding="utf-8") as f:
             return json.load(f)
     return {}
 
 def guardar_registo(reg):
+    """Guarda registo de imagens processadas"""
     with open(FICHEIRO_REGISTO, "w", encoding="utf-8") as f:
         json.dump(reg, f, indent=4, ensure_ascii=False)
 
 def limpar_nome_jogo(nome):
+    """Converte nome do jogo para nome de ficheiro"""
     mapping = {
         'Euromilhões': 'euromilhoes',
         'Eurodreams': 'eurodreams',
@@ -368,33 +388,39 @@ def limpar_nome_jogo(nome):
     return mapping.get(nome, nome.lower().strip().replace(" ", "_"))
 
 def guardar_jogo(jogo, img_nome, img_hash):
+    """Guarda um jogo no ficheiro correspondente ao tipo"""
     if not jogo.get("tipo"): 
         return False
     
     nome_ficheiro = f"{limpar_nome_jogo(jogo['tipo'])}.json"
     caminho = os.path.join(PASTA_DADOS, nome_ficheiro)
     
+    # Carregar histórico existente
     if os.path.exists(caminho):
         with open(caminho, "r", encoding="utf-8") as f:
             historico = json.load(f)
     else:
         historico = []
 
+    # Verificar duplicados por referência única
     ref = jogo.get("referencia_unica")
     if ref and any(item.get("referencia_unica") == ref for item in historico):
         print(f"   ⚠️ Referência {ref} já registada")
         return False
 
+    # Adicionar metadados
     jogo["imagem_origem"] = img_nome
     jogo["hash_imagem"] = img_hash
     jogo["data_processamento"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     historico.append(jogo)
 
+    # Guardar
     with open(caminho, "w", encoding="utf-8") as f:
         json.dump(historico, f, indent=4, ensure_ascii=False)
     
     return True
 
+# ===== PONTO DE ENTRADA =====
 if __name__ == "__main__":
-    processar_com_multiplas_chaves()  # ← Nome da função alterado
+    processar_com_multiplas_chaves()
