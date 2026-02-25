@@ -93,13 +93,19 @@ REGRAS ABSOLUTAS:
 
 PADRÕES EXATOS POR JOGO:
 
-EUROMILHÕES:
-- Formato 1 (só números): "1.N E 87 17 18 23 25" → ignora o "E", extrai 5 números, estrelas = []
-- Formato 2 (com estrelas): "1.N 01 14 20 21 32" (linha 1) + "E 05 07" (linha 2) → números + estrelas
+EUROMILHÕES (Regras de Ouro):
+1. Identifica a linha que começa por "1.N", "2.N", etc.
+2. EXTRAÇÃO DE NÚMEROS: Os primeiros 5 números encontrados após o ".N" são os teus 'numeros'.
+3. EXTRAÇÃO DE ESTRELAS:
+   - Procura por um "E" que tenha 2 números à sua direita (na mesma linha ou na linha imediatamente abaixo).
+   - Se encontrares o "E" com 2 números -> extrai para 'estrelas'.
+   - Se o "E" aparecer sozinho no meio dos números (ex: "1.N E 01...") -> IGNORA esse "E" e extrai apenas os 5 números seguintes.
+   - SE leres um total de 7 números seguidos e o campo 'estrelas' estiver vazio -> OS ÚLTIMOS 2 SÃO AS ESTRELAS.
 
 EURODREAMS:
-- Linha 1: "1.N 01 09 14 17 22 26" → 6 números
-- Linha 2: "S 04" → dream number
+- Linha "N": extrai 6 números.
+- Linha "S": extrai 1 número (Dream Number).
+- Se leres 7 números no total, o último é o Dream Number.
 
 TOTOLOTO:
 - Linha 1: "1. 35 37 40 44 46" → 5 números
