@@ -1,3 +1,11 @@
+// Adicionar no início do app.js
+document.addEventListener('DOMContentLoaded', async () => {
+    // Verificar notificações ao iniciar
+    if (window.atualizarBadge) {
+        await window.atualizarBadge();
+    }
+});
+
 // Botão da câmara → abre a câmara
 document.getElementById("cameraButton").addEventListener("click", () => {
   document.getElementById("cameraInput").click();
@@ -19,3 +27,6 @@ document.getElementById("galleryInput").addEventListener("change", () => {
   const file = document.getElementById("galleryInput").files[0];
   if (file) uploadToGitHub(file);
 });
+
+// Tornar funções globais para outros scripts
+window.atualizarBadge = atualizarBadge;
