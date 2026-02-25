@@ -28,13 +28,14 @@ jobs:
       - name: Executar OCR com Gemini
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_API_KEY_2: ${{ secrets.GEMINI_API_KEY_2 }}  # ← ADICIONA
+          GEMINI_API_KEY_3: ${{ secrets.GEMINI_API_KEY_3 }}  # ← ADICIONA
         run: python scripts/processar_uploads.py
 
       - name: Guardar alterações (se existirem)
         run: |
           git config --global user.name "Bot OCR"
           git config --global user.email "bot@github.com"
-          # Adicionamos todos os ficheiros JSON na pasta apostas (incluindo o registo)
           git add apostas/*.json
           git commit -m "OCR: novos boletins processados" || echo "Nenhuma alteração para commitar"
           git push
