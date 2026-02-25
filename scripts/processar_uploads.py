@@ -1,3 +1,7 @@
+print("🔑 Debug - Chaves encontradas:")
+for i, key in enumerate(GEMINI_KEYS):
+    print(f"   key_{i+1}: {'✓' if key else '✗'} (primeiros 4 chars: {key[:4] if key else 'none'})")
+
 import os
 import json
 import hashlib
