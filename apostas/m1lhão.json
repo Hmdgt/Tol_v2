@@ -1,0 +1,20 @@
+[
+    {
+        "tipo": "M1LHÃO",
+        "data_sorteio": "2026-02-27",
+        "data_aposta": "2026-02-20",
+        "data_emissao": "2026-02-20 08:37:32",
+        "referencia_unica": "551-05455705-M1L",
+        "valor_total": 0.3,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "codigo": "GQC37079"
+            }
+        ],
+        "imagem_origem": "foto_1772012099095.png",
+        "hash_imagem": "c15b050c58bbbf96eb5647ebef251943",
+        "data_processamento": "2026-02-25 14:43:05"
+    }
+]
