@@ -155,6 +155,7 @@ def verificar_boletins(apostas: list, todos_sorteios: dict) -> list:
     
     for aposta in apostas:
         data_aposta = aposta.get("data_sorteio")
+        concurso_aposta = aposta.get("concurso")  # ← AGORA VEM DO OCR!
         
         # Extrair ano da data
         try:
@@ -172,16 +173,24 @@ def verificar_boletins(apostas: list, todos_sorteios: dict) -> list:
         # Preparar data no formato do sorteio (DD/MM/YYYY)
         data_sorteio_formatada = normalizar_data_para_busca(data_aposta)
         
-        # ESTRATÉGIA DE BUSCA
+        # ESTRATÉGIA DE BUSCA: Prioridade por DATA + CONCURSO
         sorteio_encontrado = None
         metodo_encontrado = ""
         
-        # Tentar por DATA (os boletins Eurodreams não têm concurso)
-        for sorteio in dados_ano["lista"]:
-            if sorteio.get("data") == data_sorteio_formatada:
-                sorteio_encontrado = sorteio
-                metodo_encontrado = "apenas data"
-                break
+        # 1. Tentar por DATA + CONCURSO (se tivermos concurso)
+        if concurso_aposta:
+            chave_exata = f"{data_sorteio_formatada}|{concurso_aposta}"
+            sorteio_encontrado = dados_ano["index"].get(chave_exata)
+            if sorteio_encontrado:
+                metodo_encontrado = "data + concurso"
+        
+        # 2. Se não encontrou, tentar só por DATA (fallback)
+        if not sorteio_encontrado:
+            for sorteio in dados_ano["lista"]:
+                if sorteio.get("data") == data_sorteio_formatada:
+                    sorteio_encontrado = sorteio
+                    metodo_encontrado = "apenas data"
+                    break
         
         if not sorteio_encontrado:
             print(f"⚠️ Sorteio não encontrado para data {data_aposta}")
@@ -211,6 +220,7 @@ def verificar_boletins(apostas: list, todos_sorteios: dict) -> list:
                 "boletim": {
                     "referencia": aposta.get("referencia_unica"),
                     "data_sorteio": aposta.get("data_sorteio"),
+                    "concurso_sorteio": concurso_aposta,  # ← ADICIONADO!
                     "imagem_origem": aposta.get("imagem_origem")
                 },
                 "aposta": {
