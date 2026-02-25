@@ -1,0 +1,37 @@
+name: Verificar Totoloto
+
+on:
+  push:
+    paths:
+      - 'dados/totoloto_sc_*.json'  # Nome específico do Totoloto
+  workflow_dispatch:
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependências
+        run: |
+          pip install Pillow
+
+      - name: Verificar boletins Totoloto
+        run: python scripts/verificar_totoloto.py
+
+      - name: Guardar resultados
+        run: |
+          git config --global user.name "Bot Verificador"
+          git config --global user.email "bot@github.com"
+          git add resultados/totoloto_verificacoes.json
+          git commit -m "Verificação automática Totoloto $(date +'%Y-%m-%d')" || echo "Nenhuma alteração"
+          git push
