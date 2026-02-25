@@ -10,66 +10,129 @@ from google import genai
 from collections import deque
 import threading
 
-# Configuração
-client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+# ===== CONFIGURAÇÃO DAS CHAVES =====
+# Lista de chaves: a primeira é a atual (GEMINI_API_KEY)
+GEMINI_KEYS = [
+    os.getenv("GEMINI_API_KEY"),     # Chave 1 (atual)
+    os.getenv("GEMINI_API_KEY_2"),   # Chave 2
+    os.getenv("GEMINI_API_KEY_3")    # Chave 3
+]
 
+# Filtrar chaves vazias
+GEMINI_KEYS = [key for key in GEMINI_KEYS if key]
+
+if not GEMINI_KEYS:
+    raise ValueError("❌ Nenhuma chave Gemini encontrada!")
+
+print(f"🔑 Carregadas {len(GEMINI_KEYS)} chaves Gemini")
+
+# Cliente inicial (será trocado conforme necessário)
+client = genai.Client(api_key=GEMINI_KEYS[0])
+
+# ===== NOVO: Controlo de cota por chave =====
+FICHEIRO_COTA_CHAVES = "apostas/cota_por_chave.json"
+FICHEIRO_REGISTO = "apostas/registo_processamento.json"
+
+# Pastas
 PASTA_UPLOADS = "uploads/"
 PASTA_DADOS = "apostas/"
 PASTA_PREPROCESSADAS = "preprocessadas/"
-FICHEIRO_REGISTO = "apostas/registo_processamento.json"
 
-# Controlo de taxa (5 por minuto = 1 a cada 12 segundos)
+# Controlo de taxa (5 por minuto)
 REQUISICOES_POR_MINUTO = 5
-SEGUNDOS_ENTRE_REQUISICOES = 60 / REQUISICOES_POR_MINUTO  # 12 segundos
+SEGUNDOS_ENTRE_REQUISICOES = 60 / REQUISICOES_POR_MINUTO
 
-# Queue para controlar timestamps das requisições
+# Queue para controlar timestamps
 timestamps = deque(maxlen=REQUISICOES_POR_MINUTO)
 lock = threading.Lock()
 
+def carregar_cota_chaves():
+    """Carrega o estado de cada chave"""
+    if os.path.exists(FICHEIRO_COTA_CHAVES):
+        with open(FICHEIRO_COTA_CHAVES, "r") as f:
+            return json.load(f)
+    return {}
+
+def guardar_cota_chaves(cota):
+    with open(FICHEIRO_COTA_CHAVES, "w") as f:
+        json.dump(cota, f, indent=2)
+
+def obter_cliente_disponivel():
+    """
+    Retorna um cliente Gemini com uma chave que ainda tem cota hoje
+    """
+    cota_chaves = carregar_cota_chaves()
+    hoje = datetime.now().strftime("%Y-%m-%d")
+    
+    # Tentar chaves por ordem (1, 2, 3) mas apenas se tiverem cota
+    for idx, key in enumerate(GEMINI_KEYS):
+        key_id = f"key_{idx+1}"
+        
+        # Obter registo desta chave
+        registo = cota_chaves.get(key_id, {"data": "", "usadas": 0})
+        
+        # Reset se for novo dia
+        if registo["data"] != hoje:
+            registo = {"data": hoje, "usadas": 0}
+        
+        # Se ainda tem cota (limite 20 por dia)
+        if registo["usadas"] < 20:
+            print(f"   🔑 Usando {key_id} ({registo['usadas'] + 1}/20 hoje)")
+            return genai.Client(api_key=key), key_id, registo["usadas"] + 1
+    
+    # Se chegou aqui, todas as chaves esgotaram
+    return None, None, None
+
+def registar_uso_chave(key_id, usadas_atualizadas):
+    """Regista uma requisição bem sucedida"""
+    cota_chaves = carregar_cota_chaves()
+    hoje = datetime.now().strftime("%Y-%m-%d")
+    
+    cota_chaves[key_id] = {
+        "data": hoje,
+        "usadas": usadas_atualizadas
+    }
+    
+    guardar_cota_chaves(cota_chaves)
+
 def esperar_rate_limit():
-    """
-    Garante que não excedemos 5 requisições por minuto
-    """
+    """Garante que não excedemos 5 requisições por minuto"""
     with lock:
         agora = time.time()
         
-        # Remover timestamps mais antigos que 60 segundos
         while timestamps and timestamps[0] < agora - 60:
             timestamps.popleft()
         
-        # Se já fizemos 5 requisições no último minuto
         if len(timestamps) >= REQUISICOES_POR_MINUTO:
-            # Calcular quanto tempo esperar
             mais_antigo = timestamps[0]
             tempo_espera = 60 - (agora - mais_antigo)
             
             if tempo_espera > 0:
-                print(f"   ⏳ Rate limit: a aguardar {tempo_espera:.1f} segundos...")
+                print(f"   ⏳ Rate limit minuto: a aguardar {tempo_espera:.1f}s...")
                 time.sleep(tempo_espera)
         
-        # Adicionar timestamp atual
         timestamps.append(time.time())
 
 def preprocessar_imagem(caminho, img_nome):
-    """Gera 3 versões estratégicas da imagem (para poupar requisições)"""
+    """Gera 3 versões estratégicas da imagem"""
     os.makedirs(PASTA_PREPROCESSADAS, exist_ok=True)
     
     img = cv2.imread(caminho)
     nome_base = os.path.splitext(img_nome)[0]
     versoes = []
     
-    # 1. Original (sempre incluída)
+    # 1. Original
     img_original = Image.open(caminho)
     versoes.append(img_original)
     
-    # 2. Binarização ADAPTATIVA - Muito melhor para preservar números pequenos (estrelas) com sombras
+    # 2. Binarização adaptativa
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     binary = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
     img_binary = Image.fromarray(binary)
     versoes.append(img_binary)
     img_binary.save(os.path.join(PASTA_PREPROCESSADAS, f"{nome_base}_binary.png"))
     
-    # 3. Alto contraste + nitidez (reforçado)
+    # 3. Alto contraste + nitidez
     enhancer = ImageEnhance.Contrast(img_original)
     img_contrast = enhancer.enhance(3.0)
     enhancer = ImageEnhance.Sharpness(img_contrast)
@@ -77,10 +140,10 @@ def preprocessar_imagem(caminho, img_nome):
     versoes.append(img_sharp)
     img_sharp.save(os.path.join(PASTA_PREPROCESSADAS, f"{nome_base}_enhanced.png"))
     
-    print(f"   📸 Geradas {len(versoes)} versões estratégicas (Binarização Adaptativa Ativa)")
+    print(f"   📸 Geradas {len(versoes)} versões")
     return versoes
 
-# PROMPT CONSOLIDADO (VERSÃO FINAL COM CORREÇÃO DE GEOMETRIA)
+# PROMPT (igual ao seu, mantive igual)
 PROMPT_FINAL = """
 Tu és um especialista em extração de boletins da Santa Casa da Misericórdia de Lisboa.
 
@@ -145,8 +208,8 @@ ESTRUTURA JSON OBRIGATÓRIA:
 Retorna APENAS JSON válido, sem texto adicional.
 """
 
-def processar_com_rate_limit():
-    """Processa imagens respeitando o limite de 5/min"""
+def processar_com_multiplas_chaves():
+    """Processa imagens usando múltiplas chaves em rodízio"""
     os.makedirs(PASTA_DADOS, exist_ok=True)
     os.makedirs(PASTA_UPLOADS, exist_ok=True)
     os.makedirs(PASTA_PREPROCESSADAS, exist_ok=True)
@@ -154,12 +217,12 @@ def processar_com_rate_limit():
     registo = carregar_registo()
     imagens = [f for f in os.listdir(PASTA_UPLOADS) if f.lower().endswith((".jpg", ".jpeg", ".png"))]
     
-    # Filtrar apenas imagens não processadas
+    # Filtrar apenas imagens não processadas (JÁ EXISTE!)
     imagens_nao_processadas = []
     for img_nome in imagens:
         caminho = os.path.join(PASTA_UPLOADS, img_nome)
         img_hash = gerar_hash(caminho)
-        if img_hash not in registo:
+        if img_hash not in registo:  # ← VERIFICAÇÃO DE DUPLICADOS
             imagens_nao_processadas.append((img_nome, caminho, img_hash))
     
     if not imagens_nao_processadas:
@@ -167,22 +230,35 @@ def processar_com_rate_limit():
         return
     
     print(f"\n📊 Encontradas {len(imagens_nao_processadas)} imagens para processar")
-    print(f"⏱️  Rate limit: {REQUISICOES_POR_MINUTO} req/min → {SEGUNDOS_ENTRE_REQUISICOES:.1f} segundos entre cada\n")
+    print(f"🔑 {len(GEMINI_KEYS)} chaves disponíveis (limite total: {len(GEMINI_KEYS) * 20}/dia)")
+    print(f"⏱️  Rate limit minuto: {REQUISICOES_POR_MINUTO} req/min\n")
+    
+    processadas_com_sucesso = 0
+    imagens_falhadas = []
     
     for idx, (img_nome, caminho, img_hash) in enumerate(imagens_nao_processadas, 1):
-        print(f"[{idx}/{len(imagens_nao_processadas)}] 🚀 A processar: {img_nome}")
+        print(f"[{idx}/{len(imagens_nao_processadas)}] 🚀 {img_nome}")
+        
+        # ===== OBTER CLIENTE COM CHAVE DISPONÍVEL =====
+        cliente, key_id, usadas_atual = obter_cliente_disponivel()
+        
+        if not cliente:
+            print(f"\n🚫 TODAS AS CHAVES ESGOTADAS! ({len(GEMINI_KEYS)} * 20 = {len(GEMINI_KEYS)*20} requisições)")
+            print(f"   Processadas hoje: {processadas_com_sucesso}")
+            print(f"   Restantes: {len(imagens_nao_processadas) - idx + 1} imagens")
+            break
         
         try:
-            # GERAR VERSÕES (sem gastar requisições)
+            # GERAR VERSÕES
             versoes = preprocessar_imagem(caminho, img_nome)
             
-            # ESPERAR pelo rate limit ANTES de enviar
+            # ESPERAR rate limit minuto
             esperar_rate_limit()
             
-            # ENVIAR para o Gemini
+            # ENVIAR para o Gemini com a chave atual
             prompt = PROMPT_FINAL.replace("{num_versoes}", str(len(versoes)))
             
-            resposta = client.models.generate_content(
+            resposta = cliente.models.generate_content(
                 model="gemini-2.5-flash",
                 contents=[prompt] + versoes,
                 config={
@@ -190,6 +266,9 @@ def processar_com_rate_limit():
                     "response_mime_type": "application/json"
                 }
             )
+            
+            # ===== REGISTAR USO DA CHAVE COM SUCESSO =====
+            registar_uso_chave(key_id, usadas_atual)
             
             # PROCESSAR resposta
             dados = json.loads(resposta.text)
@@ -206,29 +285,63 @@ def processar_com_rate_limit():
                     "data": datetime.now().isoformat(),
                     "jogos": jogos_processados
                 }
+                processadas_com_sucesso += 1
             else:
                 print(f"   ⚠️ Nenhum jogo válido encontrado")
             
-            # Se não for a última imagem, mostrar contagem decrescente
-            if idx < len(imagens_nao_processadas):
-                proxima = SEGUNDOS_ENTRE_REQUISICOES
-                print(f"   ⏱️  Próxima imagem em {proxima:.0f} segundos...")
+            # Guardar registo a cada imagem (segurança)
+            guardar_registo(registo)
             
         except Exception as e:
             print(f"   ❌ Erro: {e}")
             
-            # Em caso de erro, esperar mesmo assim para não queimar rate limit
-            if idx < len(imagens_nao_processadas):
-                print(f"   ⏱️  A aguardar {SEGUNDOS_ENTRE_REQUISICOES:.0f}s antes de continuar...")
-                time.sleep(SEGUNDOS_ENTRE_REQUISICOES)
+            # Se for erro de cota, marcar esta chave como esgotada
+            if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e):
+                print(f"   ⚠️ {key_id} esgotada! Marcando como 20/20")
+                # Forçar registo como esgotada
+                cota_chaves = carregar_cota_chaves()
+                hoje = datetime.now().strftime("%Y-%m-%d")
+                cota_chaves[key_id] = {"data": hoje, "usadas": 20}
+                guardar_cota_chaves(cota_chaves)
+                
+                # Tentar novamente esta imagem com outra chave
+                print(f"   🔄 A tentar novamente com outra chave...")
+                # O loop vai continuar e na próxima iteração (mesmo índice) 
+                # vai pegar outra chave graças ao continue
+                imagens_falhadas.append((img_nome, caminho, img_hash))
+            else:
+                # Outros erros, guardar para tentar depois
+                imagens_falhadas.append((img_nome, caminho, img_hash))
+        
+        # Mostrar progresso
+        if idx < len(imagens_nao_processadas):
+            print(f"   ⏱️  Aguardar {SEGUNDOS_ENTRE_REQUISICOES:.0f}s...")
     
-    guardar_registo(registo)
-    print("\n🏁 Processamento concluído!")
+    # Relatório final
+    print(f"\n{'='*50}")
+    print(f"🏁 PROCESSAMENTO CONCLUÍDO")
+    print(f"{'='*50}")
+    print(f"✅ Processadas hoje: {processadas_com_sucesso}")
+    print(f"⏳ Falhadas: {len(imagens_falhadas)}")
+    
+    if imagens_falhadas:
+        print(f"\n📋 Imagens com erro (serão tentadas novamente na próxima execução):")
+        for img_nome, _, _ in imagens_falhadas[:5]:  # Mostrar só 5
+            print(f"   - {img_nome}")
+        if len(imagens_falhadas) > 5:
+            print(f"   ... e mais {len(imagens_falhadas) - 5}")
+    
+    # Mostrar estado das chaves
+    cota_chaves = carregar_cota_chaves()
+    hoje = datetime.now().strftime("%Y-%m-%d")
+    print(f"\n🔑 Estado das chaves hoje ({hoje}):")
+    for idx in range(len(GEMINI_KEYS)):
+        key_id = f"key_{idx+1}"
+        registo = cota_chaves.get(key_id, {"usadas": 0})
+        usadas = registo["usadas"] if registo.get("data") == hoje else 0
+        print(f"   {key_id}: {usadas}/20")
 
-# ---------------------------------------------------------
-# FUNÇÕES DE APOIO (mantêm-se iguais)
-# ---------------------------------------------------------
-
+# Funções de apoio (mantive iguais)
 def gerar_hash(caminho):
     h = hashlib.md5()
     with open(caminho, "rb") as f:
@@ -284,4 +397,4 @@ def guardar_jogo(jogo, img_nome, img_hash):
     return True
 
 if __name__ == "__main__":
-    processar_com_rate_limit()
+    processar_com_multiplas_chaves()  # ← Nome da função alterado
