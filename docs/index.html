@@ -13,6 +13,7 @@
   <link rel="manifest" href="manifest.json">
   <script src="app.js" defer></script>
   <script src="upload.js" defer></script>
+  <script src="notificacoes.js" defer></script>
 
   <style>
     body {
@@ -79,7 +80,7 @@
       border-color: #777;
     }
 
-    /* Ícone de configurações */
+    /* Ícone de configurações (direita) */
     #settingsBtn {
       position: absolute;
       bottom: 22px;
@@ -93,6 +94,43 @@
 
     #settingsBtn:active {
       opacity: 0.8;
+    }
+
+    /* NOVO: Ícone de notificações (esquerda) */
+    #notificationsBtn {
+      position: absolute;
+      bottom: 22px;
+      left: 22px;
+      opacity: 0.25;
+      font-size: 30px;
+      color: white;
+      cursor: pointer;
+      transition: 0.2s;
+      position: relative;  /* Para posicionar o badge */
+    }
+
+    #notificationsBtn:active {
+      opacity: 0.8;
+    }
+
+    /* Badge de notificações (estilo Android) */
+    .notification-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background-color: #ff4444;
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+      min-width: 18px;
+      height: 18px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 4px;
+      border: 2px solid #000;
+      opacity: 1;
     }
 
     input[type="file"] {
@@ -119,7 +157,13 @@
     <ion-icon name="image-outline"></ion-icon>
   </div>
 
-  <!-- Ícone de configurações -->
+  <!-- NOVO: Ícone de notificações (esquerda) -->
+  <div id="notificationsBtn" onclick="window.location='notificacoes.html'">
+    <ion-icon name="list-outline"></ion-icon>
+    <span id="notificationBadge" class="notification-badge" style="display: none;">0</span>
+  </div>
+
+  <!-- Ícone de configurações (direita) -->
   <ion-icon id="settingsBtn" name="settings-outline" onclick="window.location='config.html'"></ion-icon>
 
 </body>
