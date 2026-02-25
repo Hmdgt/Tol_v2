@@ -200,6 +200,7 @@ CAMPOS COMUNS (TODOS os jogos):
 - "data_aposta": YYYY-MM-DD (do rodapé)
 - "data_emissao": YYYY-MM-DD HH:MM:SS (rodapé)
 - "referencia_unica": código do rodapé
+- "concurso": número do concurso (ex: "015/2026") - extrair do topo do boletim
 - "valor_total": decimal (ex: 2.20)
 - "valido": true
 
@@ -212,6 +213,7 @@ ESTRUTURA JSON OBRIGATÓRIA:
       "data_aposta": "2026-02-20",
       "data_emissao": "2026-02-20 08:37:32",
       "referencia_unica": "551-05455705-M1L",
+      "concurso": "015/2026",  // ← NOVO CAMPO!
       "valor_total": 2.20,
       "valido": true,
       "apostas": [
