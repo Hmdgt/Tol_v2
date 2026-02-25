@@ -60,9 +60,36 @@ def carregar_ativas() -> List[Dict]:
             return json.load(f)
     return []
 
+def garantir_historico():
+    """Garante que o ficheiro de histórico existe (mesmo vazio)"""
+    if not os.path.exists(FICHEIRO_NOTIFICACOES_HISTORICO):
+        with open(FICHEIRO_NOTIFICACOES_HISTORICO, "w", encoding="utf-8") as f:
+            json.dump([], f)
+        print("📁 Criado ficheiro de histórico vazio")
+
+def gerar_resumo(resultado: dict) -> str:
+    """Gera um resumo legível do resultado"""
+    acertos = resultado.get('acertos', {})
+    numeros = acertos.get('numeros', 0)
+    
+    if 'estrelas' in acertos:
+        estrelas = acertos.get('estrelas', 0)
+        return f"{numeros} números + {estrelas} estrelas"
+    elif 'dream_number' in acertos:
+        dream = acertos.get('dream_number', False)
+        return f"{numeros} números {'+ Dream' if dream else ''}"
+    elif 'numero_da_sorte' in acertos:
+        sorte = acertos.get('numero_da_sorte', False)
+        return f"{numeros} números {'+ Nº Sorte' if sorte else ''}"
+    else:
+        return f"{numeros} acertos"
+
 def main():
     print("\n🔔 GERADOR DE NOTIFICAÇÕES")
     print("="*60)
+    
+    # Garantir que o histórico existe
+    garantir_historico()
     
     # 1. Carregar resultados recentes
     resultados_recentes = carregar_resultados_recentes()
@@ -113,23 +140,6 @@ def main():
     print(f"   📌 Total ativas agora: {len(todas_ativas)}")
     print(f"   📚 Histórico: {len(historico)}")
     print(f"\n📁 Ficheiro atualizado: {FICHEIRO_NOTIFICACOES_ATIVAS}")
-
-def gerar_resumo(resultado: dict) -> str:
-    """Gera um resumo legível do resultado"""
-    acertos = resultado.get('acertos', {})
-    numeros = acertos.get('numeros', 0)
-    
-    if 'estrelas' in acertos:
-        estrelas = acertos.get('estrelas', 0)
-        return f"{numeros} números + {estrelas} estrelas"
-    elif 'dream_number' in acertos:
-        dream = acertos.get('dream_number', False)
-        return f"{numeros} números {'+ Dream' if dream else ''}"
-    elif 'numero_da_sorte' in acertos:
-        sorte = acertos.get('numero_da_sorte', False)
-        return f"{numeros} números {'+ Nº Sorte' if sorte else ''}"
-    else:
-        return f"{numeros} acertos"
 
 if __name__ == "__main__":
     main()
