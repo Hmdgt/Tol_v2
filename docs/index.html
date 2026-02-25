@@ -4,8 +4,14 @@
   <meta charset="UTF-8">
   <title>Camera Upload</title>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  
+  <!-- Meta tags para a barra de navegação (Android) -->
+  <meta name="theme-color" content="#000000">
+  <meta name="color-scheme" content="dark">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
+  <!-- Ionicons -->
   <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
@@ -15,10 +21,23 @@
   <script src="notificacoes.js" defer></script>
 
   <style>
+    /* Reset e base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      background-color: #000;
+      height: 100%;
+    }
+
     body {
       margin: 0;
       background: #000;
       height: 100vh;
+      height: 100dvb; /* Dynamic viewport height */
       display: flex;
       justify-content: center;
       align-items: center;
@@ -27,6 +46,9 @@
       overflow: hidden;
       -webkit-user-select: none;
       user-select: none;
+      
+      /* Ajustes para edge-to-edge */
+      padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
     }
 
     /* Botão da câmara */
@@ -43,6 +65,8 @@
       transition: 0.1s;
       position: absolute;
       top: 28%;
+      left: 50%;
+      transform: translateX(-50%);
     }
 
     #cameraButton ion-icon {
@@ -65,6 +89,8 @@
       transition: 0.1s;
       position: absolute;
       top: 62%;
+      left: 50%;
+      transform: translateX(-50%);
     }
 
     #galleryButton ion-icon {
@@ -75,27 +101,29 @@
 
     #cameraButton:active,
     #galleryButton:active {
-      transform: scale(0.92);
+      transform: translateX(-50%) scale(0.92);
       border-color: #777;
     }
 
     /* Ícones de rodapé (Configurações e Notificações) */
     #settingsBtn, #listBtn {
       position: absolute;
-      bottom: 22px;
+      bottom: max(22px, env(safe-area-inset-bottom));
       opacity: 0.25;
       font-size: 30px;
       color: white;
       cursor: pointer;
       transition: 0.2s;
+      z-index: 10;
     }
 
     #settingsBtn {
-      right: 22px;
+      right: max(22px, env(safe-area-inset-right));
     }
 
     #listBtn {
-      left: 22px;
+      left: max(22px, env(safe-area-inset-left));
+      position: relative; /* Para o badge */
     }
 
     #settingsBtn:active, #listBtn:active {
@@ -111,39 +139,63 @@
       color: white;
       font-size: 11px;
       font-weight: bold;
-      min-width: 16px;
-      height: 16px;
+      min-width: 18px;
+      height: 18px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       border: 2px solid #000;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
     }
 
     input[type="file"] {
       display: none;
+    }
+
+    /* Fallback para navegadores que não suportam env() */
+    @supports not (padding: env(safe-area-inset-bottom)) {
+      #settingsBtn, #listBtn {
+        bottom: 22px;
+      }
+      #settingsBtn {
+        right: 22px;
+      }
+      #listBtn {
+        left: 22px;
+      }
+    }
+
+    /* Garantir que a área dos ícones é sempre clicável */
+    #listBtn, #settingsBtn {
+      -webkit-tap-highlight-color: transparent;
     }
   </style>
 </head>
 
 <body>
 
+  <!-- Inputs invisíveis -->
   <input type="file" accept="image/*" capture="environment" id="cameraInput">
   <input type="file" accept="image/*" id="galleryInput">
 
+  <!-- Botão da câmara -->
   <div id="cameraButton">
     <ion-icon name="camera-outline"></ion-icon>
   </div>
 
+  <!-- Botão da galeria -->
   <div id="galleryButton">
     <ion-icon name="image-outline"></ion-icon>
   </div>
 
+  <!-- Ícone de notificações (esquerda) -->
   <div id="listBtn" onclick="window.location='notificacoes.html'">
     <ion-icon name="list-outline"></ion-icon>
     <span id="notificationBadge" class="notification-badge" style="display: none;">0</span>
   </div>
 
+  <!-- Ícone de configurações (direita) -->
   <ion-icon id="settingsBtn" name="settings-outline" onclick="window.location='config.html'"></ion-icon>
 
 </body>
