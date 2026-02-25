@@ -32,7 +32,9 @@ jobs:
         run: |
           git config --global user.name "Bot Notificações"
           git config --global user.email "bot@github.com"
-          git add resultados/notificacoes_ativas.json
-          git add resultados/notificacoes_historico.json
+          
+          # Adicionar todos os ficheiros de notificações (existentes ou não)
+          git add resultados/notificacoes_*.json || true
+          
           git commit -m "Atualização de notificações $(date +'%Y-%m-%d %H:%M')" || echo "Nenhuma alteração"
           git push
