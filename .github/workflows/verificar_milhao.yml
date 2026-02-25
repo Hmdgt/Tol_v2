@@ -33,5 +33,6 @@ jobs:
           git config --global user.name "Bot Verificador"
           git config --global user.email "bot@github.com"
           git add resultados/milhao_verificacoes.json
+          git add resultados/milhao_recentes.json
           git commit -m "Verificação automática M1lhão $(date +'%Y-%m-%d')" || echo "Nenhuma alteração"
           git push
