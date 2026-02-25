@@ -183,7 +183,7 @@ def processar_com_rate_limit():
             prompt = PROMPT_FINAL.replace("{num_versoes}", str(len(versoes)))
             
             resposta = client.models.generate_content(
-                model="gemini-2.0-flash",
+                model="gemini-2.5-flash",
                 contents=[prompt] + versoes,
                 config={
                     "temperature": 0,
