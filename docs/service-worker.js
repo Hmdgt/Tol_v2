@@ -1,7 +1,7 @@
 // ===============================
 // 🔄 CONFIGURAÇÃO DE VERSÃO
 // ===============================
-const CACHE_VERSION = "v2024-02-26-03"; // muda a cada deploy
+const CACHE_VERSION = "v2024-02-27-01"; // muda a cada deploy
 const CACHE_NAME = `pirika-cache-${CACHE_VERSION}`;
 
 // Ficheiros offline
@@ -62,13 +62,13 @@ self.addEventListener("fetch", event => {
 
   if (req.method !== "GET") return;
 
-  // HTML → network first
-  if (req.mode === "navigate") {
+  // 🔥 CORREÇÃO CRÍTICA:
+  // Forçar network-first para index.html SEMPRE
+  if (req.url.endsWith("index.html") || req.mode === "navigate") {
     event.respondWith(
       fetch(req)
         .then(resp => {
-          const copy = resp.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(req, copy));
+          caches.open(CACHE_NAME).then(cache => cache.put(req, resp.clone()));
           return resp;
         })
         .catch(() => caches.match(req))
