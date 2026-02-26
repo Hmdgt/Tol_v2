@@ -64,20 +64,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 // ===============================
-// 🔔 FUNÇÃO BADGE (DEFINE AQUI)
+// 🔔 FUNÇÃO BADGE (corrigida)
 // ===============================
 async function atualizarBadge() {
   const badge = document.getElementById("notificationBadge");
   if (!badge) return;
 
   try {
-    // 👉 Aqui vais buscar o número real de notificações
-    // Exemplo: guardado no localStorage
-    const count = parseInt(localStorage.getItem("notificacoes") || "0");
+    const count = parseInt(localStorage.getItem("notificacoes_naoLidas") || "0");
 
     if (count > 0) {
       badge.style.display = "flex";
-      badge.textContent = count;
+      badge.textContent = count > 99 ? "99+" : count;
     } else {
       badge.style.display = "none";
     }
@@ -109,24 +107,19 @@ async function atualizarApp() {
 // 🧹 RESET APP (limpar cache, MANTER tokens)
 // ===============================
 async function resetApp() {
-  // 🔐 Guardar token antes de limpar
   const token = localStorage.getItem("github_token");
 
-  // 🧹 Limpar caches
   if ("caches" in window) {
     const keys = await caches.keys();
     await Promise.all(keys.map(k => caches.delete(k)));
   }
 
-  // 🧹 Limpar localStorage
   localStorage.clear();
 
-  // 🔐 Restaurar token
   if (token) {
     localStorage.setItem("github_token", token);
   }
 
-  // 🔄 Desregistar SW
   const reg = await navigator.serviceWorker.getRegistration();
   if (reg) {
     await reg.unregister();
