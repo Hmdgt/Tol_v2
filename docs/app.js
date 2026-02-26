@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   if ("serviceWorker" in navigator) {
     try {
       await navigator.serviceWorker.register(
-        "/service-worker.js?v=2024-02-27-01"
+        "/Tol_v2/service-worker.js?v=2024-02-27-01"
       );
 
       console.log("SW registado");
