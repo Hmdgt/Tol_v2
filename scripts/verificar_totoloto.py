@@ -13,14 +13,12 @@ FICHEIRO_SORTEIOS_PADRAO = "totoloto_sc_*.json"
 FICHEIRO_RESULTADOS = "resultados/totoloto_verificacoes.json"
 
 # ===== TABELA DE PRÉMIOS TOTOLOTO =====
-# Formato: (acertos_numeros, acertou_especial) -> nome do prémio
-PREMIOS_TOTOLOTO = {
-    (5, True): "1.º Prémio",   # 5 números + especial
-    (5, False): "2.º Prémio",  # 5 números
-    (4, False): "3.º Prémio",  # 4 números
-    (3, False): "4.º Prémio",  # 3 números
-    (2, False): "5.º Prémio",  # 2 números
-    (0, True): "Nº da Sorte",  # Apenas número da sorte (reembolso)
+# Formato: acertos_numeros -> nome do prémio (apenas para números)
+PREMIOS_NUMEROS_TOTOLOTO = {
+    5: "2.º Prémio",  # 5 números (sem especial)
+    4: "3.º Prémio",  # 4 números
+    3: "4.º Prémio",  # 3 números
+    2: "5.º Prémio",  # 2 números
 }
 
 def carregar_todos_sorteios() -> dict:
@@ -132,29 +130,67 @@ def calcular_acertos(aposta_numeros: List[str], aposta_especial: str,
     
     return acertos_numeros, acertou_especial
 
-def encontrar_premio(sorteio: dict, acertos_n: int, acertou_especial: bool) -> Optional[dict]:
+def encontrar_premios(sorteio: dict, acertos_n: int, acertou_especial: bool) -> List[dict]:
     """
-    Encontra o prémio correspondente na lista de prémios do sorteio
+    Encontra TODOS os prémios correspondentes (pode haver acumulação)
     """
-    chave_premio = (acertos_n, acertou_especial)
-    nome_premio = PREMIOS_TOTOLOTO.get(chave_premio)
+    premios_ganhos = []
     
-    if not nome_premio:
-        return None
-    
-    # Caso especial: prémio do número da sorte
-    if nome_premio == "Nº da Sorte":
-        # Procurar prémio específico do número da sorte
+    # CASO 1: Acertou o Nº da Sorte (sempre dá reembolso)
+    if acertou_especial:
         for premio in sorteio.get("premios", []):
             if premio.get("premio") == "Nº da Sorte":
-                return premio
+                premios_ganhos.append(premio)
+                break
     
-    # Procurar outros prémios
-    for premio in sorteio.get("premios", []):
-        if premio.get("premio") == nome_premio:
-            return premio
+    # CASO 2: Prémios por números (apenas se acertou 2+ números)
+    if acertos_n >= 2:
+        nome_premio = PREMIOS_NUMEROS_TOTOLOTO.get(acertos_n)
+        if nome_premio:
+            for premio in sorteio.get("premios", []):
+                if premio.get("premio") == nome_premio:
+                    premios_ganhos.append(premio)
+                    break
     
-    return None
+    # CASO 3: Caso especial - 5 números + Nº da Sorte (1.º Prémio)
+    if acertos_n == 5 and acertou_especial:
+        # Procurar 1.º Prémio (substitui o 2.º Prémio)
+        for premio in sorteio.get("premios", []):
+            if premio.get("premio") == "1.º Prémio":
+                # Remover o 2.º Prémio se tiver sido adicionado
+                premios_ganhos = [p for p in premios_ganhos if p.get("premio") != "2.º Prémio"]
+                premios_ganhos.append(premio)
+                break
+    
+    return premios_ganhos
+
+def calcular_valor_total(premios: List[dict]) -> str:
+    """
+    Calcula o valor total somando todos os prémios
+    """
+    total = 0.0
+    
+    for premio in premios:
+        valor_str = premio.get("valor", "0")
+        # Remover "€ " e converter vírgula para ponto
+        valor_limpo = valor_str.replace("€ ", "").replace(".", "").replace(",", ".")
+        try:
+            # Caso especial: reembolso (texto em vez de número)
+            if "Reembolso" in valor_str:
+                total += 1.0  # €1,00 por aposta simples
+            else:
+                total += float(valor_limpo)
+        except:
+            # Se não conseguir converter, ignorar
+            pass
+    
+    # Formatar de volta para o padrão
+    if total == 0:
+        return "€ 0,00"
+    elif total == 1.0 and any("Reembolso" in p.get("valor", "") for p in premios):
+        return "€ 1,00 (Reembolso)"
+    else:
+        return f"€ {total:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
 
 def verificar_boletins(apostas: list, todos_sorteios: dict) -> list:
     """
@@ -221,10 +257,10 @@ def verificar_boletins(apostas: list, todos_sorteios: dict) -> list:
                 numeros_sorteio, especial_sorteio
             )
             
-            # Encontrar prémio
-            premio = encontrar_premio(sorteio_encontrado, acertos_n, acertou_especial)
+            # Encontrar TODOS os prémios
+            premios_ganhos = encontrar_premios(sorteio_encontrado, acertos_n, acertou_especial)
             
-            # Criar resultado
+            # Criar resultado base
             resultado = {
                 "data_verificacao": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 "metodo_validacao": metodo_encontrado,
@@ -252,17 +288,26 @@ def verificar_boletins(apostas: list, todos_sorteios: dict) -> list:
                 }
             }
             
-            # Adicionar informação de prémio se houver
-            if premio:
-                resultado["premio"] = {
-                    "categoria": premio.get("premio"),
-                    "descricao": premio.get("descricao"),
-                    "valor": premio.get("valor", "0"),
-                    "vencedores": premio.get("vencedores", "0")
-                }
+            # Adicionar informação de prémios
+            if premios_ganhos:
                 resultado["ganhou"] = True
+                resultado["premios"] = premios_ganhos
+                resultado["valor_total"] = calcular_valor_total(premios_ganhos)
+                
+                # Para compatibilidade com código existente
+                if len(premios_ganhos) == 1:
+                    resultado["premio"] = premios_ganhos[0]
+                else:
+                    # Múltiplos prémios
+                    categorias = [p.get("premio") for p in premios_ganhos]
+                    resultado["premio"] = {
+                        "categoria": " + ".join(categorias),
+                        "descricao": "Acumulação de prémios",
+                        "valor": resultado["valor_total"]
+                    }
             else:
                 resultado["ganhou"] = False
+                resultado["premios"] = []
                 if acertos_n > 0 or acertou_especial:
                     resultado["premio"] = {
                         "categoria": "Sem prémio",
@@ -298,10 +343,17 @@ def mostrar_resultado_simples(resultado: dict, metodo: str):
         print(f"")
     
     if resultado.get('ganhou'):
-        print(f"   🏆 GANHOU: {resultado['premio']['categoria']}")
-        print(f"   💰 Prémio: {resultado['premio']['valor']}")
-        if resultado['premio']['categoria'] == "Nº da Sorte":
-            print(f"   🔄 Reembolso do valor da aposta")
+        if len(resultado.get('premios', [])) > 1:
+            print(f"   🏆 ACUMULAÇÃO DE PRÉMIOS:")
+            for p in resultado['premios']:
+                print(f"      • {p['premio']}: {p['valor']}")
+            print(f"   💰 TOTAL: {resultado['valor_total']}")
+        else:
+            print(f"   🏆 GANHOU: {resultado['premio']['categoria']}")
+            print(f"   💰 Prémio: {resultado['premio']['valor']}")
+        
+        if any("Reembolso" in p.get("valor", "") for p in resultado.get('premios', [])):
+            print(f"   🔄 Inclui reembolso do valor da aposta")
     else:
         if resultado['acertos']['numeros'] > 0 or resultado['acertos']['numero_da_sorte']:
             print(f"   ❌ Não ganhou prémio (combinação não premiada)")
@@ -330,7 +382,8 @@ def guardar_resultados(resultados: list):
         existe = False
         for existente in historico:
             if (existente.get("boletim", {}).get("referencia") == novo["boletim"]["referencia"] and
-                existente.get("aposta", {}).get("indice") == novo["aposta"]["indice"]):
+                existente.get("aposta", {}).get("indice") == novo["aposta"]["indice"] and
+                existente.get("data_verificacao") == novo["data_verificacao"]):
                 existe = True
                 break
         
@@ -367,23 +420,35 @@ def gerar_relatorio(resultados: list):
     
     total = len(resultados)
     ganhadores = sum(1 for r in resultados if r.get('ganhou'))
-    reembolsos = sum(1 for r in resultados if r.get('premio', {}).get('categoria') == "Nº da Sorte")
+    
+    # Contar reembolsos (qualquer aposta com Nº da Sorte)
+    reembolsos = sum(1 for r in resultados if r.get('acertos', {}).get('numero_da_sorte'))
+    
+    # Contar acumulações
+    acumulacoes = sum(1 for r in resultados if len(r.get('premios', [])) > 1)
     
     print("\n" + "📊"*35)
     print("📈 RELATÓRIO FINAL - TOTOLOTO")
     print("📊"*35)
     print(f"Total de apostas verificadas: {total}")
     print(f"Apostas premiadas: {ganhadores}")
-    print(f"   - Prémios em dinheiro: {ganhadores - reembolsos}")
+    print(f"   - Prémios em dinheiro (2+ números): {ganhadores - reembolsos + acumulacoes}")
     print(f"   - Reembolsos (Nº da Sorte): {reembolsos}")
+    print(f"   - Acumulações (prémio + reembolso): {acumulacoes}")
     
     if ganhadores > 0:
         print("\n🏆 PRÉMIOS OBTIDOS:")
         premios_contagem = {}
         for r in resultados:
             if r.get('ganhou'):
-                cat = r['premio']['categoria']
-                premios_contagem[cat] = premios_contagem.get(cat, 0) + 1
+                if len(r.get('premios', [])) > 1:
+                    # Contar cada prémio individualmente para estatísticas
+                    for p in r['premios']:
+                        cat = p['premio']
+                        premios_contagem[cat] = premios_contagem.get(cat, 0) + 1
+                else:
+                    cat = r['premio']['categoria']
+                    premios_contagem[cat] = premios_contagem.get(cat, 0) + 1
         
         for cat, count in sorted(premios_contagem.items()):
             print(f"   {cat}: {count}")
