@@ -37,25 +37,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 📦 Registar Service Worker
   if ("serviceWorker" in navigator) {
     try {
-      const reg = await navigator.serviceWorker.register(
-        "/service-worker.js?v=2024-02-26-03"
+      await navigator.serviceWorker.register(
+        "/service-worker.js?v=2024-02-27-01"
       );
 
-      console.log("SW registado", reg);
-
-      // 🔄 Detectar nova versão
-      reg.addEventListener("updatefound", () => {
-        const newWorker = reg.installing;
-
-        newWorker.addEventListener("statechange", () => {
-          if (
-            newWorker.state === "installed" &&
-            navigator.serviceWorker.controller
-          ) {
-            mostrarBotaoAtualizar();
-          }
-        });
-      });
+      console.log("SW registado");
 
     } catch (err) {
       console.error("Erro ao registar SW", err);
@@ -64,7 +50,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 // ===============================
-// 🔔 FUNÇÃO BADGE (corrigida)
+// 🔔 FUNÇÃO BADGE
 // ===============================
 async function atualizarBadge() {
   const badge = document.getElementById("notificationBadge");
@@ -85,13 +71,8 @@ async function atualizarBadge() {
 }
 
 // ===============================
-// 🔄 BOTÃO ATUALIZAR APP
+// 🔄 ATUALIZAR APP (usado no config.html)
 // ===============================
-function mostrarBotaoAtualizar() {
-  const btn = document.getElementById("btnUpdate");
-  if (btn) btn.style.display = "block";
-}
-
 async function atualizarApp() {
   const reg = await navigator.serviceWorker.getRegistration();
   if (!reg) return;
