@@ -1,10 +1,10 @@
 // ===============================
 // 🔄 CONFIGURAÇÃO DE VERSÃO
 // ===============================
-const CACHE_VERSION = "v2024-02-26-01";   // muda a cada deploy
+const CACHE_VERSION = "v2024-02-26-03"; // muda a cada deploy
 const CACHE_NAME = `pirika-cache-${CACHE_VERSION}`;
 
-// Ficheiros essenciais para funcionar offline
+// Ficheiros offline
 const ASSETS = [
   "/",
   "/index.html",
@@ -19,45 +19,74 @@ const ASSETS = [
 ];
 
 // ===============================
-// 📥 INSTALAÇÃO
+// 📥 INSTALL
 // ===============================
 self.addEventListener("install", event => {
   self.skipWaiting();
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
-  );
-});
 
-// ===============================
-// 🔁 ATIVAÇÃO + LIMPEZA DE CACHES ANTIGOS
-// ===============================
-self.addEventListener("activate", event => {
   event.waitUntil(
-    caches.keys().then(keys =>
+    caches.open(CACHE_NAME).then(cache =>
       Promise.all(
-        keys
-          .filter(key => key !== CACHE_NAME)
-          .map(key => caches.delete(key))
+        ASSETS.map(url =>
+          fetch(url)
+            .then(resp => cache.put(url, resp.clone()))
+            .catch(() => {})
+        )
       )
     )
   );
-  clients.claim();
 });
 
 // ===============================
-// 🌐 FETCH COM FALLBACK AO CACHE
+// 🔁 ACTIVATE
 // ===============================
-self.addEventListener("fetch", event => {
-  event.respondWith(
-    caches.match(event.request).then(resp => resp || fetch(event.request))
+self.addEventListener("activate", event => {
+  event.waitUntil(
+    caches.keys()
+      .then(keys =>
+        Promise.all(
+          keys
+            .filter(key => key !== CACHE_NAME)
+            .map(key => caches.delete(key))
+        )
+      )
+      .then(() => self.clients.claim())
   );
 });
 
 // ===============================
-// ⚡ RECEBER PEDIDO DE UPDATE
+// 🌐 FETCH
+// ===============================
+self.addEventListener("fetch", event => {
+  const req = event.request;
+
+  if (req.method !== "GET") return;
+
+  // HTML → network first
+  if (req.mode === "navigate") {
+    event.respondWith(
+      fetch(req)
+        .then(resp => {
+          const copy = resp.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(req, copy));
+          return resp;
+        })
+        .catch(() => caches.match(req))
+    );
+    return;
+  }
+
+  // Outros → cache first
+  event.respondWith(
+    caches.match(req).then(resp => resp || fetch(req))
+  );
+});
+
+// ===============================
+// ⚡ SKIP WAITING (botão update)
 // ===============================
 self.addEventListener("message", event => {
-  if (event.data && event.data.action === "skipWaiting") {
+  if (event.data?.action === "skipWaiting") {
     self.skipWaiting();
   }
 });
