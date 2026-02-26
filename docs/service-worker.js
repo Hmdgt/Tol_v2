@@ -6,17 +6,18 @@ const CACHE_NAME = `pirika-cache-${CACHE_VERSION}`;
 
 // Ficheiros offline
 const ASSETS = [
-  "/",
-  "/index.html",
-  "/config.html",
-  "/notificacoes.html",
-  "/manifest.json",
-  "/app.js",
-  "/upload.js",
-  "/notificacoes.js",
-  "/icons/icon-192.png",
-  "/icons/icon-512.png",
-  "/loto_logo_animado.gif"   // ← ADICIONADO: GIF da intro
+  "/Tol_v2/",
+  "/Tol_v2/index.html",
+  "/Tol_v2/config.html",
+  "/Tol_v2/notificacoes.html",
+  "/Tol_v2/manifest.json",
+  "/Tol_v2/app.js",
+  "/Tol_v2/upload.js",
+  "/Tol_v2/notificacoes.js",
+  "/Tol_v2/icons/icon-192.png",
+  "/Tol_v2/icons/icon-512.png"
+  // Se ainda quiser o GIF, adicione com o caminho correto
+  // "/Tol_v2/loto_logo_animado.gif"
 ];
 
 // ===============================
