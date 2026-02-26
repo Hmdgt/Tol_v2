@@ -129,11 +129,40 @@ def atualizar_resultados():
             )
         f.write("-" * 40 + "\n")
 
-    # JSON incremental
+    # JSON incremental - COM LÓGICA DE ATUALIZAÇÃO
     dados = ler_json(json_path, ano)
     lista = dados[str(ano)]
 
-    if not any(r["concurso"] == resultado["concurso"] for r in lista):
+    existe = any(r["concurso"] == resultado["concurso"] for r in lista)
+    
+    if existe:
+        # Encontrar o índice do concurso existente
+        for i, r in enumerate(lista):
+            if r["concurso"] == resultado["concurso"]:
+                # Verificar se o registo existente está incompleto (sem prémios)
+                # OU se o novo resultado tem prémios diferentes
+                if not r["premios"] or (resultado["premios"] and r["premios"] != resultado["premios"]):
+                    # Substituir pela versão mais completa
+                    lista[i] = {
+                        "concurso": resultado["concurso"],
+                        "data": resultado["data"],
+                        "chave": resultado["chave_ordenada"],
+                        "ordem_saida": resultado["chave_saida"],
+                        "premios": resultado["premios"]
+                    }
+                    lista.sort(key=lambda r: r["concurso"])
+                    dados[str(ano)] = lista
+                    gravar_json(json_path, dados)
+                    msg = f"Concurso {resultado['concurso']} atualizado com novos dados!"
+                    print(msg)
+                    escrever_log(msg, JOGO)
+                else:
+                    msg = f"Concurso {resultado['concurso']} já está completo. Nada a atualizar."
+                    print(msg)
+                    escrever_log(msg, JOGO)
+                break
+    else:
+        # Concurso novo - adicionar
         lista.append({
             "concurso": resultado["concurso"],
             "data": resultado["data"],
@@ -144,6 +173,9 @@ def atualizar_resultados():
         lista.sort(key=lambda r: r["concurso"])
         dados[str(ano)] = lista
         gravar_json(json_path, dados)
+        msg = f"Resultado do concurso {resultado['concurso']} adicionado ao JSON {JOGO}_{ano}."
+        print(msg)
+        escrever_log(msg, JOGO)
 
 if __name__ == "__main__":
     atualizar_resultados()
