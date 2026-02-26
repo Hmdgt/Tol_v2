@@ -1,32 +1,107 @@
-// Adicionar no início do app.js
-document.addEventListener('DOMContentLoaded', async () => {
-    // Verificar notificações ao iniciar
-    if (window.atualizarBadge) {
-        await window.atualizarBadge();
+// ===============================
+// 🚀 DOM READY
+// ===============================
+document.addEventListener("DOMContentLoaded", async () => {
+
+  // 🔔 Atualizar badge se existir
+  if (window.atualizarBadge) {
+    await window.atualizarBadge();
+  }
+
+  // 📷 Botão câmara
+  const cameraBtn = document.getElementById("cameraButton");
+  const cameraInput = document.getElementById("cameraInput");
+
+  if (cameraBtn && cameraInput) {
+    cameraBtn.addEventListener("click", () => cameraInput.click());
+
+    cameraInput.addEventListener("change", () => {
+      const file = cameraInput.files[0];
+      if (file) uploadToGitHub(file);
+    });
+  }
+
+  // 🖼️ Botão galeria
+  const galleryBtn = document.getElementById("galleryButton");
+  const galleryInput = document.getElementById("galleryInput");
+
+  if (galleryBtn && galleryInput) {
+    galleryBtn.addEventListener("click", () => galleryInput.click());
+
+    galleryInput.addEventListener("change", () => {
+      const file = galleryInput.files[0];
+      if (file) uploadToGitHub(file);
+    });
+  }
+
+  // 📦 Registar Service Worker
+  if ("serviceWorker" in navigator) {
+    try {
+      const reg = await navigator.serviceWorker.register(
+        "/service-worker.js?v=2024-02-26-03"
+      );
+
+      console.log("SW registado", reg);
+
+      // 🔄 Detectar nova versão
+      reg.addEventListener("updatefound", () => {
+        const newWorker = reg.installing;
+
+        newWorker.addEventListener("statechange", () => {
+          if (
+            newWorker.state === "installed" &&
+            navigator.serviceWorker.controller
+          ) {
+            mostrarBotaoAtualizar();
+          }
+        });
+      });
+
+    } catch (err) {
+      console.error("Erro ao registar SW", err);
     }
+  }
 });
 
-// Botão da câmara → abre a câmara
-document.getElementById("cameraButton").addEventListener("click", () => {
-  document.getElementById("cameraInput").click();
-});
+// ===============================
+// 🔄 BOTÃO ATUALIZAR APP
+// ===============================
+function mostrarBotaoAtualizar() {
+  const btn = document.getElementById("btnUpdate");
+  if (btn) btn.style.display = "block";
+}
 
-// Quando a foto é tirada → upload automático
-document.getElementById("cameraInput").addEventListener("change", () => {
-  const file = document.getElementById("cameraInput").files[0];
-  if (file) uploadToGitHub(file);
-});
+async function atualizarApp() {
+  const reg = await navigator.serviceWorker.getRegistration();
+  if (!reg) return;
 
-// Botão da galeria → abre a galeria
-document.getElementById("galleryButton").addEventListener("click", () => {
-  document.getElementById("galleryInput").click();
-});
+  if (reg.waiting) {
+    reg.waiting.postMessage({ action: "skipWaiting" });
+  }
 
-// Quando escolhe imagem da galeria → upload automático
-document.getElementById("galleryInput").addEventListener("change", () => {
-  const file = document.getElementById("galleryInput").files[0];
-  if (file) uploadToGitHub(file);
-});
+  window.location.reload();
+}
 
-// Tornar funções globais para outros scripts
+// ===============================
+// 🧹 RESET APP (limpar cache, manter tokens)
+// ===============================
+async function resetApp() {
+  if ("caches" in window) {
+    const keys = await caches.keys();
+    await Promise.all(keys.map(k => caches.delete(k)));
+  }
+
+  const reg = await navigator.serviceWorker.getRegistration();
+  if (reg) {
+    await reg.unregister();
+  }
+
+  window.location.reload();
+}
+
+// ===============================
+// 🌍 DISPONIBILIZAR GLOBALMENTE
+// ===============================
 window.atualizarBadge = atualizarBadge;
+window.atualizarApp = atualizarApp;
+window.resetApp = resetApp;
