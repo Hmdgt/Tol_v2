@@ -1,1 +1,2 @@
 [2026-02-26 21:29:27] [eurodreams] Resultado do concurso 017/2026 adicionado ao JSON eurodreams_2026.
+[2026-02-26 22:26:35] [eurodreams] Concurso 017/2026 já está completo. Nada a atualizar.
