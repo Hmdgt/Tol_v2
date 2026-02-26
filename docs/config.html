@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>Configurações</title>
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- Ionicons -->
@@ -77,35 +76,6 @@
       opacity: 0.8;
     }
   </style>
-
-  <script>
-    function saveToken() {
-      const token = document.getElementById("token").value;
-      localStorage.setItem("github_token", token);
-      alert("Token guardado no dispositivo.");
-    }
-
-    async function refreshApp() {
-      const token = localStorage.getItem("github_token");
-
-      // limpar caches
-      const keys = await caches.keys();
-      await Promise.all(keys.map(k => caches.delete(k)));
-
-      // limpar localStorage
-      localStorage.clear();
-
-      // restaurar token
-      if (token) localStorage.setItem("github_token", token);
-
-      // pedir ao SW para ativar imediatamente
-      if (navigator.serviceWorker.controller) {
-        navigator.serviceWorker.controller.postMessage({ action: "skipWaiting" });
-      }
-
-      window.location.reload();
-    }
-  </script>
 </head>
 
 <body>
@@ -117,13 +87,64 @@
     <input type="password" id="token" placeholder="Introduz o token...">
 
     <button onclick="saveToken()">Guardar Token</button>
-
-    <!-- Botão novo -->
     <button onclick="refreshApp()">Atualizar App</button>
   </div>
 
-  <!-- Botão discreto para voltar -->
   <ion-icon id="backBtn" name="arrow-back-outline" onclick="window.location='index.html'"></ion-icon>
+
+  <script>
+    // 🔹 Carregar token guardado ao abrir a página
+    document.addEventListener("DOMContentLoaded", () => {
+      const savedToken = localStorage.getItem("github_token");
+      if (savedToken) {
+        document.getElementById("token").value = savedToken;
+      }
+    });
+
+    // 🔹 Guardar token
+    function saveToken() {
+      const token = document.getElementById("token").value.trim();
+
+      if (!token) {
+        alert("Introduz um token válido.");
+        return;
+      }
+
+      localStorage.setItem("github_token", token);
+      alert("Token guardado no dispositivo.");
+    }
+
+    // 🔹 Atualizar app (limpa cache + ativa novo SW)
+    async function refreshApp() {
+      const token = localStorage.getItem("github_token");
+
+      try {
+        // apagar todas as caches
+        if ("caches" in window) {
+          const keys = await caches.keys();
+          await Promise.all(keys.map(k => caches.delete(k)));
+        }
+
+        // limpar localStorage mas manter token
+        localStorage.clear();
+        if (token) localStorage.setItem("github_token", token);
+
+        // pedir ao service worker para ativar imediatamente
+        if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+          navigator.serviceWorker.controller.postMessage({ action: "skipWaiting" });
+        }
+
+        // pequeno delay para garantir limpeza
+        setTimeout(() => {
+          window.location.reload(true);
+        }, 300);
+
+      } catch (err) {
+        console.error("Erro ao atualizar:", err);
+        alert("Erro ao atualizar a app.");
+      }
+    }
+  </script>
 
 </body>
 </html>
