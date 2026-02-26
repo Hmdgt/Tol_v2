@@ -2,18 +2,27 @@
 <html lang="pt">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Notificações</title>
-  
-  <!-- Ícones Ionicons -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Forçar barra preta no Android / Chrome -->
+  <meta name="theme-color" content="#000000">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+  <meta name="color-scheme" content="dark">
+
+  <!-- Ionicons -->
   <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-  
+
   <style>
-    /* === Reset / Body === */
+    html {
+      background: #000;
+      color-scheme: dark;
+    }
+
     body {
       margin: 0;
-      background: #000;
+      background: #000 !important;
       color: white;
       font-family: sans-serif;
       padding: 20px;
@@ -25,7 +34,6 @@
       margin-top: 10px;
     }
 
-    /* === Container lista de notificações === */
     #notificationsList {
       display: flex;
       flex-direction: column;
@@ -46,11 +54,6 @@
     .notification-card:active {
       background: #1a1a1a;
       transform: scale(0.98);
-    }
-
-    .notification-card.lido {
-      opacity: 0.7;
-      border-color: #222;
     }
 
     .notification-header {
@@ -110,32 +113,12 @@
       color: #ffd700;
     }
 
-    /* Mensagem "nenhuma notificação" */
     .no-notifications {
       text-align: center;
       opacity: 0.6;
       margin-top: 40px;
     }
 
-    /* === Badge de notificações === */
-    #notificationBadge {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: #ff4444;
-      color: white;
-      font-size: 12px;
-      padding: 4px 8px;
-      border-radius: 12px;
-      display: none;
-      justify-content: center;
-      align-items: center;
-      min-width: 24px;
-      min-height: 24px;
-      z-index: 1000;
-    }
-
-    /* === Botão voltar === */
     #backBtn {
       position: fixed;
       bottom: 20px;
@@ -150,131 +133,27 @@
     #backBtn:active {
       opacity: 0.8;
     }
-
-    /* Navbar transparente se houver */
-    .navbar {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      background: rgba(0,0,0,0); /* transparente */
-      z-index: 999;
-      padding: 12px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
   </style>
 </head>
+
 <body>
 
   <h2>Notificações</h2>
 
   <div id="notificationsList"></div>
-  <span id="notificationBadge"></span>
 
-  <!-- Botão voltar -->
   <ion-icon id="backBtn" name="arrow-back-outline" onclick="window.location='index.html'"></ion-icon>
 
+  <!-- Usa o sistema REAL de notificações -->
+  <script src="notificacoes.js"></script>
+
   <script>
-    // ==============================
-    // Carregar notificações (simulado)
-    // ==============================
-    async function carregarNotificacoes() {
-      try {
-        const resp = await fetch('resultados/notificacoes_ativas.json?t=' + Date.now());
-        if (!resp.ok) throw new Error('Erro ao carregar notificações');
-        return await resp.json();
-      } catch (err) {
-        console.error(err);
-        return [];
-      }
-    }
-
-    // ==============================
-    // Atualizar badge
-    // ==============================
-    async function atualizarBadge() {
-      const badge = document.getElementById('notificationBadge');
-      const notificacoes = await carregarNotificacoes();
-      const naoLidas = notificacoes.filter(n => !n.lido).length;
-
-      if (naoLidas > 0) {
-        badge.style.display = 'flex';
-        badge.textContent = naoLidas > 99 ? '99+' : naoLidas;
-      } else {
-        badge.style.display = 'none';
-      }
-    }
-
-    // ==============================
-    // Marcar como lida (simulado)
-    // ==============================
-    async function marcarComoLida(id) {
-      // Aqui chamarias a API/GitHub
-      console.log('Notificação marcada como lida:', id);
-      return true;
-    }
-
-    // ==============================
-    // Renderizar notificações
-    // ==============================
-    async function renderizarNotificacoes() {
-      const lista = document.getElementById('notificationsList');
-      const notificacoes = await carregarNotificacoes();
-      const naoLidas = notificacoes.filter(n => !n.lido);
-
-      if (!naoLidas.length) {
-        lista.innerHTML = '<div class="no-notifications">✨ Nenhuma notificação</div>';
-        return;
-      }
-
-      lista.innerHTML = naoLidas.map(notif => `
-        <div class="notification-card" data-id="${notif.id}" data-lido="${notif.lido}">
-          <div class="notification-header">
-            <ion-icon name="notifications-outline" class="jogo-icon"></ion-icon>
-            <span class="jogo-nome">${notif.jogo || 'Jogo'}</span>
-            <span class="unread-badge">Nova</span>
-            <span class="notification-date">${new Date(notif.data).toLocaleDateString('pt-PT')}</span>
-          </div>
-          <div class="notification-title">${notif.titulo || 'Novo resultado'}</div>
-          <div class="notification-subtitle">${notif.subtitulo || ''}</div>
-          <div class="notification-resumo">${notif.resumo || 'Ver detalhes'}</div>
-        </div>
-      `).join('');
-
-      // Eventos de clique
-      document.querySelectorAll('.notification-card').forEach(card => {
-        card.addEventListener('click', async () => {
-          card.style.pointerEvents = 'none';
-          const processing = document.createElement('div');
-          processing.className = 'processing';
-          processing.innerHTML = '⏳ A marcar como lida...';
-          card.appendChild(processing);
-
-          const resultado = await marcarComoLida(card.dataset.id);
-
-          if (resultado) {
-            card.remove();
-            if (!document.querySelectorAll('.notification-card').length) {
-              lista.innerHTML = '<div class="no-notifications">✨ Nenhuma notificação</div>';
-            }
-            await atualizarBadge();
-          } else {
-            card.style.pointerEvents = 'auto';
-            processing.remove();
-          }
-        });
-      });
-    }
-
-    // ==============================
-    // Inicialização
-    // ==============================
-    document.addEventListener('DOMContentLoaded', async () => {
-      await renderizarNotificacoes();
-      await atualizarBadge();
-      setInterval(atualizarBadge, 30000); // Atualiza badge a cada 30s
+    document.addEventListener("DOMContentLoaded", async () => {
+      await renderizarNotificacoes();  // função real do notificacoes.js
+      await atualizarBadge();          // badge real
+      setInterval(atualizarBadge, 30000);
     });
   </script>
+
 </body>
 </html>
