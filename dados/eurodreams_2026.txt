@@ -1,13 +1,13 @@
-Concurso: 016/2026
-Data: 23/02/2026
-Chave: 1 7 12 25 26 39 + 1
-Ordem de saída: 1 25 26 12 39 7 + 1
+Concurso: 017/2026
+Data: 26/02/2026
+Chave: 17 18 19 21 23 36 + 4
+Ordem de saída: 18 23 21 19 36 17 + 4
 ----------------------------------------
 Prémios:
 1.º Prémio - 6 Números + 1 Nº de Sonho | PT: 0 | EU: 0 | Valor: € 30.000/mês x 30 anos
-2.º Prémio - 6 Números | PT: 1 | EU: 1 | Valor: € 2.000/mês x 5 anos
-3.º Prémio - 5 Números | PT: 25 | EU: 137 | Valor: € 406,09
-4.º Prémio - 4 Números | PT: 626 | EU: 4.757 | Valor: € 32,78
-5.º Prémio - 3 Números | PT: 10.072 | EU: 68.342 | Valor: € 4,79
-6.º Prémio - 2 Números | PT: 59.939 | EU: 392.910 | Valor: € 2,50
+2.º Prémio - 6 Números | PT: 0 | EU: 0 | Valor: € 2.000/mês x 5 anos
+3.º Prémio - 5 Números | PT: 19 | EU: 110 | Valor: € 532,62
+4.º Prémio - 4 Números | PT: 829 | EU: 4.747 | Valor: € 34,59
+5.º Prémio - 3 Números | PT: 11.065 | EU: 70.794 | Valor: € 4,87
+6.º Prémio - 2 Números | PT: 63.443 | EU: 418.070 | Valor: € 2,50
 ----------------------------------------
