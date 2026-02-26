@@ -5,13 +5,24 @@
   <title>Configurações</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- Forçar barra preta no Android / Chrome -->
+  <meta name="theme-color" content="#000000">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+  <meta name="color-scheme" content="dark">
+
+  <!-- Ionicons -->
   <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
   <style>
+    html {
+      background: #000;
+      color-scheme: dark;
+    }
+
     body {
       margin: 0;
-      background: #000;
+      background: #000 !important;
       color: white;
       font-family: sans-serif;
       padding: 20px;
