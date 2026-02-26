@@ -1,15 +1,185 @@
 {
   "2026": [
     {
+      "concurso": "011/2026",
+      "data": "07/02/2026",
+      "numeros": [11, 14, 31, 43, 47],
+      "especial": 5,
+      "premios": [
+        {
+          "premio": "1.º Prémio",
+          "descricao": "5 Números + Nº da Sorte",
+          "vencedores": "0",
+          "valor": "(1)"
+        },
+        {
+          "premio": "2.º Prémio",
+          "descricao": "5 Números",
+          "vencedores": "2",
+          "valor": "€ 10.979,94"
+        },
+        {
+          "premio": "3.º Prémio",
+          "descricao": "4 Números",
+          "vencedores": "100",
+          "valor": "€ 274,49"
+        },
+        {
+          "premio": "4.º Prémio",
+          "descricao": "3 Números",
+          "vencedores": "4.796",
+          "valor": "€ 5,72"
+        },
+        {
+          "premio": "5.º Prémio",
+          "descricao": "2 Números",
+          "vencedores": "72.452",
+          "valor": "€ 2,27"
+        },
+        {
+          "premio": "Nº da Sorte",
+          "descricao": "Nº da Sorte",
+          "vencedores": "99.570",
+          "valor": "Reembolso do valor da aposta de Totoloto"
+        }
+      ]
+    },
+    {
+      "concurso": "012/2026",
+      "data": "11/02/2026",
+      "numeros": [8, 16, 27, 44, 49],
+      "especial": 6,
+      "premios": [
+        {
+          "premio": "1.º Prémio",
+          "descricao": "5 Números + Nº da Sorte",
+          "vencedores": "0",
+          "valor": "(1)"
+        },
+        {
+          "premio": "2.º Prémio",
+          "descricao": "5 Números",
+          "vencedores": "0",
+          "valor": "(2)"
+        },
+        {
+          "premio": "3.º Prémio",
+          "descricao": "4 Números",
+          "vencedores": "70",
+          "valor": "€ 579,75"
+        },
+        {
+          "premio": "4.º Prémio",
+          "descricao": "3 Números",
+          "vencedores": "3.759",
+          "valor": "€ 5,99"
+        },
+        {
+          "premio": "5.º Prémio",
+          "descricao": "2 Números",
+          "vencedores": "58.166",
+          "valor": "€ 2,32"
+        },
+        {
+          "premio": "Nº da Sorte",
+          "descricao": "Nº da Sorte",
+          "vencedores": "74.439",
+          "valor": "Reembolso do valor da aposta de Totoloto"
+        }
+      ]
+    },
+    {
+      "concurso": "013/2026",
+      "data": "14/02/2026",
+      "numeros": [8, 19, 25, 34, 46],
+      "especial": 1,
+      "premios": [
+        {
+          "premio": "1.º Prémio",
+          "descricao": "5 Números + Nº da Sorte",
+          "vencedores": "0",
+          "valor": "(1)"
+        },
+        {
+          "premio": "2.º Prémio",
+          "descricao": "5 Números",
+          "vencedores": "1",
+          "valor": "€ 22.781,08"
+        },
+        {
+          "premio": "3.º Prémio",
+          "descricao": "4 Números",
+          "vencedores": "137",
+          "valor": "€ 207,85"
+        },
+        {
+          "premio": "4.º Prémio",
+          "descricao": "3 Números",
+          "vencedores": "5.310",
+          "valor": "€ 5,36"
+        },
+        {
+          "premio": "5.º Prémio",
+          "descricao": "2 Números",
+          "vencedores": "78.967",
+          "valor": "€ 2,16"
+        },
+        {
+          "premio": "Nº da Sorte",
+          "descricao": "Nº da Sorte",
+          "vencedores": "59.905",
+          "valor": "Reembolso do valor da aposta de Totoloto"
+        }
+      ]
+    },
+    {
+      "concurso": "014/2026",
+      "data": "18/02/2026",
+      "numeros": [2, 5, 8, 9, 26],
+      "especial": 9,
+      "premios": [
+        {
+          "premio": "1.º Prémio",
+          "descricao": "5 Números + Nº da Sorte",
+          "vencedores": "0",
+          "valor": "(1)"
+        },
+        {
+          "premio": "2.º Prémio",
+          "descricao": "5 Números",
+          "vencedores": "0",
+          "valor": "(2)"
+        },
+        {
+          "premio": "3.º Prémio",
+          "descricao": "4 Números",
+          "vencedores": "182",
+          "valor": "€ 219,00"
+        },
+        {
+          "premio": "4.º Prémio",
+          "descricao": "3 Números",
+          "vencedores": "6.180",
+          "valor": "€ 3,58"
+        },
+        {
+          "premio": "5.º Prémio",
+          "descricao": "2 Números",
+          "vencedores": "71.246",
+          "valor": "€ 1,86"
+        },
+        {
+          "premio": "Nº da Sorte",
+          "descricao": "Nº da Sorte",
+          "vencedores": "80.059",
+          "valor": "Reembolso do valor da aposta de Totoloto"
+        }
+      ]
+    },
+    {
       "concurso": "015/2026",
       "data": "21/02/2026",
-      "numeros": [
-        7,
-        8,
-        29,
-        33,
-        45
-      ],
+      "numeros": [7, 8, 29, 33, 45],
       "especial": 4,
       "premios": [
         {
@@ -53,15 +223,46 @@
     {
       "concurso": "016/2026",
       "data": "25/02/2026",
-      "numeros": [
-        1,
-        5,
-        6,
-        14,
-        34
-      ],
+      "numeros": [1, 5, 6, 14, 34],
       "especial": 9,
-      "premios": []
+      "premios": [
+        {
+          "premio": "1.º Prémio",
+          "descricao": "5 Números + Nº da Sorte",
+          "vencedores": "0",
+          "valor": "(1)"
+        },
+        {
+          "premio": "2.º Prémio",
+          "descricao": "5 Números",
+          "vencedores": "1",
+          "valor": "€ 18.674,01"
+        },
+        {
+          "premio": "3.º Prémio",
+          "descricao": "4 Números",
+          "vencedores": "104",
+          "valor": "€ 224,44"
+        },
+        {
+          "premio": "4.º Prémio",
+          "descricao": "3 Números",
+          "vencedores": "4.700",
+          "valor": "€ 4,96"
+        },
+        {
+          "premio": "5.º Prémio",
+          "descricao": "2 Números",
+          "vencedores": "66.163",
+          "valor": "€ 2,11"
+        },
+        {
+          "premio": "Nº da Sorte",
+          "descricao": "Nº da Sorte",
+          "vencedores": "76.694",
+          "valor": "Reembolso do valor da aposta de Totoloto"
+        }
+      ]
     }
   ]
 }
