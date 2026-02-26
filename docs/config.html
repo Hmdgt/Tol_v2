@@ -84,6 +84,27 @@
       localStorage.setItem("github_token", token);
       alert("Token guardado no dispositivo.");
     }
+
+    async function refreshApp() {
+      const token = localStorage.getItem("github_token");
+
+      // limpar caches
+      const keys = await caches.keys();
+      await Promise.all(keys.map(k => caches.delete(k)));
+
+      // limpar localStorage
+      localStorage.clear();
+
+      // restaurar token
+      if (token) localStorage.setItem("github_token", token);
+
+      // pedir ao SW para ativar imediatamente
+      if (navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage({ action: "skipWaiting" });
+      }
+
+      window.location.reload();
+    }
   </script>
 </head>
 
@@ -95,7 +116,10 @@
     <label>Token GitHub:</label>
     <input type="password" id="token" placeholder="Introduz o token...">
 
-    <button onclick="saveToken()">Guardar</button>
+    <button onclick="saveToken()">Guardar Token</button>
+
+    <!-- Botão novo -->
+    <button onclick="refreshApp()">Atualizar App</button>
   </div>
 
   <!-- Botão discreto para voltar -->
