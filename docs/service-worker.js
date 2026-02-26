@@ -15,7 +15,8 @@ const ASSETS = [
   "/upload.js",
   "/notificacoes.js",
   "/icons/icon-192.png",
-  "/icons/icon-512.png"
+  "/icons/icon-512.png",
+  "/loto_logo_animado.gif"   // ← ADICIONADO: GIF da intro
 ];
 
 // ===============================
