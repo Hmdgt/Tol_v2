@@ -3,6 +3,23 @@
 // ===============================
 document.addEventListener("DOMContentLoaded", async () => {
 
+  // ===============================
+  // 🎬 INTRO (controlada por sessionStorage)
+  // ===============================
+  const introExibida = sessionStorage.getItem("introExibida");
+  if (!introExibida) {
+    const overlay = document.getElementById("intro-overlay");
+    if (overlay) {
+      overlay.style.display = "flex"; // mostra a intro
+      sessionStorage.setItem("introExibida", "true");
+
+      // Esconder após a duração do GIF (~4.8s)
+      setTimeout(() => {
+        overlay.style.display = "none";
+      }, 4800); // ajuste conforme necessário
+    }
+  }
+
   // 🔔 Atualizar badge se existir
   if (window.atualizarBadge) {
     await window.atualizarBadge();
