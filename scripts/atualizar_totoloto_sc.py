@@ -132,10 +132,26 @@ def atualizar_resultados():
     lista = dados[str(ano)]
 
     existe = any(r["concurso"] == resultado["concurso"] for r in lista)
+    
     if existe:
-        msg = f"Resultado do concurso {resultado['concurso']} já existe. Nada a fazer."
-        print(msg)
-        escrever_log(msg, "santacasa")
+        # Encontrar o índice do concurso existente
+        for i, r in enumerate(lista):
+            if r["concurso"] == resultado["concurso"]:
+                # Verificar se o registo existente está incompleto (sem prémios)
+                # OU se o novo resultado tem prémios diferentes
+                if not r["premios"] or (resultado["premios"] and r["premios"] != resultado["premios"]):
+                    lista[i] = resultado  # Substituir pela versão mais completa
+                    lista.sort(key=lambda r: r["concurso"])
+                    dados[str(ano)] = lista
+                    gravar_json(json_path, dados)
+                    msg = f"Concurso {resultado['concurso']} atualizado com novos dados!"
+                    print(msg)
+                    escrever_log(msg, "santacasa")
+                else:
+                    msg = f"Concurso {resultado['concurso']} já está completo. Nada a atualizar."
+                    print(msg)
+                    escrever_log(msg, "santacasa")
+                break
     else:
         lista.append(resultado)
         lista.sort(key=lambda r: r["concurso"])
