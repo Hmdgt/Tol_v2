@@ -1,342 +1,280 @@
-// ===== CONFIGURAÇÃO =====
-const REPO = "Hmdgt/Tol_v2";
-const CAMINHO_NOTIFICACOES = "resultados/notificacoes_ativas.json";
-const CAMINHO_HISTORICO = "resultados/notificacoes_historico.json";
-const GITHUB_RAW = `https://raw.githubusercontent.com/${REPO}/main/${CAMINHO_NOTIFICACOES}`;
-const GITHUB_API = `https://api.github.com/repos/${REPO}/contents/${CAMINHO_NOTIFICACOES}`;
-const GITHUB_HISTORICO_API = `https://api.github.com/repos/${REPO}/contents/${CAMINHO_HISTORICO}`;
-
-// Cache duration (5 minutos)
-const CACHE_DURATION = 5 * 60 * 1000;
-
-// ===== FUNÇÕES PRINCIPAIS =====
-
-// 1. Carregar notificações (com cache e localStorage)
-async function carregarNotificacoes(forceRefresh = false) {
-    try {
-        // Se não forçar refresh, tentar usar localStorage primeiro
-        if (!forceRefresh) {
-            const cached = localStorage.getItem('notificacoes_cache');
-            const timestamp = localStorage.getItem('notificacoes_timestamp');
-            
-            if (cached && timestamp) {
-                const age = Date.now() - parseInt(timestamp);
-                if (age < CACHE_DURATION) {
-                    console.log('📦 Usando cache do localStorage');
-                    return JSON.parse(cached);
-                }
-            }
-        }
-        
-        // Buscar do GitHub
-        console.log('🌐 Buscando do GitHub...');
-        const response = await fetch(GITHUB_RAW + `?t=${Date.now()}`);
-        if (!response.ok) throw new Error('Erro ao carregar');
-        
-        const data = await response.json();
-        
-        // Guardar no localStorage
-        localStorage.setItem('notificacoes_cache', JSON.stringify(data));
-        localStorage.setItem('notificacoes_timestamp', Date.now());
-        
-        return data;
-    } catch (error) {
-        console.error('Erro:', error);
-        
-        // Se falhar, tentar usar cache mesmo expirado
-        const cached = localStorage.getItem('notificacoes_cache');
-        return cached ? JSON.parse(cached) : [];
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notificações</title>
+  
+  <!-- Ícones Ionicons -->
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+  
+  <style>
+    /* === Reset / Body === */
+    body {
+      margin: 0;
+      background: #000;
+      color: white;
+      font-family: sans-serif;
+      padding: 20px;
     }
-}
 
-// 2. Atualizar badge no index.html
-async function atualizarBadge() {
-    const notificacoes = await carregarNotificacoes();
-    const naoLidas = notificacoes.filter(n => !n.lido).length;
-    
-    // Guardar contagem no localStorage
-    localStorage.setItem('notificacoes_naoLidas', naoLidas);
-    
-    const badge = document.getElementById('notificationBadge');
-    if (badge) {
-        if (naoLidas > 0) {
-            badge.style.display = 'flex';
-            badge.textContent = naoLidas > 99 ? '99+' : naoLidas;
-            console.log(`🔔 Badge atualizado: ${naoLidas} notificações`);
-        } else {
-            badge.style.display = 'none';
-            console.log('🔔 Badge removido');
-        }
+    h2 {
+      text-align: center;
+      font-weight: 300;
+      margin-top: 10px;
     }
-    
-    return notificacoes;
-}
 
-// 3. Forçar atualização do badge (chamar após marcar como lida)
-async function forcarAtualizacaoBadge() {
-    // Limpar cache
-    localStorage.removeItem('notificacoes_cache');
-    localStorage.removeItem('notificacoes_timestamp');
-    
-    // Buscar novo do GitHub
-    await atualizarBadge();
-}
-
-// 4. Marcar notificação como lida (via API GitHub)
-async function marcarComoLida(idNotificacao) {
-    const token = localStorage.getItem("github_token");
-    if (!token) {
-        alert("Token não configurado. Vai às Configurações.");
-        return false;
+    /* === Container lista de notificações === */
+    #notificationsList {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 20px;
     }
-    
-    try {
-        // Mostrar feedback visual
-        mostrarToast('A marcar como lida...');
-        
-        // ===== 1. ATUALIZAR NOTIFICAÇÕES ATIVAS =====
-        const res = await fetch(GITHUB_API, {
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
-        
-        if (!res.ok) {
-            console.error('Erro ao buscar ficheiro:', await res.text());
-            return false;
-        }
-        
-        const ficheiro = await res.json();
-        let notificacoes = JSON.parse(atob(ficheiro.content));
-        
-        const notificacaoLida = notificacoes.find(n => n.id === idNotificacao);
-        const novasAtivas = notificacoes.filter(n => n.id !== idNotificacao);
-        
-        if (!notificacaoLida) {
-            console.log('Notificação não encontrada');
-            return false;
-        }
-        
-        // Marcar como lida e adicionar timestamp
-        notificacaoLida.lido = true;
-        notificacaoLida.data_leitura = new Date().toISOString();
-        
-        // Atualizar notificações ativas (remover a lida)
-        const updateRes = await fetch(GITHUB_API, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                message: `Notificação ${idNotificacao} marcada como lida`,
-                content: btoa(JSON.stringify(novasAtivas, null, 2)),
-                sha: ficheiro.sha
-            })
-        });
-        
-        if (!updateRes.ok) {
-            console.error('Erro ao atualizar ativas:', await updateRes.text());
-            return false;
-        }
-        
-        // ===== 2. ADICIONAR AO HISTÓRICO =====
-        let historico = [];
-        let shaHist = null;
-        
-        try {
-            const resHist = await fetch(GITHUB_HISTORICO_API, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            
-            if (resHist.ok) {
-                const ficheiroHist = await resHist.json();
-                historico = JSON.parse(atob(ficheiroHist.content));
-                shaHist = ficheiroHist.sha;
-            }
-        } catch (e) {
-            console.log('Histórico ainda não existe, vai ser criado');
-        }
-        
-        // Adicionar notificação lida ao histórico
-        historico.push(notificacaoLida);
-        
-        // Atualizar histórico
-        await fetch(GITHUB_HISTORICO_API, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                message: `Notificação ${idNotificacao} adicionada ao histórico`,
-                content: btoa(JSON.stringify(historico, null, 2)),
-                sha: shaHist
-            })
-        });
-        
-        console.log('✅ Notificação movida para o histórico');
-        
-        // LIMPAR CACHE E FORÇAR ATUALIZAÇÃO DO BADGE
-        localStorage.removeItem('notificacoes_cache');
-        localStorage.removeItem('notificacoes_timestamp');
-        
-        // Atualizar badge imediatamente
-        await forcarAtualizacaoBadge();
-        
-        mostrarToast('✅ Notificação marcada como lida', 'success');
-        
-        return true;
-        
-    } catch (error) {
-        console.error('Erro ao marcar como lida:', error);
-        mostrarToast('❌ Erro ao marcar como lida', 'error');
-        return false;
+
+    .notification-card {
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 12px;
+      cursor: pointer;
+      position: relative;
+      transition: 0.2s;
     }
-}
 
-// 5. Mostrar toast (feedback visual)
-function mostrarToast(mensagem, tipo = 'info') {
-    const toast = document.createElement('div');
-    toast.style.cssText = `
-        position: fixed;
-        bottom: 100px;
-        left: 20px;
-        right: 20px;
-        background: ${tipo === 'success' ? '#4CAF50' : tipo === 'error' ? '#f44336' : '#333'};
-        color: white;
-        padding: 12px;
-        border-radius: 8px;
-        text-align: center;
-        font-size: 14px;
-        z-index: 2000;
-        animation: fadeInOut 2s ease;
-    `;
-    toast.textContent = mensagem;
-    document.body.appendChild(toast);
-    
-    setTimeout(() => toast.remove(), 2000);
-}
+    .notification-card:active {
+      background: #1a1a1a;
+      transform: scale(0.98);
+    }
 
-// 6. Renderizar lista de notificações (SÓ NÃO LIDAS)
-async function renderizarNotificacoes() {
-    const listaElement = document.getElementById('notificationsList');
-    if (!listaElement) return;
-    
-    const notificacoes = await carregarNotificacoes(true); // Forçar refresh
-    
-    // Filtrar apenas não lidas
-    const naoLidas = notificacoes.filter(n => !n.lido);
-    
-    if (naoLidas.length === 0) {
-        listaElement.innerHTML = '<div class="no-notifications">✨ Nenhuma notificação</div>';
+    .notification-card.lido {
+      opacity: 0.7;
+      border-color: #222;
+    }
+
+    .notification-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .jogo-icon {
+      font-size: 20px;
+      margin-right: 8px;
+    }
+
+    .jogo-nome {
+      font-weight: bold;
+    }
+
+    .notification-title {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .notification-subtitle {
+      font-size: 14px;
+      opacity: 0.8;
+      margin-bottom: 4px;
+    }
+
+    .notification-resumo {
+      font-size: 13px;
+      opacity: 0.7;
+    }
+
+    .unread-badge {
+      background-color: #ff4444;
+      color: white;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 10px;
+      margin-left: 8px;
+    }
+
+    .processing {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.7);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: #ffd700;
+    }
+
+    /* Mensagem "nenhuma notificação" */
+    .no-notifications {
+      text-align: center;
+      opacity: 0.6;
+      margin-top: 40px;
+    }
+
+    /* === Badge de notificações === */
+    #notificationBadge {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #ff4444;
+      color: white;
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 12px;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      min-width: 24px;
+      min-height: 24px;
+      z-index: 1000;
+    }
+
+    /* === Botão voltar === */
+    #backBtn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      font-size: 32px;
+      opacity: 0.3;
+      cursor: pointer;
+      transition: 0.2s;
+      z-index: 1000;
+    }
+
+    #backBtn:active {
+      opacity: 0.8;
+    }
+
+    /* Navbar transparente se houver */
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(0,0,0,0); /* transparente */
+      z-index: 999;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Notificações</h2>
+
+  <div id="notificationsList"></div>
+  <span id="notificationBadge"></span>
+
+  <!-- Botão voltar -->
+  <ion-icon id="backBtn" name="arrow-back-outline" onclick="window.location='index.html'"></ion-icon>
+
+  <script>
+    // ==============================
+    // Carregar notificações (simulado)
+    // ==============================
+    async function carregarNotificacoes() {
+      try {
+        const resp = await fetch('resultados/notificacoes_ativas.json?t=' + Date.now());
+        if (!resp.ok) throw new Error('Erro ao carregar notificações');
+        return await resp.json();
+      } catch (err) {
+        console.error(err);
+        return [];
+      }
+    }
+
+    // ==============================
+    // Atualizar badge
+    // ==============================
+    async function atualizarBadge() {
+      const badge = document.getElementById('notificationBadge');
+      const notificacoes = await carregarNotificacoes();
+      const naoLidas = notificacoes.filter(n => !n.lido).length;
+
+      if (naoLidas > 0) {
+        badge.style.display = 'flex';
+        badge.textContent = naoLidas > 99 ? '99+' : naoLidas;
+      } else {
+        badge.style.display = 'none';
+      }
+    }
+
+    // ==============================
+    // Marcar como lida (simulado)
+    // ==============================
+    async function marcarComoLida(id) {
+      // Aqui chamarias a API/GitHub
+      console.log('Notificação marcada como lida:', id);
+      return true;
+    }
+
+    // ==============================
+    // Renderizar notificações
+    // ==============================
+    async function renderizarNotificacoes() {
+      const lista = document.getElementById('notificationsList');
+      const notificacoes = await carregarNotificacoes();
+      const naoLidas = notificacoes.filter(n => !n.lido);
+
+      if (!naoLidas.length) {
+        lista.innerHTML = '<div class="no-notifications">✨ Nenhuma notificação</div>';
         return;
-    }
-    
-    let html = '';
-    for (const notif of naoLidas) {
-        html += `
-            <div class="notification-card" data-id="${notif.id}" data-lido="${notif.lido}">
-                <div class="notification-header">
-                    <ion-icon name="notifications-outline" class="jogo-icon"></ion-icon>
-                    <span class="jogo-nome">${notif.jogo || 'Jogo'}</span>
-                    <span class="unread-badge">Nova</span>
-                    <span class="notification-date">${new Date(notif.data).toLocaleDateString('pt-PT')}</span>
-                </div>
-                <div class="notification-title">${notif.titulo || 'Novo resultado'}</div>
-                <div class="notification-subtitle">${notif.subtitulo || ''}</div>
-                <div class="notification-resumo">${notif.resumo || 'Ver detalhes'}</div>
-            </div>
-        `;
-    }
-    
-    listaElement.innerHTML = html;
-    
-    // Adicionar eventos de clique
-    document.querySelectorAll('.notification-card').forEach(card => {
+      }
+
+      lista.innerHTML = naoLidas.map(notif => `
+        <div class="notification-card" data-id="${notif.id}" data-lido="${notif.lido}">
+          <div class="notification-header">
+            <ion-icon name="notifications-outline" class="jogo-icon"></ion-icon>
+            <span class="jogo-nome">${notif.jogo || 'Jogo'}</span>
+            <span class="unread-badge">Nova</span>
+            <span class="notification-date">${new Date(notif.data).toLocaleDateString('pt-PT')}</span>
+          </div>
+          <div class="notification-title">${notif.titulo || 'Novo resultado'}</div>
+          <div class="notification-subtitle">${notif.subtitulo || ''}</div>
+          <div class="notification-resumo">${notif.resumo || 'Ver detalhes'}</div>
+        </div>
+      `).join('');
+
+      // Eventos de clique
+      document.querySelectorAll('.notification-card').forEach(card => {
         card.addEventListener('click', async () => {
-            const id = card.dataset.id;
-            
-            // Desativar clique duplo e mostrar indicador
-            card.style.pointerEvents = 'none';
-            const processing = document.createElement('div');
-            processing.className = 'processing';
-            processing.innerHTML = '⏳ A marcar como lida...';
-            card.appendChild(processing);
-            
-            // Marcar como lida no GitHub
-            const resultado = await marcarComoLida(id);
-            
-            if (resultado) {
-                // Remover o card da lista
-                card.remove();
-                
-                // Se não houver mais cards, mostrar mensagem
-                if (document.querySelectorAll('.notification-card').length === 0) {
-                    listaElement.innerHTML = '<div class="no-notifications">✨ Nenhuma notificação</div>';
-                }
-                
-                console.log('✅ Notificação removida da lista');
-            } else {
-                // Reativar clique se falhou
-                card.style.pointerEvents = 'auto';
-                processing.remove();
+          card.style.pointerEvents = 'none';
+          const processing = document.createElement('div');
+          processing.className = 'processing';
+          processing.innerHTML = '⏳ A marcar como lida...';
+          card.appendChild(processing);
+
+          const resultado = await marcarComoLida(card.dataset.id);
+
+          if (resultado) {
+            card.remove();
+            if (!document.querySelectorAll('.notification-card').length) {
+              lista.innerHTML = '<div class="no-notifications">✨ Nenhuma notificação</div>';
             }
+            await atualizarBadge();
+          } else {
+            card.style.pointerEvents = 'auto';
+            processing.remove();
+          }
         });
+      });
+    }
+
+    // ==============================
+    // Inicialização
+    // ==============================
+    document.addEventListener('DOMContentLoaded', async () => {
+      await renderizarNotificacoes();
+      await atualizarBadge();
+      setInterval(atualizarBadge, 30000); // Atualiza badge a cada 30s
     });
-}
-
-// 7. Verificar token ao carregar
-function verificarToken() {
-    const token = localStorage.getItem("github_token");
-    if (!token) {
-        const aviso = document.createElement('div');
-        aviso.style.cssText = `
-            position: fixed;
-            bottom: 80px;
-            left: 20px;
-            right: 20px;
-            background: #333;
-            color: white;
-            padding: 10px;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 14px;
-            z-index: 1000;
-        `;
-        aviso.innerHTML = '⚠️ Token não configurado. <a href="config.html" style="color: #ffd700;">Configurar</a>';
-        document.body.appendChild(aviso);
-        
-        setTimeout(() => aviso.remove(), 5000);
-    }
-    return token;
-}
-
-// 8. Inicialização
-document.addEventListener('DOMContentLoaded', async () => {
-    console.log('🚀 Inicializando sistema de notificações');
-    
-    // Verificar token
-    verificarToken();
-    
-    // Se estiver na página de notificações
-    if (window.location.pathname.includes('notificacoes.html')) {
-        await renderizarNotificacoes();
-    }
-    
-    // Sempre atualizar badge
-    await atualizarBadge();
-    
-    // Atualizar badge periodicamente (a cada 30 segundos)
-    setInterval(atualizarBadge, 30000);
-});
-
-// Adicionar CSS para toast animation
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes fadeInOut {
-        0% { opacity: 0; transform: translateY(20px); }
-        10% { opacity: 1; transform: translateY(0); }
-        90% { opacity: 1; transform: translateY(0); }
-        100% { opacity: 0; transform: translateY(-20px); }
-    }
-`;
-document.head.appendChild(style);
+  </script>
+</body>
+</html>
