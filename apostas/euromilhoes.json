@@ -1,0 +1,89 @@
+[
+    {
+        "tipo": "Euromilhões",
+        "data_sorteio": "2026-02-24",
+        "data_aposta": "2026-02-24",
+        "data_emissao": "2026-02-24 08:57:32",
+        "referencia_unica": "555-03672294-M1L",
+        "concurso": "016/2026",
+        "valor_total": 2.2,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "numeros": [
+                    "04",
+                    "05",
+                    "32",
+                    "33",
+                    "48"
+                ],
+                "estrelas": [
+                    "01",
+                    "04"
+                ]
+            }
+        ],
+        "imagem_origem": "foto_1772012132655.png",
+        "hash_imagem": "9ddc024b4da719a3cd17db14484d4e45",
+        "data_processamento": "2026-02-26 17:17:20"
+    },
+    {
+        "tipo": "Euromilhões",
+        "data_sorteio": "2025-08-15",
+        "data_aposta": "2025-08-14",
+        "data_emissao": "2025-08-14 14:53:32",
+        "referencia_unica": "726-07294854-M1L",
+        "concurso": "065/2025",
+        "valor_total": 2.2,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "numeros": [
+                    "07",
+                    "17",
+                    "18",
+                    "23",
+                    "25"
+                ],
+                "estrelas": [
+                    "07",
+                    "10"
+                ]
+            }
+        ],
+        "imagem_origem": "foto_1771944455536.png",
+        "hash_imagem": "ebb5f93ae86259a71f53c0d47b55f234",
+        "data_processamento": "2026-02-26 17:17:35"
+    },
+    {
+        "tipo": "Euromilhões",
+        "data_sorteio": "2026-02-20",
+        "data_aposta": "2026-02-20",
+        "data_emissao": "2026-02-20 08:37:32",
+        "referencia_unica": "551-05455705-M1L",
+        "concurso": "015/2026",
+        "valor_total": 2.2,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "numeros": [
+                    "04",
+                    "09",
+                    "30",
+                    "33",
+                    "37"
+                ],
+                "estrelas": [
+                    "01",
+                    "05"
+                ]
+            }
+        ],
+        "imagem_origem": "foto_1771956049303.png",
+        "hash_imagem": "648d27f914c07ae0cb4046f3415a4bd7",
+        "data_processamento": "2026-02-26 17:17:48"
+    }
+]

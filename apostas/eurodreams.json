@@ -1,0 +1,29 @@
+[
+    {
+        "tipo": "Eurodreams",
+        "data_sorteio": "2026-02-19",
+        "data_aposta": "2026-02-17",
+        "data_emissao": "2026-02-17 17:02:32",
+        "referencia_unica": "260217-17-215626360B-098 04-01184",
+        "concurso": "015/2026",
+        "valor_total": 2.5,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "numeros": [
+                    "01",
+                    "09",
+                    "14",
+                    "17",
+                    "22",
+                    "26"
+                ],
+                "dream_number": "04"
+            }
+        ],
+        "imagem_origem": "foto_1772012037328.png",
+        "hash_imagem": "2e5283d04ca77d66fab19e528a86fb81",
+        "data_processamento": "2026-02-26 17:16:51"
+    }
+]

@@ -1,0 +1,96 @@
+[
+    {
+        "tipo": "M1LHÃO",
+        "data_sorteio": "2026-02-27",
+        "data_aposta": "2026-02-20",
+        "data_emissao": "2026-02-20 08:37:32",
+        "referencia_unica": "551-04210522-EUR",
+        "concurso": "002/2026",
+        "valor_total": 0.3,
+        "valido": true,
+        "apostas": [
+            {
+                "codigo": "GQC37079"
+            }
+        ],
+        "imagem_origem": "foto_1772012099095.png",
+        "hash_imagem": "c15b050c58bbbf96eb5647ebef251943",
+        "data_processamento": "2026-02-26 17:15:32"
+    },
+    {
+        "tipo": "M1LHÃO",
+        "data_sorteio": "2026-02-27",
+        "data_aposta": "2026-02-17",
+        "data_emissao": "2026-02-17 17:02:26",
+        "referencia_unica": "548-02491157-EUR",
+        "concurso": "002/2026",
+        "valor_total": 0.3,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "codigo": "GNN36567"
+            }
+        ],
+        "imagem_origem": "foto_1772012047961.png",
+        "hash_imagem": "be73928367a0de0fd7a7e87b03836183",
+        "data_processamento": "2026-02-26 17:15:50"
+    },
+    {
+        "tipo": "M1LHÃO",
+        "data_sorteio": "2026-02-27",
+        "data_aposta": "2026-02-06",
+        "data_emissao": "2026-02-06 18:13:47",
+        "referencia_unica": "537-01276244-EUR",
+        "concurso": "002/2026",
+        "valor_total": 0.3,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "codigo": "GFQ14191"
+            }
+        ],
+        "imagem_origem": "foto_1772012109901.png",
+        "hash_imagem": "943a94441675a3012707a9c2d2fecf5f",
+        "data_processamento": "2026-02-26 17:16:05"
+    },
+    {
+        "tipo": "M1LHÃO",
+        "data_sorteio": "2026-02-27",
+        "data_aposta": "2026-02-13",
+        "data_emissao": "2026-02-13 18:03:35",
+        "referencia_unica": "544-06256031-EUR",
+        "concurso": "002",
+        "valor_total": 0.3,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "codigo": "GLJ28595"
+            }
+        ],
+        "imagem_origem": "foto_1772012073331.png",
+        "hash_imagem": "8cf0286814186b5d92269fe7cc1edd12",
+        "data_processamento": "2026-02-26 17:16:37"
+    },
+    {
+        "tipo": "M1LHÃO",
+        "data_sorteio": "2026-02-27",
+        "data_aposta": "2026-02-24",
+        "data_emissao": "2026-02-24 08:37:32",
+        "referencia_unica": "555-02820325-EUR",
+        "concurso": "002/2026",
+        "valor_total": 2.2,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "codigo": "GTP11668"
+            }
+        ],
+        "imagem_origem": "foto_1772012120204.png",
+        "hash_imagem": "213b26221c855a0e8c40f9a3c50369f6",
+        "data_processamento": "2026-02-26 17:17:07"
+    }
+]
