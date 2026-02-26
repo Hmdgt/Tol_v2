@@ -1,12 +1,15 @@
 {
+  "id": "/",
   "name": "Pirika Loto Reg",
   "short_name": "Apostas",
-  "start_url": "index.html",
+  "start_url": "/index.html",
+  "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#000000",
   "theme_color": "#000000",
   "prefer_related_applications": false,
+
   "icons": [
     {
       "src": "icons/icon-192.png",
