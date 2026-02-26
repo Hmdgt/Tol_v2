@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       // Esconder após a duração do GIF (~4.8s)
       setTimeout(() => {
         overlay.style.display = "none";
-      }, 5500); // ajuste conforme necessário
+      }, 7500); // ajuste conforme necessário
     }
   }
 
