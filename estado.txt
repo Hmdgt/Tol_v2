@@ -1,1 +1,323 @@
+🧠 Arquitetura atual da tua PWA
+✔️ Tens bem implementado
 
+Manifest correto (standalone, theme_color, background_color)
+
+Service Worker com:
+
+versionamento de cache
+
+limpeza de caches antigos
+
+clients.claim() ✅
+
+skipWaiting() ✅
+
+network-first no index.html ✅ (muito importante)
+
+Assets offline definidos
+
+GitHub API com no-cache e timestamp → evita cache fantasma ✅
+
+Badge em localStorage → correto
+
+👉 Base está boa e funcional.
+
+📦 Lógica correta de armazenamento numa PWA
+💾 localStorage → dados persistentes do utilizador
+
+Usa para:
+
+token GitHub ✔️ (estás a usar)
+
+contadores de notificações ✔️
+
+definições do utilizador (tema, preferências, etc.)
+
+❗ Nunca usar para:
+
+listas grandes
+
+dados que mudam frequentemente
+
+🧭 sessionStorage → dados temporários da sessão
+
+Usa quando:
+
+só interessa enquanto a app está aberta
+
+não queres gravar no dispositivo
+
+Exemplos ideais:
+
+estado de navegação
+
+filtros ativos
+
+dados de formulário não submetidos
+
+👉 Atualmente não estás a usar — está ok.
+
+🗂️ Cache Storage (Service Worker)
+
+Serve para:
+
+HTML
+
+CSS
+
+JS
+
+icons
+
+páginas offline
+
+Tu estás a usar corretamente 👍
+Mas a estratégia pode melhorar (já explico).
+
+🌐 Sempre da rede (network only)
+
+Deve ser:
+
+chamadas à API GitHub ✔️ (já estás a forçar)
+
+dados dinâmicos (notificações)
+
+Aqui fizeste bem.
+
+⚡ Problema estrutural atual
+❗ Tens navegação multi-HTML
+
+index.html
+
+config.html
+
+notificacoes.html
+
+Cada navegação:
+➡️ recarrega a app
+➡️ reprocessa CSS/JS
+➡️ pode causar:
+
+flash branco
+
+reset visual
+
+atraso no Android
+
+👉 Numa PWA Android ideal → SPA (single page app)
+
+Ou:
+
+manter um único index.html
+
+carregar vistas via JS
+
+Isto elimina:
+✔️ flash branco
+✔️ reflow do tema
+✔️ problemas da barra inferior
+
+📱 Barra inferior branca no Android
+Causa real no teu caso
+
+Mesmo com theme-color preto:
+
+Quando mudas de HTML:
+
+Chrome mostra cor default (branco)
+
+depois aplica o theme
+
+depois o CSS
+
+👉 Resultado: pisca branco
+
+💡 Soluções:
+
+✔️ Obrigatório em TODOS os HTML
+
+No <head>:
+
+<meta name="theme-color" content="#000000">
+<meta name="background-color" content="#000000">
+
+E inline CSS crítico:
+
+<style>
+  html, body {
+    background:#000;
+    color:#fff;
+  }
+</style>
+
+antes de qualquer CSS externo.
+
+⚙️ Service Worker – melhoria recomendada
+
+Atualmente:
+
+index → network-first
+
+resto → cache-first
+
+Melhor:
+👉 stale-while-revalidate para JS/CSS
+
+Substituir:
+
+event.respondWith(
+  caches.match(req).then(resp => resp || fetch(req))
+);
+
+por:
+
+event.respondWith(
+  caches.match(req).then(cached => {
+    const fetchPromise = fetch(req).then(networkResp => {
+      caches.open(CACHE_NAME).then(cache => cache.put(req, networkResp.clone()));
+      return networkResp;
+    });
+    return cached || fetchPromise;
+  })
+);
+
+Ganhas:
+⚡ carregamento instantâneo
+🔄 atualização em background
+
+📶 Offline real – falta um fallback
+
+Se abrires sem net:
+
+index abre ✔️
+
+config/notificações podem falhar
+
+Adiciona uma offline.html ao cache
+e no fetch:
+
+.catch(() => caches.match('/Tol_v2/offline.html'))
+
+para navegação.
+
+🔐 Segurança (importante)
+
+Estás a guardar o GitHub token em localStorage ⚠️
+
+Numa PWA isso é:
+
+acessível por qualquer JS
+
+risco se houver XSS
+
+Se for só para uso pessoal → ok
+Se for pública → perigoso
+
+🧮 Lógica das notificações – está muito boa
+
+Pontos fortes:
+✔️ SHA handling correto
+✔️ evita duplicados no histórico
+✔️ remove das ativas
+✔️ badge sincronizada
+✔️ polling 60s adequado
+
+Sugestão:
+Evitar polling quando a página não está visível:
+
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") atualizarBadge();
+});
+🚀 Performance Android – melhorias rápidas
+1. Preload do CSS principal
+
+No <head>:
+
+<link rel="preload" href="styles.css" as="style">
+2. Defer nos scripts
+<script src="app.js" defer></script>
+3. Inline do CSS crítico
+
+para evitar flash
+
+🧱 Arquitetura ideal para a tua app
+
+Recomendação forte:
+
+Transformar em:
+
+index.html
+  ├── vista: home
+  ├── vista: notificações
+  ├── vista: config
+
+Navegação por:
+
+history.pushState()
+
+Sem trocar de HTML.
+
+Resultado:
+
+barra sempre preta
+
+sem reload
+
+mais rápido
+
+experiência “app nativa”
+
+📊 Resumo direto
+✔️ Estás a fazer bem
+
+manifest correto
+
+SW com versionamento
+
+network-first no index
+
+GitHub sem cache
+
+lógica de notificações sólida
+
+⚠️ Problemas atuais
+
+multi-HTML → causa flash branco
+
+falta offline fallback
+
+cache strategy pode melhorar
+
+token em localStorage (risco)
+
+🎯 Prioridade de correções
+
+Meta theme-color + CSS inline em todos os HTML
+
+stale-while-revalidate no SW
+
+página offline
+
+evitar polling em background
+
+(opcional mas recomendado) converter para SPA
+
+👉 Próximo passo
+
+Se quiseres, faço-te:
+
+✅ versão SPA da tua PWA
+com:
+
+navegação interna
+
+sem flash branco
+
+barra Android sempre preta
+
+offline completo
+
+estrutura pronta para crescer
+
+Queres manter multi-HTML ou migrar para SPA?
