@@ -58,14 +58,18 @@ async function marcarComoLida(idNotificacao) {
       notificacao.lido = true;
       notificacao.data_leitura = new Date().toISOString();
       historico.push(notificacao);
+
+      // 🔧 Construir corpo do pedido sem enviar sha se for null (criação)
+      const bodyHist = {
+        message: `📚 Histórico: ${idNotificacao}`,
+        content: btoa(JSON.stringify(historico, null, 2))
+      };
+      if (fHist.sha) bodyHist.sha = fHist.sha; // só inclui se existir
+
       await fetch(GITHUB_HISTORICO_API, {
         method: "PUT",
         headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-        body: JSON.stringify({
-          message: `📚 Histórico: ${idNotificacao}`,
-          content: btoa(JSON.stringify(historico, null, 2)),
-          sha: fHist.sha
-        })
+        body: JSON.stringify(bodyHist)
       });
     }
 
