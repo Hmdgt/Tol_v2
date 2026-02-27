@@ -3,21 +3,25 @@ name: Verificar M1lhão
 on:
   push:
     paths:
-      - 'dados/milhao_*.json'   # Deteta se você subir um JSON manualmente
-      - 'apostas/*.json'        # Deteta se o OCR detetar uma nova aposta do M1lhão
-  workflow_dispatch:            # Permite-lhe clicar no botão "Run"
+      - 'dados/milhao_*.json'
+      - 'apostas/*.json'
+  workflow_dispatch:
   
-  # A ligação mágica entre os dois:
   workflow_run:
-    workflows: ["Atualizar M1lhão automaticamente"] # Nome exato do seu 1º script
+    workflows: ["Atualizar M1lhão automaticamente"]
     types:
       - completed
 
+# GARANTIA: Gestão de fila para evitar conflitos simultâneos
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   verificar:
-    # Condição: Só corre se for manual/push OU se o script de scraping terminou com sucesso
     if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: write
 
@@ -40,13 +44,35 @@ jobs:
 
       - name: Guardar resultados
         run: |
+          # 1. Configurar Identidade e Rebase
           git config --global user.name "Bot Verificador"
           git config --global user.email "bot@github.com"
+          git config --global pull.rebase true
+
+          # 2. Isolar as alterações do script para limpar o ambiente de pull
+          git stash
+
+          # 3. Sincronizar com o servidor (com retentativas)
+          n=0
+          until [ "$n" -ge 3 ]
+          do
+             git pull origin main && break
+             n=$((n+1))
+             echo "Tentativa $n/3: Aguardando libertação do repositório..."
+             sleep 15
+          done
+
+          # 4. Devolver os resultados do verificador aos ficheiros
+          git stash pop || echo "Sem alterações locais para reaplicar"
+
+          # 5. Preparar os ficheiros JSON
           git add resultados/milhao_verificacoes.json
           git add resultados/milhao_recentes.json
-          
-          # Crucial: Sincroniza com o push que o scraper do M1lhão acabou de fazer
-          git pull --rebase origin main
-          
-          git commit -m "Verificação automática M1lhão $(date +'%Y-%m-%d')" || echo "Nenhuma alteração"
-          git push
+
+          # 6. Commit e Push seguros
+          if ! git diff --cached --quiet; then
+            git commit -m "Verificação automática M1lhão $(date +'%Y-%m-%d')"
+            git push origin main
+          else
+            echo "Os resultados já estão atualizados no repositório."
+          fi
