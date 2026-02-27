@@ -1,117 +1,162 @@
 // ===============================
-// 🚀 DOM READY
+// 🚀 APP PRINCIPAL (SPA)
 // ===============================
-document.addEventListener("DOMContentLoaded", async () => {
 
-  // 🔔 Atualizar badge se existir
-  if (window.atualizarBadge) {
-    await window.atualizarBadge();
-  }
-
-  // 📷 Botão câmara
-  const cameraBtn = document.getElementById("cameraButton");
-  const cameraInput = document.getElementById("cameraInput");
-
-  if (cameraBtn && cameraInput) {
-    cameraBtn.addEventListener("click", () => cameraInput.click());
-
-    cameraInput.addEventListener("change", () => {
-      const file = cameraInput.files[0];
-      if (file) uploadToGitHub(file);
-    });
-  }
-
-  // 🖼️ Botão galeria
-  const galleryBtn = document.getElementById("galleryButton");
-  const galleryInput = document.getElementById("galleryInput");
-
-  if (galleryBtn && galleryInput) {
-    galleryBtn.addEventListener("click", () => galleryInput.click());
-
-    galleryInput.addEventListener("change", () => {
-      const file = galleryInput.files[0];
-      if (file) uploadToGitHub(file);
-    });
-  }
-
-  // 📦 Registar Service Worker
-  if ("serviceWorker" in navigator) {
+// ---------- REGISTO SERVICE WORKER ----------
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", async () => {
     try {
-      await navigator.serviceWorker.register(
-        "/Tol_v2/service-worker.js?v=2024-02-27-01"
+      const reg = await navigator.serviceWorker.register(
+        "/Tol_v2/service-worker.js?v=2026-02-27-01"
       );
-
-      console.log("SW registado");
-
+      console.log("SW registado", reg);
+      reg.addEventListener("updatefound", () => {
+        const newWorker = reg.installing;
+        newWorker.addEventListener("statechange", () => {
+          if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+            mostrarBotaoAtualizar();
+          }
+        });
+      });
     } catch (err) {
       console.error("Erro ao registar SW", err);
     }
-  }
-});
+  });
+}
 
-// ===============================
-// 🔔 FUNÇÃO BADGE
-// ===============================
-async function atualizarBadge() {
+// ---------- FUNÇÕES GLOBAIS ----------
+
+// Badge
+window.atualizarBadge = async function () {
   const badge = document.getElementById("notificationBadge");
   if (!badge) return;
-
   try {
     const count = parseInt(localStorage.getItem("notificacoes_naoLidas") || "0");
-
-    if (count > 0) {
-      badge.style.display = "flex";
-      badge.textContent = count > 99 ? "99+" : count;
-    } else {
-      badge.style.display = "none";
-    }
+    badge.style.display = count > 0 ? "flex" : "none";
+    badge.textContent = count > 99 ? "99+" : count;
   } catch (err) {
-    console.error("Erro ao atualizar badge", err);
+    console.error("Erro no badge", err);
   }
-}
+};
 
-// ===============================
-// 🔄 ATUALIZAR APP (usado no config.html)
-// ===============================
-async function atualizarApp() {
+// Atualizar app (nova versão SW)
+window.atualizarApp = async function () {
   const reg = await navigator.serviceWorker.getRegistration();
-  if (!reg) return;
-
-  if (reg.waiting) {
+  if (reg?.waiting) {
     reg.waiting.postMessage({ action: "skipWaiting" });
   }
-
   window.location.reload();
-}
+};
 
-// ===============================
-// 🧹 RESET APP (limpar cache, MANTER tokens)
-// ===============================
-async function resetApp() {
+// Reset app (limpar caches, manter token)
+window.resetApp = async function () {
   const token = localStorage.getItem("github_token");
-
   if ("caches" in window) {
     const keys = await caches.keys();
     await Promise.all(keys.map(k => caches.delete(k)));
   }
-
   localStorage.clear();
-
-  if (token) {
-    localStorage.setItem("github_token", token);
-  }
-
+  if (token) localStorage.setItem("github_token", token);
   const reg = await navigator.serviceWorker.getRegistration();
-  if (reg) {
-    await reg.unregister();
-  }
-
+  if (reg) await reg.unregister();
   window.location.reload();
+};
+
+// Guardar token
+window.saveToken = function () {
+  const tokenInput = document.getElementById("token");
+  if (!tokenInput) return;
+  const token = tokenInput.value.trim();
+  if (!token) return alert("Introduz um token válido.");
+  localStorage.setItem("github_token", token);
+  alert("Token guardado.");
+};
+
+// ---------- ROUTER (navegação por views) ----------
+function showView(viewId) {
+  // Atualiza classes das views
+  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+  document.getElementById(viewId).classList.add("active");
+
+  // Atualiza botões activos
+  document.querySelectorAll(".navBtn").forEach(btn => btn.classList.remove("active"));
+  document.querySelector(`.navBtn[data-view="${viewId}"]`)?.classList.add("active");
+
+  // Lógica específica por view
+  if (viewId === "notificacoesView") {
+    if (typeof renderizarNotificacoes === "function") renderizarNotificacoes();
+  }
+  if (viewId === "configView") {
+    const tokenInput = document.getElementById("token");
+    const saved = localStorage.getItem("github_token");
+    if (tokenInput && saved) tokenInput.value = saved;
+  }
 }
 
-// ===============================
-// 🌍 DISPONIBILIZAR GLOBALMENTE
-// ===============================
-window.atualizarBadge = atualizarBadge;
-window.atualizarApp = atualizarApp;
-window.resetApp = resetApp;
+// Event listeners para os botões de navegação
+document.querySelectorAll(".navBtn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const viewId = btn.dataset.view;
+    if (viewId) showView(viewId);
+  });
+});
+
+// Mostrar view inicial (já está active pelo HTML, mas garantimos)
+showView("homeView");
+
+// ---------- EVENTOS CÂMARA/GALERIA (delegação) ----------
+document.body.addEventListener("click", (e) => {
+  const btn = e.target.closest("#cameraButton, #galleryButton");
+  if (!btn) return;
+
+  if (btn.id === "cameraButton") {
+    document.getElementById("cameraInput")?.click();
+  } else if (btn.id === "galleryButton") {
+    document.getElementById("galleryInput")?.click();
+  }
+});
+
+document.body.addEventListener("change", (e) => {
+  if (e.target.id === "cameraInput" || e.target.id === "galleryInput") {
+    const file = e.target.files[0];
+    if (file && typeof uploadToGitHub === "function") {
+      uploadToGitHub(file);
+    }
+  }
+});
+
+// ---------- BOTÕES DA CONFIG (usam funções globais) ----------
+document.getElementById("saveTokenBtn")?.addEventListener("click", saveToken);
+document.getElementById("resetAppBtn")?.addEventListener("click", resetApp);
+
+// ---------- POLLING INTELIGENTE ----------
+let pollingInterval;
+async function pollBadge() {
+  if (typeof window.atualizarBadge === "function") await window.atualizarBadge();
+}
+
+function startPolling() {
+  if (pollingInterval) clearInterval(pollingInterval);
+  pollBadge(); // primeira vez imediato
+  pollingInterval = setInterval(pollBadge, 60000);
+}
+
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") {
+    startPolling();
+  } else {
+    clearInterval(pollingInterval);
+  }
+});
+
+// Iniciar polling se a página estiver visível
+if (document.visibilityState === "visible") {
+  startPolling();
+}
+
+// ---------- MOSTRAR BOTÃO DE ATUALIZAÇÃO (opcional) ----------
+function mostrarBotaoAtualizar() {
+  // Podes criar um elemento flutuante ou usar uma notificação
+  console.log("Nova versão disponível. Atualize a app.");
+  // Exemplo: alert("Nova versão. Clique em 'Atualizar App' nas configurações.");
+}
