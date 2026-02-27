@@ -92,5 +92,24 @@
         "imagem_origem": "foto_1772012120204.png",
         "hash_imagem": "213b26221c855a0e8c40f9a3c50369f6",
         "data_processamento": "2026-02-26 17:17:07"
+    },
+    {
+        "tipo": "M1LHÃO",
+        "data_sorteio": "2026-02-27",
+        "data_aposta": "2026-02-27",
+        "data_emissao": "2026-02-27 18:11:22",
+        "referencia_unica": "558-04068700-EUR",
+        "concurso": "002/2026",
+        "valor_total": 0.3,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "codigo": "HBB29338"
+            }
+        ],
+        "imagem_origem": "foto_1772215988047.png",
+        "hash_imagem": "846a6c99b410363fe6e8ab10720e759a",
+        "data_processamento": "2026-02-27 18:14:57"
     }
 ]

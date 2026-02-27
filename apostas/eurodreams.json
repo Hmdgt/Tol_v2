@@ -25,5 +25,32 @@
         "imagem_origem": "foto_1772012037328.png",
         "hash_imagem": "2e5283d04ca77d66fab19e528a86fb81",
         "data_processamento": "2026-02-26 17:16:51"
+    },
+    {
+        "tipo": "EURODREAMS",
+        "data_sorteio": "2026-03-02",
+        "data_aposta": "2026-02-27",
+        "data_emissao": "2026-02-27 18:11:28",
+        "referencia_unica": "260227-17-7324481145-01104-01286",
+        "concurso": "018/2026",
+        "valor_total": 2.5,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "numeros": [
+                    "08",
+                    "09",
+                    "18",
+                    "25",
+                    "33",
+                    "39"
+                ],
+                "dream_number": "03"
+            }
+        ],
+        "imagem_origem": "foto_1772215957497.png",
+        "hash_imagem": "4eeb03c576118569c76cad7b62bc752d",
+        "data_processamento": "2026-02-27 18:15:12"
     }
 ]

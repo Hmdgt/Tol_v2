@@ -102,5 +102,31 @@
         "imagem_origem": "foto_1772012153864.png",
         "hash_imagem": "b7722cddfb100e90e3da32ba6aee8c27",
         "data_processamento": "2026-02-26 17:18:18"
+    },
+    {
+        "tipo": "Totoloto",
+        "data_sorteio": "2026-02-28",
+        "data_aposta": "2026-02-27",
+        "data_emissao": "2026-02-27 18:11:26",
+        "referencia_unica": "058-0579771-510",
+        "concurso": "017/2026",
+        "valor_total": 1.0,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "numeros": [
+                    "01",
+                    "12",
+                    "30",
+                    "31",
+                    "33"
+                ],
+                "numero_da_sorte": "04"
+            }
+        ],
+        "imagem_origem": "foto_1772215974628.png",
+        "hash_imagem": "e070ecaaee758f07086b12b875233975",
+        "data_processamento": "2026-02-27 18:14:44"
     }
 ]
