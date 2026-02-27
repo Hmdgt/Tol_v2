@@ -2,32 +2,48 @@
 const REPO = "Hmdgt/Tol_v2";
 const CAMINHO_NOTIFICACOES = "resultados/notificacoes_ativas.json";
 const CAMINHO_HISTORICO = "resultados/notificacoes_historico.json";
-const GITHUB_RAW = `https://raw.githubusercontent.com/${REPO}/main/${CAMINHO_NOTIFICACOES}`;
+
+// Usamos a API para leitura de escrita para garantir 0% de cache
 const GITHUB_API = `https://api.github.com/repos/${REPO}/contents/${CAMINHO_NOTIFICACOES}`;
 const GITHUB_HISTORICO_API = `https://api.github.com/repos/${REPO}/contents/${CAMINHO_HISTORICO}`;
 
+// ===== FUNÇÕES AUXILIARES =====
+
+// Função robusta para ler ficheiros do GitHub sem cache
+async function lerFicheiroGitHub(urlApi) {
+    const token = localStorage.getItem("github_token");
+    const headers = { 'Cache-Control': 'no-cache' };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const res = await fetch(urlApi + `?t=${Date.now()}`, { headers });
+    if (!res.ok) return { content: [], sha: null };
+    
+    const data = await res.json();
+    return {
+        content: JSON.parse(atob(data.content)),
+        sha: data.sha
+    };
+}
+
 // ===== FUNÇÕES PRINCIPAIS =====
 
-// 1. Carregar notificações
+// 1. Carregar notificações (Sempre frescas)
 async function carregarNotificacoes() {
     try {
-        const response = await fetch(GITHUB_RAW + `?t=${Date.now()}`); // Evitar cache
-        if (!response.ok) throw new Error('Erro ao carregar');
-        return await response.json();
+        const { content } = await lerFicheiroGitHub(GITHUB_API);
+        return content;
     } catch (error) {
-        console.error('Erro:', error);
+        console.error('Erro ao carregar notificações:', error);
         return [];
     }
 }
 
-// 2. Atualizar badge no index.html
+// 2. Atualizar badge
 async function atualizarBadge() {
     const notificacoes = await carregarNotificacoes();
     const naoLidas = notificacoes.filter(n => !n.lido).length;
     
-    // Guardar no localStorage para resposta rápida
     localStorage.setItem('notificacoes_naoLidas', naoLidas);
-    localStorage.setItem('notificacoes_timestamp', Date.now());
     
     const badge = document.getElementById('notificationBadge');
     if (badge) {
@@ -38,222 +54,126 @@ async function atualizarBadge() {
             badge.style.display = 'none';
         }
     }
-    
     return notificacoes;
 }
 
-// 3. Marcar notificação como lida (via API GitHub)
+// 3. Marcar como lida (Com proteção contra duplicação no histórico)
 async function marcarComoLida(idNotificacao) {
     const token = localStorage.getItem("github_token");
     if (!token) {
-        alert("Token não configurado. Vai às Configurações.");
+        alert("Token não configurado.");
         return false;
     }
-    
+
     try {
-        // ===== 1. ATUALIZAR NOTIFICAÇÕES ATIVAS =====
-        const res = await fetch(GITHUB_API, {
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
-        
-        if (!res.ok) {
-            console.error('Erro ao buscar ficheiro:', await res.text());
-            return false;
-        }
-        
-        const ficheiro = await res.json();
-        let notificacoes = JSON.parse(atob(ficheiro.content));
-        
-        const notificacaoLida = notificacoes.find(n => n.id === idNotificacao);
-        const novasAtivas = notificacoes.filter(n => n.id !== idNotificacao);
+        // --- 1. ATUALIZAR ATIVAS ---
+        const fAtivas = await lerFicheiroGitHub(GITHUB_API);
+        const notificacaoLida = fAtivas.content.find(n => n.id === idNotificacao);
         
         if (!notificacaoLida) {
-            console.log('Notificação não encontrada');
-            return false;
+            console.warn('Notificação já não está nas ativas.');
+            return true; // Consideramos sucesso pois já não está lá
         }
-        
-        // Marcar como lida e adicionar timestamp
-        notificacaoLida.lido = true;
-        notificacaoLida.data_leitura = new Date().toISOString();
-        
-        // Atualizar notificações ativas (remover a lida)
-        const updateRes = await fetch(GITHUB_API, {
+
+        const novasAtivas = fAtivas.content.filter(n => n.id !== idNotificacao);
+
+        const resUpdateAtivas = await fetch(GITHUB_API, {
             method: 'PUT',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                message: `Notificação ${idNotificacao} marcada como lida`,
+                message: `✅ Lida: ${idNotificacao}`,
                 content: btoa(JSON.stringify(novasAtivas, null, 2)),
-                sha: ficheiro.sha
+                sha: fAtivas.sha
             })
         });
+
+        if (!resUpdateAtivas.ok) throw new Error('Falha ao atualizar ativas');
+
+        // --- 2. ADICIONAR AO HISTÓRICO (Com Verificação de Duplicados) ---
+        const fHist = await lerFicheiroGitHub(GITHUB_HISTORICO_API);
+        let historico = fHist.content;
+
+        // SÓ ADICIONA SE O ID NÃO EXISTIR NO HISTÓRICO
+        const jaExisteNoHist = historico.some(n => n.id === idNotificacao);
         
-        if (!updateRes.ok) {
-            console.error('Erro ao atualizar ativas:', await updateRes.text());
-            return false;
-        }
-        
-        // ===== 2. ADICIONAR AO HISTÓRICO =====
-        let historico = [];
-        let shaHist = null;
-        
-        try {
-            const resHist = await fetch(GITHUB_HISTORICO_API, {
-                headers: { 'Authorization': `Bearer ${token}` }
+        if (!jaExisteNoHist) {
+            notificacaoLida.lido = true;
+            notificacaoLida.data_leitura = new Date().toISOString();
+            historico.push(notificacaoLida);
+
+            await fetch(GITHUB_HISTORICO_API, {
+                method: 'PUT',
+                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    message: `📚 Histórico: ${idNotificacao}`,
+                    content: btoa(JSON.stringify(historico, null, 2)),
+                    sha: fHist.sha
+                })
             });
-            
-            if (resHist.ok) {
-                const ficheiroHist = await resHist.json();
-                historico = JSON.parse(atob(ficheiroHist.content));
-                shaHist = ficheiroHist.sha;
-            }
-        } catch (e) {
-            console.log('Histórico ainda não existe, vai ser criado');
         }
-        
-        // Adicionar notificação lida ao histórico
-        historico.push(notificacaoLida);
-        
-        // Atualizar histórico
-        await fetch(GITHUB_HISTORICO_API, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                message: `Notificação ${idNotificacao} adicionada ao histórico`,
-                content: btoa(JSON.stringify(historico, null, 2)),
-                sha: shaHist
-            })
-        });
-        
-        console.log('✅ Notificação movida para o histórico');
-        
-        // Atualizar badge
+
         await atualizarBadge();
-        
         return true;
-        
     } catch (error) {
-        console.error('Erro ao marcar como lida:', error);
+        console.error('Erro na operação:', error);
         return false;
     }
 }
 
-// 4. Renderizar lista de notificações (SÓ NÃO LIDAS)
+// 4. Renderizar (Filtro rigoroso)
 async function renderizarNotificacoes() {
     const listaElement = document.getElementById('notificationsList');
     if (!listaElement) return;
+
+    listaElement.innerHTML = '<div class="loading">Buscando resultados...</div>';
     
     const notificacoes = await carregarNotificacoes();
-    
-    // 🔴 FILTRAR APENAS NÃO LIDAS (lido: false)
     const naoLidas = notificacoes.filter(n => !n.lido);
-    
+
     if (naoLidas.length === 0) {
-        listaElement.innerHTML = '<div class="no-notifications">✨ Nenhuma notificação</div>';
+        listaElement.innerHTML = '<div class="no-notifications">✨ Tudo limpo!</div>';
         return;
     }
-    
-    let html = '';
-    for (const notif of naoLidas) {  // ← Só itera sobre não lidas
-        html += `
-            <div class="notification-card" data-id="${notif.id}" data-lido="${notif.lido}">
-                <div class="notification-header">
-                    <ion-icon name="notifications-outline" class="jogo-icon"></ion-icon>
-                    <span class="jogo-nome">${notif.jogo || 'Jogo'}</span>
-                    <span class="unread-badge">Nova</span>
-                    <span class="notification-date">${new Date(notif.data).toLocaleDateString('pt-PT')}</span>
-                </div>
-                <div class="notification-title">${notif.titulo || 'Novo resultado'}</div>
-                <div class="notification-subtitle">${notif.subtitulo || ''}</div>
-                <div class="notification-resumo">${notif.resumo || 'Ver detalhes'}</div>
+
+    listaElement.innerHTML = naoLidas.map(notif => `
+        <div class="notification-card" data-id="${notif.id}">
+            <div class="notification-header">
+                <ion-icon name="notifications-outline" class="jogo-icon"></ion-icon>
+                <span class="jogo-nome">${notif.jogo}</span>
+                <span class="unread-badge">Nova</span>
+                <span class="notification-date">${new Date(notif.data).toLocaleDateString('pt-PT')}</span>
             </div>
-        `;
-    }
-    
-    listaElement.innerHTML = html;
-    
-    // Adicionar eventos de clique
+            <div class="notification-title">${notif.titulo}</div>
+            <div class="notification-subtitle">${notif.subtitulo}</div>
+            <div class="notification-resumo">${notif.resumo}</div>
+        </div>
+    `).join('');
+
+    // Eventos de clique
     document.querySelectorAll('.notification-card').forEach(card => {
         card.addEventListener('click', async () => {
             const id = card.dataset.id;
-            
-            // Desativar clique duplo e mostrar indicador
+            card.style.opacity = '0.5';
             card.style.pointerEvents = 'none';
-            const processing = document.createElement('div');
-            processing.className = 'processing';
-            processing.innerHTML = '⏳ A marcar como lida...';
-            card.appendChild(processing);
-            
-            // Marcar como lida no GitHub
-            const resultado = await marcarComoLida(id);
-            
-            if (resultado) {
-                // Remover o card da lista
+
+            if (await marcarComoLida(id)) {
                 card.remove();
-                
-                // Se não houver mais cards, mostrar mensagem
                 if (document.querySelectorAll('.notification-card').length === 0) {
-                    listaElement.innerHTML = '<div class="no-notifications">✨ Nenhuma notificação</div>';
+                    listaElement.innerHTML = '<div class="no-notifications">✨ Tudo limpo!</div>';
                 }
-                
-                console.log('✅ Notificação removida da lista');
             } else {
-                // Reativar clique se falhou
+                card.style.opacity = '1';
                 card.style.pointerEvents = 'auto';
-                processing.remove();
             }
         });
     });
 }
 
-// 5. Verificar token ao carregar
-function verificarToken() {
-    const token = localStorage.getItem("github_token");
-    if (!token) {
-        // Mostrar aviso subtil
-        const aviso = document.createElement('div');
-        aviso.style.cssText = `
-            position: fixed;
-            bottom: 80px;
-            left: 20px;
-            right: 20px;
-            background: #333;
-            color: white;
-            padding: 10px;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 14px;
-            z-index: 1000;
-        `;
-        aviso.innerHTML = '⚠️ Token não configurado. <a href="config.html" style="color: #ffd700;">Configurar</a>';
-        document.body.appendChild(aviso);
-        
-        // Remover após 5 segundos
-        setTimeout(() => aviso.remove(), 5000);
-    }
-    return token;
-}
-
 // 6. Inicialização
 document.addEventListener('DOMContentLoaded', async () => {
-    console.log('🚀 Inicializando sistema de notificações');
-    
-    // Verificar token (não obrigatório para ver, só para marcar)
-    verificarToken();
-    
-    // Se estiver na página de notificações
     if (window.location.pathname.includes('notificacoes.html')) {
         await renderizarNotificacoes();
     }
-    
-    // Sempre atualizar badge (em qualquer página)
     await atualizarBadge();
-    
-    // Atualizar badge periodicamente (a cada 30 segundos)
-    setInterval(atualizarBadge, 30000);
+    setInterval(atualizarBadge, 60000); // 1 minuto é suficiente com a API
 });
