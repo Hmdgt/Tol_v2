@@ -54,18 +54,39 @@ window.atualizarApp = async function () {
   window.location.reload();
 };
 
-// Reset app (limpar caches, manter token)
+// Reset app (hard reset: limpa caches, remove SW, mantém token)
 window.resetApp = async function () {
-  const token = localStorage.getItem("github_token");
-  if ("caches" in window) {
-    const keys = await caches.keys();
-    await Promise.all(keys.map(k => caches.delete(k)));
+  try {
+    // 1️⃣ Guardar token antes de limpar tudo
+    const token = localStorage.getItem("github_token");
+
+    // 2️⃣ Limpar TODOS os caches
+    if ("caches" in window) {
+      const keys = await caches.keys();
+      await Promise.all(keys.map(k => caches.delete(k)));
+    }
+
+    // 3️⃣ Remover todos os service workers ativos
+    if ("serviceWorker" in navigator) {
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(registrations.map(reg => reg.unregister()));
+    }
+
+    // 4️⃣ Limpar localStorage completamente
+    localStorage.clear();
+
+    // 5️⃣ Restaurar token
+    if (token) {
+      localStorage.setItem("github_token", token);
+    }
+
+    // 6️⃣ Forçar reload limpo (vai buscar index.html ao servidor)
+    window.location.href = "/Tol_v2/index.html";
+
+  } catch (err) {
+    console.error("Erro ao fazer reset:", err);
+    alert("Erro ao atualizar a aplicação. Tenta novamente.");
   }
-  localStorage.clear();
-  if (token) localStorage.setItem("github_token", token);
-  const reg = await navigator.serviceWorker.getRegistration();
-  if (reg) await reg.unregister();
-  window.location.reload();
 };
 
 // Guardar token
