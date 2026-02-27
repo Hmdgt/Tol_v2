@@ -10,7 +10,7 @@ const GITHUB_HISTORICO_API = `https://api.github.com/repos/${REPO}/contents/${CA
 // ---------- LER FICHEIRO ----------
 async function lerFicheiroGitHub(urlApi) {
   const token = localStorage.getItem("github_token");
-  const headers = { "Cache-Control": "no-cache" };
+  const headers = {};
   if (token) headers["Authorization"] = `Bearer ${token}`;
   const res = await fetch(urlApi + `?t=${Date.now()}`, { headers });
   if (!res.ok) return { content: [], sha: null };
