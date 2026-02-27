@@ -3,11 +3,23 @@ name: Detetar Novos Resultados
 on:
   push:
     paths:
-      - 'resultados/*_recentes.json'  # Quando qualquer *_recentes.json é atualizado
+      - 'resultados/*_recentes.json'
   workflow_dispatch:
+
+  # Corre automaticamente quando QUALQUER verificador terminar
+  workflow_run:
+    workflows:
+      - "Verificar Totoloto"
+      - "Verificar M1lhão"
+      - "Verificar Euromilhões"
+      - "Verificar EuroDreams"
+    types:
+      - completed
 
 jobs:
   gerar-notificacoes:
+    # Só corre se o workflow anterior teve sucesso OU se foi push/manual
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -15,6 +27,8 @@ jobs:
     steps:
       - name: Checkout do repositório
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Configurar Python
         uses: actions/setup-python@v5
@@ -22,8 +36,7 @@ jobs:
           python-version: '3.11'
 
       - name: Instalar dependências
-        run: |
-          pip install Pillow
+        run: pip install Pillow
 
       - name: Gerar notificações ativas
         run: python scripts/gerar_notificacoes.py
@@ -32,9 +45,11 @@ jobs:
         run: |
           git config --global user.name "Bot Notificações"
           git config --global user.email "bot@github.com"
-          
-          # Adicionar todos os ficheiros de notificações (existentes ou não)
+
           git add resultados/notificacoes_*.json || true
-          
+
+          # Evita conflitos com pushes dos verificadores
+          git pull --rebase origin main
+
           git commit -m "Atualização de notificações $(date +'%Y-%m-%d %H:%M')" || echo "Nenhuma alteração"
           git push
