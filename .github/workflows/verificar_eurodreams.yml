@@ -11,10 +11,17 @@ on:
     types:
       - completed
 
+# GARANTIA: Se houver vários disparos, eles esperam em fila (evita conflitos com o Pages)
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   verificar:
+    # Só corre se for disparo manual/push OU se o workflow anterior tiver tido sucesso
     if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: write
 
@@ -42,17 +49,30 @@ jobs:
           git config --global user.email "bot@github.com"
           git config --global pull.rebase true
 
-          # 2. Atualizar o repositório ANTES de mexer no index
-          git pull origin main
+          # 2. Guardar alterações do script temporariamente (evita erro de "unstaged changes")
+          git stash
 
-          # 3. Adicionar arquivos
+          # 3. Atualizar repositório (Pull com re-tentativas caso o GitHub esteja ocupado)
+          n=0
+          until [ "$n" -ge 3 ]
+          do
+             git pull origin main && break
+             n=$((n+1))
+             echo "Aguardando disponibilidade do repositório... (Tentativa $n/3)"
+             sleep 15
+          done
+
+          # 4. Recuperar as alterações do script
+          git stash pop || echo "Sem mudanças locais para reaplicar"
+
+          # 5. Adicionar ficheiros (Captura alterações manuais ou do script)
           git add resultados/eurodreams_verificacoes.json
           git add resultados/eurodreams_recentes.json
 
-          # 4. Só fazer commit e push se houver alterações reais
+          # 6. Só faz commit e push se houver mudanças reais face ao servidor
           if ! git diff --cached --quiet; then
             git commit -m "Verificação automática EuroDreams $(date +'%Y-%m-%d')"
             git push origin main
           else
-            echo "Sem alterações nos resultados para salvar."
+            echo "Tudo atualizado. Nenhuma alteração detetada para commit."
           fi
