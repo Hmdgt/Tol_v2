@@ -7,7 +7,7 @@ const CAMINHO_HISTORICO = "resultados/notificacoes_historico.json";
 const GITHUB_API = `https://api.github.com/repos/${REPO}/contents/${CAMINHO_NOTIFICACOES}`;
 const GITHUB_HISTORICO_API = `https://api.github.com/repos/${REPO}/contents/${CAMINHO_HISTORICO}`;
 
-// ---------- LER FICHEIRO ----------
+// ---------- LER FICHEIRO (com suporte UTF-8) ----------
 async function lerFicheiroGitHub(urlApi) {
   const token = localStorage.getItem("github_token");
   const headers = {};
@@ -15,7 +15,20 @@ async function lerFicheiroGitHub(urlApi) {
   const res = await fetch(urlApi + `?t=${Date.now()}`, { headers });
   if (!res.ok) return { content: [], sha: null };
   const data = await res.json();
-  return { content: JSON.parse(atob(data.content)), sha: data.sha };
+
+  // Decodificar base64 para UTF-8
+  const binary = atob(data.content);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  const decoder = new TextDecoder('utf-8');
+  const jsonText = decoder.decode(bytes);
+
+  return {
+    content: JSON.parse(jsonText),
+    sha: data.sha
+  };
 }
 
 // ---------- CARREGAR NOTIFICAÇÕES ----------
