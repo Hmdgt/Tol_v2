@@ -16,11 +16,17 @@ on:
     types:
       - completed
 
+# FUNDAMENTAL: Como este workflow é disparado por muitos outros, 
+# a fila de espera (concurrency) é obrigatória aqui.
+concurrency:
+  group: notifications-gate
+  cancel-in-progress: false
+
 jobs:
   gerar-notificacoes:
-    # Só corre se o workflow anterior teve sucesso OU se foi push/manual
     if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: write
 
@@ -41,15 +47,36 @@ jobs:
       - name: Gerar notificações ativas
         run: python scripts/gerar_notificacoes.py
 
-      - name: Commit das notificações
+      - name: Guardar notificações
         run: |
+          # 1. Configurar Identidade
           git config --global user.name "Bot Notificações"
           git config --global user.email "bot@github.com"
+          git config --global pull.rebase true
 
-          git add resultados/notificacoes_*.json || true
+          # 2. Stash para proteger os novos ficheiros de notificações
+          git stash
 
-          # Evita conflitos com pushes dos verificadores
-          git pull --rebase origin main
+          # 3. Pull com retentativas (essencial aqui devido ao volume de triggers)
+          n=0
+          until [ "$n" -ge 5 ]
+          do
+             git pull origin main && break
+             n=$((n+1))
+             echo "A aguardar que outros verificadores libertem o repositório... ($n/5)"
+             sleep 20
+          done
 
-          git commit -m "Atualização de notificações $(date +'%Y-%m-%d %H:%M')" || echo "Nenhuma alteração"
-          git push
+          # 4. Recuperar notificações geradas
+          git stash pop || echo "Sem novas notificações para aplicar"
+
+          # 5. Adicionar ficheiros (o wildcard captura todos os json de notificações)
+          git add resultados/notificacoes_*.json
+
+          # 6. Commit e Push
+          if ! git diff --cached --quiet; then
+            git commit -m "Atualização de notificações $(date +'%Y-%m-%d %H:%M')"
+            git push origin main
+          else
+            echo "Nenhuma notificação nova gerada."
+          fi
