@@ -6,7 +6,6 @@ on:
       - 'dados/eurodreams_*.json'
       - 'apostas/*.json'
   workflow_dispatch:
-
   workflow_run:
     workflows: ["Atualizar EuroDreams automaticamente"]
     types:
@@ -38,13 +37,22 @@ jobs:
 
       - name: Guardar resultados
         run: |
+          # 1. Configurar Identidade
           git config --global user.name "Bot Verificador"
           git config --global user.email "bot@github.com"
+          git config --global pull.rebase true
 
+          # 2. Atualizar o repositório ANTES de mexer no index
+          git pull origin main
+
+          # 3. Adicionar arquivos
           git add resultados/eurodreams_verificacoes.json
           git add resultados/eurodreams_recentes.json
 
-          git pull --rebase origin main
-
-          git commit -m "Verificação automática EuroDreams $(date +'%Y-%m-%d')" || echo "Nenhuma alteração"
-          git push
+          # 4. Só fazer commit e push se houver alterações reais
+          if ! git diff --cached --quiet; then
+            git commit -m "Verificação automática EuroDreams $(date +'%Y-%m-%d')"
+            git push origin main
+          else
+            echo "Sem alterações nos resultados para salvar."
+          fi
