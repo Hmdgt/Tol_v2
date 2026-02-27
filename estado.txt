@@ -320,4 +320,257 @@ offline completo
 
 estrutura pronta para crescer
 
-Queres manter multi-HTML ou migrar para SPA?
+A IDEIA É EVOLUIR PARA ISOT
+
+🧾 Estado atual (resumo técnico)
+
+Tens:
+
+Manifest correto ✔️
+
+Service Worker funcional ✔️
+
+Cache versionado ✔️
+
+Network-first no index ✔️
+
+API GitHub sem cache ✔️
+
+UI dark ✔️
+
+Problemas reais:
+
+⚠️ Flash branco / barra Android
+
+⚠️ Multi-HTML → reload completo
+
+⚠️ Sem fallback offline
+
+⚠️ Estratégia de cache básica
+
+⚠️ Polling sempre ativo
+
+⚠️ Token exposto (aceitável se app privada)
+
+⚠️ Sem router interno (não escala bem)
+
+🧠 Decisão arquitetural (a mais importante)
+❗ NÃO usar múltiplos HTML
+
+Em PWA Android isso causa:
+
+reload visual
+
+perda de estado
+
+barra inferior branca
+
+menor performance
+
+👉 Sim, deves usar 1 único HTML + JS router
+(não precisas de React)
+
+Uma SPA “vanilla JS” funciona perfeitamente no GitHub Pages.
+
+🏗️ Estrutura final recomendada
+index.html
+app.js
+router.js
+views/
+  home.js
+  notificacoes.js
+  config.js
+sw.js
+manifest.json
+styles.css
+offline.html
+🧭 Router interno (sem React)
+
+Exemplo simples:
+
+const routes = {
+  home: renderHome,
+  notificacoes: renderNotificacoes,
+  config: renderConfig
+};
+
+function navigate(page) {
+  history.pushState({ page }, "", `#${page}`);
+  routes[page]();
+}
+
+window.addEventListener("popstate", e => {
+  const page = e.state?.page || "home";
+  routes[page]();
+});
+
+Botões:
+
+<button onclick="navigate('notificacoes')">Notificações</button>
+
+✔️ Sem reload
+✔️ Barra preta permanente
+✔️ Estado preservado
+
+📱 Barra Android 100% preta (fix definitivo)
+Em index.html (único HTML)
+
+No topo do <head>:
+
+<meta name="theme-color" content="#000000">
+<meta name="background-color" content="#000000">
+<meta name="color-scheme" content="dark">
+<style>
+  html, body {
+    background:#000;
+    color:#fff;
+    margin:0;
+  }
+</style>
+
+⚠️ Isto tem de estar inline antes de qualquer CSS externo.
+
+⚙️ Service Worker – versão produção
+Estratégia final
+Recurso	Estratégia
+index.html	network-first
+CSS/JS	stale-while-revalidate
+icons	cache-first
+API GitHub	network-only
+Fetch final recomendado
+self.addEventListener("fetch", event => {
+  const req = event.request;
+
+  if (req.method !== "GET") return;
+
+  // Navegação → index (SPA)
+  if (req.mode === "navigate") {
+    event.respondWith(
+      fetch("/Tol_v2/index.html")
+        .catch(() => caches.match("/Tol_v2/offline.html"))
+    );
+    return;
+  }
+
+  // API GitHub → sempre rede
+  if (req.url.includes("api.github.com")) {
+    return;
+  }
+
+  // Stale while revalidate
+  event.respondWith(
+    caches.match(req).then(cached => {
+      const fetchPromise = fetch(req).then(networkResp => {
+        caches.open(CACHE_NAME).then(cache =>
+          cache.put(req, networkResp.clone())
+        );
+        return networkResp;
+      });
+      return cached || fetchPromise;
+    })
+  );
+});
+📡 Offline real
+
+Adicionar:
+
+offline.html
+<h2>Sem ligação</h2>
+<p>Os dados serão atualizados quando voltares online.</p>
+
+E incluir no ASSETS.
+
+🔔 Notificações – otimização final
+Parar polling em background
+let interval;
+
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") {
+    atualizarBadge();
+    interval = setInterval(atualizarBadge, 60000);
+  } else {
+    clearInterval(interval);
+  }
+});
+🔐 Token GitHub
+
+Em GitHub Pages não há backend.
+
+Opções:
+
+Opção	Segurança
+localStorage	⚠️ baixa
+sessionStorage	⚠️ baixa
+GitHub fine-grained token só repo	✔️ aceitável
+
+👉 Para app pessoal está OK.
+
+🚀 Performance Android
+
+Adicionar no <head>:
+
+<link rel="manifest" href="manifest.json">
+<link rel="preload" href="styles.css" as="style">
+<script defer src="app.js"></script>
+📲 Escalar para “mais páginas”
+
+Com SPA:
+
+Adicionar nova vista:
+
+views/
+  historico.js
+
+Registar no router:
+
+routes.historico = renderHistorico;
+
+Sem mexer no SW
+Sem novo HTML
+Sem flash
+
+🧱 Regras de ouro para PWA em GitHub Pages
+
+✔️ 1 único HTML
+
+✔️ Router JS interno
+
+✔️ SW com SPA fallback
+
+✔️ Inline CSS crítico
+
+✔️ Versionar cache em cada deploy
+
+✔️ API sempre network-only
+
+✔️ Offline page
+
+✔️ Parar polling em background
+
+✔️ theme-color no HTML + manifest
+
+📊 Resultado esperado
+
+Com isto:
+
+Barra Android sempre preta ✅
+
+Zero flash branco ✅
+
+Carregamento instantâneo offline ✅
+
+Atualização automática em background ✅
+
+Escalável para 20+ vistas ✅
+
+UX de app nativa ✅
+
+🧭 Próximo passo
+
+Posso entregar-te já:
+
+✅ index.html SPA pronto
+✅ router.js
+✅ sw.js final produção
+✅ estrutura de views
+✅ exemplo de navegação
