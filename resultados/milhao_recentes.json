@@ -1,0 +1,164 @@
+[
+  {
+    "data_verificacao": "2026-02-27 21:21:13",
+    "boletim": {
+      "referencia": "551-04210522-EUR",
+      "data_sorteio": "2026-02-27",
+      "imagem_origem": "foto_1772012099095.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "codigo": "GQC37079",
+      "codigo_original": "GQC37079"
+    },
+    "sorteio": {
+      "concurso": "002/2026",
+      "data": "27/02/2026",
+      "codigo_premiado": "GDH32855",
+      "codigo_original": "GDH 32855",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Código não premiado",
+      "valor": "€ 0,00"
+    }
+  },
+  {
+    "data_verificacao": "2026-02-27 21:21:13",
+    "boletim": {
+      "referencia": "548-02491157-EUR",
+      "data_sorteio": "2026-02-27",
+      "imagem_origem": "foto_1772012047961.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "codigo": "GNN36567",
+      "codigo_original": "GNN36567"
+    },
+    "sorteio": {
+      "concurso": "002/2026",
+      "data": "27/02/2026",
+      "codigo_premiado": "GDH32855",
+      "codigo_original": "GDH 32855",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Código não premiado",
+      "valor": "€ 0,00"
+    }
+  },
+  {
+    "data_verificacao": "2026-02-27 21:21:13",
+    "boletim": {
+      "referencia": "537-01276244-EUR",
+      "data_sorteio": "2026-02-27",
+      "imagem_origem": "foto_1772012109901.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "codigo": "GFQ14191",
+      "codigo_original": "GFQ14191"
+    },
+    "sorteio": {
+      "concurso": "002/2026",
+      "data": "27/02/2026",
+      "codigo_premiado": "GDH32855",
+      "codigo_original": "GDH 32855",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Código não premiado",
+      "valor": "€ 0,00"
+    }
+  },
+  {
+    "data_verificacao": "2026-02-27 21:21:13",
+    "boletim": {
+      "referencia": "544-06256031-EUR",
+      "data_sorteio": "2026-02-27",
+      "imagem_origem": "foto_1772012073331.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "codigo": "GLJ28595",
+      "codigo_original": "GLJ28595"
+    },
+    "sorteio": {
+      "concurso": "002/2026",
+      "data": "27/02/2026",
+      "codigo_premiado": "GDH32855",
+      "codigo_original": "GDH 32855",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Código não premiado",
+      "valor": "€ 0,00"
+    }
+  },
+  {
+    "data_verificacao": "2026-02-27 21:21:13",
+    "boletim": {
+      "referencia": "555-02820325-EUR",
+      "data_sorteio": "2026-02-27",
+      "imagem_origem": "foto_1772012120204.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "codigo": "GTP11668",
+      "codigo_original": "GTP11668"
+    },
+    "sorteio": {
+      "concurso": "002/2026",
+      "data": "27/02/2026",
+      "codigo_premiado": "GDH32855",
+      "codigo_original": "GDH 32855",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Código não premiado",
+      "valor": "€ 0,00"
+    }
+  },
+  {
+    "data_verificacao": "2026-02-27 21:21:13",
+    "boletim": {
+      "referencia": "558-04068700-EUR",
+      "data_sorteio": "2026-02-27",
+      "imagem_origem": "foto_1772215988047.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "codigo": "HBB29338",
+      "codigo_original": "HBB29338"
+    },
+    "sorteio": {
+      "concurso": "002/2026",
+      "data": "27/02/2026",
+      "codigo_premiado": "GDH32855",
+      "codigo_original": "GDH 32855",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Código não premiado",
+      "valor": "€ 0,00"
+    }
+  }
+]
