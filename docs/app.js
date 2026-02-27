@@ -127,6 +127,9 @@ function showView(viewId) {
     const saved = localStorage.getItem("github_token");
     if (tokenInput && saved) tokenInput.value = saved;
   }
+
+  // 🔥 Guardar última view no localStorage
+  localStorage.setItem("lastView", viewId);
 }
 
 // Event listeners para os botões de navegação
@@ -137,8 +140,13 @@ document.querySelectorAll(".navBtn").forEach(btn => {
   });
 });
 
-// Mostrar view inicial
-showView("homeView");
+// 🔥 Restaurar última view ao iniciar
+const lastView = localStorage.getItem("lastView");
+if (lastView && document.getElementById(lastView)) {
+  showView(lastView);
+} else {
+  showView("homeView");
+}
 
 // ---------- EVENTOS CÂMARA/GALERIA (delegação) ----------
 document.body.addEventListener("click", (e) => {
