@@ -1,13 +1,13 @@
 {
-  "concurso": "001/2026",
-  "data": "30/01/2026",
-  "codigo": "DXC 35552",
+  "concurso": "002/2026",
+  "data": "27/02/2026",
+  "codigo": "GDH 32855",
   "premio_nome": "1.º Prémio",
   "vencedores": "1",
   "estatisticas": [
     {
       "nome": "Receita ilíquida apostas",
-      "valor": "€ 5.620.996,50"
+      "valor": "€ 4.983.492,30"
     },
     {
       "nome": "Montante para prémios",
@@ -15,11 +15,11 @@
     },
     {
       "nome": "Nº de Registos",
-      "valor": "10.633.162"
+      "valor": "9.388.373"
     },
     {
       "nome": "Nº de Códigos atribuídos",
-      "valor": "18.736.655"
+      "valor": "16.611.641"
     }
   ]
 }

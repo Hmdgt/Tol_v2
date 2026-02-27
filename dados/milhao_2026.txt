@@ -1,11 +1,11 @@
-Concurso: 001/2026
-Data: 30/01/2026
-Código vencedor: DXC 35552
+Concurso: 002/2026
+Data: 27/02/2026
+Código vencedor: GDH 32855
 Vencedores: 1
 ----------------------------------------
 Estatísticas:
-Receita ilíquida apostas: € 5.620.996,50
+Receita ilíquida apostas: € 4.983.492,30
 Montante para prémios: € 1.000.000,00
-Nº de Registos: 10.633.162
-Nº de Códigos atribuídos: 18.736.655
+Nº de Registos: 9.388.373
+Nº de Códigos atribuídos: 16.611.641
 ----------------------------------------

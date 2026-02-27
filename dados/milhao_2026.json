@@ -24,6 +24,31 @@
           "valor": "18.736.655"
         }
       ]
+    },
+    {
+      "concurso": "002/2026",
+      "data": "27/02/2026",
+      "codigo": "GDH 32855",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1",
+      "estatisticas": [
+        {
+          "nome": "Receita ilíquida apostas",
+          "valor": "€ 4.983.492,30"
+        },
+        {
+          "nome": "Montante para prémios",
+          "valor": "€ 1.000.000,00"
+        },
+        {
+          "nome": "Nº de Registos",
+          "valor": "9.388.373"
+        },
+        {
+          "nome": "Nº de Códigos atribuídos",
+          "valor": "16.611.641"
+        }
+      ]
     }
   ]
 }
