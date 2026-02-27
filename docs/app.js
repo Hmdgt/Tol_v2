@@ -45,13 +45,18 @@ window.atualizarBadge = async function () {
   }
 };
 
-// Atualizar app (nova versão SW)
+// Atualizar app (nova versão SW) - Versão melhorada com controllerchange
 window.atualizarApp = async function () {
   const reg = await navigator.serviceWorker.getRegistration();
   if (reg?.waiting) {
     reg.waiting.postMessage({ action: "skipWaiting" });
+    // Aguarda o novo service worker assumir o controlo antes de recarregar
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      window.location.reload();
+    }, { once: true });
+  } else {
+    window.location.reload();
   }
-  window.location.reload();
 };
 
 // Reset app (hard reset: limpa caches, remove SW, mantém token)
@@ -101,12 +106,19 @@ window.saveToken = function () {
 
 // ---------- ROUTER (navegação por views) ----------
 function showView(viewId) {
+  // Remove active de todas as views
   document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-  document.getElementById(viewId).classList.add("active");
 
+  // Ativa a view solicitada (com verificação de existência)
+  const view = document.getElementById(viewId);
+  if (view) view.classList.add("active");
+
+  // Atualiza botões ativos
   document.querySelectorAll(".navBtn").forEach(btn => btn.classList.remove("active"));
-  document.querySelector(`.navBtn[data-view="${viewId}"]`)?.classList.add("active");
+  const activeBtn = document.querySelector(`.navBtn[data-view="${viewId}"]`);
+  if (activeBtn) activeBtn.classList.add("active");
 
+  // Lógica específica por view
   if (viewId === "notificacoesView") {
     if (typeof renderizarNotificacoes === "function") renderizarNotificacoes();
   }
