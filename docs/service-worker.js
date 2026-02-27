@@ -52,6 +52,11 @@ self.addEventListener("fetch", event => {
 
   const url = new URL(req.url);
 
+  // 🔥 IGNORAR API DO GITHUB (não aplicar cache)
+  if (url.hostname === "api.github.com") {
+    return; // O browser faz o fetch normal
+  }
+
   // Network-first para navegação (HTML)
   if (req.mode === "navigate" || url.pathname.endsWith("index.html")) {
     event.respondWith(
