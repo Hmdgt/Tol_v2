@@ -455,10 +455,16 @@ def gerar_relatorio(resultados: list):
                 if len(r.get('premios', [])) > 1:
                     # Contar cada prémio individualmente para estatísticas
                     for p in r['premios']:
-                        cat = p['premio']
+                        cat = p.get('premio', 'Desconhecido')
                         premios_contagem[cat] = premios_contagem.get(cat, 0) + 1
                 else:
-                    cat = r['premio']['categoria']
+                    # Caso de prémio único: pode estar em 'premio' ou em 'premios' com 1 elemento
+                    if r.get('premios') and len(r['premios']) == 1:
+                        cat = r['premios'][0].get('premio', 'Desconhecido')
+                    elif r.get('premio'):
+                        cat = r['premio'].get('premio', r['premio'].get('categoria', 'Desconhecido'))
+                    else:
+                        cat = 'Desconhecido'
                     premios_contagem[cat] = premios_contagem.get(cat, 0) + 1
         
         for cat, count in sorted(premios_contagem.items()):
