@@ -3,21 +3,25 @@ name: Verificar Euromilhões
 on:
   push:
     paths:
-      - 'dados/euromilhoes_*.json'   # Ativa se você carregar dados manualmente
-      - 'apostas/*.json'             # Ativa se o OCR processar um novo boletim
-  workflow_dispatch:                 # Botão manual
+      - 'dados/euromilhoes_*.json'
+      - 'apostas/*.json'
+  workflow_dispatch:
   
-  # A ligação com o Scraper do EuroMilhões
   workflow_run:
     workflows: ["Atualizar EuroMilhões automaticamente"]
     types:
       - completed
 
+# GARANTIA: Evita que dois workflows mexam no repositório ao mesmo tempo
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   verificar:
-    # Só corre se o anterior teve sucesso OU se foi disparo por push/manual
     if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: write
 
@@ -40,13 +44,35 @@ jobs:
 
       - name: Guardar resultados
         run: |
+          # 1. Configurar Identidade e Rebase
           git config --global user.name "Bot Verificador"
           git config --global user.email "bot@github.com"
+          git config --global pull.rebase true
+
+          # 2. Guardar alterações do script para limpar o diretório
+          git stash
+
+          # 3. Pull com re-tentativa (caso o deploy do Pages esteja a bloquear)
+          n=0
+          until [ "$n" -ge 3 ]
+          do
+             git pull origin main && break
+             n=$((n+1))
+             echo "Repositório ocupado, a tentar novamente em 15s... ($n/3)"
+             sleep 15
+          done
+
+          # 4. Recuperar as alterações do script de verificação
+          git stash pop || echo "Sem alterações locais para aplicar"
+
+          # 5. Adicionar ficheiros (sejam novos ou editados)
           git add resultados/euromilhoes_verificacoes.json
           git add resultados/euromilhoes_recentes.json
-          
-          # Sincroniza com os dados que o scraper acabou de enviar
-          git pull --rebase origin main
-          
-          git commit -m "Verificação automática EuroMilhões $(date +'%Y-%m-%d')" || echo "Nenhuma alteração"
-          git push
+
+          # 6. Commit apenas se houver mudanças reais (evita erro de commit vazio)
+          if ! git diff --cached --quiet; then
+            git commit -m "Verificação automática EuroMilhões $(date +'%Y-%m-%d')"
+            git push origin main
+          else
+            echo "Nada de novo para guardar. O repositório já está atualizado."
+          fi
