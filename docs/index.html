@@ -1,182 +1,140 @@
-// ===============================
-// 🚀 APP PRINCIPAL (SPA)
-// ===============================
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Apostas Pirika</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 
-// ---------- REGISTO SERVICE WORKER ----------
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", async () => {
-    try {
-      const reg = await navigator.serviceWorker.register(
-        "/Tol_v2/service-worker.js?v=2026-02-27-01"
-      );
-      console.log("SW registado", reg);
-      reg.addEventListener("updatefound", () => {
-        const newWorker = reg.installing;
-        newWorker.addEventListener("statechange", () => {
-          if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
-            mostrarBotaoAtualizar();
-          }
-        });
-      });
-    } catch (err) {
-      console.error("Erro ao registar SW", err);
+  <!-- Barra preta -->
+  <meta name="theme-color" content="#000000">
+  <meta name="color-scheme" content="dark">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
+
+  <!-- Ionicons -->
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+  <link rel="manifest" href="/Tol_v2/manifest.json">
+
+  <style>
+    /* ========== RESET ========== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { background: #000; height: 100%; color-scheme: dark; }
+    body {
+      margin: 0; background: #000 !important; font-family: sans-serif;
+      padding: env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);
+      min-height: 100vh; display: flex; flex-direction: column; color: white;
+      touch-action: pan-y; /* permite scroll vertical, impede zoom por pinça */
     }
-  });
-}
 
-// ---------- FUNÇÕES GLOBAIS ----------
-
-// Badge (versão que carrega notificações)
-window.atualizarBadge = async function () {
-  const badge = document.getElementById("notificationBadge");
-  if (!badge) return;
-  try {
-    if (typeof window.carregarNotificacoes !== 'function') {
-      console.warn("carregarNotificacoes não disponível");
-      return;
+    /* ========== VIEWS ========== */
+    .view {
+      display: none;
+      flex: 1 1 auto;
+      overflow-y: auto;
+      padding: 20px;
+      -webkit-overflow-scrolling: touch;
     }
-    const notificacoes = await window.carregarNotificacoes();
-    const naoLidas = notificacoes.filter(n => !n.lido).length;
-    localStorage.setItem("notificacoes_naoLidas", naoLidas);
-    badge.style.display = naoLidas > 0 ? "flex" : "none";
-    badge.textContent = naoLidas > 99 ? "99+" : naoLidas;
-  } catch (err) {
-    console.error("Erro no badge", err);
-  }
-};
+    .view.active { display: flex; flex-direction: column; }
 
-// Atualizar app (nova versão SW)
-window.atualizarApp = async function () {
-  const reg = await navigator.serviceWorker.getRegistration();
-  if (reg?.waiting) {
-    reg.waiting.postMessage({ action: "skipWaiting" });
-    navigator.serviceWorker.addEventListener("controllerchange", () => {
-      window.location.reload();
-    }, { once: true });
-  } else {
-    window.location.reload();
-  }
-};
+    h2 { text-align: center; font-weight: 300; margin-bottom: 20px; }
 
-// Reset app (hard reset: limpa caches, remove SW, mantém token)
-window.resetApp = async function () {
-  try {
-    const token = localStorage.getItem("github_token");
-    if ("caches" in window) {
-      const keys = await caches.keys();
-      await Promise.all(keys.map(k => caches.delete(k)));
+    /* ========== BOTTOM NAV ========== */
+    #bottomNav {
+      display: flex;
+      justify-content: space-around;
+      padding: 12px;
+      padding-bottom: calc(12px + env(safe-area-inset-bottom));
+      background: #111;
+      border-top: 1px solid #222;
+      flex-shrink: 0;
     }
-    if ("serviceWorker" in navigator) {
-      const registrations = await navigator.serviceWorker.getRegistrations();
-      await Promise.all(registrations.map(reg => reg.unregister()));
+    .navBtn { color: white; font-size: 28px; cursor: pointer; opacity: 0.3; transition: 0.2s; position: relative; }
+    .navBtn.active { opacity: 1; }
+    .notification-badge {
+      position: absolute; top: -5px; right: -5px; background: #ff4444; color: white;
+      font-size: 11px; font-weight: bold; min-width: 18px; height: 18px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; border: 2px solid #000;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
     }
-    localStorage.clear();
-    if (token) localStorage.setItem("github_token", token);
-    window.location.href = "/Tol_v2/index.html";
-  } catch (err) {
-    console.error("Erro ao fazer reset:", err);
-    alert("Erro ao atualizar a aplicação. Tenta novamente.");
-  }
-};
 
-// Guardar token
-window.saveToken = function () {
-  const tokenInput = document.getElementById("token");
-  if (!tokenInput) return;
-  const token = tokenInput.value.trim();
-  if (!token) return alert("Introduz um token válido.");
-  localStorage.setItem("github_token", token);
-  alert("Token guardado.");
-};
-
-// ---------- ROUTER (navegação por views) ----------
-function showView(viewId) {
-  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-  const view = document.getElementById(viewId);
-  if (view) view.classList.add("active");
-
-  document.querySelectorAll(".navBtn").forEach(btn => btn.classList.remove("active"));
-  const activeBtn = document.querySelector(`.navBtn[data-view="${viewId}"]`);
-  if (activeBtn) activeBtn.classList.add("active");
-
-  if (viewId === "notificacoesView") {
-    if (typeof renderizarNotificacoes === "function") renderizarNotificacoes();
-  }
-  if (viewId === "configView") {
-    const tokenInput = document.getElementById("token");
-    const saved = localStorage.getItem("github_token");
-    if (tokenInput && saved) tokenInput.value = saved;
-  }
-
-  // Guardar última view
-  localStorage.setItem('lastView', viewId);
-}
-
-// Event listeners para os botões de navegação
-document.querySelectorAll(".navBtn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    const viewId = btn.dataset.view;
-    if (viewId) showView(viewId);
-  });
-});
-
-// Restaurar última view ou home
-const lastView = localStorage.getItem('lastView');
-if (lastView && document.getElementById(lastView)) {
-  showView(lastView);
-} else {
-  showView('homeView');
-}
-
-// ---------- EVENTOS CÂMARA/GALERIA (delegação) ----------
-document.body.addEventListener("click", (e) => {
-  const btn = e.target.closest("#cameraButton, #galleryButton");
-  if (!btn) return;
-  if (btn.id === "cameraButton") {
-    document.getElementById("cameraInput")?.click();
-  } else if (btn.id === "galleryButton") {
-    document.getElementById("galleryInput")?.click();
-  }
-});
-
-document.body.addEventListener("change", (e) => {
-  if (e.target.id === "cameraInput" || e.target.id === "galleryInput") {
-    const file = e.target.files[0];
-    if (file && typeof uploadToGitHub === "function") {
-      uploadToGitHub(file);
+    /* ========== CÂMARA / GALERIA ========== */
+    #cameraButton, #galleryButton {
+      display: flex; justify-content: center; align-items: center; border-radius: 50%;
+      background: #111; border: 3px solid #444; cursor: pointer; transition: 0.1s;
+      margin: 20px auto;
     }
-  }
-});
+    #cameraButton { width: 150px; height: 150px; }
+    #cameraButton ion-icon { font-size: 80px; color: white; opacity: 0.9; }
+    #galleryButton { width: 120px; height: 120px; }
+    #galleryButton ion-icon { font-size: 60px; color: white; opacity: 0.9; }
+    #cameraButton:active, #galleryButton:active { transform: scale(0.92); border-color: #777; }
 
-// ---------- BOTÕES DA CONFIG (usam funções globais) ----------
-document.getElementById("saveTokenBtn")?.addEventListener("click", saveToken);
-document.getElementById("resetAppBtn")?.addEventListener("click", resetApp);
+    /* ========== CONFIG ========== */
+    input { width: 100%; padding: 12px; border-radius: 8px; border: none; background: #111; color: white; font-size: 16px; margin-bottom: 12px; }
+    button { padding: 14px; background: #222; border: 1px solid #444; color: white; border-radius: 8px; font-size: 16px; cursor: pointer; transition: 0.2s; margin-bottom: 12px; }
+    button:active { opacity: 0.8; }
 
-// ---------- POLLING INTELIGENTE ----------
-let pollingInterval;
-async function pollBadge() {
-  if (typeof window.atualizarBadge === "function") await window.atualizarBadge();
-}
+    /* ========== NOTIFICAÇÕES ========== */
+    #notificationsList { display: flex; flex-direction: column; gap: 15px; }
+    .notification-card {
+      background: #111; border: 1px solid #333; border-radius: 12px; padding: 12px;
+      cursor: pointer; position: relative; transition: 0.2s;
+    }
+    .notification-card:active { background: #1a1a1a; transform: scale(0.98); }
+    .notification-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+    .jogo-icon { font-size: 20px; margin-right: 8px; }
+    .jogo-nome { font-weight: bold; }
+    .notification-title { font-size: 16px; font-weight: 500; margin-bottom: 4px; }
+    .notification-subtitle { font-size: 14px; opacity: 0.8; margin-bottom: 4px; }
+    .notification-resumo { font-size: 13px; opacity: 0.7; }
+    .unread-badge { background-color: #ff4444; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; margin-left: 8px; }
+    .no-notifications { text-align: center; opacity: 0.6; margin-top: 40px; }
 
-function startPolling() {
-  if (pollingInterval) clearInterval(pollingInterval);
-  pollBadge();
-  pollingInterval = setInterval(pollBadge, 60000);
-}
+    /* Esconder inputs nativos */
+    #cameraInput, #galleryInput {
+      display: none;
+    }
+  </style>
+</head>
+<body>
 
-document.addEventListener("visibilitychange", () => {
-  if (document.visibilityState === "visible") {
-    startPolling();
-  } else {
-    clearInterval(pollingInterval);
-  }
-});
+  <!-- Inputs ocultos -->
+  <input type="file" accept="image/*" capture="environment" id="cameraInput">
+  <input type="file" accept="image/*" id="galleryInput">
 
-if (document.visibilityState === "visible") {
-  startPolling();
-}
+  <!-- Views -->
+  <div id="homeView" class="view active">
+    <div id="cameraButton"><ion-icon name="camera-outline"></ion-icon></div>
+    <div id="galleryButton"><ion-icon name="image-outline"></ion-icon></div>
+  </div>
 
-// ---------- MOSTRAR BOTÃO DE ATUALIZAÇÃO (opcional) ----------
-function mostrarBotaoAtualizar() {
-  console.log("Nova versão disponível. Atualize a app.");
-}
+  <div id="notificacoesView" class="view">
+    <h2>Notificações</h2>
+    <div id="notificationsList"></div>
+  </div>
+
+  <div id="configView" class="view">
+    <h2>Configurações</h2>
+    <input type="password" id="token" placeholder="Introduz o token...">
+    <button id="saveTokenBtn">Guardar Token</button>
+    <button id="resetAppBtn">Atualizar App</button>
+  </div>
+
+  <!-- Bottom navigation -->
+  <div id="bottomNav">
+    <div class="navBtn active" data-view="homeView"><ion-icon name="camera-outline"></ion-icon></div>
+    <div class="navBtn" data-view="notificacoesView">
+      <ion-icon name="list-outline"></ion-icon>
+      <span id="notificationBadge" class="notification-badge" style="display:none">0</span>
+    </div>
+    <div class="navBtn" data-view="configView"><ion-icon name="settings-outline"></ion-icon></div>
+  </div>
+
+  <!-- Scripts (ordem correta: notificacoes primeiro, depois upload, depois app) -->
+  <script src="notificacoes.js" defer></script>
+  <script src="upload.js" defer></script>
+  <script src="app.js" defer></script>
+</body>
+</html>
