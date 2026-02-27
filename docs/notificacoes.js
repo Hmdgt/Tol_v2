@@ -1,5 +1,5 @@
 // ===============================
-// 🔧 CONFIGURAÇÃO (igual à tua)
+// 🔧 CONFIGURAÇÃO
 // ===============================
 const REPO = "Hmdgt/Tol_v2";
 const CAMINHO_NOTIFICACOES = "resultados/notificacoes_ativas.json";
@@ -39,7 +39,7 @@ async function marcarComoLida(idNotificacao) {
   try {
     const fAtivas = await lerFicheiroGitHub(GITHUB_API);
     const notificacao = fAtivas.content.find(n => n.id === idNotificacao);
-    if (!notificacao) return true; // já não está activa
+    if (!notificacao) return true;
 
     const novasAtivas = fAtivas.content.filter(n => n.id !== idNotificacao);
     await fetch(GITHUB_API, {
@@ -69,7 +69,6 @@ async function marcarComoLida(idNotificacao) {
       });
     }
 
-    // Atualiza badge global
     if (typeof window.atualizarBadge === "function") await window.atualizarBadge();
     return true;
   } catch (err) {
@@ -107,7 +106,6 @@ async function renderizarNotificacoes() {
     </div>
   `).join("");
 
-  // Eventos de clique (delegação ou directo)
   document.querySelectorAll(".notification-card").forEach(card => {
     card.addEventListener("click", async () => {
       const id = card.dataset.id;
@@ -127,7 +125,7 @@ async function renderizarNotificacoes() {
   });
 }
 
-// Expor funções globalmente (para serem usadas no app.js)
+// Expor funções globalmente
 window.renderizarNotificacoes = renderizarNotificacoes;
 window.marcarComoLida = marcarComoLida;
-window.carregarNotificacoes = carregarNotificacoes; // se necessário
+window.carregarNotificacoes = carregarNotificacoes;
