@@ -3,11 +3,20 @@ name: Verificar Euromilhões
 on:
   push:
     paths:
-      - 'dados/euromilhoes_*.json'  # Dispara quando qualquer euromilhoes_ANO.json é atualizado
-  workflow_dispatch:
+      - 'dados/euromilhoes_*.json'   # Ativa se você carregar dados manualmente
+      - 'apostas/*.json'             # Ativa se o OCR processar um novo boletim
+  workflow_dispatch:                 # Botão manual
+  
+  # A ligação com o Scraper do EuroMilhões
+  workflow_run:
+    workflows: ["Atualizar EuroMilhões automaticamente"]
+    types:
+      - completed
 
 jobs:
   verificar:
+    # Só corre se o anterior teve sucesso OU se foi disparo por push/manual
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -15,6 +24,8 @@ jobs:
     steps:
       - name: Checkout do repositório
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Configurar Python
         uses: actions/setup-python@v5
@@ -22,8 +33,7 @@ jobs:
           python-version: '3.11'
 
       - name: Instalar dependências
-        run: |
-          pip install Pillow
+        run: pip install Pillow
 
       - name: Verificar boletins Euromilhões
         run: python scripts/verificar_euromilhoes.py
@@ -34,5 +44,9 @@ jobs:
           git config --global user.email "bot@github.com"
           git add resultados/euromilhoes_verificacoes.json
           git add resultados/euromilhoes_recentes.json
-          git commit -m "Verificação automática Euromilhões $(date +'%Y-%m-%d')" || echo "Nenhuma alteração"
+          
+          # Sincroniza com os dados que o scraper acabou de enviar
+          git pull --rebase origin main
+          
+          git commit -m "Verificação automática EuroMilhões $(date +'%Y-%m-%d')" || echo "Nenhuma alteração"
           git push
