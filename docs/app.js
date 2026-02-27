@@ -26,14 +26,20 @@ if ("serviceWorker" in navigator) {
 
 // ---------- FUNÇÕES GLOBAIS ----------
 
-// Badge
+// Badge (versão que carrega notificações)
 window.atualizarBadge = async function () {
   const badge = document.getElementById("notificationBadge");
   if (!badge) return;
   try {
-    const count = parseInt(localStorage.getItem("notificacoes_naoLidas") || "0");
-    badge.style.display = count > 0 ? "flex" : "none";
-    badge.textContent = count > 99 ? "99+" : count;
+    if (typeof window.carregarNotificacoes !== 'function') {
+      console.warn("carregarNotificacoes não disponível");
+      return;
+    }
+    const notificacoes = await window.carregarNotificacoes();
+    const naoLidas = notificacoes.filter(n => !n.lido).length;
+    localStorage.setItem("notificacoes_naoLidas", naoLidas);
+    badge.style.display = naoLidas > 0 ? "flex" : "none";
+    badge.textContent = naoLidas > 99 ? "99+" : naoLidas;
   } catch (err) {
     console.error("Erro no badge", err);
   }
@@ -74,15 +80,12 @@ window.saveToken = function () {
 
 // ---------- ROUTER (navegação por views) ----------
 function showView(viewId) {
-  // Atualiza classes das views
   document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
   document.getElementById(viewId).classList.add("active");
 
-  // Atualiza botões activos
   document.querySelectorAll(".navBtn").forEach(btn => btn.classList.remove("active"));
   document.querySelector(`.navBtn[data-view="${viewId}"]`)?.classList.add("active");
 
-  // Lógica específica por view
   if (viewId === "notificacoesView") {
     if (typeof renderizarNotificacoes === "function") renderizarNotificacoes();
   }
@@ -101,7 +104,7 @@ document.querySelectorAll(".navBtn").forEach(btn => {
   });
 });
 
-// Mostrar view inicial (já está active pelo HTML, mas garantimos)
+// Mostrar view inicial
 showView("homeView");
 
 // ---------- EVENTOS CÂMARA/GALERIA (delegação) ----------
@@ -137,7 +140,7 @@ async function pollBadge() {
 
 function startPolling() {
   if (pollingInterval) clearInterval(pollingInterval);
-  pollBadge(); // primeira vez imediato
+  pollBadge();
   pollingInterval = setInterval(pollBadge, 60000);
 }
 
@@ -149,14 +152,11 @@ document.addEventListener("visibilitychange", () => {
   }
 });
 
-// Iniciar polling se a página estiver visível
 if (document.visibilityState === "visible") {
   startPolling();
 }
 
 // ---------- MOSTRAR BOTÃO DE ATUALIZAÇÃO (opcional) ----------
 function mostrarBotaoAtualizar() {
-  // Podes criar um elemento flutuante ou usar uma notificação
   console.log("Nova versão disponível. Atualize a app.");
-  // Exemplo: alert("Nova versão. Clique em 'Atualizar App' nas configurações.");
 }
