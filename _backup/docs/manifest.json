@@ -1,0 +1,26 @@
+{
+  "id": "/Tol_v2/",
+  "name": "Apostas Pirika",
+  "short_name": "Apostas",
+  "start_url": "/Tol_v2/index.html",
+  "scope": "/Tol_v2/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "prefer_related_applications": false,
+
+  "icons": [
+    {
+      "src": "/Tol_v2/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/Tol_v2/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

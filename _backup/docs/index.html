@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Apostas Pirika</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+  <!-- Forçar barra preta no Android / Chrome -->
+  <meta name="theme-color" content="#000000">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#000000" media="(max-width: 600px)">
+  <meta name="color-scheme" content="dark">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
+
+  <!-- Ionicons -->
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+  <link rel="manifest" href="/Tol_v2/manifest.json">
+
+  <script src="app.js" defer></script>
+  <script src="upload.js" defer></script>
+  <script src="notificacoes.js" defer></script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html {
+      background-color: #000;
+      height: 100%;
+      color-scheme: dark;
+    }
+
+    body {
+      margin: 0;
+      background: #000 !important;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      font-family: sans-serif;
+      overflow: hidden;
+      -webkit-user-select: none;
+      user-select: none;
+      padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    }
+
+    #cameraButton, #galleryButton {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      background: #111;
+      border: 3px solid #444;
+      cursor: pointer;
+      transition: 0.1s;
+      position: absolute;
+      z-index: 10;
+    }
+
+    #cameraButton {
+      width: 150px;
+      height: 150px;
+      top: 28%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    #cameraButton ion-icon {
+      font-size: 80px;
+      color: white;
+      opacity: 0.9;
+    }
+
+    #galleryButton {
+      width: 120px;
+      height: 120px;
+      top: 62%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    #galleryButton ion-icon {
+      font-size: 60px;
+      color: white;
+      opacity: 0.9;
+    }
+
+    #cameraButton:active, #galleryButton:active {
+      transform: translateX(-50%) scale(0.92);
+      border-color: #777;
+    }
+
+    #settingsBtn, #listBtn {
+      position: absolute;
+      bottom: max(22px, env(safe-area-inset-bottom));
+      font-size: 30px;
+      color: white;
+      opacity: 0.25;
+      cursor: pointer;
+      transition: 0.2s;
+      z-index: 25;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    #settingsBtn { right: max(22px, env(safe-area-inset-right)); }
+    #listBtn { left: max(22px, env(safe-area-inset-left)); }
+
+    #settingsBtn:active, #listBtn:active {
+      opacity: 0.8;
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background-color: #ff4444;
+      color: white;
+      font-size: 11px;
+      font-weight: bold;
+      min-width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #000;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      z-index: 30;
+    }
+
+    input[type="file"] { display: none; }
+
+    @supports not (padding: env(safe-area-inset-bottom)) {
+      #settingsBtn { right: 22px; bottom: 22px; }
+      #listBtn { left: 22px; bottom: 22px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <input type="file" accept="image/*" capture="environment" id="cameraInput">
+  <input type="file" accept="image/*" id="galleryInput">
+
+  <div id="cameraButton"><ion-icon name="camera-outline"></ion-icon></div>
+  <div id="galleryButton"><ion-icon name="image-outline"></ion-icon></div>
+
+  <div id="listBtn" onclick="window.location='notificacoes.html'">
+    <ion-icon name="list-outline"></ion-icon>
+    <span id="notificationBadge" class="notification-badge" style="display:none">0</span>
+  </div>
+
+  <ion-icon id="settingsBtn" name="settings-outline" onclick="window.location='config.html'"></ion-icon>
+
+</body>
+</html>

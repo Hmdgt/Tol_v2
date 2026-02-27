@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Notificações</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Forçar barra preta no Android / Chrome -->
+  <meta name="theme-color" content="#000000">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+  <meta name="color-scheme" content="dark">
+
+  <!-- Ionicons -->
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+  <style>
+    html {
+      background: #000;
+      color-scheme: dark;
+    }
+
+    body {
+      margin: 0;
+      background: #000 !important;
+      color: white;
+      font-family: sans-serif;
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      font-weight: 300;
+      margin-top: 10px;
+    }
+
+    #notificationsList {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .notification-card {
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 12px;
+      cursor: pointer;
+      position: relative;
+      transition: 0.2s;
+    }
+
+    .notification-card:active {
+      background: #1a1a1a;
+      transform: scale(0.98);
+    }
+
+    .notification-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .jogo-icon {
+      font-size: 20px;
+      margin-right: 8px;
+    }
+
+    .jogo-nome {
+      font-weight: bold;
+    }
+
+    .notification-title {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .notification-subtitle {
+      font-size: 14px;
+      opacity: 0.8;
+      margin-bottom: 4px;
+    }
+
+    .notification-resumo {
+      font-size: 13px;
+      opacity: 0.7;
+    }
+
+    .unread-badge {
+      background-color: #ff4444;
+      color: white;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 10px;
+      margin-left: 8px;
+    }
+
+    .processing {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.7);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: #ffd700;
+    }
+
+    .no-notifications {
+      text-align: center;
+      opacity: 0.6;
+      margin-top: 40px;
+    }
+
+    #backBtn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      font-size: 32px;
+      opacity: 0.3;
+      cursor: pointer;
+      transition: 0.2s;
+      z-index: 1000;
+    }
+
+    #backBtn:active {
+      opacity: 0.8;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2>Notificações</h2>
+
+  <div id="notificationsList"></div>
+
+  <ion-icon id="backBtn" name="arrow-back-outline" onclick="window.location='index.html'"></ion-icon>
+
+  <!-- Usa o sistema REAL de notificações -->
+  <script src="notificacoes.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      await renderizarNotificacoes();  // função real do notificacoes.js
+      await atualizarBadge();          // badge real
+      setInterval(atualizarBadge, 30000);
+    });
+  </script>
+
+</body>
+</html>

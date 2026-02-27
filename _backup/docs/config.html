@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Configurações</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Forçar barra preta no Android / Chrome -->
+  <meta name="theme-color" content="#000000">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+  <meta name="color-scheme" content="dark">
+
+  <!-- Ionicons -->
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+  <style>
+    html {
+      background: #000;
+      color-scheme: dark;
+    }
+
+    body {
+      margin: 0;
+      background: #000 !important;
+      color: white;
+      font-family: sans-serif;
+      padding: 20px;
+    }
+
+    h2 {
+      margin-top: 10px;
+      font-weight: 300;
+      text-align: center;
+    }
+
+    .container {
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      background: #111;
+      color: white;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 14px;
+      background: #222;
+      border: 1px solid #444;
+      color: white;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    #backBtn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      font-size: 32px;
+      opacity: 0.3;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2>Configurações</h2>
+
+  <div class="container">
+    <label>Token GitHub:</label>
+    <input type="password" id="token" placeholder="Introduz o token...">
+
+    <button onclick="saveToken()">Guardar Token</button>
+    <button onclick="resetApp()">Atualizar App</button>
+  </div>
+
+  <ion-icon id="backBtn" name="arrow-back-outline" onclick="window.location='index.html'"></ion-icon>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const savedToken = localStorage.getItem("github_token");
+      if (savedToken) {
+        document.getElementById("token").value = savedToken;
+      }
+    });
+
+    function saveToken() {
+      const token = document.getElementById("token").value.trim();
+      if (!token) {
+        alert("Introduz um token válido.");
+        return;
+      }
+      localStorage.setItem("github_token", token);
+      alert("Token guardado.");
+    }
+  </script>
+
+  <script src="app.js"></script>
+</body>
+</html>
