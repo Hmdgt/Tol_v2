@@ -10,7 +10,7 @@ const ASSETS = [
   "/Tol_v2/manifest.json",
   "/Tol_v2/icons/icon-192.png",
   "/Tol_v2/icons/icon-512.png",
-  "/Tol_v2/offline.html"          // <<-- novo
+  "/Tol_v2/offline.html"
 ];
 
 self.addEventListener("install", event => {
@@ -20,8 +20,14 @@ self.addEventListener("install", event => {
       Promise.all(
         ASSETS.map(url =>
           fetch(url)
-            .then(resp => cache.put(url, resp.clone()))
-            .catch(() => console.warn("Falha cache asset:", url))
+            .then(resp => {
+              if (resp.ok) {
+                cache.put(url, resp.clone());
+              } else {
+                console.warn(`Asset ${url} retornou status ${resp.status}`);
+              }
+            })
+            .catch(() => console.warn("Falha ao buscar asset:", url))
         )
       )
     )
@@ -51,11 +57,15 @@ self.addEventListener("fetch", event => {
     event.respondWith(
       fetch(req)
         .then(resp => {
-          caches.open(CACHE_NAME).then(cache => cache.put(req, resp.clone()));
+          if (resp.ok) {
+            caches.open(CACHE_NAME).then(cache => cache.put(req, resp.clone()));
+          }
           return resp;
         })
-        .catch(() => caches.match("/Tol_v2/index.html"))
-        .catch(() => caches.match("/Tol_v2/offline.html"))
+        .catch(async () => {
+          const cachedIndex = await caches.match("/Tol_v2/index.html");
+          return cachedIndex || caches.match("/Tol_v2/offline.html");
+        })
     );
     return;
   }
