@@ -343,15 +343,26 @@ def mostrar_resultado_simples(resultado: dict, metodo: str):
         print(f"")
     
     if resultado.get('ganhou'):
+        # Verifica se há múltiplos prémios
         if len(resultado.get('premios', [])) > 1:
             print(f"   🏆 ACUMULAÇÃO DE PRÉMIOS:")
             for p in resultado['premios']:
                 print(f"      • {p['premio']}: {p['valor']}")
             print(f"   💰 TOTAL: {resultado['valor_total']}")
         else:
-            print(f"   🏆 GANHOU: {resultado['premio']['categoria']}")
-            print(f"   💰 Prémio: {resultado['premio']['valor']}")
+            # Caso de prémio único (pode estar em 'premios' ou em 'premio')
+            if resultado.get('premios'):
+                p = resultado['premios'][0]
+                categoria = p.get('premio', 'Desconhecido')
+                valor = p.get('valor', '€ 0,00')
+            else:
+                premio = resultado.get('premio', {})
+                categoria = premio.get('categoria', 'Desconhecido')
+                valor = premio.get('valor', '€ 0,00')
+            print(f"   🏆 GANHOU: {categoria}")
+            print(f"   💰 Prémio: {valor}")
         
+        # Verifica se inclui reembolso (pode aparecer em qualquer prémio)
         if any("Reembolso" in p.get("valor", "") for p in resultado.get('premios', [])):
             print(f"   🔄 Inclui reembolso do valor da aposta")
     else:
