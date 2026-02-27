@@ -4,19 +4,23 @@ on:
   push:
     paths:
       - 'dados/totoloto_sc_*.json'
-      - 'apostas/*.json'             # Adicionei este: se carregar aposta nova, ele verifica logo
+      - 'apostas/*.json'
   workflow_dispatch:
-  # ESTA É A CHAVE PARA LIGAR OS DOIS:
   workflow_run:
     workflows: ["Atualizar Totoloto SC automaticamente"]
     types:
       - completed
 
+# GARANTIA: Organiza a fila para evitar conflitos com deploys ou outros workflows
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   verificar:
-    # Só corre se o workflow anterior tiver tido sucesso OU se for um push manual
     if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: write
 
@@ -24,7 +28,7 @@ jobs:
       - name: Checkout do repositório
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Importante para evitar conflitos de push
+          fetch-depth: 0
 
       - name: Configurar Python
         uses: actions/setup-python@v5
@@ -32,19 +36,42 @@ jobs:
           python-version: '3.11'
 
       - name: Instalar dependências
-        run: |
-          pip install Pillow
+        run: pip install Pillow
 
       - name: Verificar boletins Totoloto
         run: python scripts/verificar_totoloto.py
 
       - name: Guardar resultados
         run: |
+          # 1. Configurar Identidade e Rebase
           git config --global user.name "Bot Verificador"
           git config --global user.email "bot@github.com"
+          git config --global pull.rebase true
+
+          # 2. Isolar as alterações do script para limpar o ambiente de pull
+          git stash
+
+          # 3. Sincronizar com o servidor (com 3 tentativas em caso de bloqueio)
+          n=0
+          until [ "$n" -ge 3 ]
+          do
+             git pull origin main && break
+             n=$((n+1))
+             echo "Tentativa $n/3: Repositório ocupado, a aguardar..."
+             sleep 15
+          done
+
+          # 4. Recuperar as alterações do script de verificação
+          git stash pop || echo "Sem alterações locais para reaplicar"
+
+          # 5. Adicionar os resultados
           git add resultados/totoloto_verificacoes.json
           git add resultados/totoloto_recentes.json
-          # Pull rebase para garantir que não há conflito com o push que o scraper acabou de fazer
-          git pull --rebase origin main
-          git commit -m "Verificação automática Totoloto $(date +'%Y-%m-%d')" || echo "Nenhuma alteração"
-          git push
+
+          # 6. Só fazer commit e push se houver mudanças reais
+          if ! git diff --cached --quiet; then
+            git commit -m "Verificação automática Totoloto $(date +'%Y-%m-%d')"
+            git push origin main
+          else
+            echo "Os ficheiros do Totoloto já estão sincronizados."
+          fi
