@@ -1,13 +1,20 @@
-name: Verificar Eurodreams
+name: Verificar EuroDreams
 
 on:
   push:
     paths:
-      - 'dados/eurodreams_*.json'  # Dispara quando qualquer eurodreams_ANO.json é atualizado
+      - 'dados/eurodreams_*.json'
+      - 'apostas/*.json'
   workflow_dispatch:
+
+  workflow_run:
+    workflows: ["Atualizar EuroDreams automaticamente"]
+    types:
+      - completed
 
 jobs:
   verificar:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -15,6 +22,8 @@ jobs:
     steps:
       - name: Checkout do repositório
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Configurar Python
         uses: actions/setup-python@v5
@@ -22,17 +31,20 @@ jobs:
           python-version: '3.11'
 
       - name: Instalar dependências
-        run: |
-          pip install Pillow
+        run: pip install Pillow
 
-      - name: Verificar boletins Eurodreams
+      - name: Verificar boletins EuroDreams
         run: python scripts/verificar_eurodreams.py
 
       - name: Guardar resultados
         run: |
           git config --global user.name "Bot Verificador"
           git config --global user.email "bot@github.com"
+
           git add resultados/eurodreams_verificacoes.json
           git add resultados/eurodreams_recentes.json
-          git commit -m "Verificação automática Eurodreams $(date +'%Y-%m-%d')" || echo "Nenhuma alteração"
+
+          git pull --rebase origin main
+
+          git commit -m "Verificação automática EuroDreams $(date +'%Y-%m-%d')" || echo "Nenhuma alteração"
           git push
