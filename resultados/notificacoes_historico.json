@@ -1,0 +1,61 @@
+[
+  {
+    "id": "eurodreams_260217-17-215626360B-098 04-01184_1",
+    "jogo": "eurodreams",
+    "data": "2026-02-27 16:40:27",
+    "lido": true,
+    "titulo": "🎫 Novo resultado EURODREAMS",
+    "subtitulo": "Boletim: 260217-17-215626360B-098 04-01184",
+    "resumo": "0 números + Dream",
+    "detalhes": {
+      "data_verificacao": "2026-02-27 16:40:27",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "260217-17-215626360B-098 04-01184",
+        "data_sorteio": "2026-02-19",
+        "concurso_sorteio": "015/2026",
+        "imagem_origem": "foto_1772012037328.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "01",
+          "09",
+          "14",
+          "17",
+          "22",
+          "26"
+        ],
+        "dream_number": "04"
+      },
+      "sorteio": {
+        "concurso": "015/2026",
+        "data": "19/02/2026",
+        "chave": "8 10 13 36 37 38 + 4",
+        "numeros": [
+          "08",
+          "10",
+          "13",
+          "36",
+          "37",
+          "38"
+        ],
+        "dream_number": "04"
+      },
+      "acertos": {
+        "numeros": 0,
+        "dream_number": true,
+        "descricao": "0 número(s) com Dream Number"
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem prémio",
+        "descricao": "0 acertos",
+        "valor": "€ 0,00"
+      },
+      "_jogo": "eurodreams",
+      "_id": "eurodreams_260217-17-215626360B-098 04-01184_1"
+    },
+    "data_leitura": "2026-02-27T16:54:56.342Z"
+  }
+]
