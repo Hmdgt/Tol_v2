@@ -22,12 +22,15 @@ self.addEventListener("install", event => {
           fetch(url)
             .then(resp => {
               if (resp.ok) {
-                cache.put(url, resp.clone());
+                // Retornar a promessa do cache.put para garantir que termina
+                return cache.put(url, resp.clone()).catch(err => {
+                  console.warn(`Erro ao guardar ${url} no cache:`, err);
+                });
               } else {
                 console.warn(`Asset ${url} retornou status ${resp.status}`);
               }
             })
-            .catch(() => console.warn("Falha ao buscar asset:", url))
+            .catch(err => console.warn("Falha ao buscar asset:", url, err))
         )
       )
     )
@@ -52,9 +55,9 @@ self.addEventListener("fetch", event => {
 
   const url = new URL(req.url);
 
-  // 🔥 IGNORAR API DO GITHUB (não aplicar cache)
+  // Ignorar API do GitHub
   if (url.hostname === "api.github.com") {
-    return; // O browser faz o fetch normal
+    return;
   }
 
   // Network-first para navegação (HTML)
@@ -63,7 +66,10 @@ self.addEventListener("fetch", event => {
       fetch(req)
         .then(resp => {
           if (resp.ok) {
-            caches.open(CACHE_NAME).then(cache => cache.put(req, resp.clone()));
+            // Guardar no cache sem bloquear a resposta, mas com tratamento de erro
+            caches.open(CACHE_NAME)
+              .then(cache => cache.put(req, resp.clone()))
+              .catch(err => console.error("Erro ao guardar no cache:", err));
           }
           return resp;
         })
