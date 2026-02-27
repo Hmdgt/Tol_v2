@@ -3,13 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <title>Apostas Pirika</title>
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-  <!-- Forçar barra preta no Android / Chrome -->
+  <!-- Barra preta -->
   <meta name="theme-color" content="#000000">
-  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
-  <meta name="theme-color" content="#000000" media="(max-width: 600px)">
   <meta name="color-scheme" content="dark">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="mobile-web-app-capable" content="yes">
@@ -20,141 +17,104 @@
 
   <link rel="manifest" href="/Tol_v2/manifest.json">
 
-  <script src="app.js" defer></script>
-  <script src="upload.js" defer></script>
-  <script src="notificacoes.js" defer></script>
-
   <style>
+    /* ========== RESET ========== */
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    html {
-      background-color: #000;
-      height: 100%;
-      color-scheme: dark;
-    }
-
+    html { background: #000; height: 100%; color-scheme: dark; }
     body {
-      margin: 0;
-      background: #000 !important;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-      font-family: sans-serif;
-      overflow: hidden;
-      -webkit-user-select: none;
-      user-select: none;
+      margin: 0; background: #000 !important; font-family: sans-serif;
       padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+      min-height: 100vh; display: flex; flex-direction: column; color: white;
     }
 
-    #cameraButton, #galleryButton {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 50%;
-      background: #111;
-      border: 3px solid #444;
-      cursor: pointer;
-      transition: 0.1s;
-      position: absolute;
-      z-index: 10;
-    }
+    /* ========== VIEWS ========== */
+    .view { display: none; flex: 1; overflow-y: auto; padding: 20px; }
+    .view.active { display: flex; flex-direction: column; }
 
-    #cameraButton {
-      width: 150px;
-      height: 150px;
-      top: 28%;
-      left: 50%;
-      transform: translateX(-50%);
-    }
+    h2 { text-align: center; font-weight: 300; margin-bottom: 20px; }
 
-    #cameraButton ion-icon {
-      font-size: 80px;
-      color: white;
-      opacity: 0.9;
-    }
-
-    #galleryButton {
-      width: 120px;
-      height: 120px;
-      top: 62%;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-
-    #galleryButton ion-icon {
-      font-size: 60px;
-      color: white;
-      opacity: 0.9;
-    }
-
-    #cameraButton:active, #galleryButton:active {
-      transform: translateX(-50%) scale(0.92);
-      border-color: #777;
-    }
-
-    #settingsBtn, #listBtn {
-      position: absolute;
-      bottom: max(22px, env(safe-area-inset-bottom));
-      font-size: 30px;
-      color: white;
-      opacity: 0.25;
-      cursor: pointer;
-      transition: 0.2s;
-      z-index: 25;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    #settingsBtn { right: max(22px, env(safe-area-inset-right)); }
-    #listBtn { left: max(22px, env(safe-area-inset-left)); }
-
-    #settingsBtn:active, #listBtn:active {
-      opacity: 0.8;
-    }
-
+    /* ========== BOTTOM NAV ========== */
+    #bottomNav { display: flex; justify-content: space-around; padding: 12px; background: #111; border-top: 1px solid #222; }
+    .navBtn { color: white; font-size: 28px; cursor: pointer; opacity: 0.3; transition: 0.2s; position: relative; }
+    .navBtn.active { opacity: 1; }
     .notification-badge {
-      position: absolute;
-      top: -5px;
-      right: -5px;
-      background-color: #ff4444;
-      color: white;
-      font-size: 11px;
-      font-weight: bold;
-      min-width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 2px solid #000;
+      position: absolute; top: -5px; right: -5px; background: #ff4444; color: white;
+      font-size: 11px; font-weight: bold; min-width: 18px; height: 18px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; border: 2px solid #000;
       box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-      z-index: 30;
     }
 
-    input[type="file"] { display: none; }
-
-    @supports not (padding: env(safe-area-inset-bottom)) {
-      #settingsBtn { right: 22px; bottom: 22px; }
-      #listBtn { left: 22px; bottom: 22px; }
+    /* ========== CÂMARA / GALERIA ========== */
+    #cameraButton, #galleryButton {
+      display: flex; justify-content: center; align-items: center; border-radius: 50%;
+      background: #111; border: 3px solid #444; cursor: pointer; transition: 0.1s;
+      margin: 20px auto;
     }
+    #cameraButton { width: 150px; height: 150px; }
+    #cameraButton ion-icon { font-size: 80px; color: white; opacity: 0.9; }
+    #galleryButton { width: 120px; height: 120px; }
+    #galleryButton ion-icon { font-size: 60px; color: white; opacity: 0.9; }
+    #cameraButton:active, #galleryButton:active { transform: scale(0.92); border-color: #777; }
+
+    /* ========== CONFIG ========== */
+    input { width: 100%; padding: 12px; border-radius: 8px; border: none; background: #111; color: white; font-size: 16px; margin-bottom: 12px; }
+    button { padding: 14px; background: #222; border: 1px solid #444; color: white; border-radius: 8px; font-size: 16px; cursor: pointer; transition: 0.2s; margin-bottom: 12px; }
+    button:active { opacity: 0.8; }
+
+    /* ========== NOTIFICAÇÕES ========== */
+    #notificationsList { display: flex; flex-direction: column; gap: 15px; }
+    .notification-card {
+      background: #111; border: 1px solid #333; border-radius: 12px; padding: 12px;
+      cursor: pointer; position: relative; transition: 0.2s;
+    }
+    .notification-card:active { background: #1a1a1a; transform: scale(0.98); }
+    .notification-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+    .jogo-icon { font-size: 20px; margin-right: 8px; }
+    .jogo-nome { font-weight: bold; }
+    .notification-title { font-size: 16px; font-weight: 500; margin-bottom: 4px; }
+    .notification-subtitle { font-size: 14px; opacity: 0.8; margin-bottom: 4px; }
+    .notification-resumo { font-size: 13px; opacity: 0.7; }
+    .unread-badge { background-color: #ff4444; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; margin-left: 8px; }
+    .no-notifications { text-align: center; opacity: 0.6; margin-top: 40px; }
   </style>
 </head>
-
 <body>
 
+  <!-- Inputs ocultos -->
   <input type="file" accept="image/*" capture="environment" id="cameraInput">
   <input type="file" accept="image/*" id="galleryInput">
 
-  <div id="cameraButton"><ion-icon name="camera-outline"></ion-icon></div>
-  <div id="galleryButton"><ion-icon name="image-outline"></ion-icon></div>
-
-  <div id="listBtn" onclick="window.location='notificacoes.html'">
-    <ion-icon name="list-outline"></ion-icon>
-    <span id="notificationBadge" class="notification-badge" style="display:none">0</span>
+  <!-- Views -->
+  <div id="homeView" class="view active">
+    <div id="cameraButton"><ion-icon name="camera-outline"></ion-icon></div>
+    <div id="galleryButton"><ion-icon name="image-outline"></ion-icon></div>
   </div>
 
-  <ion-icon id="settingsBtn" name="settings-outline" onclick="window.location='config.html'"></ion-icon>
+  <div id="notificacoesView" class="view">
+    <h2>Notificações</h2>
+    <div id="notificationsList"></div>
+  </div>
 
+  <div id="configView" class="view">
+    <h2>Configurações</h2>
+    <input type="password" id="token" placeholder="Introduz o token...">
+    <button id="saveTokenBtn">Guardar Token</button>
+    <button id="resetAppBtn">Atualizar App</button>
+  </div>
+
+  <!-- Bottom navigation -->
+  <div id="bottomNav">
+    <div class="navBtn active" data-view="homeView"><ion-icon name="camera-outline"></ion-icon></div>
+    <div class="navBtn" data-view="notificacoesView">
+      <ion-icon name="list-outline"></ion-icon>
+      <span id="notificationBadge" class="notification-badge" style="display:none">0</span>
+    </div>
+    <div class="navBtn" data-view="configView"><ion-icon name="settings-outline"></ion-icon></div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="app.js" defer></script>
+  <script src="upload.js" defer></script>
+  <script src="notificacoes.js" defer></script>
 </body>
 </html>
