@@ -116,7 +116,28 @@
       100% { opacity: 1; }
     }
 
-    /* ========== MODAL DE DETALHES ========== */
+    /* ========== DETALHE NOTIFICAÇÃO (substitui o modal) ========== */
+    .detalhe-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .btn-voltar {
+      background: #222;
+      border: 1px solid #444;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* ========== MODAL DE DETALHES (removido, mas mantido para compatibilidade) ========== */
     .modal {
       display: none;
       position: fixed;
@@ -161,7 +182,7 @@
     }
     .modal-body { padding: 20px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
 
-    /* Detalhes dentro do modal */
+    /* Detalhes dentro do modal (agora usado na view) */
     .detalhes-jogo { display: flex; flex-direction: column; gap: 16px; }
     .detalhes-jogo h4 { font-size: 20px; margin: 0 0 10px 0; color: #ffd700; }
     .detalhes-resultado {
@@ -205,6 +226,11 @@
     <div id="notificationsList"></div>
   </div>
 
+  <!-- NOVA VIEW: Detalhe da Notificação (substitui o modal) -->
+  <div id="detalheNotificacaoView" class="view">
+    <div id="detalheContainer"></div>
+  </div>
+
   <!-- NOVA VIEW: Validação de Boletins -->
   <div id="validacaoView" class="view">
     <div id="validacaoContainer"></div>
@@ -238,7 +264,7 @@
     <div class="navBtn" data-view="configView"><ion-icon name="settings-outline"></ion-icon></div>
   </div>
 
-  <!-- Modal de detalhes (escondido inicialmente) -->
+  <!-- Modal de detalhes (mantido para compatibilidade, mas não usado) -->
   <div id="modalDetalhes" class="modal" style="display:none;">
     <div class="modal-content">
       <div class="modal-header">
