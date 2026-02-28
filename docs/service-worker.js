@@ -1,4 +1,4 @@
-const CACHE_VERSION = "v2026-02-27-01";
+const CACHE_VERSION = "v2026-02-28";
 const CACHE_NAME = `pirika-cache-${CACHE_VERSION}`;
 
 const ASSETS = [
@@ -17,22 +17,14 @@ self.addEventListener("install", event => {
   self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache =>
-      Promise.all(
-        ASSETS.map(url =>
-          fetch(url)
-            .then(resp => {
-              if (resp.ok) {
-                // Retornar a promessa do cache.put para garantir que termina
-                return cache.put(url, resp.clone()).catch(err => {
-                  console.warn(`Erro ao guardar ${url} no cache:`, err);
-                });
-              } else {
-                console.warn(`Asset ${url} retornou status ${resp.status}`);
-              }
-            })
-            .catch(err => console.warn("Falha ao buscar asset:", url, err))
-        )
-      )
+      cache.addAll(ASSETS).catch(err => {
+        console.warn("Erro ao usar addAll:", err);
+        return Promise.all(
+          ASSETS.map(url => 
+            cache.add(url).catch(e => console.warn(`Falha em ${url}:`, e))
+          )
+        );
+      })
     )
   );
 });
@@ -55,35 +47,34 @@ self.addEventListener("fetch", event => {
 
   const url = new URL(req.url);
 
-  // Ignorar API do GitHub
   if (url.hostname === "api.github.com") {
     return;
   }
 
-  // Network-first para navegação (HTML)
   if (req.mode === "navigate" || url.pathname.endsWith("index.html")) {
     event.respondWith(
       fetch(req)
         .then(resp => {
-          if (resp.ok) {
-            // Guardar no cache sem bloquear a resposta, mas com tratamento de erro
-            caches.open(CACHE_NAME)
-              .then(cache => cache.put(req, resp.clone()))
-              .catch(err => console.error("Erro ao guardar no cache:", err));
-          }
+          const respClone = resp.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(req, respClone));
           return resp;
         })
         .catch(async () => {
-          const cachedIndex = await caches.match("/Tol_v2/index.html");
-          return cachedIndex || caches.match("/Tol_v2/offline.html");
+          const cached = await caches.match(req);
+          return cached || caches.match("/Tol_v2/offline.html");
         })
     );
     return;
   }
 
-  // Cache-first para assets
   event.respondWith(
-    caches.match(req).then(resp => resp || fetch(req))
+    caches.match(req).then(resp => 
+      resp || fetch(req).then(resp => {
+        const respClone = resp.clone();
+        caches.open(CACHE_NAME).then(cache => cache.put(req, respClone));
+        return resp;
+      })
+    )
   );
 });
 
