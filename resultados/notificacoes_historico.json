@@ -429,5 +429,44 @@
       "_id": "totoloto_055-07189292-166_1"
     },
     "data_leitura": "2026-02-28T18:04:45.066Z"
+  },
+  {
+    "id": "milhao_548-02491157-EUR_1",
+    "jogo": "milhao",
+    "data": "2026-02-27 21:21:13",
+    "lido": true,
+    "titulo": "🎫 Novo resultado MILHAO",
+    "subtitulo": "Boletim: 548-02491157-EUR",
+    "resumo": "0 acertos",
+    "detalhes": {
+      "data_verificacao": "2026-02-27 21:21:13",
+      "boletim": {
+        "referencia": "548-02491157-EUR",
+        "data_sorteio": "2026-02-27",
+        "imagem_origem": "foto_1772012047961.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "codigo": "GNN36567",
+        "codigo_original": "GNN36567"
+      },
+      "sorteio": {
+        "concurso": "002/2026",
+        "data": "27/02/2026",
+        "codigo_premiado": "GDH32855",
+        "codigo_original": "GDH 32855",
+        "premio_nome": "1.º Prémio",
+        "vencedores": "1"
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem prémio",
+        "descricao": "Código não premiado",
+        "valor": "€ 0,00"
+      },
+      "_jogo": "milhao",
+      "_id": "milhao_548-02491157-EUR_1"
+    },
+    "data_leitura": "2026-02-28T18:05:03.858Z"
   }
 ]
