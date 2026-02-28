@@ -76,44 +76,6 @@
     }
   },
   {
-    "id": "milhao_544-06256031-EUR_1",
-    "jogo": "milhao",
-    "data": "2026-02-27 21:21:13",
-    "lido": false,
-    "titulo": "🎫 Novo resultado MILHAO",
-    "subtitulo": "Boletim: 544-06256031-EUR",
-    "resumo": "0 acertos",
-    "detalhes": {
-      "data_verificacao": "2026-02-27 21:21:13",
-      "boletim": {
-        "referencia": "544-06256031-EUR",
-        "data_sorteio": "2026-02-27",
-        "imagem_origem": "foto_1772012073331.png"
-      },
-      "aposta": {
-        "indice": 1,
-        "codigo": "GLJ28595",
-        "codigo_original": "GLJ28595"
-      },
-      "sorteio": {
-        "concurso": "002/2026",
-        "data": "27/02/2026",
-        "codigo_premiado": "GDH32855",
-        "codigo_original": "GDH 32855",
-        "premio_nome": "1.º Prémio",
-        "vencedores": "1"
-      },
-      "ganhou": false,
-      "premio": {
-        "categoria": "Sem prémio",
-        "descricao": "Código não premiado",
-        "valor": "€ 0,00"
-      },
-      "_jogo": "milhao",
-      "_id": "milhao_544-06256031-EUR_1"
-    }
-  },
-  {
     "id": "milhao_555-02820325-EUR_1",
     "jogo": "milhao",
     "data": "2026-02-27 21:21:13",
