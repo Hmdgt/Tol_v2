@@ -210,6 +210,14 @@
     <div id="validacaoContainer"></div>
   </div>
 
+  <!-- FUTURA VIEW: Estatísticas (para implementar depois) -->
+  <div id="estatisticasView" class="view">
+    <h2>Estatísticas</h2>
+    <div id="estatisticasContainer">
+      <p style="text-align: center; opacity: 0.6; margin-top: 40px;">Em breve...</p>
+    </div>
+  </div>
+
   <div id="configView" class="view">
     <h2>Configurações</h2>
     <input type="password" id="token" placeholder="Introduz o token...">
@@ -221,8 +229,11 @@
   <div id="bottomNav">
     <div class="navBtn active" data-view="homeView"><ion-icon name="camera-outline"></ion-icon></div>
     <div class="navBtn" data-view="notificacoesView">
-      <ion-icon name="list-outline"></ion-icon>
+      <ion-icon name="notifications-outline"></ion-icon>
       <span id="notificationBadge" class="notification-badge" style="display:none">0</span>
+    </div>
+    <div class="navBtn" data-view="estatisticasView">
+      <ion-icon name="list-outline"></ion-icon>
     </div>
     <div class="navBtn" data-view="configView"><ion-icon name="settings-outline"></ion-icon></div>
   </div>
