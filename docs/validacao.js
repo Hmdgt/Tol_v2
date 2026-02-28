@@ -472,10 +472,16 @@ window.confirmarValidacao = async function(imagem) {
 
 // ---------- VOLTAR À LISTA ----------
 window.voltarListaValidacao = function() {
+  console.log("⬅️ A voltar da validação para a lista");
+  
   document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
   document.getElementById('notificacoesView').classList.add('active');
-  renderizarListaValidacao();
   renderizarNotificacoes();
+  
+  // Atualizar badge
+  if (typeof window.atualizarBadge === 'function') {
+    window.atualizarBadge();
+  }
 };
 
 // ---------- INICIALIZAR ----------
