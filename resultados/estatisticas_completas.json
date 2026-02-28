@@ -1,0 +1,79 @@
+{
+  "mensal": {
+    "totoloto": {
+      "2026-02": {
+        "total_apostas": 4,
+        "total_gasto": 4.0,
+        "total_recebido": 0.0,
+        "ganhadoras": 2,
+        "acertos_numeros": 2,
+        "acertos_especial": 2,
+        "saldo": -4.0,
+        "percentagem_acertos": 50.0
+      }
+    },
+    "euromilhoes": {
+      "2026-02": {
+        "total_apostas": 3,
+        "total_gasto": 7.5,
+        "total_recebido": 0.0,
+        "ganhadoras": 0,
+        "acertos_numeros": 0,
+        "acertos_especial": 0,
+        "saldo": -7.5,
+        "percentagem_acertos": 0.0
+      }
+    },
+    "eurodreams": {
+      "2026-02": {
+        "total_apostas": 1,
+        "total_gasto": 2.5,
+        "total_recebido": 0.0,
+        "ganhadoras": 0,
+        "acertos_numeros": 0,
+        "acertos_especial": 0,
+        "saldo": -2.5,
+        "percentagem_acertos": 0.0
+      }
+    }
+  },
+  "anual": {
+    "totoloto": {
+      "2026": {
+        "total_apostas": 4,
+        "total_gasto": 4.0,
+        "total_recebido": 0.0,
+        "ganhadoras": 2,
+        "acertos_numeros": 2,
+        "acertos_especial": 2,
+        "saldo": -4.0,
+        "percentagem_acertos": 50.0
+      }
+    },
+    "euromilhoes": {
+      "2026": {
+        "total_apostas": 3,
+        "total_gasto": 7.5,
+        "total_recebido": 0.0,
+        "ganhadoras": 0,
+        "acertos_numeros": 0,
+        "acertos_especial": 0,
+        "saldo": -7.5,
+        "percentagem_acertos": 0.0
+      }
+    },
+    "eurodreams": {
+      "2026": {
+        "total_apostas": 1,
+        "total_gasto": 2.5,
+        "total_recebido": 0.0,
+        "ganhadoras": 0,
+        "acertos_numeros": 0,
+        "acertos_especial": 0,
+        "saldo": -2.5,
+        "percentagem_acertos": 0.0
+      }
+    }
+  },
+  "ultima_atualizacao": "2026-02-28T18:34:44.165780"
+}
