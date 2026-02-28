@@ -2,3 +2,4 @@
 [2026-02-27 21:26:24] [euromilhoes] Resultado do concurso 017/2026 adicionado ao JSON euromilhoes_2026.
 [2026-02-27 22:14:47] [euromilhoes] Concurso 017/2026 já está completo. Nada a atualizar.
 [2026-02-27 23:22:22] [euromilhoes] Concurso 017/2026 já está completo. Nada a atualizar.
+[2026-02-28 10:13:08] [euromilhoes] Concurso 017/2026 já está completo. Nada a atualizar.
