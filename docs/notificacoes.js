@@ -444,7 +444,7 @@ async function renderizarNotificacoes() {
     });
 
     if (todosCards.length === 0) {
-      lista.innerHTML = '<div class="no-notifications">✨ Tudo limpo!</div>';
+      lista.innerHTML = '<div class="no-notifications">Sem notificaçoes!</div>';
       return;
     }
 
