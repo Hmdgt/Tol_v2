@@ -25,7 +25,7 @@
       margin: 0; background: #000 !important; font-family: sans-serif;
       padding: env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);
       min-height: 100vh; display: flex; flex-direction: column; color: white;
-      touch-action: pan-y; /* permite scroll vertical, impede zoom por pinça */
+      touch-action: pan-y;
     }
 
     /* ========== VIEWS ========== */
@@ -79,23 +79,113 @@
     /* ========== NOTIFICAÇÕES ========== */
     #notificationsList { display: flex; flex-direction: column; gap: 15px; }
     .notification-card {
-      background: #111; border: 1px solid #333; border-radius: 12px; padding: 12px;
+      background: #111; border: 1px solid #333; border-radius: 12px; padding: 16px;
       cursor: pointer; position: relative; transition: 0.2s;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      touch-action: manipulation;
     }
-    .notification-card:active { background: #1a1a1a; transform: scale(0.98); }
-    .notification-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
-    .jogo-icon { font-size: 20px; margin-right: 8px; }
-    .jogo-nome { font-weight: bold; }
-    .notification-title { font-size: 16px; font-weight: 500; margin-bottom: 4px; }
-    .notification-subtitle { font-size: 14px; opacity: 0.8; margin-bottom: 4px; }
-    .notification-resumo { font-size: 13px; opacity: 0.7; }
-    .unread-badge { background-color: #ff4444; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; margin-left: 8px; }
+    .notification-card:active { background: #222; transform: scale(0.98); }
+    .notification-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .jogo-icon { font-size: 20px; }
+    .jogo-nome { font-weight: bold; text-transform: capitalize; }
+    .unread-badge {
+      background: #ff4444; color: white; font-size: 10px; padding: 2px 8px;
+      border-radius: 12px; font-weight: bold; margin-left: auto;
+      animation: pulse 2s infinite;
+    }
+    .notification-date { color: #999; font-size: 12px; white-space: nowrap; }
+    .notification-title { font-size: 16px; font-weight: 500; margin: 8px 0 4px; }
+    .notification-concurso {
+      font-size: 13px; color: #888; margin-bottom: 6px;
+      font-family: monospace; background: #1a1a1a; padding: 4px 8px;
+      border-radius: 6px; display: inline-block;
+    }
+    .notification-resumo {
+      font-size: 18px; font-weight: bold; text-align: center; padding: 8px;
+      background: #1a2a1a; border-radius: 8px; margin-top: 4px;
+    }
+    .notification-resumo:contains("0 acertos") { color: #ff4444; background: #2a1a1a; }
     .no-notifications { text-align: center; opacity: 0.6; margin-top: 40px; }
+    .loading, .error { text-align: center; padding: 40px 20px; opacity: 0.7; }
+    .error { color: #ff4444; }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.7; }
+      100% { opacity: 1; }
+    }
+
+    /* ========== MODAL DE DETALHES ========== */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      backdrop-filter: blur(5px);
+    }
+    .modal-content {
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 500px;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      animation: modalFadeIn 0.3s;
+    }
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      border-bottom: 1px solid #333;
+    }
+    .modal-header h3 { margin: 0; font-weight: 300; }
+    .modal-close {
+      background: none; border: none; color: white; font-size: 28px;
+      cursor: pointer; padding: 0; width: 40px; height: 40px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .modal-body { padding: 20px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+
+    /* Detalhes dentro do modal */
+    .detalhes-jogo { display: flex; flex-direction: column; gap: 16px; }
+    .detalhes-jogo h4 { font-size: 20px; margin: 0 0 10px 0; color: #ffd700; }
+    .detalhes-resultado {
+      font-size: 18px; font-weight: bold; color: #4caf50;
+      text-align: center; padding: 12px; background: #1a2a1a;
+      border-radius: 10px; margin-bottom: 10px;
+    }
+    .detalhes-secao {
+      background: #1a1a1a; border-radius: 12px; padding: 15px;
+      border: 1px solid #333;
+    }
+    .detalhes-secao h5 {
+      margin: 0 0 10px 0; color: #888; font-size: 14px;
+      text-transform: uppercase; letter-spacing: 1px;
+    }
+    .detalhes-secao p { margin: 5px 0; line-height: 1.5; }
+    .detalhes-secao.premio { background: #2a1a1a; border-color: #ff4444; }
+    .detalhes-secao.premio h5 { color: #ff4444; }
+    .valor-premio { font-size: 24px; font-weight: bold; color: #ffd700; text-align: center; margin-top: 10px; }
+    .valor-total { font-size: 18px; color: #4caf50; text-align: center; margin-top: 5px; }
+    .sem-premio { background: #222; opacity: 0.8; }
 
     /* Esconder inputs nativos */
-    #cameraInput, #galleryInput {
-      display: none;
-    }
+    #cameraInput, #galleryInput { display: none; }
   </style>
 </head>
 <body>
@@ -132,7 +222,20 @@
     <div class="navBtn" data-view="configView"><ion-icon name="settings-outline"></ion-icon></div>
   </div>
 
-  <!-- Scripts (ordem correta: notificacoes primeiro, depois upload, depois app) -->
+  <!-- Modal de detalhes (escondido inicialmente) -->
+  <div id="modalDetalhes" class="modal" style="display:none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Detalhes da Aposta</h3>
+        <button class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <!-- Conteúdo dinâmico -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
   <script src="notificacoes.js" defer></script>
   <script src="upload.js" defer></script>
   <script src="app.js" defer></script>
