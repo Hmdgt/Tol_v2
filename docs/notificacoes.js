@@ -257,6 +257,36 @@ async function carregarNotificacoes() {
   }
 }
 
+// ---------- LISTAR VALIDAÇÕES PENDENTES ----------
+async function listarValidacoesPendentes() {
+  try {
+    if (typeof window.listarBoletinsPorValidar !== 'function') {
+      return [];
+    }
+    
+    const boletins = await window.listarBoletinsPorValidar();
+    const validacoes = [];
+    
+    for (const [imagem, jogos] of Object.entries(boletins)) {
+      validacoes.push({
+        id: `valid_${imagem}`,
+        tipo: 'validacao',
+        titulo: `📸 ${jogos.length} boletim(ins) por validar`,
+        resumo: jogos.map(j => j.tipo).join(', '),
+        data: jogos[0].data_processamento,
+        imagem: imagem,
+        jogos: jogos,
+        jogo: 'validação'
+      });
+    }
+    
+    return validacoes;
+  } catch (err) {
+    console.error("Erro ao listar validações:", err);
+    return [];
+  }
+}
+
 // ---------- MARCAR COMO LIDA ----------
 async function marcarComoLida(idNotificacao) {
   console.log("📝 A marcar como lida:", idNotificacao);
@@ -337,7 +367,7 @@ async function marcarComoLida(idNotificacao) {
   }
 }
 
-// ---------- RENDERIZAR DETALHE DA NOTIFICAÇÃO (NOVA VIEW) ----------
+// ---------- RENDERIZAR DETALHE DA NOTIFICAÇÃO ----------
 window.renderizarDetalheNotificacao = async function(idNotificacao) {
   console.log("📄 A renderizar detalhe da notificação:", idNotificacao);
   
@@ -375,9 +405,9 @@ window.voltarParaLista = function() {
   renderizarNotificacoes();
 };
 
-// ---------- RENDERIZAR NOTIFICAÇÕES (COM AS ALTERAÇÕES) ----------
+// ---------- RENDERIZAR NOTIFICAÇÕES (LISTA MISTURADA) ----------
 async function renderizarNotificacoes() {
-  console.log("🔄 A renderizar notificações...");
+  console.log("🔄 A renderizar notificações e validações...");
   
   const lista = document.getElementById("notificationsList");
   if (!lista) {
@@ -385,63 +415,61 @@ async function renderizarNotificacoes() {
     return;
   }
 
-  // Adicionar botão de validar no topo (só se houver token)
-  const token = localStorage.getItem("github_token");
-  let htmlInicial = '<div class="loading">Buscando resultados...</div>';
-  
-  if (token) {
-    htmlInicial = `
-      <button class="btn-validar-boletins" onclick="window.irParaValidacao()">
-        <ion-icon name="create-outline"></ion-icon> Validar Boletins
-      </button>
-      <div class="loading">Buscando resultados...</div>
-    `;
-  }
-  
-  lista.innerHTML = htmlInicial;
+  lista.innerHTML = '<div class="loading">Buscando resultados...</div>';
 
   try {
+    // Carregar notificações não lidas
     const notificacoes = await carregarNotificacoes();
-    console.log("📬 Notificações carregadas:", notificacoes);
+    const notificacoesNaoLidas = notificacoes.filter(n => !n.lido).map(n => ({
+      ...n,
+      tipo: 'notificacao',
+      id_original: n.id,
+      badge_text: 'Nova',
+      badge_color: '#ff4444',
+      icon: 'notifications-outline'
+    }));
     
-    const naoLidas = notificacoes.filter(n => !n.lido);
-    console.log("🔴 Não lidas:", naoLidas.length);
+    // Carregar validações pendentes
+    const validacoesPendentes = await listarValidacoesPendentes();
+    const validacoesComFormato = validacoesPendentes.map(v => ({
+      ...v,
+      badge_text: 'Pendente',
+      badge_color: '#ffaa00',
+      icon: 'create-outline'
+    }));
+    
+    // Juntar tudo e ordenar por data (mais recente primeiro)
+    const todosCards = [...notificacoesNaoLidas, ...validacoesComFormato].sort((a, b) => {
+      return new Date(b.data) - new Date(a.data);
+    });
 
-    if (naoLidas.length === 0) {
-      lista.innerHTML = token ? 
-        '<button class="btn-validar-boletins" onclick="window.irParaValidacao()"><ion-icon name="create-outline"></ion-icon> Validar Boletins</button><div class="no-notifications">✨ Tudo limpo!</div>' :
-        '<div class="no-notifications">✨ Tudo limpo!</div>';
+    if (todosCards.length === 0) {
+      lista.innerHTML = '<div class="no-notifications">✨ Tudo limpo!</div>';
       return;
     }
 
-    // Cards com as alterações pedidas:
-    // 1. Data do sorteio (em vez da data da notificação)
-    // 2. Número do concurso (em vez do boletim/subtitulo)
-    const cardsHtml = naoLidas.map(n => {
-      const dataSorteio = obterDataSorteio(n);
-      const numeroConcurso = obterNumeroConcurso(n);
+    // Renderizar cards misturados
+    lista.innerHTML = todosCards.map(card => {
+      const dataFormatada = formatarData(card.data);
       
       return `
-        <div class="notification-card" data-id="${n.id}" data-tipo="notificacao">
+        <div class="notification-card" 
+             data-id="${card.id}" 
+             data-tipo="${card.tipo}"
+             data-imagem="${card.imagem || ''}">
           <div class="notification-header">
-            <ion-icon name="notifications-outline" class="jogo-icon"></ion-icon>
-            <span class="jogo-nome">${n.jogo || 'Sem jogo'}</span>
-            <span class="unread-badge">Nova</span>
-            <span class="notification-date">${dataSorteio}</span>
+            <ion-icon name="${card.icon}" class="jogo-icon"></ion-icon>
+            <span class="jogo-nome">${card.jogo || card.tipo}</span>
+            <span class="unread-badge" style="background: ${card.badge_color}">${card.badge_text}</span>
+            <span class="notification-date">${dataFormatada}</span>
           </div>
-          <div class="notification-title">${n.titulo || ''}</div>
-          ${numeroConcurso ? `<div class="notification-concurso">📅 ${numeroConcurso}</div>` : ''}
-          <div class="notification-resumo">${n.resumo || ''}</div>
+          <div class="notification-title">${card.titulo || ''}</div>
+          ${card.resumo ? `<div class="notification-resumo">${card.resumo}</div>` : ''}
         </div>
       `;
     }).join("");
 
-    // Montar HTML completo com botão + cards
-    lista.innerHTML = token ? 
-      `<button class="btn-validar-boletins" onclick="window.irParaValidacao()"><ion-icon name="create-outline"></ion-icon> Validar Boletins</button>${cardsHtml}` :
-      cardsHtml;
-
-    // Adicionar event listeners - AGORA ABRE VIEW DEDICADA
+    // Adicionar event listeners
     document.querySelectorAll(".notification-card").forEach(card => {
       card.addEventListener("click", handleNotificationClick);
       card.addEventListener("touchstart", (e) => {
@@ -451,48 +479,59 @@ async function renderizarNotificacoes() {
     
   } catch (err) {
     console.error("❌ Erro ao renderizar:", err);
-    lista.innerHTML = token ? 
-      '<button class="btn-validar-boletins" onclick="window.irParaValidacao()"><ion-icon name="create-outline"></ion-icon> Validar Boletins</button><div class="error">Erro ao carregar notificações</div>' :
-      '<div class="error">Erro ao carregar notificações</div>';
+    lista.innerHTML = '<div class="error">Erro ao carregar notificações</div>';
   }
 }
 
-// ---------- IR PARA VALIDAÇÃO ----------
-window.irParaValidacao = function() {
-  console.log("📋 A ir para validação de boletins...");
-  
-  // Mudar para view de validação
-  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-  document.getElementById('validacaoView').classList.add('active');
-  
-  // Renderizar lista de validação se a função existir
-  if (typeof window.renderizarListaValidacao === 'function') {
-    window.renderizarListaValidacao();
-  }
-};
-
-// ---------- Handler para o clique - AGORA COM VIEW DEDICADA ----------
+// ---------- HANDLER PARA CLIQUE NOS CARDS ----------
 async function handleNotificationClick(e) {
   const card = e.currentTarget;
   const id = card.dataset.id;
   const tipo = card.dataset.tipo;
+  const imagem = card.dataset.imagem;
   
-  console.log("👆 Card clicado:", { id, tipo });
+  console.log("👆 Card clicado:", { id, tipo, imagem });
   
   if (tipo === 'notificacao') {
-    // Mudar para view de detalhe da notificação
+    // Abrir view de detalhe da notificação
     document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
     document.getElementById('detalheNotificacaoView').classList.add('active');
-    
-    // Renderizar detalhe
     await window.renderizarDetalheNotificacao(id);
-  } else {
-    // Validação - a implementar
-    console.log("🔜 Validação será implementada");
+  } else if (tipo === 'validacao') {
+    // Abrir view de validação
+    if (imagem && typeof window.abrirValidacao === 'function') {
+      window.abrirValidacao(imagem);
+    } else {
+      console.error("❌ Função abrirValidacao não disponível");
+    }
   }
 }
 
-// Fechar modal quando clicar no X ou fora (mantido para compatibilidade)
+// ---------- ATUALIZAR BADGE (SOMA TUDO) ----------
+window.atualizarBadge = async function() {
+  const badge = document.getElementById("notificationBadge");
+  if (!badge) return;
+  
+  try {
+    // Contar notificações não lidas
+    const notificacoes = await carregarNotificacoes();
+    const naoLidas = notificacoes.filter(n => !n.lido).length;
+    
+    // Contar validações pendentes
+    const validacoes = await listarValidacoesPendentes();
+    const totalValidacoes = validacoes.length;
+    
+    // Somar tudo
+    const total = naoLidas + totalValidacoes;
+    
+    badge.style.display = total > 0 ? "flex" : "none";
+    badge.textContent = total > 99 ? "99+" : total;
+  } catch (err) {
+    console.error("Erro ao atualizar badge:", err);
+  }
+};
+
+// ---------- FECHAR MODAL (mantido para compatibilidade) ----------
 document.addEventListener('DOMContentLoaded', () => {
   const modal = document.getElementById('modalDetalhes');
   if (modal) {
@@ -515,3 +554,4 @@ document.addEventListener('DOMContentLoaded', () => {
 window.renderizarNotificacoes = renderizarNotificacoes;
 window.marcarComoLida = marcarComoLida;
 window.carregarNotificacoes = carregarNotificacoes;
+window.atualizarBadge = window.atualizarBadge;
