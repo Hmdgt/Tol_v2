@@ -229,7 +229,6 @@ async function lerFicheiroGitHub(urlApi) {
   try {
     const res = await fetch(urlApi + `?t=${Date.now()}`, { headers });
     if (!res.ok) {
-      console.log(`Resposta não OK: ${res.status} para ${urlApi}`);
       return { content: [], sha: null };
     }
     
@@ -289,8 +288,6 @@ async function listarValidacoesPendentes() {
 
 // ---------- MARCAR COMO LIDA ----------
 async function marcarComoLida(idNotificacao) {
-  console.log("📝 A marcar como lida:", idNotificacao);
-  
   const token = localStorage.getItem("github_token");
   if (!token) {
     alert("Token não configurado.");
@@ -301,7 +298,6 @@ async function marcarComoLida(idNotificacao) {
     const fAtivas = await lerFicheiroGitHub(GITHUB_API);
     const notificacao = fAtivas.content.find(n => n.id === idNotificacao);
     if (!notificacao) {
-      console.log("❌ Notificação não encontrada");
       return true;
     }
 
@@ -369,8 +365,6 @@ async function marcarComoLida(idNotificacao) {
 
 // ---------- RENDERIZAR DETALHE DA NOTIFICAÇÃO ----------
 window.renderizarDetalheNotificacao = async function(idNotificacao) {
-  console.log("📄 A renderizar detalhe da notificação:", idNotificacao);
-  
   const container = document.getElementById('detalheContainer');
   if (!container) return;
   
@@ -398,8 +392,6 @@ window.renderizarDetalheNotificacao = async function(idNotificacao) {
 
 // ---------- VOLTAR PARA A LISTA ----------
 window.voltarParaLista = function() {
-  console.log("⬅️ A voltar para a lista de notificações");
-  
   document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
   document.getElementById('notificacoesView').classList.add('active');
   renderizarNotificacoes();
@@ -407,8 +399,6 @@ window.voltarParaLista = function() {
 
 // ---------- RENDERIZAR NOTIFICAÇÕES (LISTA MISTURADA) ----------
 async function renderizarNotificacoes() {
-  console.log("🔄 A renderizar notificações e validações...");
-  
   const lista = document.getElementById("notificationsList");
   if (!lista) {
     console.error("❌ Elemento notificationsList não encontrado");
@@ -489,8 +479,6 @@ async function handleNotificationClick(e) {
   const id = card.dataset.id;
   const tipo = card.dataset.tipo;
   const imagem = card.dataset.imagem;
-  
-  console.log("👆 Card clicado:", { id, tipo, imagem });
   
   if (tipo === 'notificacao') {
     // Abrir view de detalhe da notificação
