@@ -609,5 +609,44 @@
       "_id": "milhao_551-04210522-EUR_1"
     },
     "data_leitura": "2026-02-28T18:40:54.073Z"
+  },
+  {
+    "id": "milhao_555-02820325-EUR_1",
+    "jogo": "milhao",
+    "data": "2026-02-27 21:21:13",
+    "lido": true,
+    "titulo": "🎫 Novo resultado MILHAO",
+    "subtitulo": "Boletim: 555-02820325-EUR",
+    "resumo": "0 acertos",
+    "detalhes": {
+      "data_verificacao": "2026-02-27 21:21:13",
+      "boletim": {
+        "referencia": "555-02820325-EUR",
+        "data_sorteio": "2026-02-27",
+        "imagem_origem": "foto_1772012120204.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "codigo": "GTP11668",
+        "codigo_original": "GTP11668"
+      },
+      "sorteio": {
+        "concurso": "002/2026",
+        "data": "27/02/2026",
+        "codigo_premiado": "GDH32855",
+        "codigo_original": "GDH 32855",
+        "premio_nome": "1.º Prémio",
+        "vencedores": "1"
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem prémio",
+        "descricao": "Código não premiado",
+        "valor": "€ 0,00"
+      },
+      "_jogo": "milhao",
+      "_id": "milhao_555-02820325-EUR_1"
+    },
+    "data_leitura": "2026-02-28T18:40:59.556Z"
   }
 ]
