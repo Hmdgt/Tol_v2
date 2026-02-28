@@ -7,6 +7,7 @@ const ASSETS = [
   "/Tol_v2/app.js",
   "/Tol_v2/upload.js",
   "/Tol_v2/notificacoes.js",
+  "/Tol_v2/validacao.js",        // ← NOVO FICHEIRO ADICIONADO
   "/Tol_v2/manifest.json",
   "/Tol_v2/icons/icon-192.png",
   "/Tol_v2/icons/icon-512.png",
