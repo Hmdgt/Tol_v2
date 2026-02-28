@@ -1,6 +1,6 @@
 [
   {
-    "data_verificacao": "2026-02-28 21:15:22",
+    "data_verificacao": "2026-02-28 22:21:57",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "051-01634852-01349",
@@ -45,7 +45,7 @@
     }
   },
   {
-    "data_verificacao": "2026-02-28 21:15:22",
+    "data_verificacao": "2026-02-28 22:21:57",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "055-07189292-166",
@@ -90,7 +90,7 @@
     }
   },
   {
-    "data_verificacao": "2026-02-28 21:15:22",
+    "data_verificacao": "2026-02-28 22:21:57",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "037-03194624-00805",
@@ -144,7 +144,7 @@
     }
   },
   {
-    "data_verificacao": "2026-02-28 21:15:22",
+    "data_verificacao": "2026-02-28 22:21:57",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "906041",
@@ -195,6 +195,51 @@
       "descricao": "Nº da Sorte",
       "vencedores": "80.059",
       "valor": "Reembolso do valor da aposta de Totoloto"
+    }
+  },
+  {
+    "data_verificacao": "2026-02-28 22:21:57",
+    "metodo_validacao": "data + concurso",
+    "boletim": {
+      "referencia": "058-0579771-510",
+      "data_sorteio": "2026-02-28",
+      "concurso_sorteio": "017/2026",
+      "imagem_origem": "foto_1772215974628.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "numeros": [
+        "01",
+        "12",
+        "30",
+        "31",
+        "33"
+      ],
+      "numero_da_sorte": "04"
+    },
+    "sorteio": {
+      "concurso": "017/2026",
+      "data": "28/02/2026",
+      "numeros": [
+        "06",
+        "17",
+        "19",
+        "45",
+        "49"
+      ],
+      "numero_da_sorte": "04"
+    },
+    "acertos": {
+      "numeros": 0,
+      "numero_da_sorte": true,
+      "descricao": "0 número(s) com Nº da Sorte"
+    },
+    "ganhou": false,
+    "premios": [],
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Não corresponde a qualquer prémio",
+      "valor": "€ 0,00"
     }
   }
 ]
