@@ -129,7 +129,7 @@ function showView(viewId) {
   }
 
   // 🔥 Guardar última view no localStorage
-  localStorage.setItem("lastView", viewId);
+  sessionStorage.setItem("lastView", viewId);
 }
 
 // Event listeners para os botões de navegação
@@ -141,7 +141,7 @@ document.querySelectorAll(".navBtn").forEach(btn => {
 });
 
 // 🔥 Restaurar última view ao iniciar
-const lastView = localStorage.getItem("lastView");
+const lastView = sessionStorage.getItem("lastView");
 if (lastView && document.getElementById(lastView)) {
   showView(lastView);
 } else {
