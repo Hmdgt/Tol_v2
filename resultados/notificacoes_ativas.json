@@ -36,43 +36,5 @@
       "_jogo": "milhao",
       "_id": "milhao_537-01276244-EUR_1"
     }
-  },
-  {
-    "id": "milhao_558-04068700-EUR_1",
-    "jogo": "milhao",
-    "data": "2026-02-27 21:21:13",
-    "lido": false,
-    "titulo": "🎫 Novo resultado MILHAO",
-    "subtitulo": "Boletim: 558-04068700-EUR",
-    "resumo": "0 acertos",
-    "detalhes": {
-      "data_verificacao": "2026-02-27 21:21:13",
-      "boletim": {
-        "referencia": "558-04068700-EUR",
-        "data_sorteio": "2026-02-27",
-        "imagem_origem": "foto_1772215988047.png"
-      },
-      "aposta": {
-        "indice": 1,
-        "codigo": "HBB29338",
-        "codigo_original": "HBB29338"
-      },
-      "sorteio": {
-        "concurso": "002/2026",
-        "data": "27/02/2026",
-        "codigo_premiado": "GDH32855",
-        "codigo_original": "GDH 32855",
-        "premio_nome": "1.º Prémio",
-        "vencedores": "1"
-      },
-      "ganhou": false,
-      "premio": {
-        "categoria": "Sem prémio",
-        "descricao": "Código não premiado",
-        "valor": "€ 0,00"
-      },
-      "_jogo": "milhao",
-      "_id": "milhao_558-04068700-EUR_1"
-    }
   }
 ]
