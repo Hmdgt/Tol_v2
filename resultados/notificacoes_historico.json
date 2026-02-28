@@ -468,5 +468,68 @@
       "_id": "milhao_548-02491157-EUR_1"
     },
     "data_leitura": "2026-02-28T18:05:03.858Z"
+  },
+  {
+    "id": "euromilhoes_558-06034782-M1L_1",
+    "jogo": "euromilhoes",
+    "data": "2026-02-27 21:26:40",
+    "lido": true,
+    "titulo": "🎫 Novo resultado EUROMILHOES",
+    "subtitulo": "Boletim: 558-06034782-M1L",
+    "resumo": "1 números + 1 estrelas",
+    "detalhes": {
+      "data_verificacao": "2026-02-27 21:26:40",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "558-06034782-M1L",
+        "data_sorteio": "2026-02-27",
+        "concurso_sorteio": "017/2026",
+        "imagem_origem": "foto_1772216022378.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "08",
+          "23",
+          "24",
+          "31",
+          "37"
+        ],
+        "estrelas": [
+          "08",
+          "10"
+        ]
+      },
+      "sorteio": {
+        "concurso": "017/2026",
+        "data": "27/02/2026",
+        "chave": "14 24 27 39 42 + 6 10",
+        "numeros": [
+          "14",
+          "24",
+          "27",
+          "39",
+          "42"
+        ],
+        "estrelas": [
+          "06",
+          "10"
+        ]
+      },
+      "acertos": {
+        "numeros": 1,
+        "estrelas": 1,
+        "descricao": "1 número(s) e 1 estrela(s)"
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem prémio",
+        "descricao": "Não corresponde a qualquer prémio",
+        "valor": "€ 0,00"
+      },
+      "_jogo": "euromilhoes",
+      "_id": "euromilhoes_558-06034782-M1L_1"
+    },
+    "data_leitura": "2026-02-28T18:07:27.373Z"
   }
 ]
