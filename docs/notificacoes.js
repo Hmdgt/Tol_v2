@@ -83,7 +83,7 @@ function obterNumeroConcurso(notificacao) {
   return '';
 }
 
-// ---------- FUNÇÃO PARA GERAR CONTEÚDO DO MODAL ----------
+// ---------- FUNÇÃO PARA GERAR CONTEÚDO DO DETALHE ----------
 function gerarConteudoDetalhes(notificacao) {
   const { jogo, titulo, resumo, detalhes } = notificacao;
   
@@ -337,6 +337,44 @@ async function marcarComoLida(idNotificacao) {
   }
 }
 
+// ---------- RENDERIZAR DETALHE DA NOTIFICAÇÃO (NOVA VIEW) ----------
+window.renderizarDetalheNotificacao = async function(idNotificacao) {
+  console.log("📄 A renderizar detalhe da notificação:", idNotificacao);
+  
+  const container = document.getElementById('detalheContainer');
+  if (!container) return;
+  
+  const notificacoes = await carregarNotificacoes();
+  const notificacao = notificacoes.find(n => n.id === idNotificacao);
+  
+  if (!notificacao) {
+    container.innerHTML = '<p>Notificação não encontrada</p>';
+    return;
+  }
+  
+  container.innerHTML = `
+    <div class="detalhe-header">
+      <button class="btn-voltar" onclick="window.voltarParaLista()">
+        <ion-icon name="arrow-back-outline"></ion-icon> Voltar
+      </button>
+      <h2>Detalhes</h2>
+    </div>
+    ${gerarConteudoDetalhes(notificacao)}
+  `;
+  
+  // Marcar como lida em background
+  marcarComoLida(idNotificacao);
+};
+
+// ---------- VOLTAR PARA A LISTA ----------
+window.voltarParaLista = function() {
+  console.log("⬅️ A voltar para a lista de notificações");
+  
+  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+  document.getElementById('notificacoesView').classList.add('active');
+  renderizarNotificacoes();
+};
+
 // ---------- RENDERIZAR NOTIFICAÇÕES (COM AS ALTERAÇÕES) ----------
 async function renderizarNotificacoes() {
   console.log("🔄 A renderizar notificações...");
@@ -384,7 +422,7 @@ async function renderizarNotificacoes() {
       const numeroConcurso = obterNumeroConcurso(n);
       
       return `
-        <div class="notification-card" data-id="${n.id}">
+        <div class="notification-card" data-id="${n.id}" data-tipo="notificacao">
           <div class="notification-header">
             <ion-icon name="notifications-outline" class="jogo-icon"></ion-icon>
             <span class="jogo-nome">${n.jogo || 'Sem jogo'}</span>
@@ -403,7 +441,7 @@ async function renderizarNotificacoes() {
       `<button class="btn-validar-boletins" onclick="window.irParaValidacao()"><ion-icon name="create-outline"></ion-icon> Validar Boletins</button>${cardsHtml}` :
       cardsHtml;
 
-    // Adicionar event listeners - AGORA ABRE MODAL EM VEZ DE MARCAR LOGO
+    // Adicionar event listeners - AGORA ABRE VIEW DEDICADA
     document.querySelectorAll(".notification-card").forEach(card => {
       card.addEventListener("click", handleNotificationClick);
       card.addEventListener("touchstart", (e) => {
@@ -427,59 +465,34 @@ window.irParaValidacao = function() {
   document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
   document.getElementById('validacaoView').classList.add('active');
   
-  // Atualizar botões da bottom nav
-  document.querySelectorAll(".navBtn").forEach(btn => btn.classList.remove("active"));
-  // Nota: não há botão na bottom nav para validação, mas podemos manter o estado anterior
-  
   // Renderizar lista de validação se a função existir
   if (typeof window.renderizarListaValidacao === 'function') {
     window.renderizarListaValidacao();
   }
 };
 
-// Handler para o clique - AGORA COM MODAL
+// ---------- Handler para o clique - AGORA COM VIEW DEDICADA ----------
 async function handleNotificationClick(e) {
   const card = e.currentTarget;
   const id = card.dataset.id;
+  const tipo = card.dataset.tipo;
   
-  console.log("👆 Card clicado:", id);
+  console.log("👆 Card clicado:", { id, tipo });
   
-  // Buscar notificação completa para mostrar no modal
-  try {
-    const notificacoes = await carregarNotificacoes();
-    const notificacao = notificacoes.find(n => n.id === id);
+  if (tipo === 'notificacao') {
+    // Mudar para view de detalhe da notificação
+    document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+    document.getElementById('detalheNotificacaoView').classList.add('active');
     
-    if (!notificacao) {
-      console.error("❌ Notificação não encontrada");
-      return;
-    }
-    
-    // Abrir modal com detalhes
-    const modal = document.getElementById('modalDetalhes');
-    const modalBody = document.getElementById('modalBody');
-    
-    if (modal && modalBody) {
-      modalBody.innerHTML = gerarConteudoDetalhes(notificacao);
-      modal.style.display = 'flex';
-      
-      // Marcar como lida em background (sem feedback visual no card)
-      marcarComoLida(id).then(sucesso => {
-        if (sucesso) {
-          console.log("✅ Marcada como lida em background");
-          // Atualizar lista quando voltar à view
-          if (document.getElementById('notificacoesView').classList.contains('active')) {
-            setTimeout(() => renderizarNotificacoes(), 1000);
-          }
-        }
-      });
-    }
-    
-  } catch (err) {
-    console.error("❌ Erro ao abrir modal:", err);
+    // Renderizar detalhe
+    await window.renderizarDetalheNotificacao(id);
+  } else {
+    // Validação - a implementar
+    console.log("🔜 Validação será implementada");
   }
 }
 
-// Fechar modal quando clicar no X ou fora
+// Fechar modal quando clicar no X ou fora (mantido para compatibilidade)
 document.addEventListener('DOMContentLoaded', () => {
   const modal = document.getElementById('modalDetalhes');
   if (modal) {
