@@ -30,8 +30,6 @@ function base64ToString(base64) {
 // ---------- FUNÇÃO PARA FORMATAR DATA ----------
 function formatarData(dataStr) {
   if (!dataStr) return '';
-  
-  // Se vier no formato ISO (YYYY-MM-DD)
   if (dataStr.includes('-')) {
     const partes = dataStr.split(' ')[0].split('-');
     if (partes.length === 3) {
@@ -39,47 +37,28 @@ function formatarData(dataStr) {
       return `${dia}/${mes}/${ano}`;
     }
   }
-  
-  // Se já vier formatada
   return dataStr;
 }
 
 // ---------- FUNÇÃO PARA OBTER DATA DO SORTEIO ----------
 function obterDataSorteio(notificacao) {
   if (!notificacao.detalhes) return formatarData(notificacao.data);
-  
   const { detalhes } = notificacao;
-  
-  // Tentar obter do boletim
   if (detalhes.boletim && detalhes.boletim.data_sorteio) {
     return formatarData(detalhes.boletim.data_sorteio);
   }
-  
-  // Tentar obter do sorteio
   if (detalhes.sorteio && detalhes.sorteio.data) {
     return formatarData(detalhes.sorteio.data);
   }
-  
-  // Fallback para data da notificação
   return formatarData(notificacao.data);
 }
 
 // ---------- FUNÇÃO PARA OBTER NÚMERO DO CONCURSO ----------
 function obterNumeroConcurso(notificacao) {
   if (!notificacao.detalhes || !notificacao.detalhes.sorteio) return '';
-  
   const { sorteio, boletim } = notificacao.detalhes;
-  
-  // Tentar obter do sorteio
-  if (sorteio.concurso) {
-    return sorteio.concurso;
-  }
-  
-  // Tentar obter do boletim
-  if (boletim && boletim.concurso_sorteio) {
-    return boletim.concurso_sorteio;
-  }
-  
+  if (sorteio.concurso) return sorteio.concurso;
+  if (boletim && boletim.concurso_sorteio) return boletim.concurso_sorteio;
   return '';
 }
 
@@ -97,7 +76,6 @@ function gerarConteudoDetalhes(notificacao) {
       <div class="detalhes-resultado">${resumo}</div>
   `;
   
-  // Informação do Boletim
   if (detalhes.boletim) {
     html += `
       <div class="detalhes-secao">
@@ -109,15 +87,10 @@ function gerarConteudoDetalhes(notificacao) {
     `;
   }
   
-  // Informação da Aposta (diferente por jogo)
   if (detalhes.aposta) {
     html += `<div class="detalhes-secao"><h5>🎯 Aposta</h5>`;
-    
     if (jogo === 'milhao' && detalhes.aposta.codigo) {
       html += `<p><strong>Código:</strong> ${detalhes.aposta.codigo}</p>`;
-      if (detalhes.aposta.codigo_original) {
-        html += `<p><small>Original: ${detalhes.aposta.codigo_original}</small></p>`;
-      }
     } else {
       if (detalhes.aposta.numeros) {
         html += `<p><strong>Números:</strong> ${detalhes.aposta.numeros.join(' - ')}</p>`;
@@ -129,22 +102,17 @@ function gerarConteudoDetalhes(notificacao) {
         html += `<p><strong>Nº da Sorte:</strong> ${detalhes.aposta.numero_da_sorte}</p>`;
       }
     }
-    
     html += `</div>`;
   }
   
-  // Informação do Sorteio
   if (detalhes.sorteio) {
     html += `<div class="detalhes-secao"><h5>⭐ Sorteio</h5>`;
-    
     if (detalhes.sorteio.concurso) {
       html += `<p><strong>Concurso:</strong> ${detalhes.sorteio.concurso}</p>`;
     }
-    
     if (jogo === 'milhao') {
       if (detalhes.sorteio.codigo_premiado) {
         html += `<p><strong>Código premiado:</strong> ${detalhes.sorteio.codigo_premiado}</p>`;
-        html += `<p><strong>Prémio:</strong> ${detalhes.sorteio.premio_nome || '1.º Prémio'}</p>`;
       }
     } else {
       if (detalhes.sorteio.numeros) {
@@ -153,74 +121,30 @@ function gerarConteudoDetalhes(notificacao) {
       if (detalhes.sorteio.estrelas) {
         html += `<p><strong>Estrelas sorteadas:</strong> ${detalhes.sorteio.estrelas.join(' - ')}</p>`;
       }
-      if (detalhes.sorteio.chave) {
-        html += `<p><strong>Chave:</strong> ${detalhes.sorteio.chave}</p>`;
-      }
     }
-    
     html += `</div>`;
   }
   
-  // Acertos
   if (detalhes.acertos) {
     html += `<div class="detalhes-secao"><h5>✅ Acertos</h5>`;
     html += `<p>${detalhes.acertos.descricao || resumo}</p>`;
-    
-    if (detalhes.acertos.numeros !== undefined) {
-      html += `<p><strong>Números:</strong> ${detalhes.acertos.numeros}</p>`;
-    }
-    if (detalhes.acertos.estrelas !== undefined) {
-      html += `<p><strong>Estrelas:</strong> ${detalhes.acertos.estrelas}</p>`;
-    }
-    if (detalhes.acertos.numero_da_sorte !== undefined) {
-      html += `<p><strong>Nº Sorte:</strong> ${detalhes.acertos.numero_da_sorte ? 'Sim' : 'Não'}</p>`;
-    }
-    
     html += `</div>`;
   }
   
-  // Prémio (se ganhou)
   if (detalhes.ganhou) {
     html += `
       <div class="detalhes-secao premio">
         <h5>🏆 GANHOU!</h5>
-    `;
-    
-    if (detalhes.premio) {
-      html += `
-        <p><strong>${detalhes.premio.categoria || detalhes.premio.premio || 'Prémio'}</strong></p>
-        <p>${detalhes.premio.descricao || ''}</p>
-      `;
-      
-      if (detalhes.premio.valor) {
-        html += `<p class="valor-premio">${detalhes.premio.valor}</p>`;
-      }
-      
-      if (detalhes.premio.vencedores) {
-        html += `<p><small>${detalhes.premio.vencedores} vencedores</small></p>`;
-      }
-    }
-    
-    if (detalhes.valor_total) {
-      html += `<p class="valor-total">Total: ${detalhes.valor_total}</p>`;
-    }
-    
-    html += `</div>`;
-  } else if (detalhes.premio) {
-    html += `
-      <div class="detalhes-secao sem-premio">
-        <h5>😕 Sem prémio</h5>
-        <p>${detalhes.premio.descricao || 'Não ganhou desta vez'}</p>
+        <p class="valor-premio">${detalhes.premio?.valor || 'Prémio'}</p>
       </div>
     `;
   }
   
   html += `</div>`;
-  
   return html;
 }
 
-// ---------- LER FICHEIRO (com suporte UTF-8) ----------
+// ---------- LER FICHEIRO ----------
 async function lerFicheiroGitHub(urlApi) {
   const token = localStorage.getItem("github_token");
   const headers = {};
@@ -228,14 +152,9 @@ async function lerFicheiroGitHub(urlApi) {
   
   try {
     const res = await fetch(urlApi + `?t=${Date.now()}`, { headers });
-    if (!res.ok) {
-      console.log(`Resposta não OK: ${res.status} para ${urlApi}`);
-      return { content: [], sha: null };
-    }
-    
+    if (!res.ok) return { content: [], sha: null };
     const data = await res.json();
     const jsonText = base64ToString(data.content);
-    
     return {
       content: JSON.parse(jsonText),
       sha: data.sha
@@ -270,13 +189,9 @@ async function marcarComoLida(idNotificacao) {
   try {
     const fAtivas = await lerFicheiroGitHub(GITHUB_API);
     const notificacao = fAtivas.content.find(n => n.id === idNotificacao);
-    if (!notificacao) {
-      console.log("❌ Notificação não encontrada");
-      return true;
-    }
+    if (!notificacao) return true;
 
     const novasAtivas = fAtivas.content.filter(n => n.id !== idNotificacao);
-    
     const ativasContent = JSON.stringify(novasAtivas, null, 2);
     const ativasBase64 = stringToBase64(ativasContent);
     
@@ -293,11 +208,7 @@ async function marcarComoLida(idNotificacao) {
       })
     });
 
-    if (!ativasResponse.ok) {
-      const erro = await ativasResponse.json();
-      console.error("❌ Erro ao atualizar ativas:", erro);
-      return false;
-    }
+    if (!ativasResponse.ok) return false;
 
     const fHist = await lerFicheiroGitHub(GITHUB_HISTORICO_API);
     const historico = fHist.content;
@@ -326,8 +237,9 @@ async function marcarComoLida(idNotificacao) {
       });
     }
 
+    // Atualizar badge sem bloquear
     if (typeof window.atualizarBadge === "function") {
-      await window.atualizarBadge();
+      window.atualizarBadge(true).catch(console.warn);
     }
     
     return true;
@@ -337,33 +249,24 @@ async function marcarComoLida(idNotificacao) {
   }
 }
 
-// ---------- RENDERIZAR NOTIFICAÇÕES (COM AS ALTERAÇÕES) ----------
+// ---------- RENDERIZAR NOTIFICAÇÕES ----------
 async function renderizarNotificacoes() {
   console.log("🔄 A renderizar notificações...");
   
   const lista = document.getElementById("notificationsList");
-  if (!lista) {
-    console.error("❌ Elemento notificationsList não encontrado");
-    return;
-  }
+  if (!lista) return;
 
   lista.innerHTML = '<div class="loading">Buscando resultados...</div>';
 
   try {
     const notificacoes = await carregarNotificacoes();
-    console.log("📬 Notificações carregadas:", notificacoes);
-    
     const naoLidas = notificacoes.filter(n => !n.lido);
-    console.log("🔴 Não lidas:", naoLidas.length);
 
     if (naoLidas.length === 0) {
       lista.innerHTML = '<div class="no-notifications">✨ Tudo limpo!</div>';
       return;
     }
 
-    // Cards com as alterações pedidas:
-    // 1. Data do sorteio (em vez da data da notificação)
-    // 2. Número do concurso (em vez do boletim/subtitulo)
     lista.innerHTML = naoLidas.map(n => {
       const dataSorteio = obterDataSorteio(n);
       const numeroConcurso = obterNumeroConcurso(n);
@@ -383,12 +286,9 @@ async function renderizarNotificacoes() {
       `;
     }).join("");
 
-    // Adicionar event listeners - AGORA ABRE MODAL EM VEZ DE MARCAR LOGO
     document.querySelectorAll(".notification-card").forEach(card => {
       card.addEventListener("click", handleNotificationClick);
-      card.addEventListener("touchstart", (e) => {
-        e.preventDefault();
-      }, { passive: false });
+      card.addEventListener("touchstart", (e) => e.preventDefault(), { passive: false });
     });
     
   } catch (err) {
@@ -397,24 +297,18 @@ async function renderizarNotificacoes() {
   }
 }
 
-// Handler para o clique - AGORA COM MODAL
+// Handler para o clique
 async function handleNotificationClick(e) {
   const card = e.currentTarget;
   const id = card.dataset.id;
   
   console.log("👆 Card clicado:", id);
   
-  // Buscar notificação completa para mostrar no modal
   try {
     const notificacoes = await carregarNotificacoes();
     const notificacao = notificacoes.find(n => n.id === id);
+    if (!notificacao) return;
     
-    if (!notificacao) {
-      console.error("❌ Notificação não encontrada");
-      return;
-    }
-    
-    // Abrir modal com detalhes
     const modal = document.getElementById('modalDetalhes');
     const modalBody = document.getElementById('modalBody');
     
@@ -422,13 +316,12 @@ async function handleNotificationClick(e) {
       modalBody.innerHTML = gerarConteudoDetalhes(notificacao);
       modal.style.display = 'flex';
       
-      // Marcar como lida em background (sem feedback visual no card)
+      // Marcar como lida e atualizar badge
       marcarComoLida(id).then(sucesso => {
         if (sucesso) {
           console.log("✅ Marcada como lida em background");
-          // Atualizar lista quando voltar à view
           if (document.getElementById('notificacoesView').classList.contains('active')) {
-            setTimeout(() => renderizarNotificacoes(), 1000);
+            renderizarNotificacoes();
           }
         }
       });
@@ -439,21 +332,14 @@ async function handleNotificationClick(e) {
   }
 }
 
-// Fechar modal quando clicar no X ou fora
+// Fechar modal
 document.addEventListener('DOMContentLoaded', () => {
   const modal = document.getElementById('modalDetalhes');
   if (modal) {
     const closeBtn = modal.querySelector('.modal-close');
-    if (closeBtn) {
-      closeBtn.addEventListener('click', () => {
-        modal.style.display = 'none';
-      });
-    }
-    
+    closeBtn?.addEventListener('click', () => modal.style.display = 'none');
     modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        modal.style.display = 'none';
-      }
+      if (e.target === modal) modal.style.display = 'none';
     });
   }
 });
