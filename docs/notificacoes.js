@@ -347,7 +347,20 @@ async function renderizarNotificacoes() {
     return;
   }
 
-  lista.innerHTML = '<div class="loading">Buscando resultados...</div>';
+  // Adicionar botão de validar no topo (só se houver token)
+  const token = localStorage.getItem("github_token");
+  let htmlInicial = '<div class="loading">Buscando resultados...</div>';
+  
+  if (token) {
+    htmlInicial = `
+      <button class="btn-validar-boletins" onclick="window.irParaValidacao()">
+        <ion-icon name="create-outline"></ion-icon> Validar Boletins
+      </button>
+      <div class="loading">Buscando resultados...</div>
+    `;
+  }
+  
+  lista.innerHTML = htmlInicial;
 
   try {
     const notificacoes = await carregarNotificacoes();
@@ -357,14 +370,16 @@ async function renderizarNotificacoes() {
     console.log("🔴 Não lidas:", naoLidas.length);
 
     if (naoLidas.length === 0) {
-      lista.innerHTML = '<div class="no-notifications">✨ Tudo limpo!</div>';
+      lista.innerHTML = token ? 
+        '<button class="btn-validar-boletins" onclick="window.irParaValidacao()"><ion-icon name="create-outline"></ion-icon> Validar Boletins</button><div class="no-notifications">✨ Tudo limpo!</div>' :
+        '<div class="no-notifications">✨ Tudo limpo!</div>';
       return;
     }
 
     // Cards com as alterações pedidas:
     // 1. Data do sorteio (em vez da data da notificação)
     // 2. Número do concurso (em vez do boletim/subtitulo)
-    lista.innerHTML = naoLidas.map(n => {
+    const cardsHtml = naoLidas.map(n => {
       const dataSorteio = obterDataSorteio(n);
       const numeroConcurso = obterNumeroConcurso(n);
       
@@ -383,6 +398,11 @@ async function renderizarNotificacoes() {
       `;
     }).join("");
 
+    // Montar HTML completo com botão + cards
+    lista.innerHTML = token ? 
+      `<button class="btn-validar-boletins" onclick="window.irParaValidacao()"><ion-icon name="create-outline"></ion-icon> Validar Boletins</button>${cardsHtml}` :
+      cardsHtml;
+
     // Adicionar event listeners - AGORA ABRE MODAL EM VEZ DE MARCAR LOGO
     document.querySelectorAll(".notification-card").forEach(card => {
       card.addEventListener("click", handleNotificationClick);
@@ -393,9 +413,29 @@ async function renderizarNotificacoes() {
     
   } catch (err) {
     console.error("❌ Erro ao renderizar:", err);
-    lista.innerHTML = '<div class="error">Erro ao carregar notificações</div>';
+    lista.innerHTML = token ? 
+      '<button class="btn-validar-boletins" onclick="window.irParaValidacao()"><ion-icon name="create-outline"></ion-icon> Validar Boletins</button><div class="error">Erro ao carregar notificações</div>' :
+      '<div class="error">Erro ao carregar notificações</div>';
   }
 }
+
+// ---------- IR PARA VALIDAÇÃO ----------
+window.irParaValidacao = function() {
+  console.log("📋 A ir para validação de boletins...");
+  
+  // Mudar para view de validação
+  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+  document.getElementById('validacaoView').classList.add('active');
+  
+  // Atualizar botões da bottom nav
+  document.querySelectorAll(".navBtn").forEach(btn => btn.classList.remove("active"));
+  // Nota: não há botão na bottom nav para validação, mas podemos manter o estado anterior
+  
+  // Renderizar lista de validação se a função existir
+  if (typeof window.renderizarListaValidacao === 'function') {
+    window.renderizarListaValidacao();
+  }
+};
 
 // Handler para o clique - AGORA COM MODAL
 async function handleNotificationClick(e) {
