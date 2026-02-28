@@ -1,13 +1,7 @@
-Concurso: 016/2026
-Data: 25/02/2026
-Números: 1 5 6 14 34
-Especial: 9
+Concurso: 017/2026
+Data: 28/02/2026
+Números: 6 17 19 45 49
+Especial: 4
 ----------------------------------------
 Prémios:
-1.º Prémio - 5 Números + Nº da Sorte | Vencedores: 0 | Valor: (1)
-2.º Prémio - 5 Números | Vencedores: 1 | Valor: € 18.674,01
-3.º Prémio - 4 Números | Vencedores: 104 | Valor: € 224,44
-4.º Prémio - 3 Números | Vencedores: 4.700 | Valor: € 4,96
-5.º Prémio - 2 Números | Vencedores: 66.163 | Valor: € 2,11
-Nº da Sorte - Nº da Sorte | Vencedores: 76.694 | Valor: Reembolso do valor da aposta de Totoloto
 ----------------------------------------

@@ -1,50 +1,13 @@
 {
-  "concurso": "016/2026",
-  "data": "25/02/2026",
+  "concurso": "017/2026",
+  "data": "28/02/2026",
   "numeros": [
-    1,
-    5,
     6,
-    14,
-    34
+    17,
+    19,
+    45,
+    49
   ],
-  "especial": 9,
-  "premios": [
-    {
-      "premio": "1.º Prémio",
-      "descricao": "5 Números + Nº da Sorte",
-      "vencedores": "0",
-      "valor": "(1)"
-    },
-    {
-      "premio": "2.º Prémio",
-      "descricao": "5 Números",
-      "vencedores": "1",
-      "valor": "€ 18.674,01"
-    },
-    {
-      "premio": "3.º Prémio",
-      "descricao": "4 Números",
-      "vencedores": "104",
-      "valor": "€ 224,44"
-    },
-    {
-      "premio": "4.º Prémio",
-      "descricao": "3 Números",
-      "vencedores": "4.700",
-      "valor": "€ 4,96"
-    },
-    {
-      "premio": "5.º Prémio",
-      "descricao": "2 Números",
-      "vencedores": "66.163",
-      "valor": "€ 2,11"
-    },
-    {
-      "premio": "Nº da Sorte",
-      "descricao": "Nº da Sorte",
-      "vencedores": "76.694",
-      "valor": "Reembolso do valor da aposta de Totoloto"
-    }
-  ]
+  "especial": 4,
+  "premios": []
 }
