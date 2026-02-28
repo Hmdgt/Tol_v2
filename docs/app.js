@@ -7,7 +7,7 @@ if ("serviceWorker" in navigator) {
   window.addEventListener("load", async () => {
     try {
       const reg = await navigator.serviceWorker.register(
-        "/Tol_v2/service-worker.js?v=2026-02-27-01"
+        "/Tol_v2/service-worker.js?v=2026-02-28"
       );
       console.log("SW registado", reg);
       reg.addEventListener("updatefound", () => {
@@ -26,31 +26,57 @@ if ("serviceWorker" in navigator) {
 
 // ---------- FUNÇÕES GLOBAIS ----------
 
-// Badge (versão que carrega notificações)
-window.atualizarBadge = async function () {
+// Badge melhorado com cache local
+window.atualizarBadge = async function (forceRefresh = false) {
   const badge = document.getElementById("notificationBadge");
   if (!badge) return;
+  
   try {
-    if (typeof window.carregarNotificacoes !== 'function') {
-      console.warn("carregarNotificacoes não disponível");
-      return;
+    let naoLidas;
+    
+    // Se for forceRefresh ou não houver cache, buscar da API
+    if (forceRefresh) {
+      if (typeof window.carregarNotificacoes !== 'function') {
+        console.warn("carregarNotificacoes não disponível");
+        return;
+      }
+      const notificacoes = await window.carregarNotificacoes();
+      naoLidas = notificacoes.filter(n => !n.lido).length;
+      localStorage.setItem("notificacoes_naoLidas", naoLidas);
+    } else {
+      // Usar valor do cache local primeiro (mais rápido)
+      naoLidas = parseInt(localStorage.getItem("notificacoes_naoLidas") || "0");
     }
-    const notificacoes = await window.carregarNotificacoes();
-    const naoLidas = notificacoes.filter(n => !n.lido).length;
-    localStorage.setItem("notificacoes_naoLidas", naoLidas);
+    
+    // Atualizar badge
     badge.style.display = naoLidas > 0 ? "flex" : "none";
     badge.textContent = naoLidas > 99 ? "99+" : naoLidas;
+    
+    // Se não for forceRefresh, atualizar em background
+    if (!forceRefresh && typeof window.carregarNotificacoes === 'function') {
+      setTimeout(async () => {
+        try {
+          const notificacoes = await window.carregarNotificacoes();
+          const novasNaoLidas = notificacoes.filter(n => !n.lido).length;
+          localStorage.setItem("notificacoes_naoLidas", novasNaoLidas);
+          badge.style.display = novasNaoLidas > 0 ? "flex" : "none";
+          badge.textContent = novasNaoLidas > 99 ? "99+" : novasNaoLidas;
+        } catch (e) {
+          console.warn("Erro ao atualizar badge em background:", e);
+        }
+      }, 100);
+    }
+    
   } catch (err) {
     console.error("Erro no badge", err);
   }
 };
 
-// Atualizar app (nova versão SW) - Versão melhorada com controllerchange
+// Atualizar app (nova versão SW)
 window.atualizarApp = async function () {
   const reg = await navigator.serviceWorker.getRegistration();
   if (reg?.waiting) {
     reg.waiting.postMessage({ action: "skipWaiting" });
-    // Aguarda o novo service worker assumir o controlo antes de recarregar
     navigator.serviceWorker.addEventListener("controllerchange", () => {
       window.location.reload();
     }, { once: true });
@@ -62,30 +88,24 @@ window.atualizarApp = async function () {
 // Reset app (hard reset: limpa caches, remove SW, mantém token)
 window.resetApp = async function () {
   try {
-    // 1️⃣ Guardar token antes de limpar tudo
     const token = localStorage.getItem("github_token");
 
-    // 2️⃣ Limpar TODOS os caches
     if ("caches" in window) {
       const keys = await caches.keys();
       await Promise.all(keys.map(k => caches.delete(k)));
     }
 
-    // 3️⃣ Remover todos os service workers ativos
     if ("serviceWorker" in navigator) {
       const registrations = await navigator.serviceWorker.getRegistrations();
       await Promise.all(registrations.map(reg => reg.unregister()));
     }
 
-    // 4️⃣ Limpar localStorage completamente
     localStorage.clear();
 
-    // 5️⃣ Restaurar token
     if (token) {
       localStorage.setItem("github_token", token);
     }
 
-    // 6️⃣ Forçar reload limpo (vai buscar index.html ao servidor)
     window.location.href = "/Tol_v2/index.html";
 
   } catch (err) {
@@ -106,21 +126,19 @@ window.saveToken = function () {
 
 // ---------- ROUTER (navegação por views) ----------
 function showView(viewId) {
-  // Remove active de todas as views
   document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
 
-  // Ativa a view solicitada (com verificação de existência)
   const view = document.getElementById(viewId);
   if (view) view.classList.add("active");
 
-  // Atualiza botões ativos
   document.querySelectorAll(".navBtn").forEach(btn => btn.classList.remove("active"));
   const activeBtn = document.querySelector(`.navBtn[data-view="${viewId}"]`);
   if (activeBtn) activeBtn.classList.add("active");
 
-  // Lógica específica por view
   if (viewId === "notificacoesView") {
     if (typeof renderizarNotificacoes === "function") renderizarNotificacoes();
+    // Forçar atualização do badge quando abre notificações
+    if (typeof window.atualizarBadge === "function") window.atualizarBadge(true);
   }
   if (viewId === "configView") {
     const tokenInput = document.getElementById("token");
@@ -128,7 +146,6 @@ function showView(viewId) {
     if (tokenInput && saved) tokenInput.value = saved;
   }
 
-  // 🔥 Guardar última view no localStorage
   localStorage.setItem("lastView", viewId);
 }
 
@@ -140,7 +157,7 @@ document.querySelectorAll(".navBtn").forEach(btn => {
   });
 });
 
-// 🔥 Restaurar última view ao iniciar
+// Restaurar última view ao iniciar
 const lastView = localStorage.getItem("lastView");
 if (lastView && document.getElementById(lastView)) {
   showView(lastView);
@@ -169,20 +186,27 @@ document.body.addEventListener("change", (e) => {
   }
 });
 
-// ---------- BOTÕES DA CONFIG (usam funções globais) ----------
+// ---------- BOTÕES DA CONFIG ----------
 document.getElementById("saveTokenBtn")?.addEventListener("click", saveToken);
 document.getElementById("resetAppBtn")?.addEventListener("click", resetApp);
 
 // ---------- POLLING INTELIGENTE ----------
 let pollingInterval;
+let pollCount = 0;
+
 async function pollBadge() {
-  if (typeof window.atualizarBadge === "function") await window.atualizarBadge();
+  pollCount++;
+  // A cada 3 polls, forçar refresh da API
+  const forceRefresh = (pollCount % 3 === 0);
+  if (typeof window.atualizarBadge === "function") {
+    await window.atualizarBadge(forceRefresh);
+  }
 }
 
 function startPolling() {
   if (pollingInterval) clearInterval(pollingInterval);
   pollBadge();
-  pollingInterval = setInterval(pollBadge, 60000);
+  pollingInterval = setInterval(pollBadge, 30000); // 30 segundos
 }
 
 document.addEventListener("visibilitychange", () => {
@@ -197,7 +221,7 @@ if (document.visibilityState === "visible") {
   startPolling();
 }
 
-// ---------- MOSTRAR BOTÃO DE ATUALIZAÇÃO (opcional) ----------
+// Mostrar botão de atualização
 function mostrarBotaoAtualizar() {
   console.log("Nova versão disponível. Atualize a app.");
 }
