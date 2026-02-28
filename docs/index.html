@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Apostas Pirika</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+  <!-- Barra preta -->
+  <meta name="theme-color" content="#000000">
+  <meta name="color-scheme" content="dark">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
+
+  <!-- Ionicons -->
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+  <link rel="manifest" href="/Tol_v2/manifest.json">
+
+  <style>
+    /* ========== RESET ========== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { background: #000; height: 100%; color-scheme: dark; }
+    body {
+      margin: 0; background: #000 !important; font-family: sans-serif;
+      padding: env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);
+      min-height: 100vh; display: flex; flex-direction: column; color: white;
+      touch-action: pan-y;
+    }
+
+    /* ========== VIEWS ========== */
+    .view {
+      display: none;
+      flex: 1 1 auto;
+      overflow-y: auto;
+      padding: 20px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .view.active { display: flex; flex-direction: column; }
+
+    h2 { text-align: center; font-weight: 300; margin-bottom: 20px; }
+
+    /* ========== BOTTOM NAV ========== */
+    #bottomNav {
+      display: flex;
+      justify-content: space-around;
+      padding: 12px;
+      padding-bottom: calc(12px + env(safe-area-inset-bottom));
+      background: #111;
+      border-top: 1px solid #222;
+      flex-shrink: 0;
+    }
+    .navBtn { color: white; font-size: 28px; cursor: pointer; opacity: 0.3; transition: 0.2s; position: relative; }
+    .navBtn.active { opacity: 1; }
+    .notification-badge {
+      position: absolute; top: -5px; right: -5px; background: #ff4444; color: white;
+      font-size: 11px; font-weight: bold; min-width: 18px; height: 18px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; border: 2px solid #000;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    /* ========== CÂMARA / GALERIA ========== */
+    #cameraButton, #galleryButton {
+      display: flex; justify-content: center; align-items: center; border-radius: 50%;
+      background: #111; border: 3px solid #444; cursor: pointer; transition: 0.1s;
+      margin: 20px auto;
+    }
+    #cameraButton { width: 150px; height: 150px; }
+    #cameraButton ion-icon { font-size: 80px; color: white; opacity: 0.9; }
+    #galleryButton { width: 120px; height: 120px; }
+    #galleryButton ion-icon { font-size: 60px; color: white; opacity: 0.9; }
+    #cameraButton:active, #galleryButton:active { transform: scale(0.92); border-color: #777; }
+
+    /* ========== CONFIG ========== */
+    input { width: 100%; padding: 12px; border-radius: 8px; border: none; background: #111; color: white; font-size: 16px; margin-bottom: 12px; }
+    button { padding: 14px; background: #222; border: 1px solid #444; color: white; border-radius: 8px; font-size: 16px; cursor: pointer; transition: 0.2s; margin-bottom: 12px; }
+    button:active { opacity: 0.8; }
+
+    /* ========== NOTIFICAÇÕES ========== */
+    #notificationsList { display: flex; flex-direction: column; gap: 15px; }
+    .notification-card {
+      background: #111; border: 1px solid #333; border-radius: 12px; padding: 16px;
+      cursor: pointer; position: relative; transition: 0.2s;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      touch-action: manipulation;
+    }
+    .notification-card:active { background: #222; transform: scale(0.98); }
+    .notification-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .jogo-icon { font-size: 20px; }
+    .jogo-nome { font-weight: bold; text-transform: capitalize; }
+    .unread-badge {
+      background: #ff4444; color: white; font-size: 10px; padding: 2px 8px;
+      border-radius: 12px; font-weight: bold; margin-left: auto;
+      animation: pulse 2s infinite;
+    }
+    .notification-date { color: #999; font-size: 12px; white-space: nowrap; }
+    .notification-title { font-size: 16px; font-weight: 500; margin: 8px 0 4px; }
+    .notification-concurso {
+      font-size: 13px; color: #888; margin-bottom: 6px;
+      font-family: monospace; background: #1a1a1a; padding: 4px 8px;
+      border-radius: 6px; display: inline-block;
+    }
+    .notification-resumo {
+      font-size: 18px; font-weight: bold; text-align: center; padding: 8px;
+      background: #1a2a1a; border-radius: 8px; margin-top: 4px;
+    }
+    .notification-resumo:contains("0 acertos") { color: #ff4444; background: #2a1a1a; }
+    .no-notifications { text-align: center; opacity: 0.6; margin-top: 40px; }
+    .loading, .error { text-align: center; padding: 40px 20px; opacity: 0.7; }
+    .error { color: #ff4444; }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.7; }
+      100% { opacity: 1; }
+    }
+
+    /* ========== MODAL DE DETALHES ========== */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      backdrop-filter: blur(5px);
+    }
+    .modal-content {
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 500px;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      animation: modalFadeIn 0.3s;
+    }
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      border-bottom: 1px solid #333;
+    }
+    .modal-header h3 { margin: 0; font-weight: 300; }
+    .modal-close {
+      background: none; border: none; color: white; font-size: 28px;
+      cursor: pointer; padding: 0; width: 40px; height: 40px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .modal-body { padding: 20px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+
+    /* Detalhes dentro do modal */
+    .detalhes-jogo { display: flex; flex-direction: column; gap: 16px; }
+    .detalhes-jogo h4 { font-size: 20px; margin: 0 0 10px 0; color: #ffd700; }
+    .detalhes-resultado {
+      font-size: 18px; font-weight: bold; color: #4caf50;
+      text-align: center; padding: 12px; background: #1a2a1a;
+      border-radius: 10px; margin-bottom: 10px;
+    }
+    .detalhes-secao {
+      background: #1a1a1a; border-radius: 12px; padding: 15px;
+      border: 1px solid #333;
+    }
+    .detalhes-secao h5 {
+      margin: 0 0 10px 0; color: #888; font-size: 14px;
+      text-transform: uppercase; letter-spacing: 1px;
+    }
+    .detalhes-secao p { margin: 5px 0; line-height: 1.5; }
+    .detalhes-secao.premio { background: #2a1a1a; border-color: #ff4444; }
+    .detalhes-secao.premio h5 { color: #ff4444; }
+    .valor-premio { font-size: 24px; font-weight: bold; color: #ffd700; text-align: center; margin-top: 10px; }
+    .valor-total { font-size: 18px; color: #4caf50; text-align: center; margin-top: 5px; }
+    .sem-premio { background: #222; opacity: 0.8; }
+
+    /* Esconder inputs nativos */
+    #cameraInput, #galleryInput { display: none; }
+  </style>
+</head>
+<body>
+
+  <!-- Inputs ocultos -->
+  <input type="file" accept="image/*" capture="environment" id="cameraInput">
+  <input type="file" accept="image/*" id="galleryInput">
+
+  <!-- Views -->
+  <div id="homeView" class="view active">
+    <div id="cameraButton"><ion-icon name="camera-outline"></ion-icon></div>
+    <div id="galleryButton"><ion-icon name="image-outline"></ion-icon></div>
+  </div>
+
+  <div id="notificacoesView" class="view">
+    <h2>Notificações</h2>
+    <div id="notificationsList"></div>
+  </div>
+
+  <div id="configView" class="view">
+    <h2>Configurações</h2>
+    <input type="password" id="token" placeholder="Introduz o token...">
+    <button id="saveTokenBtn">Guardar Token</button>
+    <button id="resetAppBtn">Atualizar App</button>
+  </div>
+
+  <!-- Bottom navigation -->
+  <div id="bottomNav">
+    <div class="navBtn active" data-view="homeView"><ion-icon name="camera-outline"></ion-icon></div>
+    <div class="navBtn" data-view="notificacoesView">
+      <ion-icon name="list-outline"></ion-icon>
+      <span id="notificationBadge" class="notification-badge" style="display:none">0</span>
+    </div>
+    <div class="navBtn" data-view="configView"><ion-icon name="settings-outline"></ion-icon></div>
+  </div>
+
+  <!-- Modal de detalhes (escondido inicialmente) -->
+  <div id="modalDetalhes" class="modal" style="display:none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Detalhes da Aposta</h3>
+        <button class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <!-- Conteúdo dinâmico -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="notificacoes.js" defer></script>
+  <script src="upload.js" defer></script>
+  <script src="app.js" defer></script>
+</body>
+</html>
