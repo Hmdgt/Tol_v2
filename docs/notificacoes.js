@@ -1,48 +1,10 @@
 // ===============================
-// 🔧 CONFIGURAÇÃO
+// 🔔 NOTIFICAÇÕES
 // ===============================
-const REPO = "Hmdgt/Tol_v2";
-const CAMINHO_NOTIFICACOES = "resultados/notificacoes_ativas.json";
-const CAMINHO_HISTORICO = "resultados/notificacoes_historico.json";
-const GITHUB_API = `https://api.github.com/repos/${REPO}/contents/${CAMINHO_NOTIFICACOES}`;
-const GITHUB_HISTORICO_API = `https://api.github.com/repos/${REPO}/contents/${CAMINHO_HISTORICO}`;
 
-// ---------- FUNÇÃO AUXILIAR: string para base64 (SUPORTA UTF-8) ----------
-function stringToBase64(str) {
-  const utf8Bytes = new TextEncoder().encode(str);
-  let binary = '';
-  for (let i = 0; i < utf8Bytes.length; i++) {
-    binary += String.fromCharCode(utf8Bytes[i]);
-  }
-  return btoa(binary);
-}
-
-// ---------- FUNÇÃO AUXILIAR: base64 para string (SUPORTA UTF-8) ----------
-function base64ToString(base64) {
-  const binary = atob(base64);
-  const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i++) {
-    bytes[i] = binary.charCodeAt(i);
-  }
-  return new TextDecoder('utf-8').decode(bytes);
-}
-
-// ---------- FUNÇÃO PARA FORMATAR DATA ----------
-function formatarData(dataStr) {
-  if (!dataStr) return '';
-  
-  // Se vier no formato ISO (YYYY-MM-DD)
-  if (dataStr.includes('-')) {
-    const partes = dataStr.split(' ')[0].split('-');
-    if (partes.length === 3) {
-      const [ano, mes, dia] = partes;
-      return `${dia}/${mes}/${ano}`;
-    }
-  }
-  
-  // Se já vier formatada
-  return dataStr;
-}
+// Usar configuração global (do config.js)
+const GITHUB_API = `https://api.github.com/repos/${CONFIG.REPO}/contents/${CONFIG.FICHEIROS.NOTIFICACOES}`;
+const GITHUB_HISTORICO_API = `https://api.github.com/repos/${CONFIG.REPO}/contents/${CONFIG.FICHEIROS.HISTORICO}`;
 
 // ---------- FUNÇÃO PARA OBTER DATA DO SORTEIO ----------
 function obterDataSorteio(notificacao) {
