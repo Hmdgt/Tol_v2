@@ -1,0 +1,32 @@
+[
+    {
+        "tipo": "Euromilhões",
+        "data_sorteio": "2026-02-27",
+        "data_aposta": "2026-02-27",
+        "data_emissao": "2026-02-27 18:11:22",
+        "referencia_unica": "558-06034782-M1L",
+        "concurso": "017/2026",
+        "valor_total": 2.2,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "numeros": [
+                    "08",
+                    "23",
+                    "24",
+                    "31",
+                    "37"
+                ],
+                "estrelas": [
+                    "06",
+                    "10"
+                ]
+            }
+        ],
+        "confirmado": false,
+        "imagem_origem": "foto_1772387409877.png",
+        "hash_imagem": "5da35fa3fb60a67611e23dc955b5c39c",
+        "data_processamento": "2026-03-01 17:51:20"
+    }
+]
