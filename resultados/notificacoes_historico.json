@@ -37,5 +37,71 @@
       "_id": "milhao_551-04210522-EUR_1"
     },
     "data_leitura": "2026-03-01T17:44:20.086Z"
+  },
+  {
+    "id": "totoloto_906041_1",
+    "jogo": "totoloto",
+    "data": "2026-03-01 17:31:58",
+    "lido": true,
+    "titulo": "🎫 Novo resultado TOTOLOTO",
+    "subtitulo": "Boletim: 906041",
+    "resumo": "1 acertos",
+    "detalhes": {
+      "data_verificacao": "2026-03-01 17:31:58",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "906041",
+        "data_sorteio": "2026-02-18",
+        "concurso_sorteio": "014/2026",
+        "imagem_origem": "foto_1772012153864.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "03",
+          "15",
+          "26",
+          "38",
+          "49"
+        ],
+        "numero_da_sorte": "09"
+      },
+      "sorteio": {
+        "concurso": "014/2026",
+        "data": "18/02/2026",
+        "numeros": [
+          "02",
+          "05",
+          "08",
+          "09",
+          "26"
+        ],
+        "numero_da_sorte": "09"
+      },
+      "acertos": {
+        "numeros": 1,
+        "numero_da_sorte": true,
+        "descricao": "1 número(s) com Nº da Sorte"
+      },
+      "ganhou": true,
+      "premios": [
+        {
+          "premio": "Nº da Sorte",
+          "descricao": "Nº da Sorte",
+          "vencedores": "80.059",
+          "valor": "Reembolso do valor da aposta de Totoloto"
+        }
+      ],
+      "valor_total": "€ 1,00 (Reembolso)",
+      "premio": {
+        "premio": "Nº da Sorte",
+        "descricao": "Nº da Sorte",
+        "vencedores": "80.059",
+        "valor": "Reembolso do valor da aposta de Totoloto"
+      },
+      "_jogo": "totoloto",
+      "_id": "totoloto_906041_1"
+    },
+    "data_leitura": "2026-03-01T17:44:43.300Z"
   }
 ]
