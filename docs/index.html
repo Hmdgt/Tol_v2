@@ -110,11 +110,18 @@
     .loading, .error { text-align: center; padding: 40px 20px; opacity: 0.7; }
     .error { color: #ff4444; }
 
+    /* ========== LOADING SPINNER ========== */
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
     @keyframes pulse {
       0% { opacity: 1; }
       50% { opacity: 0.7; }
       100% { opacity: 1; }
     }
+
     .loading {
       text-align: center;
       padding: 40px 20px;
@@ -126,7 +133,7 @@
       animation: spin 1s linear infinite;
     }
 
-    /* ========== DETALHE NOTIFICAÇÃO (substitui o modal) ========== */
+    /* ========== DETALHE NOTIFICAÇÃO ========== */
     .detalhe-header {
       display: flex;
       align-items: center;
@@ -147,7 +154,7 @@
       gap: 4px;
     }
 
-    /* ========== MODAL DE DETALHES (removido, mas mantido para compatibilidade) ========== */
+    /* ========== MODAL DE DETALHES (mantido para compatibilidade) ========== */
     .modal {
       display: none;
       position: fixed;
@@ -192,7 +199,7 @@
     }
     .modal-body { padding: 20px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
 
-    /* Detalhes dentro do modal (agora usado na view) */
+    /* Detalhes das apostas */
     .detalhes-jogo { display: flex; flex-direction: column; gap: 16px; }
     .detalhes-jogo h4 { font-size: 20px; margin: 0 0 10px 0; color: #ffd700; }
     .detalhes-resultado {
@@ -236,17 +243,17 @@
     <div id="notificationsList"></div>
   </div>
 
-  <!-- NOVA VIEW: Detalhe da Notificação (substitui o modal) -->
+  <!-- VIEW: Detalhe da Notificação -->
   <div id="detalheNotificacaoView" class="view">
     <div id="detalheContainer"></div>
   </div>
 
-  <!-- NOVA VIEW: Validação de Boletins -->
+  <!-- VIEW: Validação de Boletins -->
   <div id="validacaoView" class="view">
     <div id="validacaoContainer"></div>
   </div>
 
-  <!-- FUTURA VIEW: Estatísticas (para implementar depois) -->
+  <!-- VIEW: Estatísticas -->
   <div id="estatisticasView" class="view">
     <h2>Estatísticas</h2>
     <div id="estatisticasContainer">
@@ -274,7 +281,7 @@
     <div class="navBtn" data-view="configView"><ion-icon name="settings-outline"></ion-icon></div>
   </div>
 
-  <!-- Modal de detalhes (mantido para compatibilidade, mas não usado) -->
+  <!-- Modal de detalhes (mantido para compatibilidade) -->
   <div id="modalDetalhes" class="modal" style="display:none;">
     <div class="modal-content">
       <div class="modal-header">
@@ -287,10 +294,12 @@
     </div>
   </div>
 
-  <!-- Scripts -->
+  <!-- Scripts - ORDEM CORRETA (config > utils > resto) -->
+  <script src="config.js" defer></script>
+  <script src="utils.js" defer></script>
   <script src="notificacoes.js" defer></script>
+  <script src="validacao.js" defer></script>
   <script src="upload.js" defer></script>
   <script src="app.js" defer></script>
-  <script src="validacao.js" defer></script>
 </body>
 </html>
