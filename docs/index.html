@@ -235,6 +235,222 @@
 
     /* Esconder inputs nativos */
     #cameraInput, #galleryInput { display: none; }
+
+    /* ========== ESTILOS PARA VALIDAÇÃO ========== */
+.validacao-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.validacao-header h3 {
+  margin: 0;
+  flex: 1;
+}
+.imagem-nome {
+  font-size: 14px;
+  color: #888;
+  background: #1a1a1a;
+  padding: 4px 8px;
+  border-radius: 6px;
+  word-break: break-all;
+  max-width: 200px;
+}
+
+.validacao-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .validacao-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.imagem-coluna {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.imagem-container {
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 10px;
+}
+
+.imagem-validacao {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid #444;
+}
+
+.imagens-preprocessadas h4 {
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: #aaa;
+}
+
+.preprocessadas-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.preprocessada-img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background: #111;
+}
+
+.formularios-coluna {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.jogo-form {
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.jogo-form h3 {
+  margin: 0 0 15px 0;
+  color: #ffd700;
+  font-size: 18px;
+}
+
+.form-campos {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.campo label {
+  font-size: 14px;
+  color: #888;
+}
+
+.campo input, .campo select {
+  background: #222;
+  border: 1px solid #444;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.campo-duplo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.numeros-grid, .estrelas-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 5px;
+}
+
+.estrelas-grid {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.numeros-grid input, .estrelas-grid input {
+  text-align: center;
+  padding: 8px 4px;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #333;
+  margin: 20px 0;
+}
+
+.botoes-validacao {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-cancelar {
+  background: #222;
+  border: 1px solid #444;
+  flex: 1;
+}
+
+.btn-validar {
+  background: #2a5a2a;
+  border: 1px solid #4caf4c;
+  flex: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-validar ion-icon {
+  font-size: 20px;
+}
+
+/* Cards da lista de validação (se forem usados) */
+.validacao-card {
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.validacao-card:active {
+  background: #222;
+  transform: scale(0.98);
+}
+.validacao-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.validacao-imagem {
+  font-size: 14px;
+  color: #aaa;
+  word-break: break-all;
+  flex: 1;
+}
+.validacao-badge {
+  background: #ffaa00;
+  color: black;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+.validacao-tipos {
+  font-size: 14px;
+  color: #888;
+  margin: 8px 0;
+}
+.validacao-preview {
+  font-size: 13px;
+  color: #4caf50;
+}
+    
   </style>
 </head>
 <body>
