@@ -456,9 +456,14 @@ window.voltarListaValidacao = function() {
   
   document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
   document.getElementById('notificacoesView').classList.add('active');
-  renderizarNotificacoes();
   
-  // Atualizar badge
+  // Tenta chamar a renderização de notificações de várias formas
+  if (typeof window.renderizarNotificacoes === 'function') {
+    window.renderizarNotificacoes();
+  } else if (typeof renderizarNotificacoes === 'function') {
+    renderizarNotificacoes();
+  }
+  
   if (typeof window.atualizarBadge === 'function') {
     window.atualizarBadge();
   }
