@@ -1,3 +1,7 @@
+// ===============================
+// 📤 UPLOAD DE IMAGENS
+// ===============================
+
 async function uploadToGitHub(file) {
   const token = localStorage.getItem("github_token");
   if (!token) {
@@ -12,10 +16,9 @@ async function uploadToGitHub(file) {
     const base64 = reader.result.split(",")[1];
 
     const filename = `foto_${Date.now()}.png`;
-    const repo = "Hmdgt/Tol_v2";
-    const path = `uploads/${filename}`;
-
-    const url = `https://api.github.com/repos/${repo}/contents/${path}`;
+    // Usar configuração global (do config.js)
+    const path = `${CONFIG.PASTAS.UPLOADS}${filename}`;
+    const url = `https://api.github.com/repos/${CONFIG.REPO}/contents/${path}`;
 
     const body = {
       message: `Upload automático: ${filename}`,
@@ -34,12 +37,19 @@ async function uploadToGitHub(file) {
 
       if (response.ok) {
         console.log("✔️ Upload concluído:", filename);
+        // Opcional: mostrar feedback ao utilizador
+        // alert("Upload concluído com sucesso!");
       } else {
         const err = await response.json();
         console.error("❌ Erro no upload:", err);
+        alert("Erro ao fazer upload. Verifica o token e tenta novamente.");
       }
     } catch (e) {
       console.error("❌ Erro de rede:", e);
+      alert("Erro de rede. Verifica a tua ligação à internet.");
     }
   };
 }
+
+// Expor função globalmente (para ser usada no app.js)
+window.uploadToGitHub = uploadToGitHub;
