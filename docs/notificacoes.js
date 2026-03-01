@@ -405,7 +405,7 @@ async function renderizarNotificacoes() {
     return;
   }
 
-  lista.innerHTML = '<div class="loading">Buscando resultados...</div>';
+  lista.innerHTML = '<div class="loading"><ion-icon name="sync-outline" class="spin"></ion-icon></div>';
 
   try {
     // Carregar notificações não lidas
