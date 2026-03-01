@@ -1,0 +1,22 @@
+[
+    {
+        "tipo": "M1lhão",
+        "data_sorteio": "2026-02-27",
+        "data_aposta": "2026-02-27",
+        "data_emissao": "2026-02-27 18:11:22",
+        "referencia_unica": "558-04068700-EUR",
+        "concurso": "002/2026",
+        "valor_total": 0.3,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "codigo": "HBB29338"
+            }
+        ],
+        "confirmado": false,
+        "imagem_origem": "foto_1772391899040.png",
+        "hash_imagem": "846a6c99b410363fe6e8ab10720e759a",
+        "data_processamento": "2026-03-01 19:06:10"
+    }
+]
