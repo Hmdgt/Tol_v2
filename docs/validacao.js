@@ -2,36 +2,17 @@
 // 🔧 VALIDAÇÃO DE BOLETINS (OCR -> HUMANO)
 // ===============================
 
-const PASTA_APOSTAS = "apostas/";
-const PASTA_UPLOADS = "uploads/";
-const PASTA_PREPROCESSADAS = "preprocessadas/";
-
-// ---------- FUNÇÃO AUXILIAR: string para base64 (SUPORTA UTF-8) ----------
-function stringToBase64(str) {
-  const utf8Bytes = new TextEncoder().encode(str);
-  let binary = '';
-  for (let i = 0; i < utf8Bytes.length; i++) {
-    binary += String.fromCharCode(utf8Bytes[i]);
-  }
-  return btoa(binary);
-}
-
-// ---------- FUNÇÃO AUXILIAR: base64 para string (SUPORTA UTF-8) ----------
-function base64ToString(base64) {
-  const binary = atob(base64);
-  const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i++) {
-    bytes[i] = binary.charCodeAt(i);
-  }
-  return new TextDecoder('utf-8').decode(bytes);
-}
+// Usar configuração global (do config.js)
+const PASTA_APOSTAS = CONFIG.PASTAS.APOSTAS;
+const PASTA_UPLOADS = CONFIG.PASTAS.UPLOADS;
+const PASTA_PREPROCESSADAS = CONFIG.PASTAS.PREPROCESSADAS;
 
 // ---------- CARREGAR FICHEIRO DO GITHUB ----------
 async function carregarFicheiroGitHub(caminho) {
   const token = localStorage.getItem("github_token");
   if (!token) return { content: null, sha: null };
   
-  const url = `https://api.github.com/repos/${REPO}/contents/${caminho}`;
+  const url = `https://api.github.com/repos/${CONFIG.REPO}/contents/${caminho}`;
   
   try {
     const res = await fetch(url + `?t=${Date.now()}`, {
@@ -59,7 +40,7 @@ async function guardarFicheiroGitHub(caminho, conteudo, sha, mensagem) {
   const token = localStorage.getItem("github_token");
   if (!token) return false;
   
-  const url = `https://api.github.com/repos/${REPO}/contents/${caminho}`;
+  const url = `https://api.github.com/repos/${CONFIG.REPO}/contents/${caminho}`;
   
   try {
     const body = {
@@ -86,7 +67,7 @@ async function guardarFicheiroGitHub(caminho, conteudo, sha, mensagem) {
 
 // ---------- LISTAR BOLETINS POR VALIDAR ----------
 window.listarBoletinsPorValidar = async function() {
-  const tipos = ['euromilhoes', 'totoloto', 'eurodreams', 'milhao'];
+  const tipos = CONFIG.TIPOS_JOGO; // Usar configuração global
   const boletinsPorImagem = {};
   
   for (const tipo of tipos) {
@@ -117,7 +98,7 @@ window.listarBoletinsPorValidar = async function() {
 // ---------- CARREGAR IMAGEM DO GITHUB ----------
 async function carregarImagemGitHub(caminho) {
   const token = localStorage.getItem("github_token");
-  const url = `https://api.github.com/repos/${REPO}/contents/${caminho}`;
+  const url = `https://api.github.com/repos/${CONFIG.REPO}/contents/${caminho}`;
   
   try {
     const res = await fetch(url, {
@@ -197,7 +178,7 @@ window.renderizarListaValidacao = async function() {
   const container = document.getElementById('validacaoContainer');
   if (!container) return;
   
-  container.innerHTML = '<div class="loading">A carregar boletins...</div>';
+  container.innerHTML = '<div class="loading"><ion-icon name="sync-outline" class="spin"></ion-icon></div>';
   
   const boletins = await window.listarBoletinsPorValidar();
   
