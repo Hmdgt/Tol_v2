@@ -1,6 +1,6 @@
 [
   {
-    "data_verificacao": "2026-02-28 23:16:30",
+    "data_verificacao": "2026-03-01 10:24:28",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "051-01634852-01349",
@@ -45,7 +45,7 @@
     }
   },
   {
-    "data_verificacao": "2026-02-28 23:16:30",
+    "data_verificacao": "2026-03-01 10:24:28",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "055-07189292-166",
@@ -90,7 +90,7 @@
     }
   },
   {
-    "data_verificacao": "2026-02-28 23:16:30",
+    "data_verificacao": "2026-03-01 10:24:28",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "037-03194624-00805",
@@ -144,7 +144,7 @@
     }
   },
   {
-    "data_verificacao": "2026-02-28 23:16:30",
+    "data_verificacao": "2026-03-01 10:24:28",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "906041",
@@ -198,7 +198,7 @@
     }
   },
   {
-    "data_verificacao": "2026-02-28 23:16:30",
+    "data_verificacao": "2026-03-01 10:24:28",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "058-0579771-510",
@@ -234,12 +234,21 @@
       "numero_da_sorte": true,
       "descricao": "0 número(s) com Nº da Sorte"
     },
-    "ganhou": false,
-    "premios": [],
+    "ganhou": true,
+    "premios": [
+      {
+        "premio": "Nº da Sorte",
+        "descricao": "Nº da Sorte",
+        "vencedores": "80.480",
+        "valor": "Reembolso do valor da aposta de Totoloto"
+      }
+    ],
+    "valor_total": "€ 1,00 (Reembolso)",
     "premio": {
-      "categoria": "Sem prémio",
-      "descricao": "Não corresponde a qualquer prémio",
-      "valor": "€ 0,00"
+      "premio": "Nº da Sorte",
+      "descricao": "Nº da Sorte",
+      "vencedores": "80.480",
+      "valor": "Reembolso do valor da aposta de Totoloto"
     }
   }
 ]
