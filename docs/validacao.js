@@ -19,6 +19,7 @@ async function carregarFicheiroGitHub(caminho) {
       headers: { Authorization: `Bearer ${token}` }
     });
     
+    // ✅ Silencia erros 404 (ficheiro não existe)
     if (res.status === 404) return { content: null, sha: null };
     if (!res.ok) throw new Error(`Erro ${res.status}`);
     
@@ -30,7 +31,10 @@ async function carregarFicheiroGitHub(caminho) {
       sha: data.sha
     };
   } catch (err) {
-    console.error(`Erro ao carregar ${caminho}:`, err);
+    // Só mostra erro se não for 404 (o 404 já foi tratado acima)
+    if (!err.message.includes('404')) {
+      console.error(`Erro ao carregar ${caminho}:`, err);
+    }
     return { content: null, sha: null };
   }
 }
