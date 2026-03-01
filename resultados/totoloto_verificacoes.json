@@ -252,7 +252,11 @@
     }
   },
   {
+<<<<<<< Updated upstream
     "data_verificacao": "2026-03-01 17:33:25",
+=======
+    "data_verificacao": "2026-03-01 17:33:34",
+>>>>>>> Stashed changes
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "051-01634852-01349",
@@ -297,7 +301,11 @@
     }
   },
   {
+<<<<<<< Updated upstream
     "data_verificacao": "2026-03-01 17:33:25",
+=======
+    "data_verificacao": "2026-03-01 17:33:34",
+>>>>>>> Stashed changes
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "055-07189292-166",
@@ -342,7 +350,11 @@
     }
   },
   {
+<<<<<<< Updated upstream
     "data_verificacao": "2026-03-01 17:33:25",
+=======
+    "data_verificacao": "2026-03-01 17:33:34",
+>>>>>>> Stashed changes
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "037-03194624-00805",
@@ -396,7 +408,11 @@
     }
   },
   {
+<<<<<<< Updated upstream
     "data_verificacao": "2026-03-01 17:33:25",
+=======
+    "data_verificacao": "2026-03-01 17:33:34",
+>>>>>>> Stashed changes
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "906041",
@@ -450,7 +466,11 @@
     }
   },
   {
+<<<<<<< Updated upstream
     "data_verificacao": "2026-03-01 17:33:25",
+=======
+    "data_verificacao": "2026-03-01 17:33:34",
+>>>>>>> Stashed changes
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "058-0579771-510",
