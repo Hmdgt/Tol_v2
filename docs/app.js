@@ -2,6 +2,50 @@
 // 🚀 APP PRINCIPAL (SPA)
 // ===============================
 
+// ========== CAPTURA DE ERROS PARA DEBUG ==========
+window.errorLog = [];
+
+window.addEventListener('error', (event) => {
+  const errorMsg = `${event.message} (${event.filename}:${event.lineno})`;
+  window.errorLog.push({
+    timestamp: new Date().toLocaleString(),
+    message: errorMsg,
+    stack: event.error?.stack
+  });
+  if (window.errorLog.length > 20) window.errorLog.shift();
+});
+
+window.addEventListener('unhandledrejection', (event) => {
+  window.errorLog.push({
+    timestamp: new Date().toLocaleString(),
+    message: `Promise rejection: ${event.reason}`,
+    stack: event.reason?.stack
+  });
+  if (window.errorLog.length > 20) window.errorLog.shift();
+});
+
+function mostrarLogs() {
+  const logs = window.errorLog || [];
+  if (logs.length === 0) {
+    alert("Nenhum erro registado até agora.");
+    return;
+  }
+
+  let msg = "📋 Últimos erros:\n\n";
+  logs.slice().reverse().forEach((log, i) => {
+    msg += `${i+1}. ${log.timestamp}\n${log.message}\n\n`;
+  });
+
+  const modal = document.getElementById('modalDetalhes');
+  const modalBody = document.getElementById('modalBody');
+  if (modal && modalBody) {
+    modalBody.innerHTML = `<pre style="white-space: pre-wrap; color: #ff8888; background:#111; padding:10px; border-radius:8px; max-height:400px; overflow-y:auto;">${msg}</pre>`;
+    modal.style.display = 'flex';
+  } else {
+    alert(msg);
+  }
+}
+
 // ---------- REGISTO SERVICE WORKER ----------
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", async () => {
@@ -202,3 +246,9 @@ if (document.visibilityState === "visible") {
 function mostrarBotaoAtualizar() {
   console.log("Nova versão disponível. Atualize a app.");
 }
+
+// Ligar o botão de debug depois de a página carregar
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('debugLogsBtn');
+  if (btn) btn.addEventListener('click', mostrarLogs);
+});
