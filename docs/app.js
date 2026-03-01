@@ -6,8 +6,9 @@
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", async () => {
     try {
+      // Usar CONFIG para a versão do cache (do config.js)
       const reg = await navigator.serviceWorker.register(
-        "/Tol_v2/service-worker.js?v=2026-02-27-01"
+        `/Tol_v2/service-worker.js?v=${CONFIG.CACHE_VERSION}`
       );
       console.log("SW registado", reg);
       reg.addEventListener("updatefound", () => {
@@ -128,7 +129,7 @@ function showView(viewId) {
     if (tokenInput && saved) tokenInput.value = saved;
   }
 
-  // 🔥 Guardar última view no localStorage
+  // Guardar última view no sessionStorage
   sessionStorage.setItem("lastView", viewId);
 }
 
@@ -140,7 +141,7 @@ document.querySelectorAll(".navBtn").forEach(btn => {
   });
 });
 
-// 🔥 Restaurar última view ao iniciar
+// Restaurar última view ao iniciar
 const lastView = sessionStorage.getItem("lastView");
 if (lastView && document.getElementById(lastView)) {
   showView(lastView);
