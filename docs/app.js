@@ -71,20 +71,26 @@ if ("serviceWorker" in navigator) {
 
 // ---------- FUNÇÕES GLOBAIS ----------
 
-// Badge (versão que carrega notificações)
+// ✅ Badge (versão corrigida que considera validações pendentes)
 window.atualizarBadge = async function () {
   const badge = document.getElementById("notificationBadge");
   if (!badge) return;
   try {
-    if (typeof window.carregarNotificacoes !== 'function') {
-      console.warn("carregarNotificacoes não disponível");
-      return;
-    }
+    // 1. Notificações não lidas
     const notificacoes = await window.carregarNotificacoes();
     const naoLidas = notificacoes.filter(n => !n.lido).length;
-    localStorage.setItem("notificacoes_naoLidas", naoLidas);
-    badge.style.display = naoLidas > 0 ? "flex" : "none";
-    badge.textContent = naoLidas > 99 ? "99+" : naoLidas;
+
+    // 2. Validações pendentes
+    let totalValidacoes = 0;
+    if (typeof window.listarValidacoesPendentes === 'function') {
+      const validacoes = await window.listarValidacoesPendentes();
+      totalValidacoes = validacoes.length;
+    }
+
+    const total = naoLidas + totalValidacoes;
+
+    badge.style.display = total > 0 ? "flex" : "none";
+    badge.textContent = total > 99 ? "99+" : total;
   } catch (err) {
     console.error("Erro no badge", err);
   }
