@@ -2,7 +2,6 @@
 // 🔧 VALIDAÇÃO DE BOLETINS (OCR -> HUMANO)
 // ===============================
 
-const REPO = "Hmdgt/Tol_v2";
 const PASTA_APOSTAS = "apostas/";
 const PASTA_UPLOADS = "uploads/";
 const PASTA_PREPROCESSADAS = "preprocessadas/";
