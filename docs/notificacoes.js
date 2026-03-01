@@ -505,3 +505,4 @@ window.renderizarNotificacoes = renderizarNotificacoes;
 window.marcarComoLida = marcarComoLida;
 window.carregarNotificacoes = carregarNotificacoes;
 window.atualizarBadge = window.atualizarBadge;
+window.listarValidacoesPendentes = listarValidacoesPendentes;
