@@ -4,7 +4,7 @@ import hashlib
 import cv2
 import numpy as np
 import time
-from PIL import Image, ImageEnhance
+from PIL import Image, ImageEnhance, ImageOps
 from datetime import datetime
 from google import genai
 from collections import deque
@@ -136,6 +136,8 @@ def gerar_thumbnail(caminho_original, nome_arquivo):
     os.makedirs(PASTA_THUMBNAILS, exist_ok=True)
     try:
         img = Image.open(caminho_original)
+        # Aplicar orientação EXIF para que a imagem fique na orientação correta
+        img = ImageOps.exif_transpose(img)
         # Redimensionar mantendo proporção, limite de 800px no lado maior
         img.thumbnail((800, 800))
         caminho_thumb = os.path.join(PASTA_THUMBNAILS, nome_arquivo)
