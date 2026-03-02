@@ -35,13 +35,13 @@
       overflow-y: auto;
       padding: 20px;
       -webkit-overflow-scrolling: touch;
-      min-height: 0;      /* ← ESSENCIAL para flex children scrollarem */
-      height: 100%;       /* Garantir que ocupa o espaço disponível */
+      min-height: 0;
+      height: 100%;
     }
     .view.active { 
       display: flex; 
       flex-direction: column; 
-      min-height: 0;      /* Mantém a propriedade para o conteúdo interior */
+      min-height: 0;
     }
 
     h2 { text-align: center; font-weight: 300; margin-bottom: 20px; }
@@ -87,7 +87,7 @@
       display: flex; 
       flex-direction: column; 
       gap: 15px; 
-      min-height: min-content; /* Evita que encolha demais */
+      min-height: min-content;
     }
     .notification-card {
       background: #111; border: 1px solid #333; border-radius: 12px; padding: 16px;
@@ -164,7 +164,7 @@
       gap: 4px;
     }
 
-    /* ========== MODAL DE DETALHES (mantido para compatibilidade) ========== */
+    /* ========== MODAL DE DETALHES ========== */
     .modal {
       display: none;
       position: fixed;
@@ -236,221 +236,207 @@
     #cameraInput, #galleryInput { display: none; }
 
     /* ========== ESTILOS PARA VALIDAÇÃO ========== */
-.validacao-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-}
-.validacao-header h3 {
-  margin: 0;
-  flex: 1;
-}
-.imagem-nome {
-  font-size: 14px;
-  color: #888;
-  background: #1a1a1a;
-  padding: 4px 8px;
-  border-radius: 6px;
-  word-break: break-all;
-  max-width: 200px;
-}
+    .validacao-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .validacao-header h3 {
+      margin: 0;
+      flex: 1;
+    }
+    .imagem-nome {
+      font-size: 14px;
+      color: #888;
+      background: #1a1a1a;
+      padding: 4px 8px;
+      border-radius: 6px;
+      word-break: break-all;
+      max-width: 200px;
+    }
 
-.validacao-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
+    .validacao-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
 
-@media (max-width: 768px) {
-  .validacao-grid {
-    grid-template-columns: 1fr;
-  }
-}
+    @media (max-width: 768px) {
+      .validacao-grid {
+        grid-template-columns: 1fr;
+      }
+    }
 
-.imagem-coluna {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
+    .imagem-coluna {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
 
-.imagem-container {
-  background: #111;
-  border: 1px solid #333;
-  border-radius: 12px;
-  padding: 10px;
-}
+    .imagem-container {
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-.imagem-validacao {
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
-  border: 1px solid #444;
-}
+    .imagem-validacao {
+      max-width: 100%;
+      max-height: 300px;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border-radius: 8px;
+      border: 1px solid #444;
+    }
 
-.imagens-preprocessadas h4 {
-  font-size: 16px;
-  margin-bottom: 10px;
-  color: #aaa;
-}
+    .formularios-coluna {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
 
-.preprocessadas-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
+    .jogo-form {
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 20px;
+    }
 
-.preprocessada-img {
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
-  border: 1px solid #444;
-  background: #111;
-}
+    .jogo-form h3 {
+      margin: 0 0 15px 0;
+      color: #ffd700;
+      font-size: 18px;
+    }
 
-.formularios-coluna {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
+    .form-campos {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
 
-.jogo-form {
-  background: #111;
-  border: 1px solid #333;
-  border-radius: 12px;
-  padding: 20px;
-}
+    .campo {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
 
-.jogo-form h3 {
-  margin: 0 0 15px 0;
-  color: #ffd700;
-  font-size: 18px;
-}
+    .campo label {
+      font-size: 14px;
+      color: #888;
+    }
 
-.form-campos {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
+    .campo input, .campo select {
+      background: #222;
+      border: 1px solid #444;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 16px;
+    }
 
-.campo {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
+    .campo-duplo {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
 
-.campo label {
-  font-size: 14px;
-  color: #888;
-}
+    .numeros-grid, .estrelas-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 5px;
+    }
 
-.campo input, .campo select {
-  background: #222;
-  border: 1px solid #444;
-  color: white;
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-size: 16px;
-}
+    .estrelas-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
 
-.campo-duplo {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
+    .numeros-grid input, .estrelas-grid input {
+      text-align: center;
+      padding: 8px 4px;
+    }
 
-.numeros-grid, .estrelas-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 5px;
-}
+    hr {
+      border: none;
+      border-top: 1px solid #333;
+      margin: 20px 0;
+    }
 
-.estrelas-grid {
-  grid-template-columns: repeat(2, 1fr);
-}
+    .botoes-validacao {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
 
-.numeros-grid input, .estrelas-grid input {
-  text-align: center;
-  padding: 8px 4px;
-}
+    .btn-cancelar {
+      background: #222;
+      border: 1px solid #444;
+      flex: 1;
+    }
 
-hr {
-  border: none;
-  border-top: 1px solid #333;
-  margin: 20px 0;
-}
+    .btn-validar {
+      background: #2a5a2a;
+      border: 1px solid #4caf4c;
+      flex: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
 
-.botoes-validacao {
-  display: flex;
-  gap: 10px;
-  margin-top: 20px;
-}
+    .btn-validar ion-icon {
+      font-size: 20px;
+    }
 
-.btn-cancelar {
-  background: #222;
-  border: 1px solid #444;
-  flex: 1;
-}
-
-.btn-validar {
-  background: #2a5a2a;
-  border: 1px solid #4caf4c;
-  flex: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.btn-validar ion-icon {
-  font-size: 20px;
-}
-
-/* Cards da lista de validação (se forem usados) */
-.validacao-card {
-  background: #111;
-  border: 1px solid #333;
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 12px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-.validacao-card:active {
-  background: #222;
-  transform: scale(0.98);
-}
-.validacao-card-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.validacao-imagem {
-  font-size: 14px;
-  color: #aaa;
-  word-break: break-all;
-  flex: 1;
-}
-.validacao-badge {
-  background: #ffaa00;
-  color: black;
-  font-size: 12px;
-  font-weight: bold;
-  padding: 2px 8px;
-  border-radius: 12px;
-}
-.validacao-tipos {
-  font-size: 14px;
-  color: #888;
-  margin: 8px 0;
-}
-.validacao-preview {
-  font-size: 13px;
-  color: #4caf50;
-}
+    /* Cards da lista de validação */
+    .validacao-card {
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .validacao-card:active {
+      background: #222;
+      transform: scale(0.98);
+    }
+    .validacao-card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .validacao-imagem {
+      font-size: 14px;
+      color: #aaa;
+      word-break: break-all;
+      flex: 1;
+    }
+    .validacao-badge {
+      background: #ffaa00;
+      color: black;
+      font-size: 12px;
+      font-weight: bold;
+      padding: 2px 8px;
+      border-radius: 12px;
+    }
+    .validacao-tipos {
+      font-size: 14px;
+      color: #888;
+      margin: 8px 0;
+    }
+    .validacao-preview {
+      font-size: 13px;
+      color: #4caf50;
+    }
     
-    /* ========== BLOQUEIO DE SCROLL (UIManager) ========== */
+    /* ========== BLOQUEIO DE SCROLL ========== */
     body.modal-open {
       overflow: hidden;
       position: fixed;
@@ -515,7 +501,7 @@ hr {
     <div class="navBtn" data-view="configView"><ion-icon name="settings-outline"></ion-icon></div>
   </div>
 
-  <!-- Modal de detalhes (mantido para compatibilidade) -->
+  <!-- Modal de detalhes (mantido para logs) -->
   <div id="modalDetalhes" class="modal" style="display:none;">
     <div class="modal-content">
       <div class="modal-header">
@@ -528,7 +514,7 @@ hr {
     </div>
   </div>
 
-  <!-- Scripts - ORDEM CORRETA (config > utils > resto) -->
+  <!-- Scripts - ORDEM CORRETA -->
   <script src="config.js" defer></script>
   <script src="utils.js" defer></script>
   <script src="notificacoes.js" defer></script>
