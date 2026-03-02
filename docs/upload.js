@@ -15,7 +15,10 @@ async function uploadToGitHub(file) {
   reader.onload = async () => {
     const base64 = reader.result.split(",")[1];
 
-    const filename = `foto_${Date.now()}.png`;
+    // Nome único: timestamp + sufixo aleatório para evitar colisões
+    const randomSuffix = Math.random().toString(36).substring(2, 8);
+    const filename = `foto_${Date.now()}_${randomSuffix}.png`;
+    
     // Usar configuração global (do config.js)
     const path = `${CONFIG.PASTAS.UPLOADS}${filename}`;
     const url = `https://api.github.com/repos/${CONFIG.REPO}/contents/${path}`;
@@ -37,7 +40,7 @@ async function uploadToGitHub(file) {
 
       if (response.ok) {
         console.log("✔️ Upload concluído:", filename);
-        // Opcional: mostrar feedback ao utilizador
+        // TODO: substituir alert por toast quando sistema de toasts estiver implementado
         // alert("Upload concluído com sucesso!");
       } else {
         const err = await response.json();
