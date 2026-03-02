@@ -1,0 +1,28 @@
+[
+    {
+        "tipo": "Totoloto",
+        "data_sorteio": "2026-02-18",
+        "data_aposta": "2026-02-17",
+        "data_emissao": "2026-02-17 17:02:30",
+        "referencia_unica": "048-07243502-091",
+        "valor_total": 1.0,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "numeros": [
+                    "03",
+                    "15",
+                    "26",
+                    "38",
+                    "49"
+                ],
+                "numero_da_sorte": "09"
+            }
+        ],
+        "confirmado": false,
+        "imagem_origem": "foto_1772481341963_mwy5bo.png",
+        "hash_imagem": "b7722cddfb100e90e3da32ba6aee8c27",
+        "data_processamento": "2026-03-02 19:57:12"
+    }
+]
