@@ -50,3 +50,40 @@ function showLoading(container) {
 function log(msg, ...args) {
   console.log(`[${new Date().toLocaleTimeString()}] ${msg}`, ...args);
 }
+
+// ========== SEGURANÇA: ESCAPE HTML ==========
+function escapeHTML(str) {
+  if (str === undefined || str === null) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+// ========== GESTÃO DE SCROLL (UIManager) ==========
+const UIManager = {
+  lockScroll() {
+    document.body.classList.add('modal-open');
+    // Guardar posição do scroll para restaurar depois
+    this.scrollPosition = window.scrollY;
+  },
+  
+  unlockScroll() {
+    document.body.classList.remove('modal-open');
+    if (this.scrollPosition !== undefined) {
+      window.scrollTo(0, this.scrollPosition);
+      this.scrollPosition = undefined;
+    }
+  },
+  
+  // Versão segura que garante a remoção de qualquer bloqueio
+  safeUnlock() {
+    document.body.classList.remove('modal-open');
+    document.body.style.overflow = '';
+    document.body.style.position = '';
+    document.body.style.width = '';
+    document.body.style.height = '';
+  }
+};
