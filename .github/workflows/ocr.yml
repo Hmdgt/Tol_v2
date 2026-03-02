@@ -36,6 +36,6 @@ jobs:
         run: |
           git config --global user.name "Bot OCR"
           git config --global user.email "bot@github.com"
-          git add apostas/*.json
+          git add apostas/*.json thumbnails/
           git commit -m "OCR: novos boletins processados" || echo "Nenhuma alteração para commitar"
           git push
