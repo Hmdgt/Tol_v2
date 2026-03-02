@@ -45,7 +45,7 @@ function obterNumeroConcurso(notificacao) {
   return '';
 }
 
-// ---------- FUNÇÃO PARA GERAR CONTEÚDO DO DETALHE ----------
+// ---------- FUNÇÃO PARA GERAR CONTEÚDO DO DETALHE (COM ESCAPE HTML) ----------
 function gerarConteudoDetalhes(notificacao) {
   const { jogo, titulo, resumo, detalhes } = notificacao;
   
@@ -53,42 +53,51 @@ function gerarConteudoDetalhes(notificacao) {
     return `<p>Sem detalhes disponíveis</p>`;
   }
   
+  // Aplicar escape em todos os campos dinâmicos
+  const tituloEscaped = escapeHTML(titulo);
+  const resumoEscaped = escapeHTML(resumo);
+  const jogoEscaped = escapeHTML(jogo);
+  
   let html = `
-    <div class="detalhes-jogo ${jogo}">
-      <h4>${titulo}</h4>
-      <div class="detalhes-resultado">${resumo}</div>
+    <div class="detalhes-jogo ${jogoEscaped}">
+      <h4>${tituloEscaped}</h4>
+      <div class="detalhes-resultado">${resumoEscaped}</div>
   `;
   
   // Informação do Boletim
   if (detalhes.boletim) {
+    const boletim = detalhes.boletim;
     html += `
       <div class="detalhes-secao">
         <h5>📋 Boletim</h5>
-        <p><strong>Referência:</strong> ${detalhes.boletim.referencia || 'N/A'}</p>
-        <p><strong>Data do sorteio:</strong> ${formatarData(detalhes.boletim.data_sorteio) || 'N/A'}</p>
-        ${detalhes.boletim.concurso_sorteio ? `<p><strong>Concurso:</strong> ${detalhes.boletim.concurso_sorteio}</p>` : ''}
+        <p><strong>Referência:</strong> ${escapeHTML(boletim.referencia || 'N/A')}</p>
+        <p><strong>Data do sorteio:</strong> ${escapeHTML(formatarData(boletim.data_sorteio) || 'N/A')}</p>
+        ${boletim.concurso_sorteio ? `<p><strong>Concurso:</strong> ${escapeHTML(boletim.concurso_sorteio)}</p>` : ''}
       </div>
     `;
   }
   
   // Informação da Aposta (diferente por jogo)
   if (detalhes.aposta) {
+    const aposta = detalhes.aposta;
     html += `<div class="detalhes-secao"><h5>🎯 Aposta</h5>`;
     
-    if (jogo === 'milhao' && detalhes.aposta.codigo) {
-      html += `<p><strong>Código:</strong> ${detalhes.aposta.codigo}</p>`;
-      if (detalhes.aposta.codigo_original) {
-        html += `<p><small>Original: ${detalhes.aposta.codigo_original}</small></p>`;
+    if (jogo === 'milhao' && aposta.codigo) {
+      html += `<p><strong>Código:</strong> ${escapeHTML(aposta.codigo)}</p>`;
+      if (aposta.codigo_original) {
+        html += `<p><small>Original: ${escapeHTML(aposta.codigo_original)}</small></p>`;
       }
     } else {
-      if (detalhes.aposta.numeros) {
-        html += `<p><strong>Números:</strong> ${detalhes.aposta.numeros.join(' - ')}</p>`;
+      if (aposta.numeros) {
+        const numerosStr = aposta.numeros.map(n => escapeHTML(n)).join(' - ');
+        html += `<p><strong>Números:</strong> ${numerosStr}</p>`;
       }
-      if (detalhes.aposta.estrelas) {
-        html += `<p><strong>Estrelas:</strong> ${detalhes.aposta.estrelas.join(' - ')}</p>`;
+      if (aposta.estrelas) {
+        const estrelasStr = aposta.estrelas.map(e => escapeHTML(e)).join(' - ');
+        html += `<p><strong>Estrelas:</strong> ${estrelasStr}</p>`;
       }
-      if (detalhes.aposta.numero_da_sorte) {
-        html += `<p><strong>Nº da Sorte:</strong> ${detalhes.aposta.numero_da_sorte}</p>`;
+      if (aposta.numero_da_sorte) {
+        html += `<p><strong>Nº da Sorte:</strong> ${escapeHTML(aposta.numero_da_sorte)}</p>`;
       }
     }
     
@@ -97,26 +106,29 @@ function gerarConteudoDetalhes(notificacao) {
   
   // Informação do Sorteio
   if (detalhes.sorteio) {
+    const sorteio = detalhes.sorteio;
     html += `<div class="detalhes-secao"><h5>⭐ Sorteio</h5>`;
     
-    if (detalhes.sorteio.concurso) {
-      html += `<p><strong>Concurso:</strong> ${detalhes.sorteio.concurso}</p>`;
+    if (sorteio.concurso) {
+      html += `<p><strong>Concurso:</strong> ${escapeHTML(sorteio.concurso)}</p>`;
     }
     
     if (jogo === 'milhao') {
-      if (detalhes.sorteio.codigo_premiado) {
-        html += `<p><strong>Código premiado:</strong> ${detalhes.sorteio.codigo_premiado}</p>`;
-        html += `<p><strong>Prémio:</strong> ${detalhes.sorteio.premio_nome || '1.º Prémio'}</p>`;
+      if (sorteio.codigo_premiado) {
+        html += `<p><strong>Código premiado:</strong> ${escapeHTML(sorteio.codigo_premiado)}</p>`;
+        html += `<p><strong>Prémio:</strong> ${escapeHTML(sorteio.premio_nome || '1.º Prémio')}</p>`;
       }
     } else {
-      if (detalhes.sorteio.numeros) {
-        html += `<p><strong>Números sorteados:</strong> ${detalhes.sorteio.numeros.join(' - ')}</p>`;
+      if (sorteio.numeros) {
+        const nums = sorteio.numeros.map(n => escapeHTML(n)).join(' - ');
+        html += `<p><strong>Números sorteados:</strong> ${nums}</p>`;
       }
-      if (detalhes.sorteio.estrelas) {
-        html += `<p><strong>Estrelas sorteadas:</strong> ${detalhes.sorteio.estrelas.join(' - ')}</p>`;
+      if (sorteio.estrelas) {
+        const estrs = sorteio.estrelas.map(e => escapeHTML(e)).join(' - ');
+        html += `<p><strong>Estrelas sorteadas:</strong> ${estrs}</p>`;
       }
-      if (detalhes.sorteio.chave) {
-        html += `<p><strong>Chave:</strong> ${detalhes.sorteio.chave}</p>`;
+      if (sorteio.chave) {
+        html += `<p><strong>Chave:</strong> ${escapeHTML(sorteio.chave)}</p>`;
       }
     }
     
@@ -125,17 +137,18 @@ function gerarConteudoDetalhes(notificacao) {
   
   // Acertos
   if (detalhes.acertos) {
+    const acertos = detalhes.acertos;
     html += `<div class="detalhes-secao"><h5>✅ Acertos</h5>`;
-    html += `<p>${detalhes.acertos.descricao || resumo}</p>`;
+    html += `<p>${escapeHTML(acertos.descricao || resumo)}</p>`;
     
-    if (detalhes.acertos.numeros !== undefined) {
-      html += `<p><strong>Números:</strong> ${detalhes.acertos.numeros}</p>`;
+    if (acertos.numeros !== undefined) {
+      html += `<p><strong>Números:</strong> ${escapeHTML(acertos.numeros)}</p>`;
     }
-    if (detalhes.acertos.estrelas !== undefined) {
-      html += `<p><strong>Estrelas:</strong> ${detalhes.acertos.estrelas}</p>`;
+    if (acertos.estrelas !== undefined) {
+      html += `<p><strong>Estrelas:</strong> ${escapeHTML(acertos.estrelas)}</p>`;
     }
-    if (detalhes.acertos.numero_da_sorte !== undefined) {
-      html += `<p><strong>Nº Sorte:</strong> ${detalhes.acertos.numero_da_sorte ? 'Sim' : 'Não'}</p>`;
+    if (acertos.numero_da_sorte !== undefined) {
+      html += `<p><strong>Nº Sorte:</strong> ${acertos.numero_da_sorte ? 'Sim' : 'Não'}</p>`;
     }
     
     html += `</div>`;
@@ -149,22 +162,23 @@ function gerarConteudoDetalhes(notificacao) {
     `;
     
     if (detalhes.premio) {
+      const premio = detalhes.premio;
       html += `
-        <p><strong>${detalhes.premio.categoria || detalhes.premio.premio || 'Prémio'}</strong></p>
-        <p>${detalhes.premio.descricao || ''}</p>
+        <p><strong>${escapeHTML(premio.categoria || premio.premio || 'Prémio')}</strong></p>
+        <p>${escapeHTML(premio.descricao || '')}</p>
       `;
       
-      if (detalhes.premio.valor) {
-        html += `<p class="valor-premio">${detalhes.premio.valor}</p>`;
+      if (premio.valor) {
+        html += `<p class="valor-premio">${escapeHTML(premio.valor)}</p>`;
       }
       
-      if (detalhes.premio.vencedores) {
-        html += `<p><small>${detalhes.premio.vencedores} vencedores</small></p>`;
+      if (premio.vencedores) {
+        html += `<p><small>${escapeHTML(premio.vencedores)} vencedores</small></p>`;
       }
     }
     
     if (detalhes.valor_total) {
-      html += `<p class="valor-total">Total: ${detalhes.valor_total}</p>`;
+      html += `<p class="valor-total">Total: ${escapeHTML(detalhes.valor_total)}</p>`;
     }
     
     html += `</div>`;
@@ -172,7 +186,7 @@ function gerarConteudoDetalhes(notificacao) {
     html += `
       <div class="detalhes-secao sem-premio">
         <h5>😕 Sem prémio</h5>
-        <p>${detalhes.premio.descricao || 'Não ganhou desta vez'}</p>
+        <p>${escapeHTML(detalhes.premio.descricao || 'Não ganhou desta vez')}</p>
       </div>
     `;
   }
@@ -354,8 +368,13 @@ window.renderizarDetalheNotificacao = async function(idNotificacao) {
 
 // ---------- VOLTAR PARA A LISTA ----------
 window.voltarParaLista = function() {
-  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-  document.getElementById('notificacoesView').classList.add('active');
+  // Usar ViewManager se disponível, senão fallback
+  if (window.ViewManager) {
+    window.ViewManager.goTo('notificacoesView');
+  } else {
+    document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+    document.getElementById('notificacoesView').classList.add('active');
+  }
   renderizarNotificacoes();
 };
 
@@ -400,33 +419,34 @@ async function renderizarNotificacoes() {
       return;
     }
 
-    // Renderizar cards misturados
+    // Renderizar cards misturados (com escape nos campos)
     lista.innerHTML = todosCards.map(card => {
       const dataFormatada = formatarData(card.data);
+      const jogoNome = escapeHTML(card.jogo || card.tipo);
+      const titulo = escapeHTML(card.titulo || '');
+      const resumo = card.resumo ? escapeHTML(card.resumo) : '';
       
       return `
         <div class="notification-card" 
-             data-id="${card.id}" 
-             data-tipo="${card.tipo}"
-             data-imagem="${card.imagem || ''}">
+             data-id="${escapeHTML(card.id)}" 
+             data-tipo="${escapeHTML(card.tipo)}"
+             data-imagem="${escapeHTML(card.imagem || '')}">
           <div class="notification-header">
-            <ion-icon name="${card.icon}" class="jogo-icon"></ion-icon>
-            <span class="jogo-nome">${card.jogo || card.tipo}</span>
-            <span class="unread-badge" style="background: ${card.badge_color}">${card.badge_text}</span>
-            <span class="notification-date">${dataFormatada}</span>
+            <ion-icon name="${escapeHTML(card.icon)}" class="jogo-icon"></ion-icon>
+            <span class="jogo-nome">${jogoNome}</span>
+            <span class="unread-badge" style="background: ${escapeHTML(card.badge_color)}">${escapeHTML(card.badge_text)}</span>
+            <span class="notification-date">${escapeHTML(dataFormatada)}</span>
           </div>
-          <div class="notification-title">${card.titulo || ''}</div>
-          ${card.resumo ? `<div class="notification-resumo">${card.resumo}</div>` : ''}
+          <div class="notification-title">${titulo}</div>
+          ${resumo ? `<div class="notification-resumo">${resumo}</div>` : ''}
         </div>
       `;
     }).join("");
 
-    // Adicionar event listeners
+    // Adicionar event listeners (removidos os touchstart com preventDefault)
     document.querySelectorAll(".notification-card").forEach(card => {
       card.addEventListener("click", handleNotificationClick);
-      card.addEventListener("touchstart", (e) => {
-        e.preventDefault();
-      }, { passive: false });
+      // NOTA: removido o event listener touchstart que bloqueava o scroll
     });
     
   } catch (err) {
@@ -435,24 +455,61 @@ async function renderizarNotificacoes() {
   }
 }
 
-// ---------- HANDLER PARA CLIQUE NOS CARDS ----------
+// ---------- HANDLER PARA CLIQUE NOS CARDS (COM FEEDBACK E PREVENÇÃO DE MÚLTIPLOS CLIQUES) ----------
+let clicking = false;
+
 async function handleNotificationClick(e) {
+  if (clicking) {
+    console.log("⏳ Clique ignorado (já em processamento)");
+    return;
+  }
+  
   const card = e.currentTarget;
   const id = card.dataset.id;
   const tipo = card.dataset.tipo;
   const imagem = card.dataset.imagem;
   
-  if (tipo === 'notificacao') {
-    // Abrir view de detalhe da notificação
-    document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-    document.getElementById('detalheNotificacaoView').classList.add('active');
-    await window.renderizarDetalheNotificacao(id);
-  } else if (tipo === 'validacao') {
-    // Abrir view de validação
-    if (imagem && typeof window.abrirValidacao === 'function') {
-      window.abrirValidacao(imagem);
-    } else {
-      console.error("❌ Função abrirValidacao não disponível");
+  // Feedback visual imediato
+  clicking = true;
+  card.style.opacity = '0.5';
+  card.style.pointerEvents = 'none';
+  
+  try {
+    if (tipo === 'notificacao') {
+      // 1. Mudar de view IMEDIATAMENTE
+      if (window.ViewManager) {
+        window.ViewManager.goTo('detalheNotificacaoView');
+      } else {
+        document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+        document.getElementById('detalheNotificacaoView').classList.add('active');
+      }
+      
+      // 2. Mostrar loading
+      const container = document.getElementById('detalheContainer');
+      if (container) {
+        container.innerHTML = '<div class="loading"><ion-icon name="sync-outline" class="spin"></ion-icon></div>';
+      }
+      
+      // 3. Carregar dados
+      await window.renderizarDetalheNotificacao(id);
+    } else if (tipo === 'validacao') {
+      if (imagem && typeof window.abrirValidacao === 'function') {
+        // A função abrirValidacao já deve tratar da mudança de view e loading
+        await window.abrirValidacao(imagem);
+      } else {
+        console.error("❌ Função abrirValidacao não disponível");
+      }
+    }
+  } catch (error) {
+    console.error('Erro no clique:', error);
+    // Poderia mostrar um toast de erro aqui
+  } finally {
+    // Restaurar o card (se ele ainda existir na DOM)
+    clicking = false;
+    const updatedCard = document.querySelector(`[data-id="${id}"]`);
+    if (updatedCard) {
+      updatedCard.style.opacity = '1';
+      updatedCard.style.pointerEvents = 'auto';
     }
   }
 }
@@ -504,5 +561,5 @@ document.addEventListener('DOMContentLoaded', () => {
 window.renderizarNotificacoes = renderizarNotificacoes;
 window.marcarComoLida = marcarComoLida;
 window.carregarNotificacoes = carregarNotificacoes;
-window.atualizarBadge = window.atualizarBadge;
+window.atualizarBadge = window.atualizarBadge;  // Mantido, mas é redundante
 window.listarValidacoesPendentes = listarValidacoesPendentes;
