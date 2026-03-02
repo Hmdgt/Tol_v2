@@ -11,8 +11,8 @@ const CACHE_NAME = `pirika-cache-${CACHE_VERSION}`;
 const ASSETS = [
   "/Tol_v2/",
   "/Tol_v2/index.html",
-  "/Tol_v2/config.js",           // ← NOVO
-  "/Tol_v2/utils.js",            // ← NOVO
+  "/Tol_v2/config.js",
+  "/Tol_v2/utils.js",
   "/Tol_v2/app.js",
   "/Tol_v2/upload.js",
   "/Tol_v2/notificacoes.js",
@@ -84,8 +84,9 @@ self.addEventListener("fetch", event => {
   }
 
   // Estratégia para imagens (stale-while-revalidate)
+  // Inclui uploads/ e thumbnails/
   if (url.pathname.includes('/Tol_v2/uploads/') || 
-      url.pathname.includes('/Tol_v2/preprocessadas/')) {
+      url.pathname.includes('/Tol_v2/thumbnails/')) {
     
     event.respondWith(
       caches.open(CACHE_NAME).then(cache => {
