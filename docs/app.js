@@ -39,7 +39,7 @@ function mostrarLogs() {
   const modal = document.getElementById('modalDetalhes');
   const modalBody = document.getElementById('modalBody');
   if (modal && modalBody) {
-    modalBody.innerHTML = `<pre style="white-space: pre-wrap; color: #ff8888; background:#111; padding:10px; border-radius:8px; max-height:400px; overflow-y:auto;">${msg}</pre>`;
+    modalBody.innerHTML = `<pre style="white-space: pre-wrap; color: #ff8888; background:#111; padding:10px; border-radius:8px; max-height:400px; overflow-y:auto;">${escapeHTML(msg)}</pre>`;
     modal.style.display = 'flex';
   } else {
     alert(msg);
@@ -72,29 +72,8 @@ if ("serviceWorker" in navigator) {
 // ---------- FUNÇÕES GLOBAIS ----------
 
 // ✅ Badge (versão corrigida que considera validações pendentes)
-window.atualizarBadge = async function () {
-  const badge = document.getElementById("notificationBadge");
-  if (!badge) return;
-  try {
-    // 1. Notificações não lidas
-    const notificacoes = await window.carregarNotificacoes();
-    const naoLidas = notificacoes.filter(n => !n.lido).length;
-
-    // 2. Validações pendentes
-    let totalValidacoes = 0;
-    if (typeof window.listarValidacoesPendentes === 'function') {
-      const validacoes = await window.listarValidacoesPendentes();
-      totalValidacoes = validacoes.length;
-    }
-
-    const total = naoLidas + totalValidacoes;
-
-    badge.style.display = total > 0 ? "flex" : "none";
-    badge.textContent = total > 99 ? "99+" : total;
-  } catch (err) {
-    console.error("Erro no badge", err);
-  }
-};
+// NOTA: a função atualizarBadge foi movida para notificacoes.js para evitar duplicação.
+// Esta definição foi removida.
 
 // Atualizar app (nova versão SW) - Versão melhorada com controllerchange
 window.atualizarApp = async function () {
@@ -155,23 +134,28 @@ window.saveToken = function () {
   alert("Token guardado.");
 };
 
-// ---------- ROUTER (navegação por views) ----------
+// ---------- ROUTER (navegação por views) - Integrado com ViewManager ----------
 function showView(viewId) {
-  // Remove active de todas as views
-  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+  // Usar ViewManager se disponível, caso contrário fallback manual
+  if (window.ViewManager) {
+    window.ViewManager.goTo(viewId);
+  } else {
+    // Fallback: esconder todas e mostrar a nova
+    document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+    const view = document.getElementById(viewId);
+    if (view) view.classList.add("active");
+  }
 
-  // Ativa a view solicitada (com verificação de existência)
-  const view = document.getElementById(viewId);
-  if (view) view.classList.add("active");
-
-  // Atualiza botões ativos
+  // Atualiza botões ativos (comum aos dois métodos)
   document.querySelectorAll(".navBtn").forEach(btn => btn.classList.remove("active"));
   const activeBtn = document.querySelector(`.navBtn[data-view="${viewId}"]`);
   if (activeBtn) activeBtn.classList.add("active");
 
   // Lógica específica por view
   if (viewId === "notificacoesView") {
-    if (typeof renderizarNotificacoes === "function") renderizarNotificacoes();
+    if (typeof window.renderizarNotificacoes === "function") {
+      window.renderizarNotificacoes();
+    }
   }
   if (viewId === "configView") {
     const tokenInput = document.getElementById("token");
@@ -221,8 +205,8 @@ document.body.addEventListener("change", (e) => {
 });
 
 // ---------- BOTÕES DA CONFIG (usam funções globais) ----------
-document.getElementById("saveTokenBtn")?.addEventListener("click", saveToken);
-document.getElementById("resetAppBtn")?.addEventListener("click", resetApp);
+document.getElementById("saveTokenBtn")?.addEventListener("click", window.saveToken);
+document.getElementById("resetAppBtn")?.addEventListener("click", window.resetApp);
 
 // ---------- POLLING INTELIGENTE ----------
 let pollingInterval;
