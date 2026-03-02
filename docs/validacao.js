@@ -342,7 +342,7 @@ async function renderizarFormValidacao(imagem, jogos) {
           html += `
             <div class="campo">
               <label>Código:</label>
-              <input type="text" class="campo-codigo" value="${codigoEscaped}" placeholder="Ex: GTP11668">
+              <input type="text" class="campo-codigo" value="${codigoEscaped}" placeholder="Ex: GTP11668" autocomplete="off">
             </div>
           `;
         } else {
