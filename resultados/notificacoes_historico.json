@@ -129,5 +129,64 @@
       "_id": "totoloto_048-07243502-091_1"
     },
     "data_leitura": "2026-03-02T20:13:10.274Z"
+  },
+  {
+    "id": "eurodreams_260227-17-7324481145-011_1",
+    "jogo": "eurodreams",
+    "data": "2026-03-02 22:17:37",
+    "lido": true,
+    "titulo": "🎫 Novo resultado EURODREAMS",
+    "subtitulo": "Boletim: 260227-17-7324481145-011",
+    "resumo": "2 números + Dream",
+    "detalhes": {
+      "data_verificacao": "2026-03-02 22:17:37",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "260227-17-7324481145-011",
+        "data_sorteio": "2026-03-02",
+        "concurso_sorteio": "018/2026",
+        "imagem_origem": "foto_1772487210858_7t6n5c.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "08",
+          "09",
+          "18",
+          "25",
+          "33",
+          "39"
+        ],
+        "dream_number": "03"
+      },
+      "sorteio": {
+        "concurso": "018/2026",
+        "data": "02/03/2026",
+        "chave": "1 8 11 14 18 35 + 3",
+        "numeros": [
+          "01",
+          "08",
+          "11",
+          "14",
+          "18",
+          "35"
+        ],
+        "dream_number": "03"
+      },
+      "acertos": {
+        "numeros": 2,
+        "dream_number": true,
+        "descricao": "2 número(s) com Dream Number"
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem prémio",
+        "descricao": "Não corresponde a qualquer prémio",
+        "valor": "€ 0,00"
+      },
+      "_jogo": "eurodreams",
+      "_id": "eurodreams_260227-17-7324481145-011_1"
+    },
+    "data_leitura": "2026-03-02T22:33:10.845Z"
   }
 ]
