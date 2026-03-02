@@ -267,13 +267,17 @@ window.abrirValidacao = async function(imagem) {
   }
 };
 
-// ---------- RENDERIZAR FORMULÁRIO DE VALIDAÇÃO ----------
+// ---------- RENDERIZAR FORMULÁRIO DE VALIDAÇÃO (VERSÃO SIMPLIFICADA) ----------
 async function renderizarFormValidacao(imagem, jogos) {
   const container = document.getElementById('validacaoContainer');
   if (!container) return;
   
   // Escape dos valores para segurança
   const imagemEscaped = escapeHTML(imagem);
+  
+  // Carregar thumbnail (com fallback para original)
+  const thumbnailUrl = await carregarImagemGitHub(`thumbnails/${imagem}`);
+  const imagemUrl = thumbnailUrl || await carregarImagemGitHub(`uploads/${imagem}`);
   
   let html = `
     <div class="validacao-header">
@@ -285,29 +289,17 @@ async function renderizarFormValidacao(imagem, jogos) {
     </div>
     
     <div class="validacao-grid">
-      <!-- Coluna da Imagem -->
+      <!-- Coluna da Imagem (apenas a thumbnail/original) -->
       <div class="imagem-coluna">
         <div class="imagem-container">
-          <img id="imagemOriginal" src="" alt="Original" class="imagem-validacao">
-        </div>
-        <div class="imagens-preprocessadas">
-          <h4>Versões Processadas</h4>
-          <div class="preprocessadas-grid">
-            <img id="imagemBinary" src="" alt="Binarizada" class="preprocessada-img">
-            <img id="imagemEnhanced" src="" alt="Realçada" class="preprocessada-img">
-          </div>
+          <img src="${imagemUrl}" alt="Boletim" class="imagem-validacao"
+               onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'100%25\' height=\'100%25\' viewBox=\'0 0 100 100\'%3E%3Crect width=\'100\' height=\'100\' fill=\'%23333\'/%3E%3Ctext x=\'10\' y=\'55\' fill=\'%23888\' font-size=\'10\'%3EImagem não disponível%3C/text%3E%3C/svg%3E';">
         </div>
       </div>
       
       <!-- Coluna dos Formulários -->
       <div class="formularios-coluna">
   `;
-  
-  // Carregar imagens (fazemos fetch depois de renderizar o esqueleto)
-  const imgOriginalPromise = carregarImagemGitHub(`${PASTA_UPLOADS}${imagem}`);
-  const nomeBase = imagem.replace(/\.[^/.]+$/, "");
-  const imgBinaryPromise = carregarImagemGitHub(`${PASTA_PREPROCESSADAS}${nomeBase}_binary.png`);
-  const imgEnhancedPromise = carregarImagemGitHub(`${PASTA_PREPROCESSADAS}${nomeBase}_enhanced.png`);
   
   // Formulários para cada jogo
   jogos.forEach((jogo, index) => {
@@ -317,9 +309,7 @@ async function renderizarFormValidacao(imagem, jogos) {
     const ficheiroEscaped = escapeHTML(jogo.tipo_ficheiro);
     const refEscaped = escapeHTML(jogo.referencia_unica || '');
     const dataSorteioEscaped = escapeHTML(jogo.data_sorteio || '');
-    const dataApostaEscaped = escapeHTML(jogo.data_aposta || '');
     const concursoEscaped = escapeHTML(jogo.concurso || '');
-    const valorTotal = jogo.valor_total || '';
     
     html += `
       <div class="jogo-form" data-tipo="${tipoEscaped}" data-hash="${hashEscaped}" data-ficheiro="${ficheiroEscaped}">
@@ -331,30 +321,18 @@ async function renderizarFormValidacao(imagem, jogos) {
             <input type="text" class="campo-ref" value="${refEscaped}" placeholder="Referência">
           </div>
           
-          <div class="campo-duplo">
-            <div class="campo">
-              <label>Data Sorteio:</label>
-              <input type="date" class="campo-data-sorteio" value="${dataSorteioEscaped}">
-            </div>
-            <div class="campo">
-              <label>Data Aposta:</label>
-              <input type="date" class="campo-data-aposta" value="${dataApostaEscaped}">
-            </div>
+          <div class="campo">
+            <label>Data do Sorteio:</label>
+            <input type="date" class="campo-data-sorteio" value="${dataSorteioEscaped}">
           </div>
           
-          <div class="campo-duplo">
-            <div class="campo">
-              <label>Concurso:</label>
-              <input type="text" class="campo-concurso" value="${concursoEscaped}" placeholder="Ex: 016/2026">
-            </div>
-            <div class="campo">
-              <label>Valor (€):</label>
-              <input type="number" step="0.01" class="campo-valor" value="${valorTotal}">
-            </div>
+          <div class="campo">
+            <label>Concurso:</label>
+            <input type="text" class="campo-concurso" value="${concursoEscaped}" placeholder="Ex: 016/2026">
           </div>
     `;
     
-    // Campos específicos por tipo
+    // Campos específicos por tipo (apostas)
     if (jogo.apostas && jogo.apostas.length > 0) {
       jogo.apostas.forEach((aposta, idxAposta) => {
         html += `<h4>Aposta ${idxAposta + 1}</h4>`;
@@ -371,7 +349,7 @@ async function renderizarFormValidacao(imagem, jogos) {
           if (aposta.numeros) {
             html += `
               <div class="campo-numeros">
-                <label>Números (5):</label>
+                <label>Números:</label>
                 <div class="numeros-grid">
             `;
             aposta.numeros.forEach((num, i) => {
@@ -384,7 +362,7 @@ async function renderizarFormValidacao(imagem, jogos) {
           if (aposta.estrelas) {
             html += `
               <div class="campo-estrelas">
-                <label>Estrelas (2):</label>
+                <label>Estrelas:</label>
                 <div class="estrelas-grid">
             `;
             aposta.estrelas.forEach((est, i) => {
@@ -431,21 +409,6 @@ async function renderizarFormValidacao(imagem, jogos) {
   document.getElementById('btnVoltarValidacao').addEventListener('click', window.voltarListaValidacao);
   document.getElementById('btnCancelarValidacao').addEventListener('click', window.voltarListaValidacao);
   document.getElementById('btnConfirmarValidacao').addEventListener('click', () => window.confirmarValidacao(imagem));
-  
-  // Carregar imagens e atualizar os src
-  try {
-    const [imgOriginal, imgBinary, imgEnhanced] = await Promise.all([
-      imgOriginalPromise,
-      imgBinaryPromise,
-      imgEnhancedPromise
-    ]);
-    
-    document.getElementById('imagemOriginal').src = imgOriginal || '';
-    if (imgBinary) document.getElementById('imagemBinary').src = imgBinary;
-    if (imgEnhanced) document.getElementById('imagemEnhanced').src = imgEnhanced;
-  } catch (err) {
-    console.error('Erro ao carregar imagens:', err);
-  }
 }
 
 // ---------- CONFIRMAR VALIDAÇÃO (com prevenção de múltiplos cliques) ----------
@@ -483,8 +446,9 @@ window.confirmarValidacao = async function(imagem) {
         tipo_ficheiro: ficheiro,
         referencia_unica: form.querySelector('.campo-ref')?.value,
         data_sorteio: form.querySelector('.campo-data-sorteio')?.value,
-        data_aposta: form.querySelector('.campo-data-aposta')?.value,
         concurso: form.querySelector('.campo-concurso')?.value,
+        // Manter data_aposta e valor_total originais se existirem, ou definir como vazio
+        data_aposta: form.querySelector('.campo-data-aposta')?.value || '',
         valor_total: parseFloat(form.querySelector('.campo-valor')?.value) || 0,
         imagem_origem: imagem,
         apostas: []
@@ -523,8 +487,7 @@ window.confirmarValidacao = async function(imagem) {
     const sucesso = await guardarValidacao(imagem, jogosAtualizados);
     
     if (sucesso) {
-      // Usar toast em vez de alert (podes criar uma função simples)
-      alert('✅ Boletim validado com sucesso!'); // Temporário, depois substituir por toast
+      alert('✅ Boletim validado com sucesso!');
       window.voltarListaValidacao();
     } else {
       alert('❌ Erro ao guardar validação. Tenta novamente.');
