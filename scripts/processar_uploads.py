@@ -38,6 +38,7 @@ FICHEIRO_REGISTO = "apostas/registo_processamento.json"
 PASTA_UPLOADS = "uploads/"
 PASTA_DADOS = "apostas/"
 PASTA_PREPROCESSADAS = "preprocessadas/"
+PASTA_THUMBNAILS = "thumbnails/"          # <-- NOVO: pasta para thumbnails
 
 # ===== CONTROLO DE TAXA (5 por minuto) =====
 REQUISICOES_POR_MINUTO = 5
@@ -128,6 +129,20 @@ def esperar_rate_limit():
                 time.sleep(tempo_espera)
         
         timestamps.append(time.time())
+
+# ===== NOVA FUNÇÃO: GERAR THUMBNAIL =====
+def gerar_thumbnail(caminho_original, nome_arquivo):
+    """Gera uma thumbnail (máx 800px no lado maior) da imagem original e guarda em PASTA_THUMBNAILS"""
+    os.makedirs(PASTA_THUMBNAILS, exist_ok=True)
+    try:
+        img = Image.open(caminho_original)
+        # Redimensionar mantendo proporção, limite de 800px no lado maior
+        img.thumbnail((800, 800))
+        caminho_thumb = os.path.join(PASTA_THUMBNAILS, nome_arquivo)
+        img.save(caminho_thumb, optimize=True, quality=85)
+        print(f"   🖼️ Thumbnail gerada: {nome_arquivo}")
+    except Exception as e:
+        print(f"   ⚠️ Erro ao gerar thumbnail: {e}")
 
 # ===== PREPROCESSAMENTO DE IMAGEM =====
 def preprocessar_imagem(caminho, img_nome):
@@ -278,6 +293,7 @@ def processar_com_multiplas_chaves():
     os.makedirs(PASTA_DADOS, exist_ok=True)
     os.makedirs(PASTA_UPLOADS, exist_ok=True)
     os.makedirs(PASTA_PREPROCESSADAS, exist_ok=True)
+    os.makedirs(PASTA_THUMBNAILS, exist_ok=True)  # <-- NOVO: criar pasta de thumbnails
 
     # Carregar registo de imagens processadas
     registo = carregar_registo()
@@ -313,6 +329,9 @@ def processar_com_multiplas_chaves():
         img_nome, caminho, img_hash = imagens_nao_processadas[idx]
         
         print(f"[{idx+1}/{len(imagens_nao_processadas)}] 🚀 {img_nome}")
+        
+        # ===== NOVO: gerar thumbnail da imagem original =====
+        gerar_thumbnail(caminho, img_nome)
         
         # OBTER CLIENTE COM CHAVE DISPONÍVEL
         cliente, key_id, usadas_atual = obter_cliente_disponivel()
