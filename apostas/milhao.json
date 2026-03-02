@@ -37,5 +37,25 @@
         "imagem_origem": "foto_1772483411331_88wr22.png",
         "hash_imagem": "9ddc024b4da719a3cd17db14484d4e45",
         "data_processamento": "2026-03-02 20:31:47"
+    },
+    {
+        "tipo": "M1lhão",
+        "data_sorteio": "2026-02-27",
+        "data_aposta": "2026-02-17",
+        "data_emissao": "2026-02-17 17:02:26",
+        "referencia_unica": "548-02491157-EUR",
+        "concurso": "002/2026",
+        "valor_total": 0.3,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "codigo": "GNN36567"
+            }
+        ],
+        "confirmado": false,
+        "imagem_origem": "foto_1772486258750_mb1ygv.png",
+        "hash_imagem": "be73928367a0de0fd7a7e87b03836183",
+        "data_processamento": "2026-03-02 21:18:49"
     }
 ]
