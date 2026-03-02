@@ -203,14 +203,18 @@ window.renderizarListaValidacao = async function() {
     const totalJogos = jogos.length;
     const tipos = [...new Set(jogos.map(j => j.tipo))].join(', ');
     
+    // Escape dos valores
+    const imagemEscaped = escapeHTML(imagem);
+    const tiposEscaped = escapeHTML(tipos);
+    
     html += `
-      <div class="validacao-card" onclick="window.abrirValidacao('${imagem}')">
+      <div class="validacao-card" data-imagem="${imagemEscaped}">
         <div class="validacao-card-header">
           <ion-icon name="document-text-outline"></ion-icon>
-          <span class="validacao-imagem">${imagem}</span>
+          <span class="validacao-imagem">${imagemEscaped}</span>
           <span class="validacao-badge">${totalJogos}</span>
         </div>
-        <div class="validacao-tipos">${tipos}</div>
+        <div class="validacao-tipos">${tiposEscaped}</div>
         <div class="validacao-preview">📸 Clique para validar</div>
       </div>
     `;
@@ -218,23 +222,49 @@ window.renderizarListaValidacao = async function() {
   
   html += '</div>';
   container.innerHTML = html;
+  
+  // Adicionar event listeners em vez de onclick no HTML
+  document.querySelectorAll('.validacao-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const imagem = card.dataset.imagem;
+      window.abrirValidacao(imagem);
+    });
+  });
 };
 
 // ---------- ABRIR VALIDAÇÃO DE UM BOLETIM ----------
 window.abrirValidacao = async function(imagem) {
   console.log("📸 A abrir validação:", imagem);
   
-  const boletins = await window.listarBoletinsPorValidar();
-  const jogos = boletins[imagem];
+  // 1. Mudar para view de validação IMEDIATAMENTE
+  if (window.ViewManager) {
+    window.ViewManager.goTo('validacaoView');
+  } else {
+    document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+    document.getElementById('validacaoView').classList.add('active');
+  }
   
-  if (!jogos) return;
+  // 2. Mostrar loading
+  const container = document.getElementById('validacaoContainer');
+  if (container) {
+    container.innerHTML = '<div class="loading"><ion-icon name="sync-outline" class="spin"></ion-icon><p>A carregar boletim...</p></div>';
+  }
   
-  // Mudar para view de validação
-  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-  document.getElementById('validacaoView').classList.add('active');
-  
-  // Renderizar formulário de validação
-  await renderizarFormValidacao(imagem, jogos);
+  // 3. Carregar dados
+  try {
+    const boletins = await window.listarBoletinsPorValidar();
+    const jogos = boletins[imagem];
+    
+    if (!jogos) {
+      if (container) container.innerHTML = '<div class="error">Boletim não encontrado</div>';
+      return;
+    }
+    
+    await renderizarFormValidacao(imagem, jogos);
+  } catch (err) {
+    console.error('Erro ao abrir validação:', err);
+    if (container) container.innerHTML = '<div class="error">Erro ao carregar. Tenta novamente.</div>';
+  }
 };
 
 // ---------- RENDERIZAR FORMULÁRIO DE VALIDAÇÃO ----------
@@ -242,13 +272,16 @@ async function renderizarFormValidacao(imagem, jogos) {
   const container = document.getElementById('validacaoContainer');
   if (!container) return;
   
+  // Escape dos valores para segurança
+  const imagemEscaped = escapeHTML(imagem);
+  
   let html = `
     <div class="validacao-header">
-      <button class="btn-voltar" onclick="window.voltarListaValidacao()">
+      <button class="btn-voltar" id="btnVoltarValidacao">
         <ion-icon name="arrow-back-outline"></ion-icon> Voltar
       </button>
       <h3>Validar Boletim</h3>
-      <span class="imagem-nome">${imagem}</span>
+      <span class="imagem-nome">${imagemEscaped}</span>
     </div>
     
     <div class="validacao-grid">
@@ -270,43 +303,53 @@ async function renderizarFormValidacao(imagem, jogos) {
       <div class="formularios-coluna">
   `;
   
-  // Carregar imagens
-  const imgOriginal = await carregarImagemGitHub(`${PASTA_UPLOADS}${imagem}`);
+  // Carregar imagens (fazemos fetch depois de renderizar o esqueleto)
+  const imgOriginalPromise = carregarImagemGitHub(`${PASTA_UPLOADS}${imagem}`);
   const nomeBase = imagem.replace(/\.[^/.]+$/, "");
-  const imgBinary = await carregarImagemGitHub(`${PASTA_PREPROCESSADAS}${nomeBase}_binary.png`);
-  const imgEnhanced = await carregarImagemGitHub(`${PASTA_PREPROCESSADAS}${nomeBase}_enhanced.png`);
+  const imgBinaryPromise = carregarImagemGitHub(`${PASTA_PREPROCESSADAS}${nomeBase}_binary.png`);
+  const imgEnhancedPromise = carregarImagemGitHub(`${PASTA_PREPROCESSADAS}${nomeBase}_enhanced.png`);
   
   // Formulários para cada jogo
   jogos.forEach((jogo, index) => {
+    // Escape de valores
+    const tipoEscaped = escapeHTML(jogo.tipo);
+    const hashEscaped = escapeHTML(jogo.hash_imagem);
+    const ficheiroEscaped = escapeHTML(jogo.tipo_ficheiro);
+    const refEscaped = escapeHTML(jogo.referencia_unica || '');
+    const dataSorteioEscaped = escapeHTML(jogo.data_sorteio || '');
+    const dataApostaEscaped = escapeHTML(jogo.data_aposta || '');
+    const concursoEscaped = escapeHTML(jogo.concurso || '');
+    const valorTotal = jogo.valor_total || '';
+    
     html += `
-      <div class="jogo-form" data-tipo="${jogo.tipo}" data-hash="${jogo.hash_imagem}" data-ficheiro="${jogo.tipo_ficheiro}">
-        <h3>${jogo.tipo} #${index + 1}</h3>
+      <div class="jogo-form" data-tipo="${tipoEscaped}" data-hash="${hashEscaped}" data-ficheiro="${ficheiroEscaped}">
+        <h3>${tipoEscaped} #${index + 1}</h3>
         
         <div class="form-campos">
           <div class="campo">
             <label>Referência Única:</label>
-            <input type="text" class="campo-ref" value="${jogo.referencia_unica || ''}" placeholder="Referência">
+            <input type="text" class="campo-ref" value="${refEscaped}" placeholder="Referência">
           </div>
           
           <div class="campo-duplo">
             <div class="campo">
               <label>Data Sorteio:</label>
-              <input type="date" class="campo-data-sorteio" value="${jogo.data_sorteio || ''}">
+              <input type="date" class="campo-data-sorteio" value="${dataSorteioEscaped}">
             </div>
             <div class="campo">
               <label>Data Aposta:</label>
-              <input type="date" class="campo-data-aposta" value="${jogo.data_aposta || ''}">
+              <input type="date" class="campo-data-aposta" value="${dataApostaEscaped}">
             </div>
           </div>
           
           <div class="campo-duplo">
             <div class="campo">
               <label>Concurso:</label>
-              <input type="text" class="campo-concurso" value="${jogo.concurso || ''}" placeholder="Ex: 016/2026">
+              <input type="text" class="campo-concurso" value="${concursoEscaped}" placeholder="Ex: 016/2026">
             </div>
             <div class="campo">
               <label>Valor (€):</label>
-              <input type="number" step="0.01" class="campo-valor" value="${jogo.valor_total || ''}">
+              <input type="number" step="0.01" class="campo-valor" value="${valorTotal}">
             </div>
           </div>
     `;
@@ -317,10 +360,11 @@ async function renderizarFormValidacao(imagem, jogos) {
         html += `<h4>Aposta ${idxAposta + 1}</h4>`;
         
         if (jogo.tipo === 'M1lhão') {
+          const codigoEscaped = escapeHTML(aposta.codigo || '');
           html += `
             <div class="campo">
               <label>Código:</label>
-              <input type="text" class="campo-codigo" value="${aposta.codigo || ''}" placeholder="Ex: GTP11668">
+              <input type="text" class="campo-codigo" value="${codigoEscaped}" placeholder="Ex: GTP11668">
             </div>
           `;
         } else {
@@ -329,12 +373,12 @@ async function renderizarFormValidacao(imagem, jogos) {
               <div class="campo-numeros">
                 <label>Números (5):</label>
                 <div class="numeros-grid">
-                  ${aposta.numeros.map((num, i) => `
-                    <input type="text" class="campo-numero" data-index="${i}" value="${num}" maxlength="2" placeholder="${i+1}">
-                  `).join('')}
-                </div>
-              </div>
             `;
+            aposta.numeros.forEach((num, i) => {
+              const numEscaped = escapeHTML(num);
+              html += `<input type="text" class="campo-numero" data-index="${i}" value="${numEscaped}" maxlength="2" placeholder="${i+1}">`;
+            });
+            html += `</div></div>`;
           }
           
           if (aposta.estrelas) {
@@ -342,19 +386,20 @@ async function renderizarFormValidacao(imagem, jogos) {
               <div class="campo-estrelas">
                 <label>Estrelas (2):</label>
                 <div class="estrelas-grid">
-                  ${aposta.estrelas.map((est, i) => `
-                    <input type="text" class="campo-estrela" data-index="${i}" value="${est}" maxlength="2" placeholder="★${i+1}">
-                  `).join('')}
-                </div>
-              </div>
             `;
+            aposta.estrelas.forEach((est, i) => {
+              const estEscaped = escapeHTML(est);
+              html += `<input type="text" class="campo-estrela" data-index="${i}" value="${estEscaped}" maxlength="2" placeholder="★${i+1}">`;
+            });
+            html += `</div></div>`;
           }
           
           if (aposta.numero_da_sorte) {
+            const sorteEscaped = escapeHTML(aposta.numero_da_sorte);
             html += `
               <div class="campo">
                 <label>Nº da Sorte:</label>
-                <input type="text" class="campo-sorte" value="${aposta.numero_da_sorte}" maxlength="2">
+                <input type="text" class="campo-sorte" value="${sorteEscaped}" maxlength="2">
               </div>
             `;
           }
@@ -371,8 +416,8 @@ async function renderizarFormValidacao(imagem, jogos) {
   
   html += `
         <div class="botoes-validacao">
-          <button class="btn-cancelar" onclick="window.voltarListaValidacao()">Cancelar</button>
-          <button class="btn-validar" onclick="window.confirmarValidacao('${imagem}')">
+          <button class="btn-cancelar" id="btnCancelarValidacao">Cancelar</button>
+          <button class="btn-validar" id="btnConfirmarValidacao">
             <ion-icon name="checkmark-circle-outline"></ion-icon> Confirmar Validação
           </button>
         </div>
@@ -382,75 +427,117 @@ async function renderizarFormValidacao(imagem, jogos) {
   
   container.innerHTML = html;
   
-  // Atualizar imagens
-  document.getElementById('imagemOriginal').src = imgOriginal;
-  if (imgBinary) document.getElementById('imagemBinary').src = imgBinary;
-  if (imgEnhanced) document.getElementById('imagemEnhanced').src = imgEnhanced;
+  // Adicionar event listeners para os botões
+  document.getElementById('btnVoltarValidacao').addEventListener('click', window.voltarListaValidacao);
+  document.getElementById('btnCancelarValidacao').addEventListener('click', window.voltarListaValidacao);
+  document.getElementById('btnConfirmarValidacao').addEventListener('click', () => window.confirmarValidacao(imagem));
+  
+  // Carregar imagens e atualizar os src
+  try {
+    const [imgOriginal, imgBinary, imgEnhanced] = await Promise.all([
+      imgOriginalPromise,
+      imgBinaryPromise,
+      imgEnhancedPromise
+    ]);
+    
+    document.getElementById('imagemOriginal').src = imgOriginal || '';
+    if (imgBinary) document.getElementById('imagemBinary').src = imgBinary;
+    if (imgEnhanced) document.getElementById('imagemEnhanced').src = imgEnhanced;
+  } catch (err) {
+    console.error('Erro ao carregar imagens:', err);
+  }
 }
 
-// ---------- CONFIRMAR VALIDAÇÃO ----------
+// ---------- CONFIRMAR VALIDAÇÃO (com prevenção de múltiplos cliques) ----------
+let validando = false;
+
 window.confirmarValidacao = async function(imagem) {
-  console.log("🔍 A validar:", imagem);
-  
-  const forms = document.querySelectorAll('.jogo-form');
-  const jogosAtualizados = [];
-  
-  for (const form of forms) {
-    const tipo = form.dataset.tipo;
-    const hash = form.dataset.hash;
-    const ficheiro = form.dataset.ficheiro;
-    
-    // Recolher campos comuns
-    const jogo = {
-      tipo: tipo,
-      hash_imagem: hash,
-      tipo_ficheiro: ficheiro,
-      referencia_unica: form.querySelector('.campo-ref')?.value,
-      data_sorteio: form.querySelector('.campo-data-sorteio')?.value,
-      data_aposta: form.querySelector('.campo-data-aposta')?.value,
-      concurso: form.querySelector('.campo-concurso')?.value,
-      valor_total: parseFloat(form.querySelector('.campo-valor')?.value) || 0,
-      imagem_origem: imagem,
-      apostas: []
-    };
-    
-    // Recolher apostas
-    const aposta = {};
-    
-    if (tipo === 'M1lhão') {
-      aposta.codigo = form.querySelector('.campo-codigo')?.value;
-    } else {
-      // Números
-      const numeros = [];
-      form.querySelectorAll('.campo-numero').forEach(input => {
-        if (input.value) numeros.push(input.value.padStart(2, '0'));
-      });
-      if (numeros.length > 0) aposta.numeros = numeros;
-      
-      // Estrelas
-      const estrelas = [];
-      form.querySelectorAll('.campo-estrela').forEach(input => {
-        if (input.value) estrelas.push(input.value.padStart(2, '0'));
-      });
-      if (estrelas.length > 0) aposta.estrelas = estrelas;
-      
-      // Nº Sorte
-      const sorte = form.querySelector('.campo-sorte')?.value;
-      if (sorte) aposta.numero_da_sorte = sorte.padStart(2, '0');
-    }
-    
-    jogo.apostas.push(aposta);
-    jogosAtualizados.push(jogo);
+  if (validando) {
+    console.log("⏳ Validação já em curso, clique ignorado");
+    return;
   }
   
-  // Guardar no GitHub
-  const sucesso = await guardarValidacao(imagem, jogosAtualizados);
+  const btn = document.getElementById('btnConfirmarValidacao');
+  if (btn) {
+    btn.disabled = true;
+    btn.style.opacity = '0.5';
+  }
   
-  if (sucesso) {
-    alert('✅ Boletim validado com sucesso!');
-    window.voltarListaValidacao();
-  } else {
-    alert('❌ Erro ao guardar validação. Tenta novamente.');
+  validando = true;
+  
+  try {
+    console.log("🔍 A validar:", imagem);
+    
+    const forms = document.querySelectorAll('.jogo-form');
+    const jogosAtualizados = [];
+    
+    for (const form of forms) {
+      const tipo = form.dataset.tipo;
+      const hash = form.dataset.hash;
+      const ficheiro = form.dataset.ficheiro;
+      
+      // Recolher campos comuns
+      const jogo = {
+        tipo: tipo,
+        hash_imagem: hash,
+        tipo_ficheiro: ficheiro,
+        referencia_unica: form.querySelector('.campo-ref')?.value,
+        data_sorteio: form.querySelector('.campo-data-sorteio')?.value,
+        data_aposta: form.querySelector('.campo-data-aposta')?.value,
+        concurso: form.querySelector('.campo-concurso')?.value,
+        valor_total: parseFloat(form.querySelector('.campo-valor')?.value) || 0,
+        imagem_origem: imagem,
+        apostas: []
+      };
+      
+      // Recolher apostas
+      const aposta = {};
+      
+      if (tipo === 'M1lhão') {
+        aposta.codigo = form.querySelector('.campo-codigo')?.value;
+      } else {
+        // Números
+        const numeros = [];
+        form.querySelectorAll('.campo-numero').forEach(input => {
+          if (input.value) numeros.push(input.value.padStart(2, '0'));
+        });
+        if (numeros.length > 0) aposta.numeros = numeros;
+        
+        // Estrelas
+        const estrelas = [];
+        form.querySelectorAll('.campo-estrela').forEach(input => {
+          if (input.value) estrelas.push(input.value.padStart(2, '0'));
+        });
+        if (estrelas.length > 0) aposta.estrelas = estrelas;
+        
+        // Nº Sorte
+        const sorte = form.querySelector('.campo-sorte')?.value;
+        if (sorte) aposta.numero_da_sorte = sorte.padStart(2, '0');
+      }
+      
+      jogo.apostas.push(aposta);
+      jogosAtualizados.push(jogo);
+    }
+    
+    // Guardar no GitHub
+    const sucesso = await guardarValidacao(imagem, jogosAtualizados);
+    
+    if (sucesso) {
+      // Usar toast em vez de alert (podes criar uma função simples)
+      alert('✅ Boletim validado com sucesso!'); // Temporário, depois substituir por toast
+      window.voltarListaValidacao();
+    } else {
+      alert('❌ Erro ao guardar validação. Tenta novamente.');
+    }
+  } catch (err) {
+    console.error('Erro na validação:', err);
+    alert('❌ Erro inesperado. Tenta novamente.');
+  } finally {
+    validando = false;
+    if (btn) {
+      btn.disabled = false;
+      btn.style.opacity = '1';
+    }
   }
 };
 
@@ -458,14 +545,17 @@ window.confirmarValidacao = async function(imagem) {
 window.voltarListaValidacao = function() {
   console.log("⬅️ A voltar da validação para a lista");
   
-  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-  document.getElementById('notificacoesView').classList.add('active');
+  // Usar ViewManager se disponível
+  if (window.ViewManager) {
+    window.ViewManager.goTo('notificacoesView');
+  } else {
+    document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+    document.getElementById('notificacoesView').classList.add('active');
+  }
   
-  // Tenta chamar a renderização de notificações de várias formas
+  // Renderizar notificações
   if (typeof window.renderizarNotificacoes === 'function') {
     window.renderizarNotificacoes();
-  } else if (typeof renderizarNotificacoes === 'function') {
-    renderizarNotificacoes();
   }
   
   if (typeof window.atualizarBadge === 'function') {
