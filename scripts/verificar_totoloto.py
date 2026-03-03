@@ -3,7 +3,7 @@ import os
 import glob
 import re
 from datetime import datetime
-from typing import Dict, List, Tuple
+from typing import List, Tuple
 
 # ===== CONFIGURAÇÃO =====
 FICHEIRO_APOSTAS = "apostas/totoloto.json"
@@ -13,10 +13,10 @@ FICHEIRO_RESULTADOS = "resultados/totoloto_verificacoes.json"
 
 # ===== TABELA DE PRÉMIOS =====
 PREMIOS_NUMEROS_TOTOLOTO = {
-    5: "2.º Prémio",  
-    4: "3.º Prémio",  
-    3: "4.º Prémio",  
-    2: "5.º Prémio",  
+    5: "2.º Prémio",
+    4: "3.º Prémio",
+    3: "4.º Prémio",
+    2: "5.º Prémio",
 }
 
 # ============================================================
@@ -33,7 +33,6 @@ def carregar_json(ficheiro: str):
 def carregar_todos_sorteios() -> dict:
     todos_sorteios = {}
     ficheiros = glob.glob(os.path.join(PASTA_DADOS, FICHEIRO_SORTEIOS_PADRAO))
-    
     for ficheiro in ficheiros:
         nome = os.path.basename(ficheiro)
         if nome == "totoloto_sc_atual.json":
@@ -92,32 +91,7 @@ def encontrar_premios(sorteio: dict, acertos_n: int, acertou_especial: bool) -> 
                 if premio.get("premio") == nome_premio:
                     premios_ganhos.append(premio)
                     break
-    if acertos_n == 5 and acertou_especial:
-        for premio in sorteio.get("premios", []):
-            if premio.get("premio") == "1.º Prémio":
-                premios_ganhos = [p for p in premios_ganhos if p.get("premio") != "2.º Prémio"]
-                premios_ganhos.append(premio)
-                break
     return premios_ganhos
-
-def calcular_valor_total(premios: List[dict]) -> str:
-    total = 0.0
-    for p in premios:
-        valor_str = p.get("valor", "0")
-        valor_limpo = valor_str.replace("€ ", "").replace(".", "").replace(",", ".")
-        try:
-            if "Reembolso" in valor_str:
-                total += 1.0
-            else:
-                total += float(valor_limpo)
-        except:
-            pass
-    if total == 0:
-        return "€ 0,00"
-    elif total == 1.0 and any("Reembolso" in p.get("valor", "") for p in premios):
-        return "€ 1,00 (Reembolso)"
-    else:
-        return f"€ {total:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
 
 # ============================================================
 # VERIFICAÇÃO
@@ -165,7 +139,7 @@ def verificar_boletins(apostas: list, todos_sorteios: dict) -> list:
                 "metodo_validacao": metodo_encontrado,
                 "boletim": {
                     "referencia": aposta.get("referencia_unica"),
-                    "data_sorteio": aposta.get("data_sorteio"),
+                    "data_sorteio": data_aposta,
                     "concurso_sorteio": concurso_aposta,
                     "imagem_origem": aposta.get("imagem_origem")
                 },
@@ -189,85 +163,58 @@ def verificar_boletins(apostas: list, todos_sorteios: dict) -> list:
             if premios_ganhos:
                 resultado["ganhou"] = True
                 resultado["premios"] = premios_ganhos
-                resultado["valor_total"] = calcular_valor_total(premios_ganhos)
-                if len(premios_ganhos) == 1:
-                    resultado["premio"] = premios_ganhos[0]
-                else:
-                    categorias = [p.get("premio") for p in premios_ganhos]
-                    resultado["premio"] = {
-                        "categoria": " + ".join(categorias),
-                        "descricao": "Acumulação de prémios",
-                        "valor": resultado["valor_total"]
-                    }
             else:
                 resultado["ganhou"] = False
                 resultado["premios"] = []
-                resultado["premio"] = {"categoria": "Sem prémio", "descricao": "0 acertos", "valor": "€ 0,00"}
             resultados.append(resultado)
-            # Mostrar no terminal
-            mostrar_resultado_simples(resultado, metodo_encontrado)
     return resultados
 
-def mostrar_resultado_simples(resultado: dict, metodo: str):
-    print("\n" + "="*70)
-    print(f"📅 Sorteio: {resultado['sorteio']['concurso']} - {resultado['sorteio']['data']}")
-    print(f"🎫 Boletim: {resultado['boletim']['referencia']} (índice {resultado['aposta']['indice']})")
-    print(f"   Validação por: {metodo.upper()}")
-    print(f"   Aposta:   {' '.join(resultado['aposta']['numeros'])} + {resultado['aposta']['numero_da_sorte']}")
-    print(f"   Sorteio:  {' '.join(resultado['sorteio']['numeros'])} + {resultado['sorteio']['numero_da_sorte']}")
-    print(f"   Acertos:  {resultado['acertos']['numeros']} números", end="")
-    if resultado['acertos']['numero_da_sorte']:
-        print(f" + Nº da Sorte ✅")
-    else:
-        print(f"")
-    if resultado.get('ganhou'):
-        if len(resultado.get('premios', [])) > 1:
-            print(f"   🏆 ACUMULAÇÃO DE PRÉMIOS:")
-            for p in resultado['premios']:
-                print(f"      • {p['premio']}: {p['valor']}")
-            print(f"   💰 TOTAL: {resultado['valor_total']}")
-        else:
-            p = resultado['premios'][0]
-            print(f"   🏆 GANHOU: {p.get('premio')}")
-            print(f"   💰 Prémio: {p.get('valor')}")
-    else:
-        print(f"   ❌ Nenhum prémio")
-    print("="*70)
+# ============================================================
+# GUARDAR RESULTADOS (HISTÓRICO + RECENTES)
+# ============================================================
 
 def guardar_resultados(resultados: list):
     os.makedirs("resultados", exist_ok=True)
+
+    # Histórico completo (incremental)
     if os.path.exists(FICHEIRO_RESULTADOS):
         with open(FICHEIRO_RESULTADOS, "r", encoding="utf-8") as f:
             historico = json.load(f)
     else:
         historico = []
-    novos_adicionados = 0
+
+    novos = 0
     for novo in resultados:
-        chave_nova = (
+        chave = (
             novo["boletim"]["referencia"],
             novo["aposta"]["indice"],
             novo["boletim"]["concurso_sorteio"]
         )
         if not any(
-            e["boletim"]["referencia"] == chave_nova[0] and
-            e["aposta"]["indice"] == chave_nova[1] and
-            e["boletim"]["concurso_sorteio"] == chave_nova[2] for e in historico
+            e["boletim"]["referencia"] == chave[0] and
+            e["aposta"]["indice"] == chave[1] and
+            e["boletim"]["concurso_sorteio"] == chave[2]
+            for e in historico
         ):
             historico.append(novo)
-            novos_adicionados += 1
+            novos += 1
+
     with open(FICHEIRO_RESULTADOS, "w", encoding="utf-8") as f:
         json.dump(historico, f, indent=2, ensure_ascii=False)
-    print(f"\n📁 Histórico guardado ({novos_adicionados} novos)")
 
-def gerar_relatorio(resultados: list):
-    if not resultados:
-        return
-    total = len(resultados)
-    ganhadores = sum(1 for r in resultados if r.get('ganhou'))
-    print("\n📊 RELATÓRIO FINAL - TOTOLOTO")
-    print(f"Total de apostas verificadas: {total}")
-    print(f"Apostas premiadas: {ganhadores}")
-    print(f"Apostas sem prémio: {total - ganhadores}")
+    print(f"\n📁 Histórico guardado ({novos} novos, total {len(historico)})")
+
+    # Ficheiro de resultados recentes (substituído a cada execução)
+    nome_base = os.path.basename(FICHEIRO_RESULTADOS)
+    nome_recentes = nome_base.replace('_verificacoes', '_recentes')
+    caminho_recentes = os.path.join("resultados", nome_recentes)
+    with open(caminho_recentes, "w", encoding="utf-8") as f:
+        json.dump(resultados, f, indent=2, ensure_ascii=False)
+    print(f"📁 Resultados recentes guardados em: {caminho_recentes}")
+
+# ============================================================
+# MAIN
+# ============================================================
 
 def main():
     print("\n🔍 VERIFICADOR DE BOLETINS TOTOLOTO")
@@ -282,7 +229,6 @@ def main():
     resultados = verificar_boletins(apostas, todos_sorteios)
     if resultados:
         guardar_resultados(resultados)
-        gerar_relatorio(resultados)
     else:
         print("\n❌ Nenhum resultado para verificar")
 
