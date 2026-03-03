@@ -1,1 +1,2 @@
 [2026-03-03 21:34:47] [euromilhoes] Resultado do concurso 018/2026 adicionado ao JSON euromilhoes_2026.
+[2026-03-03 22:19:20] [euromilhoes] Concurso 018/2026 já está completo. Nada a atualizar.
