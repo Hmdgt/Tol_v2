@@ -384,11 +384,12 @@ async function renderizarFormValidacao(imagem, jogos) {
 
           // Dream Number
           if (aposta.dream_number !== undefined) {
-            const dreamEscaped = escapeHTML(aposta.dream_number);
+            let dreamEscaped = escapeHTML(aposta.dream_number);
+            if (dreamEscaped.length === 1) dreamEscaped = '0' + dreamEscaped;
             html += `
               <div class="campo">
                 <label>Dream Number:</label>
-                <input type="text" class="campo-dream" value="${dreamEscaped}" maxlength="2">
+                <input type="text" class="campo-dream" value="${dreamEscaped}" maxlength="2" placeholder="00">
               </div>
             `;
           }
