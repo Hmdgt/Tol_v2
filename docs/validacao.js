@@ -267,7 +267,7 @@ window.abrirValidacao = async function(imagem) {
   }
 };
 
-// ---------- RENDERIZAR FORMULÁRIO DE VALIDAÇÃO (VERSÃO SIMPLIFICADA) ----------
+// ---------- RENDERIZAR FORMULÁRIO DE VALIDAÇÃO (COM ZOOM/PAN) ----------
 async function renderizarFormValidacao(imagem, jogos) {
   const container = document.getElementById('validacaoContainer');
   if (!container) return;
@@ -289,10 +289,10 @@ async function renderizarFormValidacao(imagem, jogos) {
     </div>
     
     <div class="validacao-grid">
-      <!-- Coluna da Imagem (apenas a thumbnail/original) -->
+      <!-- Coluna da Imagem com zoom/pan -->
       <div class="imagem-coluna">
-        <div class="imagem-container">
-          <img src="${imagemUrl}" alt="Boletim" class="imagem-validacao"
+        <div class="zoom-container" id="zoomContainer">
+          <img src="${imagemUrl}" alt="Boletim" class="zoom-img"
                onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'100%25\' height=\'100%25\' viewBox=\'0 0 100 100\'%3E%3Crect width=\'100\' height=\'100\' fill=\'%23333\'/%3E%3Ctext x=\'10\' y=\'55\' fill=\'%23888\' font-size=\'10\'%3EImagem não disponível%3C/text%3E%3C/svg%3E';">
         </div>
       </div>
@@ -417,7 +417,121 @@ async function renderizarFormValidacao(imagem, jogos) {
   
   container.innerHTML = html;
   
-  // Adicionar event listeners para os botões
+  // ========== INICIALIZAR ZOOM/PAN ==========
+  const zoomContainer = document.getElementById('zoomContainer');
+  const zoomImg = zoomContainer.querySelector('img');
+
+  let scale = 1.5;           // zoom inicial
+  let translateX = 0;
+  let translateY = 0;
+  let startX, startY;
+  let isDragging = false;
+  let lastDist = 0;
+  let pinchScale = 1;
+
+  const MIN_SCALE = 1;
+  const MAX_SCALE = 5;
+
+  function updateTransform() {
+    zoomImg.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale * pinchScale})`;
+  }
+
+  function clampScale() {
+    let total = scale * pinchScale;
+    if (total < MIN_SCALE) {
+      let factor = MIN_SCALE / total;
+      scale *= factor;
+      pinchScale *= factor;
+    } else if (total > MAX_SCALE) {
+      let factor = MAX_SCALE / total;
+      scale *= factor;
+      pinchScale *= factor;
+    }
+  }
+
+  function constrainPan() {
+    const containerRect = zoomContainer.getBoundingClientRect();
+    const imgRect = zoomImg.getBoundingClientRect();
+
+    // Quando a imagem é maior que o container, limitamos o arrasto
+    const maxX = Math.max(0, (imgRect.width - containerRect.width) / 2);
+    const minX = -maxX;
+    const maxY = Math.max(0, (imgRect.height - containerRect.height) / 2);
+    const minY = -maxY;
+
+    translateX = Math.min(maxX, Math.max(minX, translateX));
+    translateY = Math.min(maxY, Math.max(minY, translateY));
+  }
+
+  // ---------- Arrasto com pointer (rato/toque) ----------
+  zoomContainer.addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'touch' && !e.isPrimary) return;
+    isDragging = true;
+    startX = e.clientX - translateX;
+    startY = e.clientY - translateY;
+    zoomContainer.setPointerCapture(e.pointerId);
+    zoomContainer.classList.add('dragging');
+  });
+
+  zoomContainer.addEventListener('pointermove', (e) => {
+    if (!isDragging) return;
+    translateX = e.clientX - startX;
+    translateY = e.clientY - startY;
+    constrainPan();
+    updateTransform();
+  });
+
+  zoomContainer.addEventListener('pointerup', () => {
+    isDragging = false;
+    zoomContainer.classList.remove('dragging');
+  });
+  zoomContainer.addEventListener('pointerleave', () => {
+    isDragging = false;
+    zoomContainer.classList.remove('dragging');
+  });
+
+  // ---------- Zoom com roda do rato ----------
+  zoomContainer.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const delta = e.deltaY > 0 ? 0.9 : 1.1; // 10% para cada clique
+    scale *= delta;
+    clampScale();
+    updateTransform();
+  }, { passive: false });
+
+  // ---------- Pinch-to-zoom (touch) ----------
+  zoomContainer.addEventListener('touchmove', (e) => {
+    if (e.touches.length === 2) {
+      e.preventDefault();
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      const dist = Math.hypot(dx, dy);
+
+      if (lastDist) {
+        pinchScale *= dist / lastDist;
+        clampScale();
+        updateTransform();
+      }
+      lastDist = dist;
+    }
+  }, { passive: false });
+
+  zoomContainer.addEventListener('touchend', (e) => {
+    if (e.touches.length < 2) lastDist = 0;
+  });
+  zoomContainer.addEventListener('touchcancel', () => { lastDist = 0; });
+
+  // ---------- Aplicar transformação inicial ----------
+  zoomImg.onload = () => {
+    scale = 1.5;
+    translateX = 0;
+    translateY = 0;
+    pinchScale = 1;
+    updateTransform();
+  };
+  if (zoomImg.complete) zoomImg.onload();
+
+  // ========== BOTÕES ==========
   document.getElementById('btnVoltarValidacao').addEventListener('click', window.voltarListaValidacao);
   document.getElementById('btnCancelarValidacao').addEventListener('click', window.voltarListaValidacao);
   document.getElementById('btnConfirmarValidacao').addEventListener('click', () => window.confirmarValidacao(imagem));
