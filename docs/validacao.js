@@ -381,6 +381,17 @@ async function renderizarFormValidacao(imagem, jogos) {
               </div>
             `;
           }
+
+          // Dream Number
+          if (aposta.dream_number !== undefined) {
+            const dreamEscaped = escapeHTML(aposta.dream_number);
+            html += `
+              <div class="campo">
+                <label>Dream Number:</label>
+                <input type="text" class="campo-dream" value="${dreamEscaped}" maxlength="2">
+              </div>
+            `;
+          }
         }
       });
     }
@@ -477,6 +488,10 @@ window.confirmarValidacao = async function(imagem) {
         // Nº Sorte
         const sorte = form.querySelector('.campo-sorte')?.value;
         if (sorte) aposta.numero_da_sorte = sorte.padStart(2, '0');
+
+        // Dream Number
+        const dream = form.querySelector('.campo-dream')?.value;
+        if (dream) aposta.dream_number = dream.padStart(2,'0');
       }
       
       jogo.apostas.push(aposta);
