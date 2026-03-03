@@ -1,0 +1,128 @@
+[
+  {
+    "id": "euromilhoes_558-06034782-M1L_None",
+    "jogo": "euromilhoes",
+    "data": "2026-03-03 13:23:07",
+    "lido": false,
+    "titulo": "🎫 Novo resultado EUROMILHOES",
+    "subtitulo": "Boletim: 558-06034782-M1L",
+    "resumo": "1 números + 2 estrelas",
+    "detalhes": {
+      "data_verificacao": "2026-03-03 13:23:07",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "558-06034782-M1L",
+        "data_sorteio": "2026-02-27",
+        "concurso_sorteio": "017/2026",
+        "imagem_origem": "foto_1772387409877.png"
+      },
+      "aposta": {
+        "indice": null,
+        "numeros": [
+          "08",
+          "23",
+          "24",
+          "31",
+          "37"
+        ],
+        "estrelas": [
+          "06",
+          "10"
+        ]
+      },
+      "sorteio": {
+        "concurso": "017/2026",
+        "data": "27/02/2026",
+        "chave": "14 24 27 39 42 + 6 10",
+        "numeros": [
+          "14",
+          "24",
+          "27",
+          "39",
+          "42"
+        ],
+        "estrelas": [
+          "06",
+          "10"
+        ]
+      },
+      "acertos": {
+        "numeros": 1,
+        "estrelas": 2,
+        "descricao": "1 número(s) e 2 estrela(s)"
+      },
+      "premio": {
+        "categoria": "11.º Prémio",
+        "descricao": "1 Número + 2 Estrelas",
+        "valor": "€ 7,15",
+        "vencedores_pt": "12.653",
+        "vencedores_eu": "185.628"
+      },
+      "ganhou": true,
+      "_jogo": "euromilhoes",
+      "_id": "euromilhoes_558-06034782-M1L_None"
+    }
+  },
+  {
+    "id": "euromilhoes_555-03672294-M1L_1",
+    "jogo": "euromilhoes",
+    "data": "2026-03-03 13:23:07",
+    "lido": false,
+    "titulo": "🎫 Novo resultado EUROMILHOES",
+    "subtitulo": "Boletim: 555-03672294-M1L",
+    "resumo": "0 números + 0 estrelas",
+    "detalhes": {
+      "data_verificacao": "2026-03-03 13:23:07",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "555-03672294-M1L",
+        "data_sorteio": "2026-02-24",
+        "concurso_sorteio": "016/2026",
+        "imagem_origem": "foto_1772483411331_88wr22.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "04",
+          "05",
+          "32",
+          "33",
+          "48"
+        ],
+        "estrelas": [
+          "01",
+          "04"
+        ]
+      },
+      "sorteio": {
+        "concurso": "016/2026",
+        "data": "24/02/2026",
+        "chave": "10 27 40 43 47 + 6 10",
+        "numeros": [
+          "10",
+          "27",
+          "40",
+          "43",
+          "47"
+        ],
+        "estrelas": [
+          "06",
+          "10"
+        ]
+      },
+      "acertos": {
+        "numeros": 0,
+        "estrelas": 0,
+        "descricao": "0 número(s) e 0 estrela(s)"
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem prémio",
+        "descricao": "0 acertos",
+        "valor": "€ 0,00"
+      },
+      "_jogo": "euromilhoes",
+      "_id": "euromilhoes_555-03672294-M1L_1"
+    }
+  }
+]
