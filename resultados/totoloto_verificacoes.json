@@ -45,5 +45,45 @@
         "valor": "Reembolso do valor da aposta de Totoloto"
       }
     ]
+  },
+  {
+    "data_verificacao": "2026-03-05 09:39:26",
+    "metodo_validacao": "data + concurso",
+    "boletim": {
+      "referencia": "062-06308289-177",
+      "data_sorteio": "2026-03-04",
+      "concurso_sorteio": "018/2026",
+      "imagem_origem": "foto_1772698893946_f48v9n.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "numeros": [
+        "01",
+        "04",
+        "14",
+        "23",
+        "41"
+      ],
+      "numero_da_sorte": "05"
+    },
+    "sorteio": {
+      "concurso": "018/2026",
+      "data": "04/03/2026",
+      "numeros": [
+        "11",
+        "13",
+        "16",
+        "17",
+        "34"
+      ],
+      "numero_da_sorte": "12"
+    },
+    "acertos": {
+      "numeros": 0,
+      "numero_da_sorte": false,
+      "descricao": "0 número(s) sem Nº da Sorte"
+    },
+    "ganhou": false,
+    "premios": []
   }
 ]
