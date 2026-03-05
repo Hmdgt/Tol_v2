@@ -1,0 +1,3 @@
+concurrency:
+  group: santa-casa-pipeline
+  cancel-in-progress: true
