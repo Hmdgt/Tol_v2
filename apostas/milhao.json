@@ -1,0 +1,22 @@
+[
+    {
+        "tipo": "M1lhão",
+        "data_sorteio": "2026-02-24",
+        "data_aposta": "2026-02-24",
+        "data_emissao": "2026-02-24 08:57:56",
+        "referencia_unica": "555-02820325-226",
+        "concurso": null,
+        "valor_total": null,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "codigo": "04-01191"
+            }
+        ],
+        "confirmado": false,
+        "imagem_origem": "foto_1772697171696_ucx22g.png",
+        "hash_imagem": "5ff1d1eaf8739823a65ea9b42c97b914",
+        "data_processamento": "2026-03-05 07:55:00"
+    }
+]

@@ -1,31 +1,61 @@
 [
-  {
-    "tipo": "Euromilhões",
-    "hash_imagem": "f18b13cbb97987b201ca83e81f5a4489",
-    "tipo_ficheiro": "euromilhoes",
-    "referencia_unica": "551-05455705-M1L",
-    "data_sorteio": "2026-02-20",
-    "concurso": "015/2026",
-    "data_aposta": "",
-    "valor_total": 0,
-    "imagem_origem": "foto_1772547253065_kp9i75.png",
-    "apostas": [
-      {
-        "numeros": [
-          "04",
-          "09",
-          "30",
-          "33",
-          "37"
+    {
+        "tipo": "Euromilhões",
+        "hash_imagem": "f18b13cbb97987b201ca83e81f5a4489",
+        "tipo_ficheiro": "euromilhoes",
+        "referencia_unica": "551-05455705-M1L",
+        "data_sorteio": "2026-02-20",
+        "concurso": "015/2026",
+        "data_aposta": "",
+        "valor_total": 0,
+        "imagem_origem": "foto_1772547253065_kp9i75.png",
+        "apostas": [
+            {
+                "numeros": [
+                    "04",
+                    "09",
+                    "30",
+                    "33",
+                    "37"
+                ],
+                "estrelas": [
+                    "01",
+                    "05"
+                ]
+            }
         ],
-        "estrelas": [
-          "01",
-          "05"
-        ]
-      }
-    ],
-    "confirmado": true,
-    "data_validacao": "2026-03-03T22:33:42.279Z",
-    "validado_por": "humano"
-  }
+        "confirmado": true,
+        "data_validacao": "2026-03-03T22:33:42.279Z",
+        "validado_por": "humano"
+    },
+    {
+        "tipo": "Euromilhões",
+        "data_sorteio": "2026-02-24",
+        "data_aposta": "2026-02-24",
+        "data_emissao": "2026-02-24 08:57:56",
+        "referencia_unica": "555-03672294-M1L",
+        "concurso": "016/2026",
+        "valor_total": 2.2,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "numeros": [
+                    "04",
+                    "05",
+                    "32",
+                    "33",
+                    "48"
+                ],
+                "estrelas": [
+                    "01",
+                    "04"
+                ]
+            }
+        ],
+        "confirmado": false,
+        "imagem_origem": "foto_1772697171696_ucx22g.png",
+        "hash_imagem": "5ff1d1eaf8739823a65ea9b42c97b914",
+        "data_processamento": "2026-03-05 07:55:00"
+    }
 ]
