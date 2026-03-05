@@ -1,3 +1,14 @@
-concurrency:
-  group: santa-casa-pipeline
-  cancel-in-progress: true
+name: Reset Concurrency - Santa Casa
+
+on:
+  workflow_dispatch:  # dispara manualmente
+
+jobs:
+  reset:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: santa-casa-pipeline
+      cancel-in-progress: true
+    steps:
+      - name: Dummy step
+        run: echo "Reset do concurrency feito!"
