@@ -1,28 +1,55 @@
 [
-  {
-    "tipo": "Totoloto",
-    "hash_imagem": "fa746585f2af21658d23da7271b687ee",
-    "tipo_ficheiro": "totoloto",
-    "referencia_unica": "037-03194624-022",
-    "data_sorteio": "2026-02-07",
-    "concurso": "011/2026",
-    "data_aposta": "",
-    "valor_total": 0,
-    "imagem_origem": "foto_1772544842015_1c7b4g.png",
-    "apostas": [
-      {
-        "numeros": [
-          "18",
-          "20",
-          "29",
-          "39",
-          "47"
+    {
+        "tipo": "Totoloto",
+        "hash_imagem": "fa746585f2af21658d23da7271b687ee",
+        "tipo_ficheiro": "totoloto",
+        "referencia_unica": "037-03194624-022",
+        "data_sorteio": "2026-02-07",
+        "concurso": "011/2026",
+        "data_aposta": "",
+        "valor_total": 0,
+        "imagem_origem": "foto_1772544842015_1c7b4g.png",
+        "apostas": [
+            {
+                "numeros": [
+                    "18",
+                    "20",
+                    "29",
+                    "39",
+                    "47"
+                ],
+                "numero_da_sorte": "05"
+            }
         ],
-        "numero_da_sorte": "05"
-      }
-    ],
-    "confirmado": true,
-    "data_validacao": "2026-03-03T13:37:57.961Z",
-    "validado_por": "humano"
-  }
+        "confirmado": true,
+        "data_validacao": "2026-03-03T13:37:57.961Z",
+        "validado_por": "humano"
+    },
+    {
+        "tipo": "Totoloto",
+        "data_sorteio": "2026-03-04",
+        "data_aposta": "2026-03-03",
+        "data_emissao": "2026-03-03 18:41:17",
+        "referencia_unica": "062-06308289-177",
+        "concurso": "018/2026",
+        "valor_total": 1.0,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "numeros": [
+                    "01",
+                    "04",
+                    "14",
+                    "23",
+                    "41"
+                ],
+                "numero_da_sorte": "05"
+            }
+        ],
+        "confirmado": false,
+        "imagem_origem": "foto_1772698893946_f48v9n.png",
+        "hash_imagem": "4c9f9b728d6f1657f78f3722f059cab7",
+        "data_processamento": "2026-03-05 08:22:28"
+    }
 ]
