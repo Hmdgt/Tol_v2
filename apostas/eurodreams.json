@@ -1,0 +1,30 @@
+[
+    {
+        "tipo": "EuroDreams",
+        "data_sorteio": "2026-03-02",
+        "data_aposta": "2026-02-27",
+        "data_emissao": "2026-02-27 18:11:28",
+        "referencia_unica": "260227-17-7324481145-011",
+        "concurso": "018/2026",
+        "valor_total": 2.5,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "numeros": [
+                    "08",
+                    "09",
+                    "18",
+                    "25",
+                    "33",
+                    "39"
+                ],
+                "numero_da_sorte": "03"
+            }
+        ],
+        "confirmado": false,
+        "imagem_origem": "foto_1772714896532_nc0vqf.png",
+        "hash_imagem": "d61ad3d67d58f543d5d0a913c5947592",
+        "data_processamento": "2026-03-05 12:49:10"
+    }
+]
