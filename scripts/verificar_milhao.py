@@ -6,7 +6,7 @@ from datetime import datetime
 from typing import Dict, List, Optional
 
 # ===== CONFIGURAÇÃO =====
-FICHEIRO_APOSTAS = "apostas/m1lhão.json"
+FICHEIRO_APOSTAS = "apostas/milhao.json"
 PASTA_DADOS = "dados/"
 FICHEIRO_RESULTADOS = "resultados/milhao_verificacoes.json"
 
