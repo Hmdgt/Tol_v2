@@ -55,11 +55,11 @@
     }
   },
   {
-<<<<<<< Updated upstream
+
     "data_verificacao": "2026-03-05 08:23:17",
-=======
+
     "data_verificacao": "2026-03-05 08:23:31",
->>>>>>> Stashed changes
+
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "555-03672294-M1L",
