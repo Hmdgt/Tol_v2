@@ -102,7 +102,6 @@
     }
   },
   {
-    "data_verificacao": "2026-03-05 08:23:17",
     "data_verificacao": "2026-03-05 08:23:31",
     "metodo_validacao": "data + concurso",
     "boletim": {
