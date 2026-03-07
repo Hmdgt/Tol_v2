@@ -1,0 +1,32 @@
+[
+    {
+        "tipo": "Euromilhões",
+        "data_sorteio": "2025-08-15",
+        "data_aposta": "2025-08-14",
+        "data_emissao": "2025-08-14 14:53:32",
+        "referencia_unica": "726-07294854-M1L",
+        "concurso": "065/2025",
+        "valor_total": 2.2,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "numeros": [
+                    "07",
+                    "17",
+                    "18",
+                    "23",
+                    "25"
+                ],
+                "estrelas": [
+                    "07",
+                    "10"
+                ]
+            }
+        ],
+        "confirmado": false,
+        "imagem_origem": "foto_1772919920564_hc6zk5.png",
+        "hash_imagem": "ebb5f93ae86259a71f53c0d47b55f234",
+        "data_processamento": "2026-03-07 21:46:26"
+    }
+]
