@@ -142,6 +142,10 @@ def atualizar_resultados():
         dados[str(ano)] = lista
         gravar_json(json_path, dados)
 
+        msg = f"Resultado do concurso {resultado['concurso']} adicionado ao JSON {JOGO}_{ano}."
+        print(msg)
+        escrever_log(msg, JOGO)
+
 if __name__ == "__main__":
     atualizar_resultados()
 
