@@ -1,4 +1,0 @@
-[2026-03-05 21:30:47] [eurodreams] Resultado do concurso 019/2026 adicionado ao JSON eurodreams_2026.
-[2026-03-05 22:24:18] [eurodreams] Concurso 019/2026 já está completo. Nada a atualizar.
-[2026-03-05 23:43:00] [eurodreams] Concurso 019/2026 já está completo. Nada a atualizar.
-[2026-03-06 10:47:22] [eurodreams] Concurso 019/2026 já está completo. Nada a atualizar.
