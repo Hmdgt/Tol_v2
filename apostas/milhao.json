@@ -1,0 +1,22 @@
+[
+    {
+        "tipo": "M1lhão",
+        "data_sorteio": "2026-03-03",
+        "data_aposta": "2026-03-03",
+        "data_emissao": "2026-03-03 18:41:13",
+        "referencia_unica": "562-01647066-M1L",
+        "concurso": "018/2026",
+        "valor_total": 0.3,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "codigo": null
+            }
+        ],
+        "confirmado": false,
+        "imagem_origem": "foto_1772903050032_w2q43s.png",
+        "hash_imagem": "8fba423ff8a4aa7f7e0928c0fb01665e",
+        "data_processamento": "2026-03-07 17:05:09"
+    }
+]
