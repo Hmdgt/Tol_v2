@@ -16,7 +16,6 @@ def gerar_id_unico(resultado: dict, jogo: str) -> str:
     """
     referencia = resultado.get('boletim', {}).get('referencia', 'sem_ref')
     indice = resultado.get('aposta', {}).get('indice', 1)
-    # O ID agora é fixo para aquele boletim específico
     return f"{jogo}_{referencia}_{indice}"
 
 def carregar_resultados_recentes() -> List[Dict]:
@@ -37,7 +36,6 @@ def carregar_resultados_recentes() -> List[Dict]:
             
             for resultado in resultados:
                 resultado['_jogo'] = jogo
-                # Gerar o ID aqui para comparação posterior
                 resultado['_id'] = gerar_id_unico(resultado, jogo)
                 todos_resultados.append(resultado)
                 
@@ -57,16 +55,65 @@ def carregar_json(caminho: str) -> List[Dict]:
     return []
 
 def gerar_resumo(resultado: dict) -> str:
-    """Gera um resumo legível do resultado"""
+    """
+    Gera um resumo legível do resultado, adaptado para cada jogo.
+    Para o Totoloto, considera a possibilidade de acumular prémios (números + Nº da Sorte).
+    """
+    jogo = resultado.get('_jogo')
     acertos = resultado.get('acertos', {})
-    numeros = acertos.get('numeros', 0)
+    premios = resultado.get('premios', [])
     
-    if 'estrelas' in acertos:
-        return f"{numeros} números + {acertos.get('estrelas', 0)} estrelas"
-    elif 'dream_number' in acertos:
-        dream = acertos.get('dream_number', False)
-        return f"{numeros} números {'+ Dream' if dream else ''}"
-    return f"{numeros} acertos"
+    # Se não houver prémios, retorna "Não ganhou" (ou, se preferires, a descrição dos acertos)
+    if not premios:
+        # Fallback para a descrição antiga, mas podemos simplificar
+        if jogo == 'totoloto':
+            # Para Totoloto sem prémios, mostramos apenas "Não ganhou"
+            return "Não ganhou"
+        # Para outros jogos, podemos manter a descrição de acertos (ex: "1 número + 0 estrelas")
+        numeros = acertos.get('numeros', 0)
+        if 'estrelas' in acertos:
+            return f"{numeros} números + {acertos.get('estrelas', 0)} estrelas"
+        elif 'dream_number' in acertos:
+            dream = acertos.get('dream_number', False)
+            return f"{numeros} números {'+ Dream' if dream else ''}"
+        return f"{numeros} acertos"
+    
+    # Calcular total dos prémios
+    total = 0.0
+    for p in premios:
+        valor_str = p.get('valor', '0').replace('€', '').replace(' ', '').replace(',', '.')
+        try:
+            total += float(valor_str)
+        except ValueError:
+            pass
+    
+    total_str = f"€ {total:.2f}".replace('.', ',')
+    
+    # Tratamento específico para Totoloto
+    if jogo == 'totoloto':
+        numeros = acertos.get('numeros', 0)
+        ns = acertos.get('numero_da_sorte', False)
+        
+        # Construir descrição dos acertos
+        if numeros > 0 and ns:
+            desc = f"{numeros} número{'s' if numeros != 1 else ''} + Nº da Sorte"
+        elif numeros > 0:
+            desc = f"{numeros} número{'s' if numeros != 1 else ''}"
+        elif ns:
+            desc = "Nº da Sorte"
+        else:
+            desc = "Nenhum acerto"  # não deve acontecer porque temos prémios
+        
+        return f"Ganhou: {desc} – Total: {total_str}"
+    
+    # Para outros jogos, se houver um único prémio, mostramos o nome e valor
+    if len(premios) == 1:
+        p = premios[0]
+        nome = p.get('premio', 'Prémio')
+        return f"Ganhou: {nome} – {p.get('valor', total_str)}"
+    
+    # Fallback (caso haja múltiplos prémios noutro jogo, o que não deve acontecer)
+    return f"Ganhou ({len(premios)} prémios) – Total: {total_str}"
 
 def main():
     print("\n🔔 GERADOR DE NOTIFICAÇÕES")
@@ -78,7 +125,6 @@ def main():
     ativas = carregar_json(FICHEIRO_NOTIFICACOES_ATIVAS)
     
     # 2. Criar sets de IDs para busca rápida
-    # IMPORTANTE: No histórico o campo chama-se 'id', no resultado recente usamos '_id'
     ids_no_historico = {n.get('id') for n in historico if n.get('id')}
     ids_nas_ativas = {n.get('id') for n in ativas if n.get('id')}
     
@@ -88,7 +134,6 @@ def main():
     for res in resultados_recentes:
         rid = res.get('_id')
         
-        # SÓ adiciona se não estiver no histórico NEM nas ativas
         if rid not in ids_no_historico and rid not in ids_nas_ativas:
             notificacao = {
                 "id": rid,
@@ -101,7 +146,7 @@ def main():
                 "detalhes": res
             }
             novas_notificacoes.append(notificacao)
-            ids_nas_ativas.add(rid) # Evita duplicados no mesmo lote
+            ids_nas_ativas.add(rid)
             print(f"   ➕ Nova: {rid}")
 
     if not novas_notificacoes:
@@ -109,7 +154,6 @@ def main():
         return
 
     # 4. Merge e Gravação
-    # Mantemos o que já era ativo e adicionamos as novas
     lista_final_ativas = ativas + novas_notificacoes
 
     with open(FICHEIRO_NOTIFICACOES_ATIVAS, "w", encoding="utf-8") as f:
