@@ -1,1 +1,60 @@
-[]
+[
+  {
+    "id": "totoloto_058-05797711-110_1",
+    "jogo": "totoloto",
+    "data": "2026-03-07 17:12:37",
+    "lido": false,
+    "titulo": "🎫 Novo resultado TOTOLOTO",
+    "subtitulo": "Boletim: 058-05797711-110",
+    "resumo": "0 acertos",
+    "detalhes": {
+      "data_verificacao": "2026-03-07 17:12:37",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "058-05797711-110",
+        "data_sorteio": "2026-02-28",
+        "concurso_sorteio": "017/2026",
+        "imagem_origem": "foto_1772903447552_pv3a61.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "01",
+          "12",
+          "30",
+          "31",
+          "33"
+        ],
+        "numero_da_sorte": "04"
+      },
+      "sorteio": {
+        "concurso": "017/2026",
+        "data": "28/02/2026",
+        "numeros": [
+          "06",
+          "17",
+          "19",
+          "45",
+          "49"
+        ],
+        "numero_da_sorte": "04"
+      },
+      "acertos": {
+        "numeros": 0,
+        "numero_da_sorte": true,
+        "descricao": "0 número(s) com Nº da Sorte"
+      },
+      "ganhou": true,
+      "premios": [
+        {
+          "premio": "Nº da Sorte",
+          "descricao": "Nº da Sorte",
+          "vencedores": "80.480",
+          "valor": "Reembolso do valor da aposta de Totoloto"
+        }
+      ],
+      "_jogo": "totoloto",
+      "_id": "totoloto_058-05797711-110_1"
+    }
+  }
+]
