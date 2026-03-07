@@ -71,23 +71,34 @@ async function guardarFicheiroGitHub(caminho, conteudo, sha, mensagem) {
 
 // ---------- LISTAR BOLETINS POR VALIDAR ----------
 window.listarBoletinsPorValidar = async function() {
-  const tipos = CONFIG.TIPOS_JOGO; // Usar configuração global
+  const tipos = CONFIG.TIPOS_JOGO;
   const boletinsPorImagem = {};
-  
+
   for (const tipo of tipos) {
     const caminho = `${PASTA_APOSTAS}${tipo}.json`;
     const { content } = await carregarFicheiroGitHub(caminho);
-    
+
     if (content && Array.isArray(content)) {
-      // Filtrar apenas não confirmados
       const naoConfirmados = content.filter(jogo => !jogo.confirmado);
-      
+
       for (const jogo of naoConfirmados) {
-        const imgOrigem = jogo.imagem_origem;
-        if (!boletinsPorImagem[imgOrigem]) {
-          boletinsPorImagem[imgOrigem] = [];
+        const img = jogo.imagem_origem;
+
+        if (!boletinsPorImagem[img]) {
+          // primeira vez → criar array e registar tipo
+          boletinsPorImagem[img] = {
+            tipo: jogo.tipo,
+            lista: []
+          };
         }
-        boletinsPorImagem[imgOrigem].push({
+
+        // se o tipo não coincidir → ignorar (proteção anti-mistura)
+        if (boletinsPorImagem[img].tipo !== jogo.tipo) {
+          console.warn(`Ignorado jogo de tipo diferente na mesma imagem: ${img}`);
+          continue;
+        }
+
+        boletinsPorImagem[img].lista.push({
           ...jogo,
           tipo_ficheiro: tipo,
           _indice: content.findIndex(j => j.hash_imagem === jogo.hash_imagem)
@@ -95,9 +106,16 @@ window.listarBoletinsPorValidar = async function() {
       }
     }
   }
-  
-  return boletinsPorImagem;
+
+  // converter para formato antigo: { imagem: [jogos] }
+  const resultado = {};
+  for (const [img, dados] of Object.entries(boletinsPorImagem)) {
+    resultado[img] = dados.lista;
+  }
+
+  return resultado;
 };
+
 
 // ---------- CARREGAR IMAGEM DO GITHUB ----------
 async function carregarImagemGitHub(caminho) {
@@ -122,35 +140,33 @@ async function carregarImagemGitHub(caminho) {
 // ---------- GUARDAR VALIDAÇÃO (ATUALIZA JSON E MARCA confirmado = true) ----------
 async function guardarValidacao(imagem, jogosAtualizados) {
   console.log("💾 A guardar validação para:", imagem);
-  
-  // Agrupar por tipo de ficheiro
+
+  // Proteção anti-mistura
+  const tipos = new Set(jogosAtualizados.map(j => j.tipo_ficheiro));
+  if (tipos.size > 1) {
+    console.error("❌ ERRO: mistura de tipos na validação! Operação cancelada.");
+    return false;
+  }
+
   const porFicheiro = {};
-  
+
   for (const jogo of jogosAtualizados) {
     const tipo = jogo.tipo_ficheiro;
     if (!porFicheiro[tipo]) {
-      porFicheiro[tipo] = {
-        conteudo: [],
-        sha: null,
-        jogos: []
-      };
+      porFicheiro[tipo] = { conteudo: [], sha: null, jogos: [] };
     }
     porFicheiro[tipo].jogos.push(jogo);
   }
-  
-  // Atualizar cada ficheiro
+
   for (const [tipo, data] of Object.entries(porFicheiro)) {
     const caminho = `${PASTA_APOSTAS}${tipo}.json`;
-    
-    // Carregar ficheiro completo
+
     const { content, sha } = await carregarFicheiroGitHub(caminho);
     if (!content) continue;
-    
-    // Atualizar jogos específicos
+
     for (const jogoAtualizado of data.jogos) {
       const indice = content.findIndex(j => j.hash_imagem === jogoAtualizado.hash_imagem);
       if (indice !== -1) {
-        // Marcar como confirmado e atualizar dados
         content[indice] = {
           ...jogoAtualizado,
           confirmado: true,
@@ -159,21 +175,20 @@ async function guardarValidacao(imagem, jogosAtualizados) {
         };
       }
     }
-    
-    // Guardar ficheiro
+
     const sucesso = await guardarFicheiroGitHub(
       caminho,
       content,
       sha,
       `✅ Validação humana: ${imagem}`
     );
-    
+
     if (!sucesso) {
       console.error(`❌ Erro ao guardar ${caminho}`);
       return false;
     }
   }
-  
+
   return true;
 }
 
@@ -181,16 +196,16 @@ async function guardarValidacao(imagem, jogosAtualizados) {
 window.renderizarListaValidacao = async function() {
   const container = document.getElementById('validacaoContainer');
   if (!container) return;
-  
+
   container.innerHTML = '<div class="loading"><ion-icon name="sync-outline" class="spin"></ion-icon></div>';
-  
+
   const boletins = await window.listarBoletinsPorValidar();
-  
+
   if (Object.keys(boletins).length === 0) {
     container.innerHTML = '<div class="no-notifications">✅ Todos os boletins validados!</div>';
     return;
   }
-  
+
   let html = `
     <div class="validacao-header">
       <h2>Boletins por Validar</h2>
@@ -198,36 +213,30 @@ window.renderizarListaValidacao = async function() {
     </div>
     <div class="validacao-lista">
   `;
-  
+
   for (const [imagem, jogos] of Object.entries(boletins)) {
-    const totalJogos = jogos.length;
-    const tipos = [...new Set(jogos.map(j => j.tipo))].join(', ');
-    
-    // Escape dos valores
-    const imagemEscaped = escapeHTML(imagem);
-    const tiposEscaped = escapeHTML(tipos);
-    
+    const total = jogos.length;
+    const tipo = jogos[0].tipo; // agora é sempre único
+
     html += `
-      <div class="validacao-card" data-imagem="${imagemEscaped}">
+      <div class="validacao-card" data-imagem="${escapeHTML(imagem)}">
         <div class="validacao-card-header">
           <ion-icon name="document-text-outline"></ion-icon>
-          <span class="validacao-imagem">${imagemEscaped}</span>
-          <span class="validacao-badge">${totalJogos}</span>
+          <span class="validacao-imagem">${escapeHTML(imagem)}</span>
+          <span class="validacao-badge">${total}</span>
         </div>
-        <div class="validacao-tipos">${tiposEscaped}</div>
+        <div class="validacao-tipos">${escapeHTML(tipo)}</div>
         <div class="validacao-preview">📸 Clique para validar</div>
       </div>
     `;
   }
-  
+
   html += '</div>';
   container.innerHTML = html;
-  
-  // Adicionar event listeners em vez de onclick no HTML
+
   document.querySelectorAll('.validacao-card').forEach(card => {
     card.addEventListener('click', () => {
-      const imagem = card.dataset.imagem;
-      window.abrirValidacao(imagem);
+      window.abrirValidacao(card.dataset.imagem);
     });
   });
 };
