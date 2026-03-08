@@ -40,16 +40,15 @@ async function uploadToGitHub(file) {
 
       if (response.ok) {
         console.log("✔️ Upload concluído:", filename);
-        // TODO: substituir alert por toast quando sistema de toasts estiver implementado
-        // alert("Upload concluído com sucesso!");
+        ToastManager.mostrar("✅ Imagem enviada com sucesso!", "sucesso");
       } else {
         const err = await response.json();
         console.error("❌ Erro no upload:", err);
-        alert("Erro ao fazer upload. Verifica o token e tenta novamente.");
+        ToastManager.mostrar("❌ Erro no upload.", "erro");        
       }
     } catch (e) {
       console.error("❌ Erro de rede:", e);
-      alert("Erro de rede. Verifica a tua ligação à internet.");
+      ToastManager.mostrar("❌ Erro de rede. Verifica a ligação.", "erro");        
     }
   };
 }
