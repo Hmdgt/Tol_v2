@@ -53,14 +53,18 @@
           "37"
         ],
         "estrelas": [
-          "08",
+          "06",
           "10"
         ]
       }
     ],
-    "confirmado": false,
+    "confirmado": true,
     "imagem_origem": "foto_1772987362814_0umjom.png",
     "hash_imagem": "787bbfdda7ff11245c9d38c16749f490",
-    "data_processamento": "2026-03-08 18:25:26"
+    "data_processamento": "2026-03-08 18:25:26",
+    "tipo_ficheiro": "euromilhoes",
+    "_indice": 1,
+    "data_validacao": "2026-03-08T18:28:11.769Z",
+    "validado_por": "humano"
   }
 ]
