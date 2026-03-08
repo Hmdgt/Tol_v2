@@ -7,7 +7,7 @@
         "total_recebido": 0.0,
         "ganhadoras": 0,
         "acertos_numeros": 2,
-        "acertos_especial": 2,
+        "acertos_especial": 3,
         "maior_premio": 0.0,
         "data_maior_premio": null,
         "saldo": 0.0,
@@ -15,7 +15,7 @@
         "media_premios": 0.0,
         "mediana_premios": 0.0,
         "media_acertos_numeros": 1.0,
-        "media_acertos_especial": 1.0
+        "media_acertos_especial": 1.5
       }
     }
   },
@@ -27,7 +27,7 @@
         "total_recebido": 0.0,
         "ganhadoras": 0,
         "acertos_numeros": 2,
-        "acertos_especial": 2,
+        "acertos_especial": 3,
         "valores_premios": [],
         "maior_premio": 0.0,
         "data_maior_premio": null,
@@ -35,7 +35,7 @@
         "percentagem_ganhadoras": 0.0,
         "media_premios": 0.0,
         "media_acertos_numeros": 1.0,
-        "media_acertos_especial": 1.0
+        "media_acertos_especial": 1.5
       }
     }
   },
@@ -65,5 +65,5 @@
       }
     }
   },
-  "ultima_atualizacao": "2026-03-08T18:29:00.849484"
+  "ultima_atualizacao": "2026-03-08T18:41:53.565515"
 }
