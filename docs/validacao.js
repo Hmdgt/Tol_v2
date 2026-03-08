@@ -19,7 +19,6 @@ async function carregarFicheiroGitHub(caminho) {
       headers: { Authorization: `Bearer ${token}` }
     });
     
-    // ✅ Silencia erros 404 (ficheiro não existe)
     if (res.status === 404) return { content: null, sha: null };
     if (!res.ok) throw new Error(`Erro ${res.status}`);
     
@@ -31,7 +30,6 @@ async function carregarFicheiroGitHub(caminho) {
       sha: data.sha
     };
   } catch (err) {
-    // Só mostra erro se não for 404 (o 404 já foi tratado acima)
     if (!err.message.includes('404')) {
       console.error(`Erro ao carregar ${caminho}:`, err);
     }
@@ -85,14 +83,12 @@ window.listarBoletinsPorValidar = async function() {
         const img = jogo.imagem_origem;
 
         if (!boletinsPorImagem[img]) {
-          // primeira vez → criar array e registar tipo
           boletinsPorImagem[img] = {
             tipo: jogo.tipo,
             lista: []
           };
         }
 
-        // se o tipo não coincidir → ignorar (proteção anti-mistura)
         if (boletinsPorImagem[img].tipo !== jogo.tipo) {
           console.warn(`Ignorado jogo de tipo diferente na mesma imagem: ${img}`);
           continue;
@@ -107,7 +103,6 @@ window.listarBoletinsPorValidar = async function() {
     }
   }
 
-  // converter para formato antigo: { imagem: [jogos] }
   const resultado = {};
   for (const [img, dados] of Object.entries(boletinsPorImagem)) {
     resultado[img] = dados.lista;
@@ -115,7 +110,6 @@ window.listarBoletinsPorValidar = async function() {
 
   return resultado;
 };
-
 
 // ---------- CARREGAR IMAGEM DO GITHUB ----------
 async function carregarImagemGitHub(caminho) {
@@ -141,7 +135,6 @@ async function carregarImagemGitHub(caminho) {
 async function guardarValidacao(imagem, jogosAtualizados) {
   console.log("💾 A guardar validação para:", imagem);
 
-  // Proteção anti-mistura
   const tipos = new Set(jogosAtualizados.map(j => j.tipo_ficheiro));
   if (tipos.size > 1) {
     console.error("❌ ERRO: mistura de tipos na validação! Operação cancelada.");
@@ -216,7 +209,7 @@ window.renderizarListaValidacao = async function() {
 
   for (const [imagem, jogos] of Object.entries(boletins)) {
     const total = jogos.length;
-    const tipo = jogos[0].tipo; // agora é sempre único
+    const tipo = jogos[0].tipo;
 
     html += `
       <div class="validacao-card" data-imagem="${escapeHTML(imagem)}">
@@ -245,7 +238,6 @@ window.renderizarListaValidacao = async function() {
 window.abrirValidacao = async function(imagem) {
   console.log("📸 A abrir validação:", imagem);
   
-  // 1. Mudar para view de validação IMEDIATAMENTE
   if (window.ViewManager) {
     window.ViewManager.goTo('validacaoView');
   } else {
@@ -253,13 +245,11 @@ window.abrirValidacao = async function(imagem) {
     document.getElementById('validacaoView').classList.add('active');
   }
   
-  // 2. Mostrar loading
   const container = document.getElementById('validacaoContainer');
   if (container) {
     container.innerHTML = '<div class="loading"><ion-icon name="sync-outline" class="spin"></ion-icon><p>A carregar boletim...</p></div>';
   }
   
-  // 3. Carregar dados
   try {
     const boletins = await window.listarBoletinsPorValidar();
     const jogos = boletins[imagem];
@@ -281,10 +271,8 @@ async function renderizarFormValidacao(imagem, jogos) {
   const container = document.getElementById('validacaoContainer');
   if (!container) return;
   
-  // Escape dos valores para segurança
   const imagemEscaped = escapeHTML(imagem);
   
-  // Carregar thumbnail (com fallback para original)
   const thumbnailUrl = await carregarImagemGitHub(`thumbnails/${imagem}`);
   const imagemUrl = thumbnailUrl || await carregarImagemGitHub(`uploads/${imagem}`);
   
@@ -298,7 +286,6 @@ async function renderizarFormValidacao(imagem, jogos) {
     </div>
     
     <div class="validacao-grid">
-      <!-- Coluna da Imagem com zoom/pan -->
       <div class="imagem-coluna">
         <div class="zoom-container" id="zoomContainer">
           <img src="${imagemUrl}" alt="Boletim" class="zoom-img"
@@ -306,13 +293,10 @@ async function renderizarFormValidacao(imagem, jogos) {
         </div>
       </div>
       
-      <!-- Coluna dos Formulários -->
       <div class="formularios-coluna">
   `;
   
-  // Formulários para cada jogo
   jogos.forEach((jogo, index) => {
-    // Escape de valores
     const tipoEscaped = escapeHTML(jogo.tipo);
     const hashEscaped = escapeHTML(jogo.hash_imagem);
     const ficheiroEscaped = escapeHTML(jogo.tipo_ficheiro);
@@ -320,8 +304,15 @@ async function renderizarFormValidacao(imagem, jogos) {
     const dataSorteioEscaped = escapeHTML(jogo.data_sorteio || '');
     const concursoEscaped = escapeHTML(jogo.concurso || '');
     
+    // Guardar o objeto original num atributo data-original (codificado)
+    const originalEncoded = encodeURIComponent(JSON.stringify(jogo));
+    
     html += `
-      <div class="jogo-form" data-tipo="${tipoEscaped}" data-hash="${hashEscaped}" data-ficheiro="${ficheiroEscaped}">
+      <div class="jogo-form" 
+           data-tipo="${tipoEscaped}" 
+           data-hash="${hashEscaped}" 
+           data-ficheiro="${ficheiroEscaped}"
+           data-original="${originalEncoded}">
         <h3>${tipoEscaped} #${index + 1}</h3>
         
         <div class="form-campos">
@@ -341,7 +332,6 @@ async function renderizarFormValidacao(imagem, jogos) {
           </div>
     `;
     
-    // Campos específicos por tipo (apostas)
     if (jogo.apostas && jogo.apostas.length > 0) {
       jogo.apostas.forEach((aposta, idxAposta) => {
         html += `<h4>Aposta ${idxAposta + 1}</h4>`;
@@ -391,7 +381,6 @@ async function renderizarFormValidacao(imagem, jogos) {
             `;
           }
 
-          // Dream Number
           if (aposta.dream_number !== undefined) {
             let dreamEscaped = escapeHTML(aposta.dream_number);
             if (dreamEscaped.length === 1) dreamEscaped = '0' + dreamEscaped;
@@ -430,7 +419,7 @@ async function renderizarFormValidacao(imagem, jogos) {
   const zoomContainer = document.getElementById('zoomContainer');
   const zoomImg = zoomContainer.querySelector('img');
 
-  let scale = 1.5;           // zoom inicial
+  let scale = 1.5;
   let translateX = 0;
   let translateY = 0;
   let startX, startY;
@@ -461,18 +450,14 @@ async function renderizarFormValidacao(imagem, jogos) {
   function constrainPan() {
     const containerRect = zoomContainer.getBoundingClientRect();
     const imgRect = zoomImg.getBoundingClientRect();
-
-    // Quando a imagem é maior que o container, limitamos o arrasto
     const maxX = Math.max(0, (imgRect.width - containerRect.width) / 2);
     const minX = -maxX;
     const maxY = Math.max(0, (imgRect.height - containerRect.height) / 2);
     const minY = -maxY;
-
     translateX = Math.min(maxX, Math.max(minX, translateX));
     translateY = Math.min(maxY, Math.max(minY, translateY));
   }
 
-  // ---------- Arrasto com pointer (rato/toque) ----------
   zoomContainer.addEventListener('pointerdown', (e) => {
     if (e.pointerType === 'touch' && !e.isPrimary) return;
     isDragging = true;
@@ -499,23 +484,20 @@ async function renderizarFormValidacao(imagem, jogos) {
     zoomContainer.classList.remove('dragging');
   });
 
-  // ---------- Zoom com roda do rato ----------
   zoomContainer.addEventListener('wheel', (e) => {
     e.preventDefault();
-    const delta = e.deltaY > 0 ? 0.9 : 1.1; // 10% para cada clique
+    const delta = e.deltaY > 0 ? 0.9 : 1.1;
     scale *= delta;
     clampScale();
     updateTransform();
   }, { passive: false });
 
-  // ---------- Pinch-to-zoom (touch) ----------
   zoomContainer.addEventListener('touchmove', (e) => {
     if (e.touches.length === 2) {
       e.preventDefault();
       const dx = e.touches[0].clientX - e.touches[1].clientX;
       const dy = e.touches[0].clientY - e.touches[1].clientY;
       const dist = Math.hypot(dx, dy);
-
       if (lastDist) {
         pinchScale *= dist / lastDist;
         clampScale();
@@ -530,7 +512,6 @@ async function renderizarFormValidacao(imagem, jogos) {
   });
   zoomContainer.addEventListener('touchcancel', () => { lastDist = 0; });
 
-  // ---------- Aplicar transformação inicial ----------
   zoomImg.onload = () => {
     scale = 1.5;
     translateX = 0;
@@ -540,13 +521,12 @@ async function renderizarFormValidacao(imagem, jogos) {
   };
   if (zoomImg.complete) zoomImg.onload();
 
-  // ========== BOTÕES ==========
   document.getElementById('btnVoltarValidacao').addEventListener('click', window.voltarListaValidacao);
   document.getElementById('btnCancelarValidacao').addEventListener('click', window.voltarListaValidacao);
   document.getElementById('btnConfirmarValidacao').addEventListener('click', () => window.confirmarValidacao(imagem));
 }
 
-// ---------- CONFIRMAR VALIDAÇÃO (com prevenção de múltiplos cliques) ----------
+// ---------- CONFIRMAR VALIDAÇÃO (com preservação de campos originais) ----------
 let validando = false;
 
 window.confirmarValidacao = async function(imagem) {
@@ -570,56 +550,94 @@ window.confirmarValidacao = async function(imagem) {
     const jogosAtualizados = [];
     
     for (const form of forms) {
-      const tipo = form.dataset.tipo;
-      const hash = form.dataset.hash;
-      const ficheiro = form.dataset.ficheiro;
+      // Recuperar o objeto original
+      const original = JSON.parse(decodeURIComponent(form.dataset.original));
       
-      // Recolher campos comuns
-      const jogo = {
-        tipo: tipo,
-        hash_imagem: hash,
-        tipo_ficheiro: ficheiro,
-        referencia_unica: form.querySelector('.campo-ref')?.value,
-        data_sorteio: form.querySelector('.campo-data-sorteio')?.value,
-        concurso: form.querySelector('.campo-concurso')?.value,
-        // Manter data_aposta e valor_total originais se existirem, ou definir como vazio
-        data_aposta: form.querySelector('.campo-data-aposta')?.value || '',
-        valor_total: parseFloat(form.querySelector('.campo-valor')?.value) || 0,
-        imagem_origem: imagem,
-        apostas: []
-      };
+      // Obter valores dos inputs comuns
+      const referencia_unica = form.querySelector('.campo-ref')?.value;
+      const data_sorteio = form.querySelector('.campo-data-sorteio')?.value;
+      const concurso = form.querySelector('.campo-concurso')?.value;
       
-      // Recolher apostas
-      const aposta = {};
+      // Recolher apostas editadas
+      const apostasEditadas = [];
       
-      if (tipo === 'M1lhão') {
-        aposta.codigo = form.querySelector('.campo-codigo')?.value;
+      if (original.tipo === 'M1lhão') {
+        // Para M1lhão, há apenas um campo código por aposta
+        const inputsCodigo = form.querySelectorAll('.campo-codigo');
+        original.apostas.forEach((apostaOriginal, idx) => {
+          const codigoInput = inputsCodigo[idx];
+          if (codigoInput) {
+            apostasEditadas.push({
+              ...apostaOriginal,                         // mantém indice, etc.
+              codigo: codigoInput.value
+            });
+          } else {
+            // fallback
+            apostasEditadas.push(apostaOriginal);
+          }
+        });
       } else {
-        // Números
-        const numeros = [];
-        form.querySelectorAll('.campo-numero').forEach(input => {
-          if (input.value) numeros.push(input.value.padStart(2, '0'));
-        });
-        if (numeros.length > 0) aposta.numeros = numeros;
+        // Para outros jogos, percorrer cada aposta original e recolher os inputs correspondentes
+        const inputsNumero = form.querySelectorAll('.campo-numero');
+        const inputsEstrela = form.querySelectorAll('.campo-estrela');
+        const inputSorte = form.querySelector('.campo-sorte');        // apenas um por jogo (Nº da Sorte)
+        const inputDream = form.querySelector('.campo-dream');        // apenas um por jogo (Dream Number)
         
-        // Estrelas
-        const estrelas = [];
-        form.querySelectorAll('.campo-estrela').forEach(input => {
-          if (input.value) estrelas.push(input.value.padStart(2, '0'));
+        // Assumimos que as apostas estão na mesma ordem dos inputs
+        original.apostas.forEach((apostaOriginal, idx) => {
+          const numeros = [];
+          const estrelas = [];
+          
+          // Índices dos inputs para esta aposta
+          const startNum = idx * 5;   // cada aposta tem 5 números
+          const startEst = idx * 2;    // cada aposta tem 2 estrelas
+          
+          for (let i = 0; i < 5; i++) {
+            const input = inputsNumero[startNum + i];
+            if (input && input.value) {
+              numeros.push(input.value.padStart(2, '0'));
+            }
+          }
+          for (let i = 0; i < 2; i++) {
+            const input = inputsEstrela[startEst + i];
+            if (input && input.value) {
+              estrelas.push(input.value.padStart(2, '0'));
+            }
+          }
+          
+          const novaAposta = {
+            ...apostaOriginal,          // preserva indice e outros campos
+            numeros: numeros.length ? numeros : apostaOriginal.numeros,
+            estrelas: estrelas.length ? estrelas : apostaOriginal.estrelas
+          };
+          
+          // Campos especiais (existem apenas um por jogo, não por aposta)
+          if (inputSorte) {
+            novaAposta.numero_da_sorte = inputSorte.value.padStart(2, '0');
+          }
+          if (inputDream) {
+            novaAposta.dream_number = inputDream.value.padStart(2, '0');
+          }
+          
+          apostasEditadas.push(novaAposta);
         });
-        if (estrelas.length > 0) aposta.estrelas = estrelas;
-        
-        // Nº Sorte
-        const sorte = form.querySelector('.campo-sorte')?.value;
-        if (sorte) aposta.numero_da_sorte = sorte.padStart(2, '0');
-
-        // Dream Number
-        const dream = form.querySelector('.campo-dream')?.value;
-        if (dream) aposta.dream_number = dream.padStart(2,'0');
       }
       
-      jogo.apostas.push(aposta);
-      jogosAtualizados.push(jogo);
+      // Construir o objeto jogo atualizado: parte do original e sobreescreve os campos editados
+      const jogoAtualizado = {
+        ...original,
+        referencia_unica,
+        data_sorteio,
+        concurso,
+        imagem_origem: imagem,
+        apostas: apostasEditadas
+      };
+      
+      // Atualizar também os campos que possam existir no formulário mas não no original
+      // (ex.: se houver campo data_aposta ou valor_total, mas não os estamos a usar)
+      // Para manter a simplicidade, não adicionamos campos novos.
+      
+      jogosAtualizados.push(jogoAtualizado);
     }
     
     // Guardar no GitHub
@@ -647,7 +665,6 @@ window.confirmarValidacao = async function(imagem) {
 window.voltarListaValidacao = function() {
   console.log("⬅️ A voltar da validação para a lista");
   
-  // Usar ViewManager se disponível
   if (window.ViewManager) {
     window.ViewManager.goTo('notificacoesView');
   } else {
@@ -655,7 +672,6 @@ window.voltarListaValidacao = function() {
     document.getElementById('notificacoesView').classList.add('active');
   }
   
-  // Renderizar notificações
   if (typeof window.renderizarNotificacoes === 'function') {
     window.renderizarNotificacoes();
   }
@@ -667,7 +683,6 @@ window.voltarListaValidacao = function() {
 
 // ---------- INICIALIZAR ----------
 document.addEventListener('DOMContentLoaded', () => {
-  // Se estiver na view de validação, renderizar lista
   if (document.getElementById('validacaoView').classList.contains('active')) {
     renderizarListaValidacao();
   }
