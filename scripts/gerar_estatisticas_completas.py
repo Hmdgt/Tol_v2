@@ -4,207 +4,22 @@
 import json
 import os
 import glob
-import re
 from datetime import datetime
 from collections import defaultdict
-from typing import Dict, List, Any, Tuple, Optional
+from typing import Dict, List, Any
 
 # ===== CONFIGURAÇÃO =====
-PASTA_APOSTAS = "apostas/"
-PASTA_DADOS = "dados/"
 PASTA_RESULTADOS = "resultados/"
 FICHEIRO_ESTATISTICAS = os.path.join(PASTA_RESULTADOS, "estatisticas_completas.json")
 
-# Custo base por aposta (em euros) – ajustar conforme os jogos reais
-CUSTO_POR_JOGO = {
-    "totoloto": 1.0,
-    "eurodreams": 2.5,
-    "euromilhoes": 2.5,
-    "milhao": 1.0,
-    # adicionar outros jogos conforme necessário
-}
-
-# Mapeamento de nomes de jogos para padrões de ficheiros
-PADRAO_SORTEIOS = {
-    "totoloto": "totoloto_sc_*.json",
-    "eurodreams": "eurodreams_*.json",
-    "euromilhoes": "euromilhoes_*.json",
-    "milhao": "milhao_*.json",
-}
-
-def carregar_apostas(jogo: str) -> List[Dict]:
-    """Carrega o ficheiro de apostas de um jogo específico."""
-    caminho = os.path.join(PASTA_APOSTAS, f"{jogo}.json")
-    if not os.path.exists(caminho):
-        return []
-    with open(caminho, "r", encoding="utf-8") as f:
-        return json.load(f)
-
-def carregar_sorteios(jogo: str) -> Dict[str, List[Dict]]:
-    """
-    Carrega todos os ficheiros de sorteios de um jogo (por ano).
-    Retorna um dicionário {ano: [sorteios]}.
-    """
-    padrao = PADRAO_SORTEIOS.get(jogo, f"{jogo}_*.json")
-    caminho_padrao = os.path.join(PASTA_DADOS, padrao)
-    ficheiros = glob.glob(caminho_padrao)
-    sorteios_por_ano = {}
-
-    for ficheiro in ficheiros:
-        nome = os.path.basename(ficheiro)
-        # Extrair ano do nome (ex: totoloto_sc_2026.json -> 2026)
-        match = re.search(r'_(\d{4})\.json$', nome)
-        if not match:
-            continue
-        ano = match.group(1)
-
-        with open(ficheiro, "r", encoding="utf-8") as f:
-            dados = json.load(f)
-
-        # Alguns ficheiros têm estrutura {ano: [...]}, outros são lista direta
-        if isinstance(dados, dict) and ano in dados:
-            lista = dados[ano]
-        elif isinstance(dados, list):
-            lista = dados
-        else:
-            continue
-
-        # Criar índice para pesquisa rápida (data + concurso)
-        indice = {}
-        for sorteio in lista:
-            chave = f"{sorteio.get('data')}|{sorteio.get('concurso')}"
-            indice[chave] = sorteio
-        sorteios_por_ano[ano] = {
-            "lista": lista,
-            "indice": indice
-        }
-    return sorteios_por_ano
-
-def normalizar_data_para_busca(data_aposta: str) -> str:
-    """Converte data ISO (YYYY-MM-DD) para formato DD/MM/YYYY."""
-    try:
-        ano, mes, dia = data_aposta.split('-')
-        return f"{dia}/{mes}/{ano}"
-    except:
-        return data_aposta
-
-def extrair_numeros_e_especial(aposta: Dict, jogo: str) -> Tuple[List[str], Optional[str]]:
-    """
-    Extrai números e campo especial (estrelas, dream, etc.) conforme o jogo.
-    Retorna (lista_numeros, especial)
-    """
-    numeros = [str(n).zfill(2) for n in aposta.get("numeros", [])]
-    if jogo == "euromilhoes":
-        especial = aposta.get("estrelas", [])
-        # Para euromilhões, o especial são as estrelas (lista)
-        return numeros, especial
-    elif jogo == "eurodreams":
-        # Dream number é um único número
-        especial = str(aposta.get("dream_number", "")).zfill(2)
-        return numeros, especial
-    elif jogo == "totoloto":
-        especial = str(aposta.get("numero_da_sorte", "")).zfill(2)
-        return numeros, especial
-    elif jogo == "milhao":
-        # Milhão tem apenas código, não números
-        return [], aposta.get("codigo", "")
-    else:
-        return numeros, None
-
-def extrair_numeros_e_especial_sorteio(sorteio: Dict, jogo: str) -> Tuple[List[str], Any]:
-    """Extrai números e especial do sorteio."""
-    numeros = [str(n).zfill(2) for n in sorteio.get("numeros", [])]
-    if jogo == "euromilhoes":
-        especial = [str(e).zfill(2) for e in sorteio.get("estrelas", [])]
-        return numeros, especial
-    elif jogo == "eurodreams":
-        especial = str(sorteio.get("dream_number", "")).zfill(2)
-        return numeros, especial
-    elif jogo == "totoloto":
-        especial = str(sorteio.get("especial", "")).zfill(2)
-        return numeros, especial
-    elif jogo == "milhao":
-        # Milhão tem código
-        return [], sorteio.get("codigo", "")
-    else:
-        return numeros, None
-
-def calcular_acertos(aposta_numeros: List[str], aposta_especial: Any,
-                     sorteio_numeros: List[str], sorteio_especial: Any,
-                     jogo: str) -> Dict:
-    """
-    Calcula acertos para um determinado jogo.
-    Retorna dicionário com contagens.
-    """
-    acertos_numeros = len(set(aposta_numeros) & set(sorteio_numeros))
-
-    if jogo == "euromilhoes":
-        # aposta_especial e sorteio_especial são listas de estrelas
-        acertos_especial = len(set(aposta_especial) & set(sorteio_especial))
-        return {"numeros": acertos_numeros, "especial": acertos_especial}
-    elif jogo in ["eurodreams", "totoloto"]:
-        # especial é um único número
-        acertou_especial = (aposta_especial == sorteio_especial)
-        return {"numeros": acertos_numeros, "especial": 1 if acertou_especial else 0}
-    elif jogo == "milhao":
-        # Milhão: comparação de código
-        acertou = (aposta_especial == sorteio_especial)
-        return {"numeros": 0, "especial": 1 if acertou else 0}
-    else:
-        return {"numeros": acertos_numeros, "especial": 0}
-
-def determinar_se_ganhou(acertos: Dict, jogo: str) -> bool:
-    """Define se a aposta ganhou algum prémio (critério específico de cada jogo)."""
-    if jogo == "euromilhoes":
-        # Ganha com 2+ números ou 1+ estrelas (simplificado – na realidade há tabela)
-        return acertos["numeros"] >= 2 or acertos["especial"] >= 1
-    elif jogo == "eurodreams":
-        # Ganha com 2+ números ou acertou dream
-        return acertos["numeros"] >= 2 or acertos["especial"] == 1
-    elif jogo == "totoloto":
-        # Ganha com 2+ números ou acertou especial
-        return acertos["numeros"] >= 2 or acertos["especial"] == 1
-    elif jogo == "milhao":
-        # Ganha se acertou o código
-        return acertos["especial"] == 1
-    else:
-        return False
-
-def extrair_valor_premio(sorteio: Dict, acertos: Dict, jogo: str) -> float:
-    """
-    Determina o valor do prémio com base nos acertos e na tabela de prémios do sorteio.
-    Se não houver informação detalhada, retorna 0.
-    """
-    premios = sorteio.get("premios", [])
-    if not premios:
-        return 0.0
-
-    # Lógica simplificada: procurar prémio correspondente ao número de acertos
-    # Pode ser melhorada conforme a estrutura real dos prémios
-    if jogo == "euromilhoes":
-        chave = f"{acertos['numeros']}+{acertos['especial']}"
-    elif jogo in ["eurodreams", "totoloto"]:
-        if acertos["especial"] and acertos["numeros"] == 0:
-            chave = "Nº da Sorte"
-        else:
-            chave = f"{acertos['numeros']}+{acertos['especial']}"
-    elif jogo == "milhao":
-        chave = "1º Prémio"  # apenas um prémio
-    else:
-        return 0.0
-
-    for premio in premios:
-        if chave in premio.get("premio", ""):
-            valor_str = premio.get("valor", "0")
-            # Converte string para float
-            return extrair_valor_monetario(valor_str)
-    return 0.0
-
+# ===== FUNÇÕES AUXILIARES =====
 def extrair_valor_monetario(valor_str: str) -> float:
-    """Converte string como '€ 1,00' ou '€ 10,50' para float."""
+    """Converte string como '€ 1,80' ou '€ 10,50' para float."""
     if not valor_str:
         return 0.0
-    valor_limpo = valor_str.replace('€ ', '').replace('.', '').replace(',', '.')
+    # Remove '€ ' e espaços, troca vírgula por ponto
+    valor_limpo = valor_str.replace('€', '').replace(' ', '').replace(',', '.')
+    # Caso especial "Reembolso" – considerar 1€
     if 'Reembolso' in valor_limpo:
         return 1.0
     try:
@@ -212,16 +27,33 @@ def extrair_valor_monetario(valor_str: str) -> float:
     except ValueError:
         return 0.0
 
-def processar_jogo(jogo: str) -> Dict:
-    """
-    Processa um jogo: carrega apostas e sorteios, cruza e retorna estatísticas.
-    """
-    apostas = carregar_apostas(jogo)
-    if not apostas:
-        return {}
+def carregar_resultados_jogo(jogo: str) -> List[Dict]:
+    """Carrega o ficheiro de verificacoes de um jogo específico."""
+    caminho = os.path.join(PASTA_RESULTADOS, f"{jogo}_verificacoes.json")
+    if not os.path.exists(caminho):
+        return []
+    with open(caminho, "r", encoding="utf-8") as f:
+        return json.load(f)
 
-    sorteios_por_ano = carregar_sorteios(jogo)
-    if not sorteios_por_ano:
+def calcular_mediana(valores: List[float]) -> float:
+    """Calcula a mediana de uma lista de números."""
+    if not valores:
+        return 0.0
+    sorted_vals = sorted(valores)
+    n = len(sorted_vals)
+    mid = n // 2
+    if n % 2 == 0:
+        return (sorted_vals[mid-1] + sorted_vals[mid]) / 2
+    else:
+        return sorted_vals[mid]
+
+# ===== PROCESSAMENTO POR JOGO =====
+def processar_jogo(jogo: str) -> Dict[str, Any]:
+    """
+    Lê o histórico de verificações de um jogo e retorna estatísticas mensais e anuais.
+    """
+    resultados = carregar_resultados_jogo(jogo)
+    if not resultados:
         return {}
 
     # Dicionário para acumular estatísticas mensais
@@ -231,74 +63,152 @@ def processar_jogo(jogo: str) -> Dict:
         "total_recebido": 0.0,
         "ganhadoras": 0,
         "acertos_numeros": 0,
-        "acertos_especial": 0
+        "acertos_especial": 0,
+        "valores_premios": [],      # lista de valores para cálculo de médias/medianas
+        "maior_premio": 0.0,
+        "data_maior_premio": None,
+        # Para controlo interno
+        "_boletins_processados": set()  # evita contar o gasto múltiplas vezes por aposta
     })
 
-    custo_base = CUSTO_POR_JOGO.get(jogo, 1.0)
-
-    for aposta in apostas:
-        data_sorteio = aposta.get("data_sorteio")
-        concurso_aposta = aposta.get("concurso")
-        if not data_sorteio:
+    for res in resultados:
+        # Obter data no formato ISO (YYYY-MM-DD)
+        data = res.get("boletim", {}).get("data_sorteio")
+        if not data:
             continue
+        ano_mes = data[:7]  # YYYY-MM
+        mes = stats_mensais[ano_mes]
 
-        # Extrair ano e mês
-        try:
-            ano_mes = data_sorteio[:7]  # YYYY-MM
-            ano = data_sorteio[:4]
-        except:
+        # Cada 'res' corresponde a UMA aposta individual (índice)
+        mes["total_apostas"] += 1
+
+        # --- Gasto (rateado do boletim) ---
+        # O boletim pode ter várias apostas; o custo por aposta = valor_total / n_apostas
+        # Para não recalcular por aposta, podemos usar um identificador único do boletim
+        boletim_id = res.get("boletim", {}).get("referencia")
+        if boletim_id and boletim_id not in mes["_boletins_processados"]:
+            # Ainda não contabilizámos o custo deste boletim
+            # Precisamos do valor_total. Vamos buscá-lo aos detalhes? 
+            # Nos resultados de verificação, o campo 'valor_total' está ao nível do boletim?
+            # Na estrutura atual, 'detalhes' (que é o resultado original) tem o boletim com valor_total.
+            # Mas temos de aceder a res diretamente? 
+            # NOTA: o ficheiro de verificações contém o resultado tal como saiu do verificador,
+            # que inclui o objeto boletim com 'valor_total'. Vamos assumir que está em res['boletim'].
+            valor_total_boletim = float(res.get("boletim", {}).get("valor_total", 0))
+            # Número de apostas no boletim: podemos obter do campo 'apostas' nos detalhes,
+            # mas não está diretamente em res. Em vez disso, podemos contar as entradas com a mesma referência.
+            # Como já estamos a iterar por aposta, podemos usar um dicionário auxiliar.
+            # Simplificação: assumimos que o verificador já guardou o valor_total no boletim
+            # e que cada aposta tem o mesmo custo. Vamos calcular o número de apostas deste boletim
+            # contando quantas entradas no ficheiro têm a mesma referência.
+            # Para não complicar, faremos um pré-processamento: agrupar por referência.
+            # Mas para já, vou deixar um TODO e usar um valor fixo? Não, vamos fazer bem.
+            pass
+
+        # Solução mais robusta: pré-agrupar por referência antes de acumular.
+        # Vou refazer a lógica: primeiro, agrupar todas as apostas por referência de boletim.
+        # Mas para manter o código simples e eficaz, vou optar por uma abordagem
+        # que usa um dicionário auxiliar por mês para controlar os boletins já processados.
+
+    # Como a implementação acima está incompleta, vou reescrever de forma mais clara:
+
+def processar_jogo(jogo: str) -> Dict[str, Any]:
+    resultados = carregar_resultados_jogo(jogo)
+    if not resultados:
+        return {}
+
+    # Agrupar apostas por referência de boletim para ratear corretamente o gasto
+    boletins_por_ref = defaultdict(list)
+    for res in resultados:
+        ref = res.get("boletim", {}).get("referencia")
+        if ref:
+            boletins_por_ref[ref].append(res)
+
+    stats_mensais = defaultdict(lambda: {
+        "total_apostas": 0,
+        "total_gasto": 0.0,
+        "total_recebido": 0.0,
+        "ganhadoras": 0,
+        "acertos_numeros": 0,
+        "acertos_especial": 0,
+        "valores_premios": [],
+        "maior_premio": 0.0,
+        "data_maior_premio": None
+    })
+
+    for ref, apostas in boletins_por_ref.items():
+        # Todas as apostas pertencem ao mesmo boletim
+        # Obter valor_total da primeira (todas têm o mesmo)
+        valor_total_boletim = 0.0
+        data_exemplo = None
+        if apostas:
+            primeiro = apostas[0]
+            data_exemplo = primeiro.get("boletim", {}).get("data_sorteio")
+            valor_total_boletim = float(primeiro.get("boletim", {}).get("valor_total", 0))
+        n_apostas = len(apostas)
+        if n_apostas == 0:
             continue
+        custo_por_aposta = valor_total_boletim / n_apostas if n_apostas > 0 else 0
 
-        # Obter dados do ano
-        dados_ano = sorteios_por_ano.get(ano)
-        if not dados_ano:
-            continue
-
-        # Normalizar data para busca
-        data_busca = normalizar_data_para_busca(data_sorteio)
-
-        # Procurar sorteio
-        sorteio = None
-        if concurso_aposta:
-            chave = f"{data_busca}|{concurso_aposta}"
-            sorteio = dados_ano["indice"].get(chave)
-        if not sorteio:
-            # Fallback: apenas pela data
-            for s in dados_ano["lista"]:
-                if s.get("data") == data_busca:
-                    sorteio = s
-                    break
-        if not sorteio:
-            continue
-
-        # Para cada aposta individual (índice)
-        for aposta_ind in aposta.get("apostas", []):
-            numeros_aposta, especial_aposta = extrair_numeros_e_especial(aposta_ind, jogo)
-            numeros_sorteio, especial_sorteio = extrair_numeros_e_especial_sorteio(sorteio, jogo)
-
-            acertos = calcular_acertos(numeros_aposta, especial_aposta,
-                                       numeros_sorteio, especial_sorteio, jogo)
-            ganhou = determinar_se_ganhou(acertos, jogo)
-            valor_premio = extrair_valor_premio(sorteio, acertos, jogo) if ganhou else 0.0
-
-            # Acumular estatísticas mensais
+        for res in apostas:
+            data = res.get("boletim", {}).get("data_sorteio")
+            if not data:
+                continue
+            ano_mes = data[:7]
             mes = stats_mensais[ano_mes]
-            mes["total_apostas"] += 1
-            mes["total_gasto"] += custo_base
-            if ganhou:
-                mes["ganhadoras"] += 1
-                mes["total_recebido"] += valor_premio
-            mes["acertos_numeros"] += acertos.get("numeros", 0)
-            mes["acertos_especial"] += acertos.get("especial", 0)
 
-    # Calcular derivados
+            mes["total_apostas"] += 1
+            mes["total_gasto"] += custo_por_aposta
+
+            # Acertos
+            acertos = res.get("acertos", {})
+            mes["acertos_numeros"] += acertos.get("numeros", 0)
+            # 'especial' pode ser número de estrelas, dream, etc.
+            mes["acertos_especial"] += acertos.get("estrelas", 0) or acertos.get("dream_number", 0) or acertos.get("numero_da_sorte", 0)
+
+            # Prémios
+            premios = res.get("premios", [])
+            total_recebido_aposta = 0.0
+            for p in premios:
+                valor = extrair_valor_monetario(p.get("valor", "0"))
+                total_recebido_aposta += valor
+                mes["valores_premios"].append(valor)
+
+            if total_recebido_aposta > 0:
+                mes["ganhadoras"] += 1
+                mes["total_recebido"] += total_recebido_aposta
+
+                if total_recebido_aposta > mes["maior_premio"]:
+                    mes["maior_premio"] = total_recebido_aposta
+                    mes["data_maior_premio"] = data
+
+    # Calcular derivados mensais
     for mes, dados in stats_mensais.items():
-        dados["saldo"] = dados["total_recebido"] - dados["total_gasto"]
-        dados["percentagem_acertos"] = (dados["ganhadoras"] / dados["total_apostas"] * 100) if dados["total_apostas"] > 0 else 0.0
-        # Arredondamentos
-        for k in ["total_gasto", "total_recebido", "saldo"]:
+        dados["saldo"] = round(dados["total_recebido"] - dados["total_gasto"], 2)
+        dados["percentagem_ganhadoras"] = round(
+            (dados["ganhadoras"] / dados["total_apostas"] * 100) if dados["total_apostas"] > 0 else 0, 2
+        )
+        # Média dos prémios (apenas entre apostas que ganharam)
+        if dados["ganhadoras"] > 0:
+            dados["media_premios"] = round(dados["total_recebido"] / dados["ganhadoras"], 2)
+        else:
+            dados["media_premios"] = 0.0
+        # Mediana dos prémios (considerando todas as apostas? ou só ganhadoras?)
+        # Vamos considerar apenas ganhadoras
+        dados["mediana_premios"] = round(calcular_mediana(dados["valores_premios"]), 2)
+        # Média de acertos
+        if dados["total_apostas"] > 0:
+            dados["media_acertos_numeros"] = round(dados["acertos_numeros"] / dados["total_apostas"], 2)
+            dados["media_acertos_especial"] = round(dados["acertos_especial"] / dados["total_apostas"], 2)
+        else:
+            dados["media_acertos_numeros"] = 0.0
+            dados["media_acertos_especial"] = 0.0
+        # Arredondar valores monetários
+        for k in ["total_gasto", "total_recebido", "maior_premio"]:
             dados[k] = round(dados[k], 2)
-        dados["percentagem_acertos"] = round(dados["percentagem_acertos"], 2)
+        # Remover campo auxiliar
+        if "valores_premios" in dados:
+            del dados["valores_premios"]
 
     return dict(stats_mensais)
 
@@ -310,7 +220,10 @@ def agregar_anual(mensais: Dict) -> Dict:
         "total_recebido": 0.0,
         "ganhadoras": 0,
         "acertos_numeros": 0,
-        "acertos_especial": 0
+        "acertos_especial": 0,
+        "valores_premios": [],
+        "maior_premio": 0.0,
+        "data_maior_premio": None
     })
 
     for mes, dados in mensais.items():
@@ -322,26 +235,103 @@ def agregar_anual(mensais: Dict) -> Dict:
         acc["ganhadoras"] += dados["ganhadoras"]
         acc["acertos_numeros"] += dados["acertos_numeros"]
         acc["acertos_especial"] += dados["acertos_especial"]
+        # Para a mediana, precisamos de todos os valores de prémio do ano
+        # Como não os guardámos, podemos recalcular a mediana a partir da média? Não é possível.
+        # Vamos optar por não calcular mediana anual.
+        if dados["maior_premio"] > acc["maior_premio"]:
+            acc["maior_premio"] = dados["maior_premio"]
+            acc["data_maior_premio"] = dados["data_maior_premio"]
 
     # Calcular derivados anuais
     for ano, dados in anuais.items():
-        dados["saldo"] = dados["total_recebido"] - dados["total_gasto"]
-        dados["percentagem_acertos"] = (dados["ganhadoras"] / dados["total_apostas"] * 100) if dados["total_apostas"] > 0 else 0.0
-        for k in ["total_gasto", "total_recebido", "saldo"]:
+        dados["saldo"] = round(dados["total_recebido"] - dados["total_gasto"], 2)
+        dados["percentagem_ganhadoras"] = round(
+            (dados["ganhadoras"] / dados["total_apostas"] * 100) if dados["total_apostas"] > 0 else 0, 2
+        )
+        if dados["ganhadoras"] > 0:
+            dados["media_premios"] = round(dados["total_recebido"] / dados["ganhadoras"], 2)
+        else:
+            dados["media_premios"] = 0.0
+        if dados["total_apostas"] > 0:
+            dados["media_acertos_numeros"] = round(dados["acertos_numeros"] / dados["total_apostas"], 2)
+            dados["media_acertos_especial"] = round(dados["acertos_especial"] / dados["total_apostas"], 2)
+        else:
+            dados["media_acertos_numeros"] = 0.0
+            dados["media_acertos_especial"] = 0.0
+        # Arredondar
+        for k in ["total_gasto", "total_recebido", "maior_premio"]:
             dados[k] = round(dados[k], 2)
-        dados["percentagem_acertos"] = round(dados["percentagem_acertos"], 2)
 
     return dict(anuais)
 
+def calcular_globais(estatisticas_por_jogo: Dict) -> Dict:
+    """Calcula estatísticas agregadas de todos os jogos."""
+    global_mensal = defaultdict(lambda: {
+        "total_apostas": 0,
+        "total_gasto": 0.0,
+        "total_recebido": 0.0,
+        "ganhadoras": 0,
+        "maior_premio": 0.0,
+        "data_maior_premio": None
+    })
+
+    for jogo, dados_jogo in estatisticas_por_jogo.items():
+        for mes, dados in dados_jogo.items():
+            g = global_mensal[mes]
+            g["total_apostas"] += dados["total_apostas"]
+            g["total_gasto"] += dados["total_gasto"]
+            g["total_recebido"] += dados["total_recebido"]
+            g["ganhadoras"] += dados["ganhadoras"]
+            if dados["maior_premio"] > g["maior_premio"]:
+                g["maior_premio"] = dados["maior_premio"]
+                g["data_maior_premio"] = dados["data_maior_premio"]
+
+    global_anual = defaultdict(lambda: {
+        "total_apostas": 0,
+        "total_gasto": 0.0,
+        "total_recebido": 0.0,
+        "ganhadoras": 0,
+        "maior_premio": 0.0,
+        "data_maior_premio": None
+    })
+
+    for mes, dados in global_mensal.items():
+        ano = mes[:4]
+        g = global_anual[ano]
+        g["total_apostas"] += dados["total_apostas"]
+        g["total_gasto"] += dados["total_gasto"]
+        g["total_recebido"] += dados["total_recebido"]
+        g["ganhadoras"] += dados["ganhadoras"]
+        if dados["maior_premio"] > g["maior_premio"]:
+            g["maior_premio"] = dados["maior_premio"]
+            g["data_maior_premio"] = dados["data_maior_premio"]
+
+    # Calcular derivados
+    for dados in list(global_mensal.values()) + list(global_anual.values()):
+        dados["saldo"] = round(dados["total_recebido"] - dados["total_gasto"], 2)
+        dados["percentagem_ganhadoras"] = round(
+            (dados["ganhadoras"] / dados["total_apostas"] * 100) if dados["total_apostas"] > 0 else 0, 2
+        )
+        dados["total_gasto"] = round(dados["total_gasto"], 2)
+        dados["total_recebido"] = round(dados["total_recebido"], 2)
+        dados["maior_premio"] = round(dados["maior_premio"], 2)
+
+    return {
+        "mensal": dict(global_mensal),
+        "anual": dict(global_anual)
+    }
+
+# ===== MAIN =====
 def main():
-    print("\n📊 GERADOR DE ESTATÍSTICAS COMPLETAS (DIRETO DE APOSTAS E SORTEIOS)")
+    print("\n📊 GERADOR DE ESTATÍSTICAS COMPLETAS (BASEADO EM RESULTADOS VERIFICADOS)")
     print("="*70)
 
-    jogos = ["totoloto", "euromilhoes", "eurodreams", "milhao"]  # lista a ajustar
+    jogos = ["totoloto", "euromilhoes", "eurodreams", "milhao"]
 
     estatisticas = {
         "mensal": {},
         "anual": {},
+        "global": {},
         "ultima_atualizacao": datetime.now().isoformat()
     }
 
@@ -354,6 +344,11 @@ def main():
             print(f"   ✅ Dados processados: {len(mensais)} meses")
         else:
             print(f"   ⚠️ Sem dados para {jogo}")
+
+    # Calcular totais globais
+    if estatisticas["mensal"]:
+        estatisticas["global"] = calcular_globais(estatisticas["mensal"])
+        print("\n🌍 Estatísticas globais calculadas.")
 
     # Guardar resultados
     os.makedirs(PASTA_RESULTADOS, exist_ok=True)
