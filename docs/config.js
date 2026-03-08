@@ -16,7 +16,7 @@ const CONFIG = {
   // Ficheiros
   FICHEIROS: {
     NOTIFICACOES: "resultados/notificacoes_ativas.json",
-    HISTORICO: "resultados/notificacoes_historico.json"
+    HISTORICO: "resultados/notificacoes_historico.json",
     ESTATISTICAS: "resultados/estatisticas_completas.json"   // <-- adiciona esta linha
   },
   
