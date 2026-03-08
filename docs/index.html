@@ -444,6 +444,76 @@
       font-size: 13px;
       color: #4caf50;
     }
+
+    /* ========== ESTATÍSTICAS ========== */
+.estatisticas-header {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.periodo-tabs, .jogo-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+
+.periodo-btn, .jogo-btn {
+    background: #222;
+    border: 1px solid #444;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.periodo-btn.active, .jogo-btn.active {
+    background: #2a5a2a;
+    border-color: #4caf4c;
+}
+
+.estatisticas-tabela {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.estatisticas-tabela th {
+    background: #1a1a1a;
+    color: #888;
+    font-weight: normal;
+    padding: 12px 8px;
+    text-align: center;
+    border-bottom: 2px solid #333;
+}
+
+.estatisticas-tabela td {
+    padding: 10px 8px;
+    text-align: center;
+    border-bottom: 1px solid #222;
+}
+
+.estatisticas-tabela td.positivo {
+    color: #4caf4c;
+}
+
+.estatisticas-tabela td.negativo {
+    color: #ff4444;
+}
+
+.estatisticas-tabela tbody tr:hover {
+    background: #1a1a1a;
+}
+
+.no-data {
+    text-align: center;
+    padding: 40px;
+    opacity: 0.6;
+}
     
     /* ========== BLOQUEIO DE SCROLL ========== */
     body.modal-open {
