@@ -1,31 +1,61 @@
 [
-  {
-    "tipo": "Euromilhões",
-    "hash_imagem": "ebb5f93ae86259a71f53c0d47b55f234",
-    "tipo_ficheiro": "euromilhoes",
-    "referencia_unica": "726-07294854-M1L",
-    "data_sorteio": "2025-08-15",
-    "concurso": "065/2025",
-    "data_aposta": "",
-    "valor_total": 0,
-    "imagem_origem": "foto_1772919920564_hc6zk5.png",
-    "apostas": [
-      {
-        "numeros": [
-          "07",
-          "17",
-          "18",
-          "23",
-          "25"
+    {
+        "tipo": "Euromilhões",
+        "hash_imagem": "ebb5f93ae86259a71f53c0d47b55f234",
+        "tipo_ficheiro": "euromilhoes",
+        "referencia_unica": "726-07294854-M1L",
+        "data_sorteio": "2025-08-15",
+        "concurso": "065/2025",
+        "data_aposta": "",
+        "valor_total": 0,
+        "imagem_origem": "foto_1772919920564_hc6zk5.png",
+        "apostas": [
+            {
+                "numeros": [
+                    "07",
+                    "17",
+                    "18",
+                    "23",
+                    "25"
+                ],
+                "estrelas": [
+                    "07",
+                    "10"
+                ]
+            }
         ],
-        "estrelas": [
-          "07",
-          "10"
-        ]
-      }
-    ],
-    "confirmado": true,
-    "data_validacao": "2026-03-07T21:50:21.421Z",
-    "validado_por": "humano"
-  }
+        "confirmado": true,
+        "data_validacao": "2026-03-07T21:50:21.421Z",
+        "validado_por": "humano"
+    },
+    {
+        "tipo": "Euromilhões",
+        "data_sorteio": "2026-03-03",
+        "data_aposta": "2026-03-03",
+        "data_emissao": "2026-03-03 18:41:13",
+        "referencia_unica": "562-01647066-M1L",
+        "concurso": "018/2026",
+        "valor_total": 2.2,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "numeros": [
+                    "06",
+                    "23",
+                    "33",
+                    "36",
+                    "48"
+                ],
+                "estrelas": [
+                    "01",
+                    "04"
+                ]
+            }
+        ],
+        "confirmado": false,
+        "imagem_origem": "foto_1772974125427_cfcdjd.png",
+        "hash_imagem": "7306ee5bf6ef9b174d5b19ab6060a6d7",
+        "data_processamento": "2026-03-08 12:49:58"
+    }
 ]
