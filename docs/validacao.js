@@ -626,14 +626,14 @@ window.confirmarValidacao = async function(imagem) {
     const sucesso = await guardarValidacao(imagem, jogosAtualizados);
     
     if (sucesso) {
-      alert('✅ Boletim validado com sucesso!');
+      ToastManager.mostrar("✅ Boletim validado com sucesso!", "sucesso");
       window.voltarListaValidacao();
     } else {
-      alert('❌ Erro ao guardar validação. Tenta novamente.');
+      ToastManager.mostrar("❌ Erro ao guardar validação. Tenta novamente.", "erro");
     }
   } catch (err) {
     console.error('Erro na validação:', err);
-    alert('❌ Erro inesperado. Tenta novamente.');
+    ToastManager.mostrar("❌ Erro inesperado. Tenta novamente.", "erro");
   } finally {
     validando = false;
     if (btn) {
