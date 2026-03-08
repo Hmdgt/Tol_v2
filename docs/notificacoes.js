@@ -99,6 +99,10 @@ function gerarConteudoDetalhes(notificacao) {
       if (aposta.numero_da_sorte) {
         html += `<p><strong>Nº da Sorte:</strong> ${escapeHTML(aposta.numero_da_sorte)}</p>`;
       }
+      // 🆕 Adicionar Dream Number para EuroDreams
+      if (aposta.dream_number) {
+          html += `<p><strong>Dream Number:</strong> ${escapeHTML(aposta.dream_number)}</p>`;
+      }
     }
     
     html += `</div>`;
