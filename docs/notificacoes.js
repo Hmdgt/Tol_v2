@@ -159,41 +159,47 @@ function gerarConteudoDetalhes(notificacao) {
   }
   
   // Prémio (se ganhou)
-  if (detalhes.ganhou) {
-    html += `
-      <div class="detalhes-secao premio">
-        <h5>🏆 GANHOU!</h5>
-    `;
-    
-    if (detalhes.premio) {
-      const premio = detalhes.premio;
+if (detalhes.ganhou) {
+  html += `<div class="detalhes-secao premio"><h5>🏆 GANHOU!</h5>`;
+
+  if (detalhes.premios && detalhes.premios.length > 0) {
+    detalhes.premios.forEach(p => {
+      const nomePremio = p.premio || p.categoria || 'Prémio';
       html += `
-        <p><strong>${escapeHTML(premio.categoria || premio.premio || 'Prémio')}</strong></p>
-        <p>${escapeHTML(premio.descricao || '')}</p>
+        <p><strong>${escapeHTML(nomePremio)}</strong></p>
+        <p>${escapeHTML(p.descricao || '')}</p>
       `;
-      
-      if (premio.valor) {
-        html += `<p class="valor-premio">${escapeHTML(premio.valor)}</p>`;
+      if (p.valor) {
+        html += `<p class="valor-premio">${escapeHTML(p.valor)}</p>`;
       }
-      
-      if (premio.vencedores) {
-        html += `<p><small>${escapeHTML(premio.vencedores)} vencedores</small></p>`;
+      if (p.vencedores) {
+        html += `<p><small>${escapeHTML(p.vencedores)} vencedores</small></p>`;
       }
-    }
-    
-    if (detalhes.valor_total) {
-      html += `<p class="valor-total">Total: ${escapeHTML(detalhes.valor_total)}</p>`;
-    }
-    
-    html += `</div>`;
+    });
   } else if (detalhes.premio) {
+    // fallback (improvável, mas mantém compatibilidade)
+    const p = detalhes.premio;
     html += `
-      <div class="detalhes-secao sem-premio">
-        <h5>😕 Sem prémio</h5>
-        <p>${escapeHTML(detalhes.premio.descricao || 'Não ganhou desta vez')}</p>
-      </div>
+      <p><strong>${escapeHTML(p.categoria || p.premio || 'Prémio')}</strong></p>
+      <p>${escapeHTML(p.descricao || '')}</p>
+      ${p.valor ? `<p class="valor-premio">${escapeHTML(p.valor)}</p>` : ''}
+      ${p.vencedores ? `<p><small>${escapeHTML(p.vencedores)} vencedores</small></p>` : ''}
     `;
   }
+
+  if (detalhes.valor_total) {
+    html += `<p class="valor-total">Total: ${escapeHTML(detalhes.valor_total)}</p>`;
+  }
+  html += `</div>`;
+} else if (detalhes.premio) {
+  // improvável
+  html += `
+    <div class="detalhes-secao sem-premio">
+      <h5>😕 Sem prémio</h5>
+      <p>${escapeHTML(detalhes.premio.descricao || 'Não ganhou desta vez')}</p>
+    </div>
+  `;
+}
   
   html += `</div>`;
   
