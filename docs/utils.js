@@ -87,3 +87,75 @@ const UIManager = {
     document.body.style.height = '';
   }
 };
+  // ========== SISTEMA DE TOASTS ==========
+const ToastManager = {
+  mostrar(mensagem, tipo = 'sucesso', duracao = 3000) {
+    // Remove toast anterior se existir
+    const anterior = document.querySelector('.custom-toast');
+    if (anterior) anterior.remove();
+
+    // Definir cor e ícone conforme o tipo
+    let bgColor, icone;
+    switch (tipo) {
+      case 'sucesso':
+        bgColor = '#2a5a2a';
+        icone = 'checkmark-circle-outline';
+        break;
+      case 'erro':
+        bgColor = '#8b2c2c';
+        icone = 'alert-circle-outline';
+        break;
+      case 'info':
+        bgColor = '#2a4a6a';
+        icone = 'information-circle-outline';
+        break;
+      default:
+        bgColor = '#333';
+        icone = 'notifications-outline';
+    }
+
+    // Criar elemento toast
+    const toast = document.createElement('div');
+    toast.className = 'custom-toast';
+    toast.innerHTML = `
+      <ion-icon name="${icone}" style="font-size: 24px; margin-right: 8px;"></ion-icon>
+      <span style="flex: 1;">${mensagem}</span>
+    `;
+    toast.style.cssText = `
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: ${bgColor};
+      color: white;
+      padding: 12px 20px;
+      border-radius: 50px;
+      font-size: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 250px;
+      max-width: 80%;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      border: 1px solid #555;
+    `;
+
+    document.body.appendChild(toast);
+
+    // Forçar reflow para ativar transição
+    toast.offsetHeight;
+    toast.style.opacity = '1';
+
+    // Remover após duração
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      setTimeout(() => toast.remove(), 300);
+    }, duracao);
+  }
+};
+
+// Exportar para uso global (opcional, mas útil)
+window.ToastManager = ToastManager;
