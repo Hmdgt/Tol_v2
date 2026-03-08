@@ -2,11 +2,18 @@
 // 📊 ESTATÍSTICAS
 // ===============================
 
-const ESTATISTICAS_API = `https://api.github.com/repos/${CONFIG.REPO}/contents/resultados/estatisticas_completas.json`;
+// Usar configuração global (assumindo que CONFIG.FICHEIROS.ESTATISTICAS existe)
+const ESTATISTICAS_API = `https://api.github.com/repos/${CONFIG.REPO}/contents/${CONFIG.FICHEIROS.ESTATISTICAS}`;
 
 let estatisticasData = null;
-let abaAtiva = 'global'; // 'global' ou nome do jogo
-let periodoAtivo = 'mensal'; // 'mensal' ou 'anual'
+let abaAtiva = 'global';        // 'global' ou nome do jogo
+let periodoAtivo = 'mensal';    // 'mensal' ou 'anual'
+
+// ---------- FORMATAÇÃO DE MOEDA (vírgula) ----------
+function formatarMoeda(valor) {
+    if (valor === undefined || valor === null) return '-';
+    return valor.toFixed(2).replace('.', ',');
+}
 
 // ---------- CARREGAR ESTATÍSTICAS ----------
 async function carregarEstatisticas() {
@@ -62,14 +69,14 @@ async function renderizarEstatisticas() {
         milhao: 'M1lhão'
     };
     for (const jogo of jogos) {
-        if (estatisticasData.mensal[jogo] || estatisticasData.anual[jogo]) {
+        if (estatisticasData.mensal?.[jogo] || estatisticasData.anual?.[jogo]) {
             html += `<button class="jogo-btn ${abaAtiva === jogo ? 'active' : ''}" data-jogo="${jogo}">${nomesJogo[jogo]}</button>`;
         }
     }
 
-    html += `</div></div><div class="estatisticas-conteudo">`;
+    html += `</div></div><div class="estatisticas-conteudo" style="overflow-x: auto;">`;
 
-    // Conteúdo conforme aba e periodo
+    // Conteúdo conforme aba e período
     if (abaAtiva === 'global') {
         html += gerarTabelaGlobal(periodoAtivo, estatisticasData.global);
     } else {
@@ -120,6 +127,7 @@ function gerarTabelaGlobal(periodo, dadosGlobais) {
         <th>Ganhadoras</th>
         <th>% Ganho</th>
         <th>Maior prémio (€)</th>
+        <th>Data</th>
     </tr></thead><tbody>`;
 
     for (const periodoKey of periodos) {
@@ -127,12 +135,13 @@ function gerarTabelaGlobal(periodo, dadosGlobais) {
         html += `<tr>
             <td><strong>${periodoKey}</strong></td>
             <td>${dados.total_apostas}</td>
-            <td>${dados.total_gasto.toFixed(2)}</td>
-            <td>${dados.total_recebido.toFixed(2)}</td>
-            <td class="${dados.saldo >= 0 ? 'positivo' : 'negativo'}">${dados.saldo.toFixed(2)}</td>
+            <td>${formatarMoeda(dados.total_gasto)}</td>
+            <td>${formatarMoeda(dados.total_recebido)}</td>
+            <td class="${dados.saldo >= 0 ? 'positivo' : 'negativo'}">${formatarMoeda(dados.saldo)}</td>
             <td>${dados.ganhadoras}</td>
-            <td>${dados.percentagem_ganhadoras}%</td>
-            <td>${dados.maior_premio.toFixed(2)}</td>
+            <td>${dados.percentagem_ganhadoras?.toFixed(1) ?? '0'}%</td>
+            <td>${formatarMoeda(dados.maior_premio)}</td>
+            <td>${dados.data_maior_premio ? dados.data_maior_premio : '-'}</td>
         </tr>`;
     }
 
@@ -173,16 +182,16 @@ function gerarTabelaJogo(periodo, dadosJogo, jogo) {
         html += `<tr>
             <td><strong>${periodoKey}</strong></td>
             <td>${dados.total_apostas}</td>
-            <td>${dados.total_gasto.toFixed(2)}</td>
-            <td>${dados.total_recebido.toFixed(2)}</td>
-            <td class="${dados.saldo >= 0 ? 'positivo' : 'negativo'}">${dados.saldo.toFixed(2)}</td>
+            <td>${formatarMoeda(dados.total_gasto)}</td>
+            <td>${formatarMoeda(dados.total_recebido)}</td>
+            <td class="${dados.saldo >= 0 ? 'positivo' : 'negativo'}">${formatarMoeda(dados.saldo)}</td>
             <td>${dados.ganhadoras}</td>
-            <td>${dados.percentagem_ganhadoras}%</td>
-            <td>${dados.maior_premio.toFixed(2)}</td>
-            <td>${dados.media_premios.toFixed(2)}</td>
-            <td>${dados.mediana_premios.toFixed(2)}</td>
-            <td>${dados.media_acertos_numeros.toFixed(2)}</td>
-            <td>${dados.media_acertos_especial.toFixed(2)}</td>
+            <td>${dados.percentagem_ganhadoras?.toFixed(1) ?? '0'}%</td>
+            <td>${formatarMoeda(dados.maior_premio)}</td>
+            <td>${formatarMoeda(dados.media_premios)}</td>
+            <td>${formatarMoeda(dados.mediana_premios)}</td>
+            <td>${dados.media_acertos_numeros?.toFixed(2) ?? '0'}</td>
+            <td>${dados.media_acertos_especial?.toFixed(2) ?? '0'}</td>
         </tr>`;
     }
 
@@ -193,7 +202,7 @@ function gerarTabelaJogo(periodo, dadosJogo, jogo) {
 // ---------- EXPOR FUNÇÃO PARA O APP ----------
 window.renderizarEstatisticas = renderizarEstatisticas;
 
-// Inicializar se a view estiver ativa (opcional)
+// Inicializar se a view estiver ativa
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('estatisticasView').classList.contains('active')) {
         renderizarEstatisticas();
