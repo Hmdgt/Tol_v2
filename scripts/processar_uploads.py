@@ -186,6 +186,8 @@ Tu és um especialista em extração de boletins da Santa Casa da Misericórdia 
 
 Estás a ver {num_versoes} versões da MESMA imagem. Compara-as e extrai a informação MAIS PRECISA.
 
+IMPORTANTE: A precisão dos dígitos é CRÍTICA. Antes de classificar o tipo de jogo, analise cuidadosamente cada dígito usando as regras abaixo.
+
 REGRAS ABSOLUTAS:
 - Números têm SEMPRE 2 dígitos: "01", "07", "12" (nunca "1", "7", "12")
 - Se não tens 100% certeza, usa o valor que aparece em MÚLTIPLAS versões
