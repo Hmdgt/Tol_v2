@@ -184,113 +184,111 @@ def preprocessar_imagem(caminho, img_nome):
 PROMPT_FINAL = """
 Tu és um especialista em extração de boletins da Santa Casa da Misericórdia de Lisboa.
 
-Estás a ver {num_versoes} versões da MESMA imagem. Compara-as e extrai a informação MAIS PRECISA.
+Vais receber {num_versoes} versões da MESMA área do boletim (apenas a zona relevante do jogo).
+A tua missão é extrair a informação MAIS PRECISA possível, com ZERO ERROS nos dígitos.
 
-REGRAS ABSOLUTAS:
-- Números têm SEMPRE 2 dígitos: "01", "07", "12" (nunca "1", "7", "12")
-- Se não tens 100% certeza, usa o valor que aparece em MÚLTIPLAS versões
-- NUNCA inventes números ou estrelas
-- DIFERENCIAÇÃO CRÍTICA: Analisa a curvatura dos dígitos para evitar trocas comuns:
-  * [6 vs 8]: O '6' é aberto no topo; o '8' é fechado em dois círculos.
-  * [0 vs 8]: O '0' é um oval vazio; o '8' tem um cruzamento central.
-  * [1 vs 7]: O '1' é uma barra vertical simples; o '7' tem uma barra horizontal clara no topo.
-  * [5 vs 6]: O '5' tem topo reto; o '6' é curvo.
-- CONTEXTO NUMÉRICO:
-  * Se o número extraído for > 50 (exceto no Totoloto que vai até 49 e EuroDreams até 40), REVERIFICA a imagem. 
-  * Se no Euromilhões leres "08" numa estrela, confirma se não é um "06" ou "09" devido à inclinação da foto.
-- COMPARAÇÃO MULTI-CAMADA: Se as {num_versoes} imagens tiverem iluminações diferentes, prioriza a zona onde o contraste entre o papel e a tinta preta é mais nítido.
+====================================================================
+IDENTIFICAÇÃO DO TIPO DE JOGO (OBRIGATÓRIO)
+====================================================================
+Antes de extrair qualquer número, identifica o tipo de jogo observando o layout:
 
-REGRAS DE NEGÓCIO:
-- A imagem contém um ÚNICO boletim, que pode ter várias apostas, mas todas do MESMO tipo de jogo.
-- Deves devolver EXATAMENTE UM objeto na lista "jogos", correspondente ao jogo presente.
-- Se houver ambiguidade, dá prioridade ao jogo que aparecer mais claramente.
+- EUROMILHÕES → tem linhas “N” (5 números) e “E” (2 estrelas).
+- TOTOLOTO → tem 5 números + “NÚMERO DA SORTE”.
+- EURODREAMS → tem linha “N” (6 números) + linha “S” (1 Dream Number).
+- M1LHÃO → tem apenas um código alfanumérico (ex: “GTP11668”).
 
-PADRÕES EXATOS POR JOGO:
+Depois de identificar o tipo de jogo, aplica APENAS as regras desse jogo.
+NUNCA inventes campos que não existam no jogo identificado.
 
-EUROMILHÕES (Regras de Ouro):
-1. Identifica os blocos de apostas (1., 2., etc.).
-2. NÚMEROS (N): São os 5 números principais encontrados na linha do "N".
-3. ESTRELAS (E): São os 2 números que aparecem na linha imediatamente abaixo do "N", geralmente precedidos por "E".
-4. REGRA DE SEGURANÇA MÁXIMA: Um jogo de Euromilhões NUNCA tem 0 estrelas. Se extraíres 5 números e o campo 'estrelas' estiver vazio, procura na imagem pelos dois números pequenos que faltam na linha de baixo.
-5. Se encontrares 7 números no total para a mesma aposta, os 2 últimos são SEMPRE as estrelas.
+====================================================================
+COMPARAÇÃO ENTRE IMAGENS (OBRIGATÓRIO)
+====================================================================
+PASSO 1 — Extrai os números/campos da Imagem 1 (versão nítida).
+PASSO 2 — Extrai os números/campos da Imagem 2 (versão original).
+PASSO 3 — Compara os resultados.
+PASSO 4 — Se forem iguais, usa esse valor.
+PASSO 5 — Se forem diferentes, analisa a forma geométrica dos dígitos:
+  - '3' tem aberturas laterais; '8' é fechado.
+  - '6' tem topo aberto; '8' tem dois círculos fechados.
+  - '0' é oval; '8' tem cruzamento interno.
+  - '1' é barra vertical; '7' tem barra horizontal no topo.
+PASSO 6 — Nunca inventes valores que não apareçam em nenhuma das imagens.
+PASSO 7 — Se continuares com dúvida, escolhe o valor que aparece mais vezes.
 
-EURODREAMS:
-- Linha "N": extrai 6 números.
-- Linha "S": extrai 1 número (Dream Number).
-- Se leres 7 números no total, o último é o Dream Number.
+====================================================================
+REGRAS ABSOLUTAS DE DÍGITOS
+====================================================================
+- Todos os números têm SEMPRE 2 dígitos: “01”, “07”, “12”.
+- Nunca inventes números, estrelas, Dream Number ou Número da Sorte.
+- Se um número > 50 aparecer, reverifica (exceto Totoloto até 49 e EuroDreams até 40).
+- No Euromilhões, estrelas são SEMPRE de 01 a 12.
+
+====================================================================
+REGRAS POR JOGO
+====================================================================
+
+EUROMILHÕES:
+- Linha “N”: 5 números.
+- Linha “E”: 2 estrelas.
+- Se encontrares 7 números, os 2 últimos são SEMPRE as estrelas.
+- Nunca devolver estrelas se não existirem na imagem.
 
 TOTOLOTO:
-- Linha 1: "1. 35 37 40 44 46" → 5 números
-- Linha 2: "NUMERO DA SORTE 04" → número da sorte
+- 5 números principais.
+- “NÚMERO DA SORTE”: 1 número.
+- Nunca devolver estrelas neste jogo.
+
+EURODREAMS:
+- Linha “N”: 6 números.
+- Linha “S”: 1 Dream Number.
+- Nunca devolver estrelas neste jogo.
 
 M1LHÃO:
-- Código: "GTP 11668" → "GTP11668"
+- Apenas um código alfanumérico (ex: “GTP11668”).
+- Nunca devolver números, estrelas ou Dream Number.
 
-CAMPOS COMUNS (TODOS os jogos):
-- "data_sorteio": YYYY-MM-DD (do topo)
-- "data_aposta": YYYY-MM-DD (do rodapé)
-- "data_emissao": YYYY-MM-DD HH:MM:SS (rodapé)
+====================================================================
+CAMPOS COMUNS (TODOS OS JOGOS)
+====================================================================
+- "data_sorteio": YYYY-MM-DD
+- "data_aposta": YYYY-MM-DD
+- "data_emissao": YYYY-MM-DD HH:MM:SS
 - "referencia_unica": código do rodapé
-- "concurso": número do concurso (ex: "015/2026") - extrair do topo do boletim
+- "concurso": "NNN/AAAA"
 - "valor_total": decimal (ex: 2.20)
 - "valido": true
 
-ESTRUTURA JSON OBRIGATÓRIA:
+====================================================================
+ESTRUTURA JSON OBRIGATÓRIA
+====================================================================
 {
   "jogos": [
     {
-      "tipo": "M1lhão",
-      "data_sorteio": "2026-02-27",
-      "data_aposta": "2026-02-24",
-      "data_emissao": "2026-02-24 08:57:56",
-      "referencia_unica": "555-02820325-EUR",
-      "concurso": "008/2026",
-      "valor_total": 0.30,
+      "tipo": "...",
+      "data_sorteio": "...",
+      "data_aposta": "...",
+      "data_emissao": "...",
+      "referencia_unica": "...",
+      "concurso": "...",
+      "valor_total": ...,
       "valido": true,
       "apostas": [
         {
           "indice": 1,
-          "codigo": "GTP11668"
-        }
-      ]
-    },
-    {
-      "tipo": "Euromilhões",
-      "data_sorteio": "2026-02-24",
-      "data_aposta": "2026-02-24",
-      "data_emissao": "2026-02-24 08:57:56",
-      "referencia_unica": "555-03672294-M1L",
-      "concurso": "016/2026",
-      "valor_total": 2.20,
-      "valido": true,
-      "apostas": [
-        {
-          "indice": 1,
-          "numeros": ["04", "05", "32", "33", "48"],
-          "estrelas": ["01", "04"]
-        }
-      ]
-    },
-    {
-      "tipo": "Totoloto",
-      "data_sorteio": "2026-02-07",
-      "data_aposta": "2026-02-06",
-      "data_emissao": "2026-02-06 18:13:51",
-      "referencia_unica": "037-03194624-022",
-      "concurso": "011/2026",
-      "valor_total": 1.00,
-      "valido": true,
-      "apostas": [
-        {
-          "indice": 1,
-          "numeros": ["18", "20", "29", "39", "47"],
-          "numero_da_sorte": "05"
+          "numeros": [...],
+          "estrelas": [...],
+          "numero_da_sorte": "...",
+          "dream_number": "...",
+          "codigo": "..."
         }
       ]
     }
   ]
 }
+
+Inclui APENAS os campos que pertencem ao jogo identificado.
 Retorna APENAS JSON válido, sem texto adicional.
+
 """
 
 # ===== FUNÇÃO PRINCIPAL DE PROCESSAMENTO =====
