@@ -1,6 +1,6 @@
 [
   {
-    "data_verificacao": "2026-03-09 16:35:30",
+    "data_verificacao": "2026-03-09 18:05:48",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "558-08834782-M1L",
@@ -12,13 +12,13 @@
       "indice": 1,
       "numeros": [
         "08",
-        "28",
+        "23",
         "24",
         "31",
         "37"
       ],
       "estrelas": [
-        "08",
+        "06",
         "10"
       ]
     },
@@ -40,14 +40,16 @@
     },
     "acertos": {
       "numeros": 1,
-      "estrelas": 1,
-      "descricao": "1 número(s) e 1 estrela(s)"
+      "estrelas": 2,
+      "descricao": "1 número(s) e 2 estrela(s)"
     },
-    "ganhou": false,
     "premio": {
-      "categoria": "Sem prémio",
-      "descricao": "Não corresponde a qualquer prémio",
-      "valor": "€ 0,00"
-    }
+      "categoria": "11.º Prémio",
+      "descricao": "1 Número + 2 Estrelas",
+      "valor": "€ 7,15",
+      "vencedores_pt": "12.653",
+      "vencedores_eu": "185.628"
+    },
+    "ganhou": true
   }
 ]
