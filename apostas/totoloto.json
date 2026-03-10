@@ -1,29 +1,33 @@
 [
-    {
-        "tipo": "Totoloto",
-        "data_sorteio": "2026-03-11",
-        "data_aposta": "2026-03-10",
-        "data_emissao": "2026-03-10 18:25:05",
-        "referencia_unica": "069-06457998-027",
-        "concurso": null,
-        "valor_total": 1.0,
-        "valido": true,
-        "apostas": [
-            {
-                "indice": 1,
-                "numeros": [
-                    "09",
-                    "16",
-                    "21",
-                    "35",
-                    "46"
-                ],
-                "numero_da_sorte": "10"
-            }
+  {
+    "tipo": "Totoloto",
+    "data_sorteio": "2026-03-11",
+    "data_aposta": "2026-03-10",
+    "data_emissao": "2026-03-10 18:25:05",
+    "referencia_unica": "069-06457998-027",
+    "concurso": "020/2026",
+    "valor_total": 1,
+    "valido": true,
+    "apostas": [
+      {
+        "indice": 1,
+        "numeros": [
+          "09",
+          "16",
+          "21",
+          "35",
+          "46"
         ],
-        "confirmado": false,
-        "imagem_origem": "foto_1773167973534_9mqelh.png",
-        "hash_imagem": "d76091de62cc8f643f6553c5837502a7",
-        "data_processamento": "2026-03-10 18:40:02"
-    }
+        "numero_da_sorte": "10"
+      }
+    ],
+    "confirmado": true,
+    "imagem_origem": "foto_1773167973534_9mqelh.png",
+    "hash_imagem": "d76091de62cc8f643f6553c5837502a7",
+    "data_processamento": "2026-03-10 18:40:02",
+    "tipo_ficheiro": "totoloto",
+    "_indice": 0,
+    "data_validacao": "2026-03-10T18:42:02.392Z",
+    "validado_por": "humano"
+  }
 ]
