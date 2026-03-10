@@ -1,0 +1,29 @@
+[
+    {
+        "tipo": "Totoloto",
+        "data_sorteio": "2026-03-11",
+        "data_aposta": "2026-03-10",
+        "data_emissao": "2026-03-10 18:25:05",
+        "referencia_unica": "069-06457998-027",
+        "concurso": null,
+        "valor_total": 1.0,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "numeros": [
+                    "09",
+                    "16",
+                    "21",
+                    "35",
+                    "46"
+                ],
+                "numero_da_sorte": "10"
+            }
+        ],
+        "confirmado": false,
+        "imagem_origem": "foto_1773167973534_9mqelh.png",
+        "hash_imagem": "d76091de62cc8f643f6553c5837502a7",
+        "data_processamento": "2026-03-10 18:40:02"
+    }
+]

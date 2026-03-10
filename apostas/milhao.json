@@ -1,0 +1,22 @@
+[
+    {
+        "tipo": "M1lhão",
+        "data_sorteio": "2026-03-27",
+        "data_aposta": "2026-03-06",
+        "data_emissao": "2026-03-06 17:51:09",
+        "referencia_unica": "565-06102529-EUR",
+        "concurso": "003/2026",
+        "valor_total": 0.3,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "codigo": "HJM25455"
+            }
+        ],
+        "confirmado": false,
+        "imagem_origem": "foto_1773079460500_t4yuqh.png",
+        "hash_imagem": "12e5ca906853b5bf24e0ae8a553b5606",
+        "data_processamento": "2026-03-10 18:40:21"
+    }
+]
