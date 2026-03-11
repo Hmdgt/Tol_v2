@@ -184,7 +184,9 @@ def preprocessar_imagem(caminho, img_nome):
 PROMPT_FINAL = """
 Tu és um especialista em extração de boletins da Santa Casa da Misericórdia de Lisboa.
 
-Estás a ver {num_versoes} versões da MESMA imagem. Compara-as e extrai a informação MAIS PRECISA.
+Vais analizar fotografias de boletins, de EUROMILHÕES, EURODREAMS, TOTOLOTO e M1LHÃO, e vai retirar informação de cada um dos boletins.
+
+Estás a ver 3 versões da MESMA imagem(boletim). Compara-as e extrai a informação MAIS PRECISA.
 
 IMPORTANTE: A precisão dos dígitos é CRÍTICA. Antes de classificar o tipo de jogo, analise cuidadosamente cada dígito usando as regras abaixo.
 
@@ -199,22 +201,21 @@ REGRAS ABSOLUTAS:
   * [5 vs 6]: O '5' tem topo reto; o '6' é curvo.
 - CONTEXTO NUMÉRICO:
   * Se o número extraído for > 50 (exceto no Totoloto que vai até 49 e EuroDreams até 40), REVERIFICA a imagem. 
-  * Se no Euromilhões leres "08" numa estrela, confirma se não é um "06" ou "09" devido à inclinação da foto.
-- COMPARAÇÃO MULTI-CAMADA: Se as {num_versoes} imagens tiverem iluminações diferentes, prioriza a zona onde o contraste entre o papel e a tinta preta é mais nítido.
+  * Se  leres "08" , confirma se não é um "06" ou "09" devido à inclinação da foto.
+- COMPARAÇÃO MULTI-CAMADA: Se 3 versões da MESMA imagem tiverem iluminações diferentes, prioriza a zona onde o contraste entre o papel e a tinta preta é mais nítido.
 
 REGRAS DE NEGÓCIO:
 - A imagem contém um ÚNICO boletim, que pode ter várias apostas, mas todas do MESMO tipo de jogo.
 - Deves devolver EXATAMENTE UM objeto na lista "jogos", correspondente ao jogo presente.
 - Se houver ambiguidade, dá prioridade ao jogo que aparecer mais claramente.
+- Identifica os blocos de apostas (1., 2., etc.).
 
 PADRÕES EXATOS POR JOGO:
 
 EUROMILHÕES (Regras de Ouro):
-1. Identifica os blocos de apostas (1., 2., etc.).
-2. NÚMEROS (N): São os 5 números principais encontrados na linha do "N".
-3. ESTRELAS (E): São os 2 números que aparecem na linha imediatamente abaixo do "N", geralmente precedidos por "E".
-4. REGRA DE SEGURANÇA MÁXIMA: Um jogo de Euromilhões NUNCA tem 0 estrelas. Se extraíres 5 números e o campo 'estrelas' estiver vazio, procura na imagem pelos dois números pequenos que faltam na linha de baixo.
-5. Se encontrares 7 números no total para a mesma aposta, os 2 últimos são SEMPRE as estrelas.
+- Linha "N": extrai 5 números.
+- Linha "E": extrai 2 ESTRELAS
+- Se encontrares 7 números no total para a mesma aposta, os 2 últimos são SEMPRE as estrelas.
 
 EURODREAMS:
 - Linha "N": extrai 6 números.
@@ -233,11 +234,11 @@ CAMPOS COMUNS (TODOS os jogos):
 - "data_aposta": YYYY-MM-DD (do rodapé)
 - "data_emissao": YYYY-MM-DD HH:MM:SS (rodapé)
 - "referencia_unica": código do rodapé
-- "concurso": número do concurso (ex: "015/2026") - extrair do topo do boletim
+- "concurso": número do concurso/sorteio (ex: "015/2026") - extrair do topo do boletim
 - "valor_total": decimal (ex: 2.20)
 - "valido": true
 
-ESTRUTURA JSON OBRIGATÓRIA:
+ESTRUTURA JSON OBRIGATÓRIA POR TIPO DE JOGO:
 {
   "jogos": [
     {
@@ -270,6 +271,23 @@ ESTRUTURA JSON OBRIGATÓRIA:
           "indice": 1,
           "numeros": ["04", "05", "32", "33", "48"],
           "estrelas": ["01", "04"]
+        }
+      ]
+    },
+        {
+      "tipo": "Eurodreams",
+      "data_sorteio": "2026-02-24",
+      "data_aposta": "2026-02-24",
+      "data_emissao": "2026-02-24 08:57:56",
+      "referencia_unica": "555-03672294-M1L",
+      "concurso": "016/2026",
+      "valor_total": 2.50,
+      "valido": true,
+      "apostas": [
+        {
+          "indice": 1,
+          "numeros": ["02", "06", "32", "33", "34", "35"],
+          "dream": ["03"]
         }
       ]
     },
