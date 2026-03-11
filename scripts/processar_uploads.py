@@ -11,12 +11,14 @@ from collections import deque
 import threading
 
 # ===== CONFIGURAÇÃO DE MODELOS E CHAVES =====
+# Modelos Gemini válidos em Março de 2026 (ordem de fallback)
 MODELOS_FALLBACK = [
-    "gemini-3.1-flash-lite",
-    "gemini-2.5-flash",
-    "gemini-2.5-flash-lite",
+    "gemini-3.1-flash-lite-preview",  # Mais recente e rápido
+    "gemini-2.5-flash",               # Versão estável anterior
+    "gemini-2.5-flash-lite",           # Versão mais leve
 ]
 
+# Chaves API (até 3)
 GEMINI_KEYS = [
     os.getenv("GEMINI_API_KEY"),
     os.getenv("GEMINI_API_KEY_2"),
@@ -27,15 +29,22 @@ GEMINI_KEYS = [key for key in GEMINI_KEYS if key]
 if not GEMINI_KEYS:
     raise ValueError("❌ Nenhuma chave Gemini encontrada!")
 
-# ===== FICHEIROS E PASTAS =====
+print("🔑 Debug - Chaves encontradas:")
+for i, key in enumerate(GEMINI_KEYS):
+    print(f"   key_{i+1}: {'✓' if key else '✗'} (primeiros 4 chars: {key[:4] if key else 'none'})")
+print(f"🔑 Carregadas {len(GEMINI_KEYS)} chaves Gemini")
+
+# ===== FICHEIROS DE CONTROLO =====
 FICHEIRO_COTA_CHAVES = "apostas/cota_por_chave.json"
 FICHEIRO_REGISTO = "apostas/registo_processamento.json"
+
+# ===== PASTAS =====
 PASTA_UPLOADS = "uploads/"
 PASTA_DADOS = "apostas/"
 PASTA_PREPROCESSADAS = "preprocessadas/"
 PASTA_THUMBNAILS = "thumbnails/"
 
-# ===== CONTROLO DE TAXA =====
+# ===== CONTROLO DE TAXA (5 por minuto) =====
 REQUISICOES_POR_MINUTO = 5
 SEGUNDOS_ENTRE_REQUISICOES = 60 / REQUISICOES_POR_MINUTO
 timestamps = deque(maxlen=REQUISICOES_POR_MINUTO)
@@ -44,6 +53,7 @@ ultima_chave_idx = -1
 
 # ===== FUNÇÕES DE CONTROLO DE CHAVES =====
 def carregar_cota_chaves():
+    """Carrega o estado de cada chave"""
     if os.path.exists(FICHEIRO_COTA_CHAVES):
         with open(FICHEIRO_COTA_CHAVES, "r") as f:
             return json.load(f)
@@ -55,6 +65,10 @@ def guardar_cota_chaves(cota):
         json.dump(cota, f, indent=2)
 
 def obter_cliente_disponivel():
+    """
+    Retorna um cliente Gemini com uma chave que ainda tem cota hoje.
+    Usa round-robin para distribuir as requisições entre as chaves.
+    """
     global ultima_chave_idx
     cota_chaves = carregar_cota_chaves()
     hoje = datetime.now().strftime("%Y-%m-%d")
@@ -65,68 +79,87 @@ def obter_cliente_disponivel():
         key_id = f"key_{idx+1}"
         registo = cota_chaves.get(key_id, {"data": "", "usadas": 0})
 
+        # Reset se for novo dia
         if registo.get("data") != hoje:
             registo = {"data": hoje, "usadas": 0}
 
+        # Se ainda tem cota (limite 20 por dia)
         if registo["usadas"] < 20:
             ultima_chave_idx = idx
             print(f"   🔑 Usando {key_id} ({registo['usadas'] + 1}/20 hoje)")
             return genai.Client(api_key=GEMINI_KEYS[idx]), key_id, registo["usadas"] + 1
+
+    # Todas as chaves esgotadas
     return None, None, None
 
 def registar_uso_chave(key_id, usadas_atualizadas):
+    """Regista uma requisição bem sucedida"""
     cota_chaves = carregar_cota_chaves()
     hoje = datetime.now().strftime("%Y-%m-%d")
     cota_chaves[key_id] = {"data": hoje, "usadas": usadas_atualizadas}
     guardar_cota_chaves(cota_chaves)
 
 def marcar_chave_esgotada(key_id):
+    """Marca uma chave como esgotada (20/20) após erro 429"""
     cota_chaves = carregar_cota_chaves()
     hoje = datetime.now().strftime("%Y-%m-%d")
     cota_chaves[key_id] = {"data": hoje, "usadas": 20}
     guardar_cota_chaves(cota_chaves)
     print(f"   ⚠️ {key_id} marcada como esgotada (20/20)")
 
-# ===== FUNÇÕES DE SUPORTE E IMAGEM =====
+# ===== FUNÇÕES DE RATE LIMIT =====
 def esperar_rate_limit():
+    """Garante que não excedemos 5 requisições por minuto"""
     with lock:
         agora = time.time()
+        # Remover timestamps mais antigos que 60 segundos
         while timestamps and timestamps[0] < agora - 60:
             timestamps.popleft()
+
         if len(timestamps) >= REQUISICOES_POR_MINUTO:
-            tempo_espera = 60 - (agora - timestamps[0])
+            mais_antigo = timestamps[0]
+            tempo_espera = 60 - (agora - mais_antigo)
             if tempo_espera > 0:
                 print(f"   ⏳ Rate limit: a aguardar {tempo_espera:.1f}s...")
                 time.sleep(tempo_espera)
+
         timestamps.append(time.time())
 
+# ===== FUNÇÕES DE PROCESSAMENTO DE IMAGEM =====
 def gerar_hash(caminho):
+    """Gera hash MD5 de um ficheiro"""
     h = hashlib.md5()
     with open(caminho, "rb") as f:
         h.update(f.read())
     return h.hexdigest()
 
 def gerar_thumbnail(caminho_original, nome_arquivo):
+    """Gera uma thumbnail (máx 800px no lado maior) da imagem original"""
     os.makedirs(PASTA_THUMBNAILS, exist_ok=True)
     try:
         img = Image.open(caminho_original)
-        img = ImageOps.exif_transpose(img)
+        img = ImageOps.exif_transpose(img)  # Corrigir orientação EXIF
         img.thumbnail((800, 800))
-        img.save(os.path.join(PASTA_THUMBNAILS, nome_arquivo), optimize=True, quality=85)
+        caminho_thumb = os.path.join(PASTA_THUMBNAILS, nome_arquivo)
+        img.save(caminho_thumb, optimize=True, quality=85)
         print(f"   🖼️ Thumbnail gerada: {nome_arquivo}")
     except Exception as e:
-        print(f"   ⚠️ Erro thumbnail: {e}")
+        print(f"   ⚠️ Erro ao gerar thumbnail: {e}")
 
 def preprocessar_imagem(caminho, img_nome):
+    """Gera 3 versões estratégicas da imagem"""
     os.makedirs(PASTA_PREPROCESSADAS, exist_ok=True)
+
     img = cv2.imread(caminho)
     if img is None:
         raise ValueError(f"Imagem não pode ser lida: {caminho}")
 
     nome_base = os.path.splitext(img_nome)[0]
+    versoes = []
 
-    # 1. Original
+    # 1. Original (com correção de orientação)
     img_original = ImageOps.exif_transpose(Image.open(caminho))
+    versoes.append(img_original)
 
     # 2. Binarização adaptativa
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -137,6 +170,7 @@ def preprocessar_imagem(caminho, img_nome):
         11, 2
     )
     img_binary = Image.fromarray(binary)
+    versoes.append(img_binary)
     img_binary.save(os.path.join(PASTA_PREPROCESSADAS, f"{nome_base}_binary.png"))
 
     # 3. Alto contraste + nitidez
@@ -144,59 +178,13 @@ def preprocessar_imagem(caminho, img_nome):
     img_contrast = enhancer.enhance(3.0)
     enhancer = ImageEnhance.Sharpness(img_contrast)
     img_sharp = enhancer.enhance(2.0)
+    versoes.append(img_sharp)
     img_sharp.save(os.path.join(PASTA_PREPROCESSADAS, f"{nome_base}_enhanced.png"))
 
     print(f"   📸 Geradas 3 versões")
-    return [img_original, img_binary, img_sharp]
+    return versoes
 
-# ===== GESTÃO DE DADOS JOGOS =====
-def carregar_registo():
-    if os.path.exists(FICHEIRO_REGISTO):
-        with open(FICHEIRO_REGISTO, "r", encoding="utf-8") as f:
-            return json.load(f)
-    return {}
-
-def guardar_registo(reg):
-    with open(FICHEIRO_REGISTO, "w", encoding="utf-8") as f:
-        json.dump(reg, f, indent=4, ensure_ascii=False)
-
-def limpar_nome_jogo(nome):
-    mapping = {
-        "Euromilhões": "euromilhoes",
-        "Eurodreams": "eurodreams",
-        "Totoloto": "totoloto",
-        "M1lhão": "milhao",
-    }
-    return mapping.get(nome, nome.lower().strip().replace(" ", "_"))
-
-def guardar_jogo(jogo, img_nome, img_hash):
-    if not jogo.get("tipo"):
-        return False
-
-    nome_ficheiro = f"{limpar_nome_jogo(jogo['tipo'])}.json"
-    caminho = os.path.join(PASTA_DADOS, nome_ficheiro)
-
-    if os.path.exists(caminho):
-        with open(caminho, "r", encoding="utf-8") as f:
-            historico = json.load(f)
-    else:
-        historico = []
-
-    ref = jogo.get("referencia_unica")
-    if ref and any(item.get("referencia_unica") == ref for item in historico):
-        print(f"   ⚠️ Referência {ref} já registada")
-        return False
-
-    jogo["imagem_origem"] = img_nome
-    jogo["hash_imagem"] = img_hash
-    jogo["data_processamento"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-    historico.append(jogo)
-    with open(caminho, "w", encoding="utf-8") as f:
-        json.dump(historico, f, indent=4, ensure_ascii=False)
-    return True
-
-# ===== PROMPT COMPLETO =====
+# ===== PROMPT DO GEMINI (COMPLETO) =====
 PROMPT_FINAL = """
 Tu és um especialista em extração de boletins da Santa Casa da Misericórdia de Lisboa.
 
@@ -329,27 +317,88 @@ ESTRUTURA JSON OBRIGATÓRIA POR TIPO DE JOGO:
 Retorna APENAS JSON válido, sem texto adicional.
 """
 
-# ===== PROCESSAMENTO PRINCIPAL =====
-def processar_com_multiplas_chaves():
-    for p in [PASTA_DADOS, PASTA_UPLOADS, PASTA_PREPROCESSADAS, PASTA_THUMBNAILS]:
-        os.makedirs(p, exist_ok=True)
+# ===== FUNÇÕES DE GESTÃO DE JOGOS =====
+def carregar_registo():
+    """Carrega registo de imagens processadas"""
+    if os.path.exists(FICHEIRO_REGISTO):
+        with open(FICHEIRO_REGISTO, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return {}
 
+def guardar_registo(reg):
+    """Guarda registo de imagens processadas"""
+    with open(FICHEIRO_REGISTO, "w", encoding="utf-8") as f:
+        json.dump(reg, f, indent=4, ensure_ascii=False)
+
+def limpar_nome_jogo(nome):
+    """Converte nome do jogo para nome de ficheiro"""
+    mapping = {
+        "Euromilhões": "euromilhoes",
+        "Eurodreams": "eurodreams",
+        "Totoloto": "totoloto",
+        "M1lhão": "milhao",
+    }
+    return mapping.get(nome, nome.lower().strip().replace(" ", "_"))
+
+def guardar_jogo(jogo, img_nome, img_hash):
+    """Guarda um jogo no ficheiro correspondente ao tipo"""
+    if not jogo.get("tipo"):
+        return False
+
+    nome_ficheiro = f"{limpar_nome_jogo(jogo['tipo'])}.json"
+    caminho = os.path.join(PASTA_DADOS, nome_ficheiro)
+
+    # Carregar histórico existente
+    if os.path.exists(caminho):
+        with open(caminho, "r", encoding="utf-8") as f:
+            historico = json.load(f)
+    else:
+        historico = []
+
+    # Verificar duplicados por referência única
+    ref = jogo.get("referencia_unica")
+    if ref and any(item.get("referencia_unica") == ref for item in historico):
+        print(f"   ⚠️ Referência {ref} já registada")
+        return False
+
+    # Adicionar metadados
+    jogo["imagem_origem"] = img_nome
+    jogo["hash_imagem"] = img_hash
+    jogo["data_processamento"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    jogo["confirmado"] = False  # campo adicional
+
+    historico.append(jogo)
+
+    # Guardar
+    with open(caminho, "w", encoding="utf-8") as f:
+        json.dump(historico, f, indent=4, ensure_ascii=False)
+
+    return True
+
+# ===== FUNÇÃO PRINCIPAL DE PROCESSAMENTO =====
+def processar_com_multiplas_chaves():
+    """Processa imagens com fallback entre modelos e tentativas em caso de ocupado"""
+    # Criar pastas necessárias
+    for pasta in [PASTA_DADOS, PASTA_UPLOADS, PASTA_PREPROCESSADAS, PASTA_THUMBNAILS]:
+        os.makedirs(pasta, exist_ok=True)
+
+    # Carregar registo de imagens processadas
     registo = carregar_registo()
-    imagens = [
-        f for f in os.listdir(PASTA_UPLOADS)
-        if f.lower().endswith((".jpg", ".jpeg", ".png"))
-    ]
+
+    # Listar imagens na pasta uploads
+    imagens = [f for f in os.listdir(PASTA_UPLOADS) if f.lower().endswith((".jpg", ".jpeg", ".png"))]
 
     if not imagens:
         print("📭 Nenhuma imagem encontrada na pasta uploads/")
         return
 
+    # Filtrar apenas imagens não processadas
     imagens_para_processar = []
-    for f in imagens:
-        caminho = os.path.join(PASTA_UPLOADS, f)
+    for img_nome in imagens:
+        caminho = os.path.join(PASTA_UPLOADS, img_nome)
         img_hash = gerar_hash(caminho)
         if img_hash not in registo:
-            imagens_para_processar.append((f, caminho, img_hash))
+            imagens_para_processar.append((img_nome, caminho, img_hash))
 
     if not imagens_para_processar:
         print("📭 Nenhuma imagem nova para processar.")
@@ -366,50 +415,65 @@ def processar_com_multiplas_chaves():
         img_nome, caminho, img_hash = imagens_para_processar[idx]
         print(f"\n🚀 [{idx+1}/{len(imagens_para_processar)}] {img_nome}")
 
+        # Gerar thumbnail e versões preprocessadas
         gerar_thumbnail(caminho, img_nome)
-        versoes = preprocessar_imagem(caminho, img_nome)
+        try:
+            versoes = preprocessar_imagem(caminho, img_nome)
+        except Exception as e:
+            print(f"   ❌ Erro no pré-processamento: {e}")
+            idx += 1
+            continue
 
         sucesso_imagem = False
-        erro_irrecuperavel = False
 
-        for modelo_nome in MODELOS_FALLBACK:
-            if sucesso_imagem or erro_irrecuperavel:
+        # Tentar cada modelo por ordem
+        for modelo in MODELOS_FALLBACK:
+            if sucesso_imagem:
                 break
 
-            tentativas_key = 0
-            while tentativas_key < len(GEMINI_KEYS):
+            tentativas_restantes = 3  # número de tentativas para este modelo (para erros 503)
+            while tentativas_restantes > 0 and not sucesso_imagem:
+                # Obter cliente com chave disponível
                 cliente, key_id, usadas_atual = obter_cliente_disponivel()
                 if not cliente:
-                    print("🚫 Todas as chaves esgotadas para hoje.")
-                    print(f"   Processadas hoje: {processadas_com_sucesso}")
-                    print(f"   Restantes: {len(imagens_para_processar) - idx} imagens")
-                    return
+                    print(f"   ⚠️ Sem chaves disponíveis para o modelo {modelo}. A passar ao próximo.")
+                    break  # sai do while, vai para o próximo modelo
 
                 try:
+                    # Respeitar rate limit
                     esperar_rate_limit()
-                    print(f"   🤖 Tentando {modelo_nome} | {key_id}")
 
+                    print(f"   🤖 Tentativa {4 - tentativas_restantes} com {modelo} | {key_id}")
+
+                    # Enviar requisição
                     resposta = cliente.models.generate_content(
-                        model=modelo_nome,
+                        model=modelo,
                         contents=[PROMPT_FINAL] + versoes,
                         config={
                             "temperature": 0,
-                            "response_mime_type": "application/json",
-                        },
+                            "response_mime_type": "application/json"
+                        }
                     )
 
+                    # Se chegou aqui, a requisição foi bem-sucedida
                     registar_uso_chave(key_id, usadas_atual)
-                    dados = json.loads(resposta.text)
+
+                    # Processar resposta JSON
+                    try:
+                        dados = json.loads(resposta.text)
+                    except json.JSONDecodeError:
+                        print(f"   ❌ Resposta não é JSON válido: {resposta.text[:200]}")
+                        # Considerar como erro não recuperável e passar ao próximo modelo
+                        break
 
                     jogos_nesta_imagem = 0
                     for jogo in dados.get("jogos", []):
-                        # validação extra por tipo
+                        # Validação específica para M1lhão
                         if jogo.get("tipo") == "M1lhão":
                             if not any(aposta.get("codigo") for aposta in jogo.get("apostas", [])):
                                 print(f"   ⚠️ Ignorado M1lhão sem código na imagem {img_nome}")
                                 continue
 
-                        jogo["confirmado"] = False
                         if guardar_jogo(jogo, img_nome, img_hash):
                             jogos_nesta_imagem += 1
 
@@ -418,42 +482,63 @@ def processar_com_multiplas_chaves():
                         registo[img_hash] = {
                             "arquivo": img_nome,
                             "data": datetime.now().isoformat(),
-                            "jogos": jogos_nesta_imagem,
+                            "jogos": jogos_nesta_imagem
                         }
                         guardar_registo(registo)
                         processadas_com_sucesso += 1
                         sucesso_imagem = True
                     else:
                         print("   ⚠️ Nenhum jogo válido encontrado")
-
-                    break  # sai do loop de chaves para este modelo
+                        # Mesmo sem jogos, consideramos a imagem processada (não volta a tentar)
+                        sucesso_imagem = True
 
                 except Exception as e:
-                    msg = str(e).upper()
+                    erro_str = str(e).upper()
                     print(f"   ❌ Erro: {e}")
 
-                    if "429" in msg or "RESOURCE_EXHAUSTED" in msg:
+                    # Tratamento de erros
+                    if "429" in erro_str or "RESOURCE_EXHAUSTED" in erro_str:
+                        # Cota esgotada: marcar chave e tentar outra imediatamente (não gasta tentativa do modelo)
                         marcar_chave_esgotada(key_id)
-                        print(f"   🔄 Chave {key_id} esgotada. Tentando próxima chave...")
-                        tentativas_key += 1
+                        # Continua no while (tenta outra chave, mesmo modelo)
                         continue
-                    elif "503" in msg or "UNAVAILABLE" in msg:
-                        print(f"   ⚠️ {modelo_nome} instável (503). A tentar próximo modelo...")
-                        break
+                    elif "503" in erro_str or "UNAVAILABLE" in erro_str:
+                        # Serviço indisponível: decrementa tentativas e tenta novamente (pode ser a mesma ou outra chave)
+                        tentativas_restantes -= 1
+                        if tentativas_restantes > 0:
+                            print(f"   🔄 Modelo indisponível, restam {tentativas_restantes} tentativa(s). A aguardar 5s...")
+                            time.sleep(5)
+                            # Continua no while (tenta novamente com outra chave, se disponível)
+                        else:
+                            print(f"   ⚠️ Esgotadas tentativas para o modelo {modelo} devido a indisponibilidade.")
+                            break  # Sai do while, vai para o próximo modelo
                     else:
-                        print("   ⚠️ Erro não recuperável para esta imagem. A avançar.")
-                        erro_irrecuperavel = True
-                        break
+                        # Outro erro (ex: parsing, imagem inválida) - considerar falha permanente para este modelo
+                        print("   ⚠️ Erro não recuperável. A passar para próximo modelo.")
+                        break  # Sai do while, vai para o próximo modelo
 
+            # Fim do while de tentativas para este modelo
+
+        # Após percorrer todos os modelos
+        if not sucesso_imagem:
+            print(f"   ❌ Falha em todos os modelos para a imagem {img_nome}")
+            # Opcional: marcar a imagem como falhada para não re-processar? Por enquanto avança.
         idx += 1
 
+        # Pequena pausa entre imagens (para não sobrecarregar)
+        if idx < len(imagens_para_processar):
+            print(f"   ⏱️  Aguardar {SEGUNDOS_ENTRE_REQUISICOES:.0f}s antes da próxima imagem...")
+            time.sleep(SEGUNDOS_ENTRE_REQUISICOES)
+
+    # RELATÓRIO FINAL
     print(f"\n{'='*50}")
-    print("🏁 PROCESSAMENTO CONCLUÍDO")
+    print(f"🏁 PROCESSAMENTO CONCLUÍDO")
     print(f"{'='*50}")
     print(f"✅ Processadas hoje: {processadas_com_sucesso}")
     print(f"📊 Total na pasta: {len(imagens)} imagens")
     print(f"📅 Restantes: {len(imagens_para_processar) - processadas_com_sucesso} imagens")
 
+    # Mostrar estado das chaves
     cota_chaves = carregar_cota_chaves()
     hoje = datetime.now().strftime("%Y-%m-%d")
     print(f"\n🔑 Estado das chaves hoje ({hoje}):")
@@ -463,5 +548,6 @@ def processar_com_multiplas_chaves():
         usadas = registo_chave["usadas"] if registo_chave.get("data") == hoje else 0
         print(f"   {key_id}: {usadas}/20")
 
+# ===== PONTO DE ENTRADA =====
 if __name__ == "__main__":
     processar_com_multiplas_chaves()
