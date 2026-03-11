@@ -362,7 +362,7 @@ def processar_com_multiplas_chaves():
             prompt = PROMPT_FINAL.replace("{num_versoes}", str(len(versoes)))
             
             resposta = cliente.models.generate_content(
-                model="gemini-2.5-flash",
+                model="gemini-3.1-flash-lite",
                 contents=[prompt] + versoes,
                 config={
                     "temperature": 0,
