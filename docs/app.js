@@ -2,6 +2,17 @@
 // 🚀 APP PRINCIPAL (SPA)
 // ===============================
 
+// ========== GARANTIR COR PRETA DA BARRA DE ESTADO ==========
+function fixThemeColor() {
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute('content', '#000000');
+}
+fixThemeColor();
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') fixThemeColor();
+});
+window.addEventListener('scroll', fixThemeColor, { passive: true });
+
 // ========== CAPTURA DE ERROS PARA DEBUG ==========
 window.errorLog = [];
 
@@ -46,11 +57,61 @@ function mostrarLogs() {
   }
 }
 
+// ========== GESTOR DE VIEWS ==========
+window.ViewManager = {
+  goTo(viewId) {
+    // Esconder todas as views
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    // Mostrar a nova
+    const view = document.getElementById(viewId);
+    if (view) view.classList.add('active');
+
+    // Atualizar botões da navegação
+    document.querySelectorAll('.navBtn').forEach(btn => btn.classList.remove('active'));
+    const activeBtn = document.querySelector(`.navBtn[data-view="${viewId}"]`);
+    if (activeBtn) activeBtn.classList.add('active');
+
+    // Executar funções específicas de cada view
+    if (viewId === 'notificacoesView' && typeof window.renderizarNotificacoes === 'function') {
+      window.renderizarNotificacoes();
+    }
+    if (viewId === 'validacaoView' && typeof window.renderizarListaValidacao === 'function') {
+      window.renderizarListaValidacao();
+    }
+    if (viewId === 'estatisticasView' && typeof window.renderizarEstatisticas === 'function') {
+      window.renderizarEstatisticas();
+    }
+    if (viewId === 'configView') {
+      const tokenInput = document.getElementById('token');
+      const saved = localStorage.getItem('github_token');
+      if (tokenInput && saved) tokenInput.value = saved;
+    }
+
+    // Guardar última view
+    sessionStorage.setItem('lastView', viewId);
+  }
+};
+
+// Substituir a navegação manual pelo ViewManager
+document.querySelectorAll('.navBtn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const viewId = btn.dataset.view;
+    if (viewId) window.ViewManager.goTo(viewId);
+  });
+});
+
+// Restaurar última view ao iniciar
+const lastView = sessionStorage.getItem('lastView');
+if (lastView && document.getElementById(lastView)) {
+  window.ViewManager.goTo(lastView);
+} else {
+  window.ViewManager.goTo('homeView');
+}
+
 // ---------- REGISTO SERVICE WORKER ----------
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", async () => {
     try {
-      // Usar CONFIG para a versão do cache (do config.js)
       const reg = await navigator.serviceWorker.register(
         `/Tol_v2/service-worker.js?v=${CONFIG.CACHE_VERSION}`
       );
@@ -71,16 +132,11 @@ if ("serviceWorker" in navigator) {
 
 // ---------- FUNÇÕES GLOBAIS ----------
 
-// ✅ Badge (versão corrigida que considera validações pendentes)
-// NOTA: a função atualizarBadge foi movida para notificacoes.js para evitar duplicação.
-// Esta definição foi removida.
-
-// Atualizar app (nova versão SW) - Versão melhorada com controllerchange
+// Atualizar app (nova versão SW)
 window.atualizarApp = async function () {
   const reg = await navigator.serviceWorker.getRegistration();
   if (reg?.waiting) {
     reg.waiting.postMessage({ action: "skipWaiting" });
-    // Aguarda o novo service worker assumir o controlo antes de recarregar
     navigator.serviceWorker.addEventListener("controllerchange", () => {
       window.location.reload();
     }, { once: true });
@@ -92,32 +148,22 @@ window.atualizarApp = async function () {
 // Reset app (hard reset: limpa caches, remove SW, mantém token)
 window.resetApp = async function () {
   try {
-    // 1️⃣ Guardar token antes de limpar tudo
     const token = localStorage.getItem("github_token");
 
-    // 2️⃣ Limpar TODOS os caches
     if ("caches" in window) {
       const keys = await caches.keys();
       await Promise.all(keys.map(k => caches.delete(k)));
     }
 
-    // 3️⃣ Remover todos os service workers ativos
     if ("serviceWorker" in navigator) {
       const registrations = await navigator.serviceWorker.getRegistrations();
       await Promise.all(registrations.map(reg => reg.unregister()));
     }
 
-    // 4️⃣ Limpar localStorage completamente
     localStorage.clear();
+    if (token) localStorage.setItem("github_token", token);
 
-    // 5️⃣ Restaurar token
-    if (token) {
-      localStorage.setItem("github_token", token);
-    }
-
-    // 6️⃣ Forçar reload limpo (vai buscar index.html ao servidor)
     window.location.href = "/Tol_v2/index.html";
-
   } catch (err) {
     console.error("Erro ao fazer reset:", err);
     alert("Erro ao atualizar a aplicação. Tenta novamente.");
@@ -133,55 +179,6 @@ window.saveToken = function () {
   localStorage.setItem("github_token", token);
   alert("Token guardado.");
 };
-
-// ---------- ROUTER (navegação por views) - Integrado com ViewManager ----------
-function showView(viewId) {
-  // Usar ViewManager se disponível, caso contrário fallback manual
-  if (window.ViewManager) {
-    window.ViewManager.goTo(viewId);
-  } else {
-    // Fallback: esconder todas e mostrar a nova
-    document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-    const view = document.getElementById(viewId);
-    if (view) view.classList.add("active");
-  }
-
-  // Atualiza botões ativos (comum aos dois métodos)
-  document.querySelectorAll(".navBtn").forEach(btn => btn.classList.remove("active"));
-  const activeBtn = document.querySelector(`.navBtn[data-view="${viewId}"]`);
-  if (activeBtn) activeBtn.classList.add("active");
-
-  // Lógica específica por view
-  if (viewId === "notificacoesView") {
-    if (typeof window.renderizarNotificacoes === "function") {
-      window.renderizarNotificacoes();
-    }
-  }
-  if (viewId === "configView") {
-    const tokenInput = document.getElementById("token");
-    const saved = localStorage.getItem("github_token");
-    if (tokenInput && saved) tokenInput.value = saved;
-  }
-
-  // Guardar última view no sessionStorage
-  sessionStorage.setItem("lastView", viewId);
-}
-
-// Event listeners para os botões de navegação
-document.querySelectorAll(".navBtn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    const viewId = btn.dataset.view;
-    if (viewId) showView(viewId);
-  });
-});
-
-// Restaurar última view ao iniciar
-const lastView = sessionStorage.getItem("lastView");
-if (lastView && document.getElementById(lastView)) {
-  showView(lastView);
-} else {
-  showView("homeView");
-}
 
 // ---------- EVENTOS CÂMARA/GALERIA (delegação) ----------
 document.body.addEventListener("click", (e) => {
