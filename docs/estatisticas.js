@@ -8,11 +8,38 @@ const ESTATISTICAS_API = `https://api.github.com/repos/${CONFIG.REPO}/contents/$
 let estatisticasData = null;
 let abaAtiva = 'global';        // 'global' ou nome do jogo
 let periodoAtivo = 'mensal';    // 'mensal' ou 'anual'
+let anoSelecionado = 'todos';   // 'todos' ou ano específico (ex: '2026')
 
 // ---------- FORMATAÇÃO DE MOEDA (vírgula) ----------
 function formatarMoeda(valor) {
     if (valor === undefined || valor === null) return '-';
     return valor.toFixed(2).replace('.', ',');
+}
+
+// ---------- FORMATAR MÊS (sem ano) ----------
+function formatarMes(mesAno) {
+    const [ano, mes] = mesAno.split('-');
+    const meses = [
+        'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+    ];
+    return meses[parseInt(mes) - 1];
+}
+
+// ---------- OBTER ANOS DISPONÍVEIS A PARTIR DOS DADOS ----------
+function obterAnosDisponiveis() {
+    if (!estatisticasData || !estatisticasData.mensal) return [];
+
+    const anosSet = new Set();
+    for (const jogo in estatisticasData.mensal) {
+        const meses = Object.keys(estatisticasData.mensal[jogo] || {});
+        meses.forEach(mes => anosSet.add(mes.substring(0, 4)));
+    }
+    // Adicionar também anos dos dados globais, se existirem
+    if (estatisticasData.global?.mensal) {
+        Object.keys(estatisticasData.global.mensal).forEach(mes => anosSet.add(mes.substring(0, 4)));
+    }
+    return Array.from(anosSet).sort();
 }
 
 // ---------- CARREGAR ESTATÍSTICAS ----------
@@ -36,6 +63,20 @@ async function carregarEstatisticas() {
     }
 }
 
+// ---------- FILTRAR DADOS POR ANO (se aplicável) ----------
+function filtrarPorAno(dados, periodo, ano) {
+    if (ano === 'todos' || !dados) return dados;
+    if (!dados[periodo]) return dados;
+
+    const filtrado = {};
+    for (const chave in dados[periodo]) {
+        if (chave.startsWith(ano)) {
+            filtrado[chave] = dados[periodo][chave];
+        }
+    }
+    return { [periodo]: filtrado };
+}
+
 // ---------- RENDERIZAR ESTATÍSTICAS ----------
 async function renderizarEstatisticas() {
     const container = document.getElementById('estatisticasContainer');
@@ -45,17 +86,18 @@ async function renderizarEstatisticas() {
     container.innerHTML = '<div class="loading"><ion-icon name="sync-outline" class="spin"></ion-icon><p>A carregar estatísticas...</p></div>';
 
     estatisticasData = await carregarEstatisticas();
-    
+
     if (!estatisticasData) {
         container.innerHTML = '<div class="error">❌ Não foi possível carregar estatísticas. Verifica se o ficheiro existe e o token tem permissões.</div>';
         return;
     }
 
-    // Se os dados estiverem vazios (ex: objeto sem propriedades)
     if (Object.keys(estatisticasData).length === 0) {
         container.innerHTML = '<div class="no-notifications">📊 Nenhuma estatística disponível.</div>';
         return;
     }
+
+    const anos = obterAnosDisponiveis();
 
     // Construir HTML
     let html = `
@@ -65,9 +107,19 @@ async function renderizarEstatisticas() {
                 <button class="periodo-btn ${periodoAtivo === 'mensal' ? 'active' : ''}" data-periodo="mensal">Mensal</button>
                 <button class="periodo-btn ${periodoAtivo === 'anual' ? 'active' : ''}" data-periodo="anual">Anual</button>
             </div>
-            <div class="jogo-tabs">
-                <button class="jogo-btn ${abaAtiva === 'global' ? 'active' : ''}" data-jogo="global">🌍 Global</button>
     `;
+
+    // Seletor de anos (só aparece se houver mais de um ano)
+    if (anos.length > 1) {
+        html += `<div class="ano-tabs" style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 10px;">`;
+        html += `<button class="ano-btn ${anoSelecionado === 'todos' ? 'active' : ''}" data-ano="todos">Todos</button>`;
+        anos.forEach(ano => {
+            html += `<button class="ano-btn ${anoSelecionado === ano ? 'active' : ''}" data-ano="${ano}">${ano}</button>`;
+        });
+        html += `</div>`;
+    }
+
+    html += `<div class="jogo-tabs"><button class="jogo-btn ${abaAtiva === 'global' ? 'active' : ''}" data-jogo="global">🌍 Global</button>`;
 
     const jogos = ['totoloto', 'euromilhoes', 'eurodreams', 'milhao'];
     const nomesJogo = {
@@ -76,9 +128,8 @@ async function renderizarEstatisticas() {
         eurodreams: 'EuroDreams',
         milhao: 'M1lhão'
     };
-    
+
     for (const jogo of jogos) {
-        // Verificar se existem dados para este jogo no período ativo (ou pelo menos em algum)
         const temDados = estatisticasData.mensal?.[jogo] || estatisticasData.anual?.[jogo];
         if (temDados) {
             html += `<button class="jogo-btn ${abaAtiva === jogo ? 'active' : ''}" data-jogo="${jogo}">${nomesJogo[jogo]}</button>`;
@@ -87,11 +138,44 @@ async function renderizarEstatisticas() {
 
     html += `</div></div><div class="estatisticas-conteudo" style="overflow-x: auto;">`;
 
+    // Aplicar filtro de ano aos dados (apenas se não for "todos")
+    let dadosFiltrados = estatisticasData;
+    if (anoSelecionado !== 'todos') {
+        if (abaAtiva === 'global') {
+            dadosFiltrados = {
+                ...estatisticasData,
+                global: filtrarPorAno(estatisticasData.global, periodoAtivo, anoSelecionado)
+            };
+        } else {
+            dadosFiltrados = {
+                ...estatisticasData,
+                mensal: {
+                    ...estatisticasData.mensal,
+                    [abaAtiva]: estatisticasData.mensal?.[abaAtiva] 
+                        ? Object.fromEntries(
+                            Object.entries(estatisticasData.mensal[abaAtiva]).filter(([mes]) => mes.startsWith(anoSelecionado))
+                          )
+                        : {}
+                },
+                anual: {
+                    ...estatisticasData.anual,
+                    [abaAtiva]: estatisticasData.anual?.[abaAtiva]
+                        ? Object.fromEntries(
+                            Object.entries(estatisticasData.anual[abaAtiva]).filter(([ano]) => ano === anoSelecionado)
+                          )
+                        : {}
+                }
+            };
+        }
+    } else {
+        dadosFiltrados = estatisticasData;
+    }
+
     // Conteúdo conforme aba e período
     if (abaAtiva === 'global') {
-        html += gerarTabelaGlobal(periodoAtivo, estatisticasData.global);
+        html += gerarTabelaGlobal(periodoAtivo, dadosFiltrados.global);
     } else {
-        const dadosJogo = periodoAtivo === 'mensal' ? estatisticasData.mensal?.[abaAtiva] : estatisticasData.anual?.[abaAtiva];
+        const dadosJogo = periodoAtivo === 'mensal' ? dadosFiltrados.mensal?.[abaAtiva] : dadosFiltrados.anual?.[abaAtiva];
         html += gerarTabelaJogo(periodoAtivo, dadosJogo, abaAtiva);
     }
 
@@ -103,7 +187,7 @@ async function renderizarEstatisticas() {
     document.querySelectorAll('.periodo-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             periodoAtivo = btn.dataset.periodo;
-            renderizarEstatisticas(); // recarrega com novo período
+            renderizarEstatisticas();
         });
     });
 
@@ -111,14 +195,22 @@ async function renderizarEstatisticas() {
     document.querySelectorAll('.jogo-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             abaAtiva = btn.dataset.jogo;
-            renderizarEstatisticas(); // recarrega com novo jogo
+            renderizarEstatisticas();
+        });
+    });
+
+    // Adicionar event listeners aos botões de ano (se existirem)
+    document.querySelectorAll('.ano-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            anoSelecionado = btn.dataset.ano;
+            renderizarEstatisticas();
         });
     });
 }
 
 // ---------- GERAR TABELA GLOBAL ----------
 function gerarTabelaGlobal(periodo, dadosGlobais) {
-    if (!dadosGlobais || !dadosGlobais[periodo]) {
+    if (!dadosGlobais || !dadosGlobais[periodo] || Object.keys(dadosGlobais[periodo]).length === 0) {
         return '<p class="no-data">Sem dados globais disponíveis para este período.</p>';
     }
 
@@ -144,7 +236,7 @@ function gerarTabelaGlobal(periodo, dadosGlobais) {
     for (const periodoKey of periodos) {
         const dados = dadosGlobais[periodo][periodoKey];
         html += `<tr>
-            <td><strong>${periodoKey}</strong></td>
+            <td><strong>${periodo === 'mensal' ? formatarMes(periodoKey) : periodoKey}</strong></td>
             <td>${dados.total_apostas}</td>
             <td>${formatarMoeda(dados.total_gasto)}</td>
             <td>${formatarMoeda(dados.total_recebido)}</td>
@@ -162,7 +254,7 @@ function gerarTabelaGlobal(periodo, dadosGlobais) {
 
 // ---------- GERAR TABELA POR JOGO ----------
 function gerarTabelaJogo(periodo, dadosJogo, jogo) {
-    if (!dadosJogo) {
+    if (!dadosJogo || Object.keys(dadosJogo).length === 0) {
         return '<p class="no-data">Sem dados disponíveis para este jogo neste período.</p>';
     }
 
@@ -191,7 +283,7 @@ function gerarTabelaJogo(periodo, dadosJogo, jogo) {
     for (const periodoKey of periodos) {
         const dados = dadosJogo[periodoKey];
         html += `<tr>
-            <td><strong>${periodoKey}</strong></td>
+            <td><strong>${periodo === 'mensal' ? formatarMes(periodoKey) : periodoKey}</strong></td>
             <td>${dados.total_apostas}</td>
             <td>${formatarMoeda(dados.total_gasto)}</td>
             <td>${formatarMoeda(dados.total_recebido)}</td>
