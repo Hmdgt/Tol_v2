@@ -14,15 +14,32 @@ PASTA_APOSTAS = os.path.join(PASTA_DADOS, "apostas")
 FICHEIRO_ESTATISTICAS = os.path.join(PASTA_RESULTADOS, "estatisticas_completas.json")
 
 # ===== FUNÇÕES AUXILIARES =====
-def extrair_valor_monetario(valor_str: str) -> float:
-    if not valor_str:
+def extrair_valor_monetario(valor) -> float:
+    """
+    Converte um valor (string ou número) para float.
+    Exemplos: "2,20" → 2.20, "7.15" → 7.15, 2.2 → 2.2, "Reembolso" → 1.0
+    """
+    if valor is None:
         return 0.0
-    valor_limpo = valor_str.replace('€', '').replace(' ', '').replace(',', '.')
-    if 'Reembolso' in valor_limpo:
-        return 1.0
+
+    # Se já for número, retorna diretamente
+    if isinstance(valor, (int, float)):
+        return float(valor)
+
+    # Converte para string e limpa
     try:
+        valor_str = str(valor).strip()
+        if not valor_str:
+            return 0.0
+
+        # Trata casos especiais
+        if 'Reembolso' in valor_str:
+            return 1.0
+
+        # Remove símbolos e substitui vírgula por ponto
+        valor_limpo = valor_str.replace('€', '').replace(' ', '').replace(',', '.')
         return float(valor_limpo)
-    except ValueError:
+    except (ValueError, TypeError):
         return 0.0
 
 
@@ -122,9 +139,13 @@ def processar_jogo(jogo: str) -> Dict[str, Any]:
 
     for ref, apostas in por_ref.items():
         boletim = boletins.get(ref, {})
-        valor_total = float(boletim.get("valor_total", 0))
+        # Usa a função melhorada para converter o valor_total
+        valor_total = extrair_valor_monetario(boletim.get("valor_total", 0))
         n_apostas = len(boletim.get("apostas", [])) or len(apostas)
         custo_por_aposta = valor_total / n_apostas if n_apostas else 0
+
+        # Log opcional (descomentar para depuração)
+        # print(f"   🔍 Ref: {ref} | valor_total: {valor_total} | n_apostas: {n_apostas} | custo_por_aposta: {custo_por_aposta}")
 
         for v in apostas:
             data = v.get("boletim", {}).get("data_sorteio")
