@@ -1,70 +1,100 @@
 [
-  {
-    "tipo": "Euromilhões",
-    "data_sorteio": "2026-02-27",
-    "data_aposta": "2026-02-27",
-    "data_emissao": "2026-02-27 18:11:22",
-    "referencia_unica": "558-06034782-M1L",
-    "concurso": "017/2026",
-    "valor_total": 2.2,
-    "valido": true,
-    "apostas": [
-      {
-        "indice": 1,
-        "numeros": [
-          "08",
-          "23",
-          "24",
-          "31",
-          "37"
+    {
+        "tipo": "Euromilhões",
+        "data_sorteio": "2026-02-27",
+        "data_aposta": "2026-02-27",
+        "data_emissao": "2026-02-27 18:11:22",
+        "referencia_unica": "558-06034782-M1L",
+        "concurso": "017/2026",
+        "valor_total": 2.2,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "numeros": [
+                    "08",
+                    "23",
+                    "24",
+                    "31",
+                    "37"
+                ],
+                "estrelas": [
+                    "06",
+                    "10"
+                ]
+            }
         ],
-        "estrelas": [
-          "06",
-          "10"
-        ]
-      }
-    ],
-    "imagem_origem": "foto_1772996032042_6442uz.png",
-    "hash_imagem": "0bfee8488c351994537cb8515e0394ba",
-    "data_processamento": "2026-03-12 22:15:50",
-    "confirmado": true,
-    "tipo_ficheiro": "euromilhoes",
-    "_indice": 0,
-    "data_validacao": "2026-03-12T22:17:07.191Z",
-    "validado_por": "humano"
-  },
-  {
-    "tipo": "Euromilhões",
-    "data_sorteio": "2026-02-20",
-    "data_aposta": "2026-02-20",
-    "data_emissao": "2026-02-20 08:37:32",
-    "referencia_unica": "551-05455705-M1L",
-    "concurso": "015/2026",
-    "valor_total": 2.2,
-    "valido": true,
-    "apostas": [
-      {
-        "indice": 1,
-        "numeros": [
-          "04",
-          "09",
-          "30",
-          "33",
-          "37"
+        "imagem_origem": "foto_1772996032042_6442uz.png",
+        "hash_imagem": "0bfee8488c351994537cb8515e0394ba",
+        "data_processamento": "2026-03-12 22:15:50",
+        "confirmado": true,
+        "tipo_ficheiro": "euromilhoes",
+        "_indice": 0,
+        "data_validacao": "2026-03-12T22:17:07.191Z",
+        "validado_por": "humano"
+    },
+    {
+        "tipo": "Euromilhões",
+        "data_sorteio": "2026-02-20",
+        "data_aposta": "2026-02-20",
+        "data_emissao": "2026-02-20 08:37:32",
+        "referencia_unica": "551-05455705-M1L",
+        "concurso": "015/2026",
+        "valor_total": 2.2,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "numeros": [
+                    "04",
+                    "09",
+                    "30",
+                    "33",
+                    "37"
+                ],
+                "estrelas": [
+                    "01",
+                    "05"
+                ]
+            }
         ],
-        "estrelas": [
-          "01",
-          "05"
-        ]
-      }
-    ],
-    "imagem_origem": "foto_1773355534195_b52jpr.png",
-    "hash_imagem": "1e178ba024e37240ac4e3caa6d75f33e",
-    "data_processamento": "2026-03-12 22:46:33",
-    "confirmado": true,
-    "tipo_ficheiro": "euromilhoes",
-    "_indice": 1,
-    "data_validacao": "2026-03-12T22:47:39.717Z",
-    "validado_por": "humano"
-  }
+        "imagem_origem": "foto_1773355534195_b52jpr.png",
+        "hash_imagem": "1e178ba024e37240ac4e3caa6d75f33e",
+        "data_processamento": "2026-03-12 22:46:33",
+        "confirmado": true,
+        "tipo_ficheiro": "euromilhoes",
+        "_indice": 1,
+        "data_validacao": "2026-03-12T22:47:39.717Z",
+        "validado_por": "humano"
+    },
+    {
+        "tipo": "Euromilhões",
+        "data_sorteio": "2026-02-24",
+        "data_aposta": "2026-02-24",
+        "data_emissao": "2026-02-24 08:57:56",
+        "referencia_unica": "555-03672294-M1L",
+        "concurso": "016/2026",
+        "valor_total": 2.2,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "numeros": [
+                    "04",
+                    "05",
+                    "32",
+                    "33",
+                    "48"
+                ],
+                "estrelas": [
+                    "01",
+                    "04"
+                ]
+            }
+        ],
+        "imagem_origem": "foto_1773355843942_geuwjt.png",
+        "hash_imagem": "458ec4d00f6a2e1ffb646cbfe888ad0e",
+        "data_processamento": "2026-03-12 22:52:02",
+        "confirmado": false
+    }
 ]
