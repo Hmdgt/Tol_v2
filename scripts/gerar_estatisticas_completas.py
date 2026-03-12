@@ -9,8 +9,7 @@ from typing import Dict, List, Any
 
 # ===== CONFIGURAÇÃO =====
 PASTA_RESULTADOS = "resultados/"
-PASTA_DADOS = "dados/"
-PASTA_APOSTAS = os.path.join(PASTA_DADOS, "apostas")
+PASTA_APOSTAS = "apostas/"                     # ← corrigido: aponta diretamente para a pasta das apostas
 FICHEIRO_ESTATISTICAS = os.path.join(PASTA_RESULTADOS, "estatisticas_completas.json")
 
 # ===== FUNÇÕES AUXILIARES =====
@@ -22,17 +21,21 @@ def extrair_valor_monetario(valor) -> float:
     if valor is None:
         return 0.0
 
+    # Se já for número, retorna diretamente
     if isinstance(valor, (int, float)):
         return float(valor)
 
+    # Converte para string e limpa
     try:
         valor_str = str(valor).strip()
         if not valor_str:
             return 0.0
 
+        # Trata casos especiais
         if 'Reembolso' in valor_str:
             return 1.0
 
+        # Remove símbolos e substitui vírgula por ponto
         valor_limpo = valor_str.replace('€', '').replace(' ', '').replace(',', '.')
         return float(valor_limpo)
     except (ValueError, TypeError):
@@ -47,6 +50,7 @@ def carregar_json(caminho: str):
 
 
 def carregar_boletins(jogo: str) -> Dict[str, Any]:
+    """Carrega boletins originais de /apostas/<jogo>.json"""
     caminho = os.path.join(PASTA_APOSTAS, f"{jogo}.json")
     dados = carregar_json(caminho)
     boletins = {}
@@ -60,7 +64,8 @@ def carregar_boletins(jogo: str) -> Dict[str, Any]:
 
 
 def carregar_sorteios(jogo: str) -> Dict[str, Any]:
-    caminho = os.path.join(PASTA_DADOS, f"{jogo}_2026.json")
+    """Carrega sorteios oficiais de /dados/<jogo>_2026.json"""
+    caminho = os.path.join("dados/", f"{jogo}_2026.json")
     dados = carregar_json(caminho)
     sorteios = {}
 
@@ -74,11 +79,13 @@ def carregar_sorteios(jogo: str) -> Dict[str, Any]:
 
 
 def carregar_verificacoes(jogo: str) -> List[Dict]:
+    """Carrega verificações de resultados/<jogo>_verificacoes.json"""
     caminho = os.path.join(PASTA_RESULTADOS, f"{jogo}_verificacoes.json")
     dados = carregar_json(caminho)
     if not dados:
         return []
 
+    # Normalizar: transformar "premio" → "premios"
     for v in dados:
         if "premio" in v and v["premio"]:
             v["premios"] = [v["premio"]]
@@ -107,6 +114,7 @@ def processar_jogo(jogo: str) -> Dict[str, Any]:
     if not verificacoes:
         return {}
 
+    # Agrupar verificações por referência
     por_ref = defaultdict(list)
     for v in verificacoes:
         ref = v.get("boletim", {}).get("referencia")
@@ -127,6 +135,7 @@ def processar_jogo(jogo: str) -> Dict[str, Any]:
 
     for ref, apostas in por_ref.items():
         boletim = boletins.get(ref, {})
+        # Usa a função melhorada para converter o valor_total
         valor_total = extrair_valor_monetario(boletim.get("valor_total", 0))
         n_apostas = len(boletim.get("apostas", [])) or len(apostas)
         custo_por_aposta = valor_total / n_apostas if n_apostas else 0
@@ -162,6 +171,7 @@ def processar_jogo(jogo: str) -> Dict[str, Any]:
                     mes["maior_premio"] = total_recebido
                     mes["data_maior_premio"] = data
 
+    # Calcular derivados
     for mes, d in stats_mensais.items():
         d["saldo"] = round(d["total_recebido"] - d["total_gasto"], 2)
         d["percentagem_ganhadoras"] = round((d["ganhadoras"] / d["total_apostas"] * 100) if d["total_apostas"] else 0, 2)
