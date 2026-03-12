@@ -24,7 +24,7 @@ async function carregarEstatisticas() {
     try {
         const res = await fetch(ESTATISTICAS_API + `?t=${Date.now()}`, { headers });
         if (!res.ok) {
-            if (res.status === 404) return null;
+            if (res.status === 404) return null; // ficheiro não existe
             throw new Error(`Erro ${res.status}`);
         }
         const data = await res.json();
@@ -41,11 +41,19 @@ async function renderizarEstatisticas() {
     const container = document.getElementById('estatisticasContainer');
     if (!container) return;
 
-    container.innerHTML = '<div class="loading"><ion-icon name="sync-outline" class="spin"></ion-icon></div>';
+    // Mostrar loading imediatamente
+    container.innerHTML = '<div class="loading"><ion-icon name="sync-outline" class="spin"></ion-icon><p>A carregar estatísticas...</p></div>';
 
     estatisticasData = await carregarEstatisticas();
+    
     if (!estatisticasData) {
-        container.innerHTML = '<div class="error">Não foi possível carregar estatísticas.</div>';
+        container.innerHTML = '<div class="error">❌ Não foi possível carregar estatísticas. Verifica se o ficheiro existe e o token tem permissões.</div>';
+        return;
+    }
+
+    // Se os dados estiverem vazios (ex: objeto sem propriedades)
+    if (Object.keys(estatisticasData).length === 0) {
+        container.innerHTML = '<div class="no-notifications">📊 Nenhuma estatística disponível.</div>';
         return;
     }
 
@@ -68,8 +76,11 @@ async function renderizarEstatisticas() {
         eurodreams: 'EuroDreams',
         milhao: 'M1lhão'
     };
+    
     for (const jogo of jogos) {
-        if (estatisticasData.mensal?.[jogo] || estatisticasData.anual?.[jogo]) {
+        // Verificar se existem dados para este jogo no período ativo (ou pelo menos em algum)
+        const temDados = estatisticasData.mensal?.[jogo] || estatisticasData.anual?.[jogo];
+        if (temDados) {
             html += `<button class="jogo-btn ${abaAtiva === jogo ? 'active' : ''}" data-jogo="${jogo}">${nomesJogo[jogo]}</button>`;
         }
     }
@@ -80,7 +91,7 @@ async function renderizarEstatisticas() {
     if (abaAtiva === 'global') {
         html += gerarTabelaGlobal(periodoAtivo, estatisticasData.global);
     } else {
-        const dadosJogo = periodoAtivo === 'mensal' ? estatisticasData.mensal[abaAtiva] : estatisticasData.anual[abaAtiva];
+        const dadosJogo = periodoAtivo === 'mensal' ? estatisticasData.mensal?.[abaAtiva] : estatisticasData.anual?.[abaAtiva];
         html += gerarTabelaJogo(periodoAtivo, dadosJogo, abaAtiva);
     }
 
@@ -92,7 +103,7 @@ async function renderizarEstatisticas() {
     document.querySelectorAll('.periodo-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             periodoAtivo = btn.dataset.periodo;
-            renderizarEstatisticas();
+            renderizarEstatisticas(); // recarrega com novo período
         });
     });
 
@@ -100,7 +111,7 @@ async function renderizarEstatisticas() {
     document.querySelectorAll('.jogo-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             abaAtiva = btn.dataset.jogo;
-            renderizarEstatisticas();
+            renderizarEstatisticas(); // recarrega com novo jogo
         });
     });
 }
@@ -108,7 +119,7 @@ async function renderizarEstatisticas() {
 // ---------- GERAR TABELA GLOBAL ----------
 function gerarTabelaGlobal(periodo, dadosGlobais) {
     if (!dadosGlobais || !dadosGlobais[periodo]) {
-        return '<p class="no-data">Sem dados globais disponíveis.</p>';
+        return '<p class="no-data">Sem dados globais disponíveis para este período.</p>';
     }
 
     const periodos = Object.keys(dadosGlobais[periodo]).sort().reverse();
@@ -152,7 +163,7 @@ function gerarTabelaGlobal(periodo, dadosGlobais) {
 // ---------- GERAR TABELA POR JOGO ----------
 function gerarTabelaJogo(periodo, dadosJogo, jogo) {
     if (!dadosJogo) {
-        return '<p class="no-data">Sem dados disponíveis para este jogo.</p>';
+        return '<p class="no-data">Sem dados disponíveis para este jogo neste período.</p>';
     }
 
     const periodos = Object.keys(dadosJogo).sort().reverse();
