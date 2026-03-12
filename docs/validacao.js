@@ -238,12 +238,7 @@ window.renderizarListaValidacao = async function() {
 window.abrirValidacao = async function(imagem) {
   console.log("📸 A abrir validação:", imagem);
   
-  if (window.ViewManager) {
-    window.ViewManager.goTo('validacaoView');
-  } else {
-    document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-    document.getElementById('validacaoView').classList.add('active');
-  }
+  window.ViewManager.goTo('validacaoView');
   
   const container = document.getElementById('validacaoContainer');
   if (container) {
@@ -304,7 +299,6 @@ async function renderizarFormValidacao(imagem, jogos) {
     const dataSorteioEscaped = escapeHTML(jogo.data_sorteio || '');
     const concursoEscaped = escapeHTML(jogo.concurso || '');
     
-    // Guardar o objeto original num atributo data-original (codificado)
     const originalEncoded = encodeURIComponent(JSON.stringify(jogo));
     
     html += `
@@ -526,7 +520,7 @@ async function renderizarFormValidacao(imagem, jogos) {
   document.getElementById('btnConfirmarValidacao').addEventListener('click', () => window.confirmarValidacao(imagem));
 }
 
-// ---------- CONFIRMAR VALIDAÇÃO (com preservação de campos originais) ----------
+// ---------- CONFIRMAR VALIDAÇÃO ----------
 let validando = false;
 
 window.confirmarValidacao = async function(imagem) {
@@ -550,47 +544,39 @@ window.confirmarValidacao = async function(imagem) {
     const jogosAtualizados = [];
     
     for (const form of forms) {
-      // Recuperar o objeto original
       const original = JSON.parse(decodeURIComponent(form.dataset.original));
       
-      // Obter valores dos inputs comuns
       const referencia_unica = form.querySelector('.campo-ref')?.value;
       const data_sorteio = form.querySelector('.campo-data-sorteio')?.value;
       const concurso = form.querySelector('.campo-concurso')?.value;
       
-      // Recolher apostas editadas
       const apostasEditadas = [];
       
       if (original.tipo === 'M1lhão') {
-        // Para M1lhão, há apenas um campo código por aposta
         const inputsCodigo = form.querySelectorAll('.campo-codigo');
         original.apostas.forEach((apostaOriginal, idx) => {
           const codigoInput = inputsCodigo[idx];
           if (codigoInput) {
             apostasEditadas.push({
-              ...apostaOriginal,                         // mantém indice, etc.
+              ...apostaOriginal,
               codigo: codigoInput.value
             });
           } else {
-            // fallback
             apostasEditadas.push(apostaOriginal);
           }
         });
       } else {
-        // Para outros jogos, percorrer cada aposta original e recolher os inputs correspondentes
         const inputsNumero = form.querySelectorAll('.campo-numero');
         const inputsEstrela = form.querySelectorAll('.campo-estrela');
-        const inputSorte = form.querySelector('.campo-sorte');        // apenas um por jogo (Nº da Sorte)
-        const inputDream = form.querySelector('.campo-dream');        // apenas um por jogo (Dream Number)
+        const inputSorte = form.querySelector('.campo-sorte');
+        const inputDream = form.querySelector('.campo-dream');
         
-        // Assumimos que as apostas estão na mesma ordem dos inputs
         original.apostas.forEach((apostaOriginal, idx) => {
           const numeros = [];
           const estrelas = [];
           
-          // Índices dos inputs para esta aposta
-          const startNum = idx * 5;   // cada aposta tem 5 números
-          const startEst = idx * 2;    // cada aposta tem 2 estrelas
+          const startNum = idx * 5;
+          const startEst = idx * 2;
           
           for (let i = 0; i < 5; i++) {
             const input = inputsNumero[startNum + i];
@@ -606,12 +592,11 @@ window.confirmarValidacao = async function(imagem) {
           }
           
           const novaAposta = {
-            ...apostaOriginal,          // preserva indice e outros campos
+            ...apostaOriginal,
             numeros: numeros.length ? numeros : apostaOriginal.numeros,
             estrelas: estrelas.length ? estrelas : apostaOriginal.estrelas
           };
           
-          // Campos especiais (existem apenas um por jogo, não por aposta)
           if (inputSorte) {
             novaAposta.numero_da_sorte = inputSorte.value.padStart(2, '0');
           }
@@ -623,7 +608,6 @@ window.confirmarValidacao = async function(imagem) {
         });
       }
       
-      // Construir o objeto jogo atualizado: parte do original e sobreescreve os campos editados
       const jogoAtualizado = {
         ...original,
         referencia_unica,
@@ -633,14 +617,9 @@ window.confirmarValidacao = async function(imagem) {
         apostas: apostasEditadas
       };
       
-      // Atualizar também os campos que possam existir no formulário mas não no original
-      // (ex.: se houver campo data_aposta ou valor_total, mas não os estamos a usar)
-      // Para manter a simplicidade, não adicionamos campos novos.
-      
       jogosAtualizados.push(jogoAtualizado);
     }
     
-    // Guardar no GitHub
     const sucesso = await guardarValidacao(imagem, jogosAtualizados);
     
     if (sucesso) {
@@ -665,12 +644,7 @@ window.confirmarValidacao = async function(imagem) {
 window.voltarListaValidacao = function() {
   console.log("⬅️ A voltar da validação para a lista");
   
-  if (window.ViewManager) {
-    window.ViewManager.goTo('notificacoesView');
-  } else {
-    document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-    document.getElementById('notificacoesView').classList.add('active');
-  }
+  window.ViewManager.goTo('notificacoesView');
   
   if (typeof window.renderizarNotificacoes === 'function') {
     window.renderizarNotificacoes();
