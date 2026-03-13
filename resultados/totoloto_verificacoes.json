@@ -172,5 +172,92 @@
     },
     "ganhou": false,
     "premios": []
+  },
+  {
+    "data_verificacao": "2026-03-13 22:27:08",
+    "metodo_validacao": "data + concurso",
+    "boletim": {
+      "referencia": "062-06308289-177",
+      "data_sorteio": "2026-03-04",
+      "concurso_sorteio": "018/2026",
+      "imagem_origem": "foto_1773440630144_03zs6y.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "numeros": [
+        "01",
+        "04",
+        "14",
+        "23",
+        "41"
+      ],
+      "numero_da_sorte": "05"
+    },
+    "sorteio": {
+      "concurso": "018/2026",
+      "data": "04/03/2026",
+      "numeros": [
+        "11",
+        "13",
+        "16",
+        "17",
+        "34"
+      ],
+      "numero_da_sorte": "12"
+    },
+    "acertos": {
+      "numeros": 0,
+      "numero_da_sorte": false,
+      "descricao": "0 número(s) sem Nº da Sorte"
+    },
+    "ganhou": false,
+    "premios": []
+  },
+  {
+    "data_verificacao": "2026-03-13 22:27:08",
+    "metodo_validacao": "data + concurso",
+    "boletim": {
+      "referencia": "058-05797711-210",
+      "data_sorteio": "2026-02-28",
+      "concurso_sorteio": "017/2026",
+      "imagem_origem": "foto_1773440449315_04ajup.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "numeros": [
+        "01",
+        "12",
+        "30",
+        "31",
+        "33"
+      ],
+      "numero_da_sorte": "04"
+    },
+    "sorteio": {
+      "concurso": "017/2026",
+      "data": "28/02/2026",
+      "numeros": [
+        "06",
+        "17",
+        "19",
+        "45",
+        "49"
+      ],
+      "numero_da_sorte": "04"
+    },
+    "acertos": {
+      "numeros": 0,
+      "numero_da_sorte": true,
+      "descricao": "0 número(s) com Nº da Sorte"
+    },
+    "ganhou": true,
+    "premios": [
+      {
+        "premio": "Nº da Sorte",
+        "descricao": "Nº da Sorte",
+        "vencedores": "80.480",
+        "valor": "Reembolso do valor da aposta de Totoloto"
+      }
+    ]
   }
 ]
