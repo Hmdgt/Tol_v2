@@ -161,7 +161,7 @@ def verificar_boletins(apostas, sorteios):
     return resultados
 
 # ============================================================
-# GUARDAR RESULTADOS (SEM DUPLICAÇÃO)
+# GUARDAR RESULTADOS (SEM DUPLICAÇÃO) + FICHEIRO RECENTE
 # ============================================================
 
 def guardar_resultados(resultados):
@@ -199,7 +199,17 @@ def guardar_resultados(resultados):
     with open(FICHEIRO_RESULTADOS, "w", encoding="utf-8") as f:
         json.dump(historico, f, indent=2, ensure_ascii=False)
 
-    print(f"\n📁 Histórico atualizado ({novos} novos registos)")
+    print(f"\n📁 Histórico guardado em: {FICHEIRO_RESULTADOS}")
+    print(f"📊 Novas verificações no histórico: {novos}")
+    print(f"📊 Total no histórico: {len(historico)}")
+
+    # ===== GUARDAR RESULTADOS RECENTES (PARA NOTIFICAÇÕES) =====
+    if resultados:
+        caminho_recentes = os.path.join("resultados", "eurodreams_recentes.json")
+        with open(caminho_recentes, "w", encoding="utf-8") as f:
+            json.dump(resultados, f, indent=2, ensure_ascii=False)
+        print(f"📁 Resultados recentes guardados em: {caminho_recentes}")
+        print(f"📊 Total de resultados recentes: {len(resultados)}")
 
 # ============================================================
 # RELATÓRIO
