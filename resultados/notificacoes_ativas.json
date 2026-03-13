@@ -1,1 +1,44 @@
-[]
+[
+  {
+    "id": "eurodreams_260217-17-2156263608-098_1",
+    "jogo": "eurodreams",
+    "data": "2026-03-13 13:08:05",
+    "lido": false,
+    "titulo": "🎫 Novo resultado EURODREAMS",
+    "subtitulo": "Boletim: 260217-17-2156263608-098",
+    "resumo": "0 acertos",
+    "detalhes": {
+      "data_verificacao": "2026-03-13 13:08:05",
+      "boletim": {
+        "referencia": "260217-17-2156263608-098",
+        "concurso_sorteio": "015/2026",
+        "data_sorteio": "2026-02-19"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "01",
+          "09",
+          "14",
+          "17",
+          "22",
+          "26"
+        ],
+        "dream": [
+          "04"
+        ]
+      },
+      "acertos": {
+        "numeros": 0,
+        "dream": false
+      },
+      "ganhou": false,
+      "premio": {
+        "premio": "Sem prémio",
+        "valor": "€ 0,00"
+      },
+      "_jogo": "eurodreams",
+      "_id": "eurodreams_260217-17-2156263608-098_1"
+    }
+  }
+]
