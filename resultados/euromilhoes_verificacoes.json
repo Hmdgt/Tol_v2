@@ -204,5 +204,56 @@
       "descricao": "Não corresponde a qualquer prémio",
       "valor": "€ 0,00"
     }
+  },
+  {
+    "data_verificacao": "2026-03-13 08:42:04",
+    "metodo_validacao": "data + concurso",
+    "boletim": {
+      "referencia": "569-06929646-M1L",
+      "data_sorteio": "2026-03-10",
+      "concurso_sorteio": "020/2026",
+      "imagem_origem": "foto_1773388664866_y37o2w.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "numeros": [
+        "07",
+        "08",
+        "12",
+        "23",
+        "42"
+      ],
+      "estrelas": [
+        "06",
+        "12"
+      ]
+    },
+    "sorteio": {
+      "concurso": "020/2026",
+      "data": "10/03/2026",
+      "chave": "12 14 27 44 50 + 4 12",
+      "numeros": [
+        "12",
+        "14",
+        "27",
+        "44",
+        "50"
+      ],
+      "estrelas": [
+        "04",
+        "12"
+      ]
+    },
+    "acertos": {
+      "numeros": 1,
+      "estrelas": 1,
+      "descricao": "1 número(s) e 1 estrela(s)"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Não corresponde a qualquer prémio",
+      "valor": "€ 0,00"
+    }
   }
 ]
