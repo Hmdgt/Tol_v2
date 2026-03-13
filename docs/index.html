@@ -424,6 +424,53 @@
     }
     .custom-toast ion-icon { flex-shrink: 0; }
 
+    /* Estilos para a aba premiados com seleção */
+.premiado-card {
+    transition: border-color 0.2s, transform 0.1s;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+.premiado-card.selecionado {
+    border-color: #ffd700 !important;
+    background: #222 !important;
+}
+.selecao-barra {
+    background: #222;
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.selecao-barra span {
+    color: #ffd700;
+    font-weight: bold;
+}
+.btn-cancelar {
+    background: #333;
+    border: 1px solid #555;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.btn-validar {
+    background: #2a5a2a;
+    border: 1px solid #4caf4c;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.btn-validar ion-icon {
+    font-size: 18px;
+}
+
     /* ========== ESTATÍSTICAS ========== */
     .estatisticas-header {
       display: flex;
