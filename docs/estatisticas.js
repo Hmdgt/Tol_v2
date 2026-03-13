@@ -354,8 +354,8 @@ function gerarTabelaJogo(periodo, dadosJogo, jogo) {
 // ---------- GERAR LISTA DE BOLETINS PREMIADOS ----------
 function gerarListaPremiados(dados) {
     // Filtrar apenas os que ganharam
-    const premiados = dados.filter(item => item.ganhou === true);
-
+    const premiados = dados.filter(item => item.detalhes?.ganhou === true);
+    
     if (premiados.length === 0) {
         return '<p class="no-data">Nenhum boletim premiado encontrado.</p>';
     }
