@@ -2,7 +2,6 @@ import os
 import smtplib
 import json
 from email.message import EmailMessage
-from email.utils import make_msgid
 from datetime import datetime
 from typing import List, Dict
 
@@ -10,7 +9,6 @@ from typing import List, Dict
 FICHEIRO_HISTORICO = "resultados/notificacoes_historico.json"
 
 def carregar_historico() -> List[Dict]:
-    """Carrega o histórico de notificações do ficheiro JSON."""
     if not os.path.exists(FICHEIRO_HISTORICO):
         print("❌ Ficheiro de histórico não encontrado.")
         return []
@@ -18,7 +16,6 @@ def carregar_historico() -> List[Dict]:
         return json.load(f)
 
 def formatar_data(data_str: str) -> str:
-    """Formata data ISO para DD/MM/YYYY."""
     try:
         dt = datetime.fromisoformat(data_str.replace('Z', '+00:00'))
         return dt.strftime("%d/%m/%Y")
@@ -26,7 +23,6 @@ def formatar_data(data_str: str) -> str:
         return data_str
 
 def extrair_valor(premio: dict) -> float:
-    """Extrai valor numérico de um prémio (trata 'Reembolso' como 1.0)."""
     valor_str = premio.get('valor', '0').replace('€', '').replace(' ', '').replace(',', '.')
     if 'Reembolso' in valor_str:
         return 1.0
@@ -36,11 +32,11 @@ def extrair_valor(premio: dict) -> float:
         return 0.0
 
 def gerar_html_premiados(premiados: List[Dict]) -> str:
-    """Gera o corpo HTML do email com a lista de prémios ativos."""
+    """Gera HTML com cards semelhantes aos da SPA."""
     if not premiados:
-        return "<p>Nenhum prémio ativo no momento.</p>"
+        return "<p style='color: #888; text-align: center;'>Nenhum prémio ativo no momento.</p>"
 
-    linhas = []
+    cards_html = []
     for p in premiados:
         jogo = p.get('jogo', p.get('_jogo', 'desconhecido')).upper()
         data = formatar_data(p.get('data', ''))
@@ -67,7 +63,7 @@ def gerar_html_premiados(premiados: List[Dict]) -> str:
         premios_str = '<br>'.join(premios_info) if premios_info else 'Prémio não detalhado'
         valor_total_str = f"€ {valor_total:.2f}".replace('.', ',')
 
-        # Construir descrição da aposta
+        # Descrição da aposta
         aposta = detalhes.get('aposta', {})
         if jogo == 'MILHAO':
             desc_aposta = f"Código: {aposta.get('codigo', '-')}"
@@ -85,54 +81,43 @@ def gerar_html_premiados(premiados: List[Dict]) -> str:
             else:
                 desc_aposta = '-'
 
-        linhas.append(f"""
-        <tr>
-            <td style="border:1px solid #333; padding:8px; text-align:center;">{jogo}</td>
-            <td style="border:1px solid #333; padding:8px;">{data}</td>
-            <td style="border:1px solid #333; padding:8px;">{concurso}</td>
-            <td style="border:1px solid #333; padding:8px;">{referencia}</td>
-            <td style="border:1px solid #333; padding:8px;">{desc_aposta}</td>
-            <td style="border:1px solid #333; padding:8px;">{premios_str}</td>
-            <td style="border:1px solid #333; padding:8px; font-weight:bold; color:#ffd700;">{valor_total_str}</td>
-        </tr>
-        """)
-
-    tabela = f"""
-    <table style="border-collapse:collapse; width:100%; font-family:sans-serif; font-size:14px;">
-        <thead>
-            <tr style="background:#2a5a2a; color:white;">
-                <th style="border:1px solid #333; padding:8px;">Jogo</th>
-                <th style="border:1px solid #333; padding:8px;">Data</th>
-                <th style="border:1px solid #333; padding:8px;">Concurso</th>
-                <th style="border:1px solid #333; padding:8px;">Referência</th>
-                <th style="border:1px solid #333; padding:8px;">Aposta</th>
-                <th style="border:1px solid #333; padding:8px;">Prémio(s)</th>
-                <th style="border:1px solid #333; padding:8px;">Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            {''.join(linhas)}
-        </tbody>
-    </table>
-    """
+        # Construir card
+        card = f"""
+        <div style="background: #1a1a1a; border: 1px solid #333; border-radius: 12px; padding: 16px; margin-bottom: 16px; font-family: Arial, sans-serif; color: #eee;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <span style="background: #2a5a2a; padding: 6px 14px; border-radius: 20px; font-weight: bold; color: white;">{jogo}</span>
+                <span style="color: #ffd700; font-weight: bold;">{premios_info[0].split(':')[0] if premios_info else 'Prémio'}</span>
+            </div>
+            <div style="display: grid; grid-template-columns: auto 1fr; gap: 8px 15px; font-size: 14px;">
+                <span style="color: #888;">Data:</span><span>{data}</span>
+                <span style="color: #888;">Concurso:</span><span>{concurso}</span>
+                <span style="color: #888;">Referência:</span><span>{referencia}</span>
+                <span style="color: #888;">Aposta:</span><span>{desc_aposta}</span>
+                <span style="color: #888;">Prémio:</span><span style="color: #ffd700;">{premios_str}</span>
+                <span style="color: #888;">Total:</span><span style="color: #ffd700; font-weight: bold;">{valor_total_str}</span>
+            </div>
+        </div>
+        """
+        cards_html.append(card)
 
     html = f"""
     <html>
     <head>
         <meta charset="UTF-8">
     </head>
-    <body style="background:#111; color:#eee; padding:20px;">
-        <h2 style="color:#ffd700; text-align:center;">🏆 Prémios Ativos 🏆</h2>
-        <p style="text-align:center;">Lista de boletins premiados ainda não arquivados.</p>
-        {tabela}
-        <p style="margin-top:20px; font-size:12px; color:#888;">Enviado automaticamente pelo sistema.</p>
+    <body style="background: #111; color: #eee; padding: 20px; font-family: Arial, sans-serif;">
+        <h2 style="color: #ffd700; text-align: center; margin-bottom: 25px;">🏆 Prémios Ativos 🏆</h2>
+        <p style="text-align: center; color: #aaa; margin-bottom: 20px;">Lista de boletins premiados ainda não arquivados.</p>
+        <div style="max-width: 600px; margin: 0 auto;">
+            {''.join(cards_html)}
+        </div>
+        <p style="margin-top: 30px; font-size: 12px; color: #888; text-align: center;">Enviado automaticamente pelo sistema.</p>
     </body>
     </html>
     """
     return html
 
 def enviar_email(remetente: str, senha_app: str, destinatario: str, assunto: str, corpo_html: str):
-    """Envia o email com o conteúdo HTML."""
     msg = EmailMessage()
     msg["From"] = remetente
     msg["To"] = destinatario
@@ -167,17 +152,16 @@ def main():
         print("❌ Histórico vazio ou não carregado.")
         return
 
-    # Filtrar prémios ativos: ganhou === true e !arquivado
     ativos = [item for item in historico if item.get('detalhes', {}).get('ganhou') and not item.get('arquivado')]
 
     if not ativos:
         print("📭 Nenhum prémio ativo encontrado.")
-        corpo_html = "<p>Nenhum prémio ativo no momento.</p>"
+        corpo_html = "<p style='color: #888; text-align: center;'>Nenhum prémio ativo no momento.</p>"
     else:
         print(f"📊 Encontrados {len(ativos)} prémios ativos.")
         corpo_html = gerar_html_premiados(ativos)
 
-    assunto = f"🏆 Prémios Ativos - {datetime.now().strftime('%d/%m/%Y')}"
+    assunto = f" Prémios Ativos - {datetime.now().strftime('%d/%m/%Y')}"
     enviar_email(remetente, senha_app, destinatario, assunto, corpo_html)
 
 if __name__ == "__main__":
