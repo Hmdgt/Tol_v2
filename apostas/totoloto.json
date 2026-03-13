@@ -210,6 +210,10 @@
     "imagem_origem": "foto_1773440449315_04ajup.png",
     "hash_imagem": "d69b3f44ef0d6ae1f978b27e47ff8b43",
     "data_processamento": "2026-03-13 22:25:18",
-    "confirmado": false
+    "confirmado": true,
+    "tipo_ficheiro": "totoloto",
+    "_indice": 6,
+    "data_validacao": "2026-03-13T22:38:15.785Z",
+    "validado_por": "humano"
   }
 ]
