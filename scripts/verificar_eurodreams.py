@@ -7,7 +7,7 @@ from typing import List, Tuple
 # ===== CONFIGURAÇÃO =====
 FICHEIRO_APOSTAS = "apostas/eurodreams.json"
 PASTA_DADOS = "dados/"
-FICHEIRO_SORTEIOS_PADRAO = "eurodreams_sc_*.json"
+FICHEIRO_SORTEIOS_PADRAO = "eurodreams_*.json"
 FICHEIRO_RESULTADOS = "resultados/eurodreams_verificacoes.json"
 
 # ===== TABELA DE PRÉMIOS EURODREAMS =====
