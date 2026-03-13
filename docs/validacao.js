@@ -339,11 +339,15 @@ async function renderizarFormValidacao(imagem, jogos) {
             </div>
           `;
         } else {
+          // Números: grid varia conforme o jogo
           if (aposta.numeros) {
+            const numCount = aposta.numeros.length;
+            // Escolhe a classe de grid adequada: 5 para Euromilhões/Totoloto, 6 para EuroDreams
+            const gridClass = (jogo.tipo === 'Eurodreams' || jogo.tipo === 'EuroDreams') ? 'numeros-grid-6' : 'numeros-grid';
             html += `
               <div class="campo-numeros">
                 <label>Números:</label>
-                <div class="numeros-grid">
+                <div class="${gridClass}">
             `;
             aposta.numeros.forEach((num, i) => {
               const numEscaped = escapeHTML(num);
@@ -352,6 +356,7 @@ async function renderizarFormValidacao(imagem, jogos) {
             html += `</div></div>`;
           }
           
+          // Estrelas (apenas para Euromilhões)
           if (aposta.estrelas) {
             html += `
               <div class="campo-estrelas">
@@ -365,6 +370,7 @@ async function renderizarFormValidacao(imagem, jogos) {
             html += `</div></div>`;
           }
           
+          // Número da Sorte (Totoloto)
           if (aposta.numero_da_sorte) {
             const sorteEscaped = escapeHTML(aposta.numero_da_sorte);
             html += `
@@ -375,8 +381,15 @@ async function renderizarFormValidacao(imagem, jogos) {
             `;
           }
 
-          if (aposta.dream_number !== undefined) {
-            let dreamEscaped = escapeHTML(aposta.dream_number);
+          // Dream Number (EuroDreams) – aceita tanto campo 'dream' (array) como 'dream_number'
+          let dreamValue = '';
+          if (aposta.dream && Array.isArray(aposta.dream) && aposta.dream.length > 0) {
+            dreamValue = aposta.dream[0];
+          } else if (aposta.dream_number !== undefined) {
+            dreamValue = aposta.dream_number;
+          }
+          if (dreamValue) {
+            let dreamEscaped = escapeHTML(dreamValue);
             if (dreamEscaped.length === 1) dreamEscaped = '0' + dreamEscaped;
             html += `
               <div class="campo">
@@ -572,36 +585,52 @@ window.confirmarValidacao = async function(imagem) {
         const inputDream = form.querySelector('.campo-dream');
         
         original.apostas.forEach((apostaOriginal, idx) => {
+          // Determinar quantos números tem esta aposta (5 ou 6)
+          const numCount = apostaOriginal.numeros ? apostaOriginal.numeros.length : 0;
+          
+          // Recolher números editados
           const numeros = [];
-          const estrelas = [];
-          
-          const startNum = idx * 5;
-          const startEst = idx * 2;
-          
-          for (let i = 0; i < 5; i++) {
-            const input = inputsNumero[startNum + i];
+          for (let i = 0; i < numCount; i++) {
+            // O índice no array de inputs é: idx * numCount + i
+            const inputIndex = idx * numCount + i;
+            const input = inputsNumero[inputIndex];
             if (input && input.value) {
               numeros.push(input.value.padStart(2, '0'));
             }
           }
-          for (let i = 0; i < 2; i++) {
-            const input = inputsEstrela[startEst + i];
-            if (input && input.value) {
-              estrelas.push(input.value.padStart(2, '0'));
+          
+          // Estrelas (sempre 2 para Euromilhões)
+          const estrelas = [];
+          if (apostaOriginal.estrelas) {
+            for (let i = 0; i < 2; i++) {
+              const input = inputsEstrela[idx * 2 + i];
+              if (input && input.value) {
+                estrelas.push(input.value.padStart(2, '0'));
+              }
             }
           }
           
           const novaAposta = {
             ...apostaOriginal,
             numeros: numeros.length ? numeros : apostaOriginal.numeros,
-            estrelas: estrelas.length ? estrelas : apostaOriginal.estrelas
           };
+          
+          if (estrelas.length) {
+            novaAposta.estrelas = estrelas;
+          }
           
           if (inputSorte) {
             novaAposta.numero_da_sorte = inputSorte.value.padStart(2, '0');
           }
+          
+          // Dream: preservar o formato original (array 'dream' ou string 'dream_number')
           if (inputDream) {
-            novaAposta.dream_number = inputDream.value.padStart(2, '0');
+            const dreamVal = inputDream.value.padStart(2, '0');
+            if (apostaOriginal.dream && Array.isArray(apostaOriginal.dream)) {
+              novaAposta.dream = [dreamVal];
+            } else {
+              novaAposta.dream_number = dreamVal;
+            }
           }
           
           apostasEditadas.push(novaAposta);
