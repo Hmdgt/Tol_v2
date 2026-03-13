@@ -106,7 +106,7 @@ def gerar_html_premiados(premiados: List[Dict]) -> str:
         <meta charset="UTF-8">
     </head>
     <body style="background: #111; color: #eee; padding: 20px; font-family: Arial, sans-serif;">
-        <h2 style="color: #ffd700; text-align: center; margin-bottom: 25px;">🏆 Prémios Ativos 🏆</h2>
+        <h2 style="color: #ffd700; text-align: center; margin-bottom: 25px;"> Prémios Ativos </h2>
         <p style="text-align: center; color: #aaa; margin-bottom: 20px;">Lista de boletins premiados ainda não arquivados.</p>
         <div style="max-width: 600px; margin: 0 auto;">
             {''.join(cards_html)}
