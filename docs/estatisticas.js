@@ -361,11 +361,37 @@ function gerarListaPremiadosInterativa(dados) {
         const jogo = p.jogo || p._jogo || 'desconhecido';
         const data = formatarData(p.data);
         const concurso = p.detalhes?.sorteio?.concurso || p.detalhes?.boletim?.concurso_sorteio || '-';
-        const premio = p.detalhes?.premio?.categoria || p.detalhes?.premio?.premio || 'Prémio';
-        const valor = p.detalhes?.premio?.valor || '€ 0,00';
         const referencia = p.detalhes?.boletim?.referencia || '-';
 
-        // Construir descrição dos números/código
+        // --- Processar prémios (pode ser array ou objeto singular) ---
+        let categorias = [];
+        let valorTotal = 0;
+
+        // Se existir premios (array) – usado no Totoloto e outros com múltiplos prémios
+        if (p.detalhes?.premios && Array.isArray(p.detalhes.premios)) {
+            p.detalhes.premios.forEach(prem => {
+                if (prem && prem.premio) categorias.push(prem.premio);
+                const valorStr = prem?.valor?.replace('€', '').replace(' ', '').replace(',', '.') || '0';
+                const num = parseFloat(valorStr);
+                if (!isNaN(num)) valorTotal += num;
+            });
+        } 
+        // Se existir premio (singular) – usado noutros jogos
+        else if (p.detalhes?.premio) {
+            const prem = p.detalhes.premio;
+            if (prem.categoria || prem.premio) categorias.push(prem.categoria || prem.premio);
+            const valorStr = prem?.valor?.replace('€', '').replace(' ', '').replace(',', '.') || '0';
+            const num = parseFloat(valorStr);
+            if (!isNaN(num)) valorTotal += num;
+        }
+
+        // Se não houver categorias, usar nome do jogo
+        if (categorias.length === 0) categorias.push('Prémio');
+
+        const categoriasStr = categorias.join(' + ');
+        const valorTotalStr = `€ ${valorTotal.toFixed(2).replace('.', ',')}`;
+
+        // --- Construir descrição dos números/código ---
         let numeros = '';
         if (jogo === 'milhao') {
             numeros = `Código: ${p.detalhes?.aposta?.codigo || '-'}`;
@@ -394,14 +420,14 @@ function gerarListaPremiadosInterativa(dados) {
             <div class="${classeCard}" data-id="${escapeHTML(id)}" style="background: #1a1a1a; border: 2px solid ${selecionado ? '#ffd700' : '#333'}; border-radius: 12px; padding: 16px; cursor: pointer; transition: 0.2s;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                     <span style="background: #2a5a2a; padding: 4px 12px; border-radius: 20px; font-weight: bold; color: white;">${jogo.toUpperCase()}</span>
-                    <span style="color: #ffd700; font-weight: bold;">${premio}</span>
+                    <span style="color: #ffd700; font-weight: bold;">${categoriasStr}</span>
                 </div>
                 <div style="display: grid; grid-template-columns: auto 1fr; gap: 8px 12px; font-size: 14px;">
                     <span style="color: #888;">Data:</span><span>${data}</span>
                     <span style="color: #888;">Concurso:</span><span>${concurso}</span>
                     <span style="color: #888;">Referência:</span><span>${referencia}</span>
                     <span style="color: #888;">Aposta:</span><span>${numeros}</span>
-                    <span style="color: #888;">Prémio:</span><span class="valor-premio" style="color: #ffd700;">${valor}</span>
+                    <span style="color: #888;">Prémio:</span><span class="valor-premio" style="color: #ffd700;">${valorTotalStr}</span>
                 </div>
             </div>
         `;
