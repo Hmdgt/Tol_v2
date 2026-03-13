@@ -371,7 +371,11 @@ function gerarListaPremiadosInterativa(dados) {
         if (p.detalhes?.premios && Array.isArray(p.detalhes.premios)) {
             p.detalhes.premios.forEach(prem => {
                 if (prem && prem.premio) categorias.push(prem.premio);
-                const valorStr = prem?.valor?.replace('€', '').replace(' ', '').replace(',', '.') || '0';
+                let valorStr = prem?.valor?.replace('€', '').replace(' ', '').replace(',', '.') || '0';
+                // Tratamento especial para "Reembolso do valor da aposta de Totoloto"
+                if (valorStr.includes('Reembolso')) {
+                    valorStr = '1.0'; // assumimos que a aposta custa 1€
+                }
                 const num = parseFloat(valorStr);
                 if (!isNaN(num)) valorTotal += num;
             });
@@ -380,7 +384,11 @@ function gerarListaPremiadosInterativa(dados) {
         else if (p.detalhes?.premio) {
             const prem = p.detalhes.premio;
             if (prem.categoria || prem.premio) categorias.push(prem.categoria || prem.premio);
-            const valorStr = prem?.valor?.replace('€', '').replace(' ', '').replace(',', '.') || '0';
+            let valorStr = prem?.valor?.replace('€', '').replace(' ', '').replace(',', '.') || '0';
+            // Tratamento especial para "Reembolso" (caso apareça aqui)
+            if (valorStr.includes('Reembolso')) {
+                valorStr = '1.0';
+            }
             const num = parseFloat(valorStr);
             if (!isNaN(num)) valorTotal += num;
         }
