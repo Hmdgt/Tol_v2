@@ -5,3 +5,4 @@
 [2026-03-10 10:34:53] [eurodreams] Concurso 020/2026 já está completo. Nada a atualizar.
 [2026-03-12 22:18:58] [eurodreams] Resultado do concurso 021/2026 adicionado ao JSON eurodreams_2026.
 [2026-03-12 23:16:53] [eurodreams] Concurso 021/2026 já está completo. Nada a atualizar.
+[2026-03-13 10:48:51] [eurodreams] Concurso 021/2026 já está completo. Nada a atualizar.
