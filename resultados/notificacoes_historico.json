@@ -673,5 +673,57 @@
       "_id": "totoloto_051-01634852-249_1"
     },
     "data_leitura": "2026-03-13T22:15:57.928Z"
+  },
+  {
+    "id": "totoloto_055-07189292-166_1",
+    "jogo": "totoloto",
+    "data": "2026-03-13 22:15:03",
+    "lido": true,
+    "titulo": "🎫 Novo resultado TOTOLOTO",
+    "subtitulo": "Boletim: 055-07189292-166",
+    "resumo": "Não ganhou",
+    "detalhes": {
+      "data_verificacao": "2026-03-13 22:15:03",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "055-07189292-166",
+        "data_sorteio": "2026-02-25",
+        "concurso_sorteio": "016/2026",
+        "imagem_origem": "foto_1773439180451_a1g5vi.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "35",
+          "37",
+          "40",
+          "44",
+          "46"
+        ],
+        "numero_da_sorte": "04"
+      },
+      "sorteio": {
+        "concurso": "016/2026",
+        "data": "25/02/2026",
+        "numeros": [
+          "01",
+          "05",
+          "06",
+          "14",
+          "34"
+        ],
+        "numero_da_sorte": "09"
+      },
+      "acertos": {
+        "numeros": 0,
+        "numero_da_sorte": false,
+        "descricao": "0 número(s) sem Nº da Sorte"
+      },
+      "ganhou": false,
+      "premios": [],
+      "_jogo": "totoloto",
+      "_id": "totoloto_055-07189292-166_1"
+    },
+    "data_leitura": "2026-03-13T22:16:08.674Z"
   }
 ]
