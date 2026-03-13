@@ -401,5 +401,44 @@
       "_id": "eurodreams_260227-17-7324481145-011_1"
     },
     "data_leitura": "2026-03-13T13:35:26.447Z"
+  },
+  {
+    "id": "milhao_558-04068700-EUR_1",
+    "jogo": "milhao",
+    "data": "2026-03-13 13:40:04",
+    "lido": true,
+    "titulo": "🎫 Novo resultado MILHAO",
+    "subtitulo": "Boletim: 558-04068700-EUR",
+    "resumo": "0 acertos",
+    "detalhes": {
+      "data_verificacao": "2026-03-13 13:40:04",
+      "boletim": {
+        "referencia": "558-04068700-EUR",
+        "data_sorteio": "2026-02-27",
+        "imagem_origem": "foto_1773409047980_8l846z.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "codigo": "HBB29338",
+        "codigo_original": "HBB29338"
+      },
+      "sorteio": {
+        "concurso": "002/2026",
+        "data": "27/02/2026",
+        "codigo_premiado": "GDH32855",
+        "codigo_original": "GDH 32855",
+        "premio_nome": "1.º Prémio",
+        "vencedores": "1"
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem prémio",
+        "descricao": "Código não premiado",
+        "valor": "€ 0,00"
+      },
+      "_jogo": "milhao",
+      "_id": "milhao_558-04068700-EUR_1"
+    },
+    "data_leitura": "2026-03-13T13:54:25.914Z"
   }
 ]
