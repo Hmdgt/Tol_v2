@@ -3,3 +3,4 @@
 [2026-03-10 22:18:54] [euromilhoes] Concurso 020/2026 já está completo. Nada a atualizar.
 [2026-03-10 23:27:09] [euromilhoes] Concurso 020/2026 já está completo. Nada a atualizar.
 [2026-03-11 10:46:15] [euromilhoes] Concurso 020/2026 já está completo. Nada a atualizar.
+[2026-03-13 21:29:27] [euromilhoes] Resultado do concurso 021/2026 adicionado ao JSON euromilhoes_2026.
