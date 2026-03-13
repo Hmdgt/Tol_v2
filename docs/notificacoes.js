@@ -99,9 +99,11 @@ function gerarConteudoDetalhes(notificacao) {
       if (aposta.numero_da_sorte) {
         html += `<p><strong>Nº da Sorte:</strong> ${escapeHTML(aposta.numero_da_sorte)}</p>`;
       }
-      // 🆕 Adicionar Dream Number para EuroDreams
-      if (aposta.dream_number) {
-          html += `<p><strong>Dream Number:</strong> ${escapeHTML(aposta.dream_number)}</p>`;
+      // Dream Number para EuroDreams (pode vir como array 'dream' ou string 'dream_number')
+      if (aposta.dream && Array.isArray(aposta.dream) && aposta.dream.length > 0) {
+        html += `<p><strong>Dream Number:</strong> ${escapeHTML(aposta.dream[0])}</p>`;
+      } else if (aposta.dream_number !== undefined) {
+        html += `<p><strong>Dream Number:</strong> ${escapeHTML(aposta.dream_number)}</p>`;
       }
     }
     
@@ -134,6 +136,9 @@ function gerarConteudoDetalhes(notificacao) {
       if (sorteio.chave) {
         html += `<p><strong>Chave:</strong> ${escapeHTML(sorteio.chave)}</p>`;
       }
+      if (sorteio.dream) {
+        html += `<p><strong>Dream Number sorteado:</strong> ${escapeHTML(sorteio.dream)}</p>`;
+      }
     }
     
     html += `</div>`;
@@ -153,6 +158,9 @@ function gerarConteudoDetalhes(notificacao) {
     }
     if (acertos.numero_da_sorte !== undefined) {
       html += `<p><strong>Nº Sorte:</strong> ${acertos.numero_da_sorte ? 'Sim' : 'Não'}</p>`;
+    }
+    if (acertos.dream !== undefined) {
+      html += `<p><strong>Dream:</strong> ${acertos.dream ? 'Sim' : 'Não'}</p>`;
     }
     
     html += `</div>`;
