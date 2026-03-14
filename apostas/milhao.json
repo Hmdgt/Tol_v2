@@ -1,242 +1,262 @@
 [
-  {
-    "tipo": "M1lhão",
-    "data_sorteio": "2026-02-27",
-    "data_aposta": "2026-02-27",
-    "data_emissao": "2026-02-27 18:11:22",
-    "referencia_unica": "558-04068700-EUR",
-    "concurso": "002/2026",
-    "valor_total": 0.3,
-    "valido": true,
-    "apostas": [
-      {
-        "indice": 1,
-        "codigo": "HBB29338"
-      }
-    ],
-    "imagem_origem": "foto_1773409047980_8l846z.png",
-    "hash_imagem": "6898805f8c60d543d02ebb02710e9a8a",
-    "data_processamento": "2026-03-13 13:38:15",
-    "confirmado": true,
-    "tipo_ficheiro": "milhao",
-    "_indice": 0,
-    "data_validacao": "2026-03-13T13:39:53.093Z",
-    "validado_por": "humano"
-  },
-  {
-    "tipo": "M1lhão",
-    "data_sorteio": "2026-03-27",
-    "data_aposta": "2026-03-13",
-    "data_emissao": "2026-03-13 18:17:29",
-    "referencia_unica": "572-01552696-EUR",
-    "concurso": "003/2026",
-    "valor_total": 0.3,
-    "valido": true,
-    "apostas": [
-      {
-        "indice": 1,
-        "codigo": "HQX07630"
-      }
-    ],
-    "imagem_origem": "foto_1773426251972_khwe4w.png",
-    "hash_imagem": "5ee83c75e44b45bfdb7c055259f35d90",
-    "data_processamento": "2026-03-13 18:25:13",
-    "confirmado": true,
-    "tipo_ficheiro": "milhao",
-    "_indice": 1,
-    "data_validacao": "2026-03-13T18:28:05.114Z",
-    "validado_por": "humano"
-  },
-  {
-    "tipo": "M1lhão",
-    "data_sorteio": "2026-02-27",
-    "data_aposta": "2026-02-13",
-    "data_emissao": "2026-02-13 18:03:35",
-    "referencia_unica": "544-06256031-EUR",
-    "concurso": "002/2026",
-    "valor_total": 0.3,
-    "valido": true,
-    "apostas": [
-      {
-        "indice": 1,
-        "codigo": "GLJ28595"
-      }
-    ],
-    "imagem_origem": "foto_1773484790283_v84eej.png",
-    "hash_imagem": "8079bcb2307f0ce9fa511ec27d631df6",
-    "data_processamento": "2026-03-14 10:40:33",
-    "confirmado": true,
-    "tipo_ficheiro": "milhao",
-    "_indice": 2,
-    "data_validacao": "2026-03-14T10:43:19.352Z",
-    "validado_por": "humano"
-  },
-  {
-    "tipo": "M1lhão",
-    "data_sorteio": "2026-02-27",
-    "data_aposta": "2026-02-20",
-    "data_emissao": "2026-02-20 08:37:32",
-    "referencia_unica": "551-04210522-EUR",
-    "concurso": "002/2026",
-    "valor_total": 0.3,
-    "valido": true,
-    "apostas": [
-      {
-        "indice": 1,
-        "codigo": "GQC37079"
-      }
-    ],
-    "imagem_origem": "foto_1773483396388_5k139y.png",
-    "hash_imagem": "67967417e5bc9e5016021595bf60d1b5",
-    "data_processamento": "2026-03-14 10:41:23",
-    "confirmado": true,
-    "tipo_ficheiro": "milhao",
-    "_indice": 3,
-    "data_validacao": "2026-03-14T10:43:43.523Z",
-    "validado_por": "humano"
-  },
-  {
-    "tipo": "M1lhão",
-    "data_sorteio": "2026-02-27",
-    "data_aposta": "2026-02-17",
-    "data_emissao": "2026-02-17 17:02:26",
-    "referencia_unica": "548-02491157-EUR",
-    "concurso": "002",
-    "valor_total": 0.3,
-    "valido": true,
-    "apostas": [
-      {
-        "indice": 1,
-        "codigo": "GNN36567"
-      }
-    ],
-    "imagem_origem": "foto_1773485212367_dzvohs.png",
-    "hash_imagem": "e9017c19129c93f4367b69973054a573",
-    "data_processamento": "2026-03-14 10:47:30",
-    "confirmado": true,
-    "tipo_ficheiro": "milhao",
-    "_indice": 4,
-    "data_validacao": "2026-03-14T10:49:11.462Z",
-    "validado_por": "humano"
-  },
-  {
-    "tipo": "M1lhão",
-    "data_sorteio": "2026-02-27",
-    "data_aposta": "2026-02-24",
-    "data_emissao": "2026-02-24 08:57:56",
-    "referencia_unica": "555-02820325-EUR",
-    "concurso": "002/2026",
-    "valor_total": 0.3,
-    "valido": true,
-    "apostas": [
-      {
-        "indice": 1,
-        "codigo": "GTP11668"
-      }
-    ],
-    "imagem_origem": "foto_1773490943017_syv24h.png",
-    "hash_imagem": "486b8dea920a73c4fcb9606a3e94184e",
-    "data_processamento": "2026-03-14 12:23:19",
-    "confirmado": true,
-    "tipo_ficheiro": "milhao",
-    "_indice": 5,
-    "data_validacao": "2026-03-14T12:26:06.104Z",
-    "validado_por": "humano"
-  },
-  {
-    "tipo": "M1lhão",
-    "data_sorteio": "2026-02-27",
-    "data_aposta": "2026-02-06",
-    "data_emissao": "2026-02-06 18:13:47",
-    "referencia_unica": "537-01276244-EUR",
-    "concurso": "002/2026",
-    "valor_total": 0.3,
-    "valido": true,
-    "apostas": [
-      {
-        "indice": 1,
-        "codigo": "GFQ14191"
-      }
-    ],
-    "imagem_origem": "foto_1773491509521_46ruo5.png",
-    "hash_imagem": "6b2b8799ebe1a8d164a2cd1d0b5815ad",
-    "data_processamento": "2026-03-14 12:32:42",
-    "confirmado": true,
-    "tipo_ficheiro": "milhao",
-    "_indice": 6,
-    "data_validacao": "2026-03-14T12:43:26.708Z",
-    "validado_por": "humano"
-  },
-  {
-    "tipo": "M1lhão",
-    "data_sorteio": "2026-03-27",
-    "data_aposta": "2026-03-03",
-    "data_emissao": "2026-03-03 18:41:13",
-    "referencia_unica": "562-06824411-EUR",
-    "concurso": "003/2026",
-    "valor_total": 0.3,
-    "valido": true,
-    "apostas": [
-      {
-        "indice": 1,
-        "codigo": "HFF17155"
-      }
-    ],
-    "imagem_origem": "foto_1773493855400_ncyuzo.png",
-    "hash_imagem": "162fbd09fbe586c5943abfc52a192466",
-    "data_processamento": "2026-03-14 13:11:31",
-    "confirmado": true,
-    "tipo_ficheiro": "milhao",
-    "_indice": 7,
-    "data_validacao": "2026-03-14T13:12:40.340Z",
-    "validado_por": "humano"
-  },
-  {
-    "tipo": "M1lhão",
-    "data_sorteio": "2026-03-27",
-    "data_aposta": "2026-03-06",
-    "data_emissao": "2026-03-06 17:51:09",
-    "referencia_unica": "565-06102529-EUR",
-    "concurso": "003/2026",
-    "valor_total": 0.3,
-    "valido": true,
-    "apostas": [
-      {
-        "indice": 1,
-        "codigo": "HJM25455"
-      }
-    ],
-    "imagem_origem": "foto_1773494756106_nswcz0.png",
-    "hash_imagem": "8333554c372e6e0fa4b2eb3c36bd21df",
-    "data_processamento": "2026-03-14 13:27:08",
-    "confirmado": true,
-    "tipo_ficheiro": "milhao",
-    "_indice": 8,
-    "data_validacao": "2026-03-14T13:28:40.035Z",
-    "validado_por": "humano"
-  },
-  {
-    "tipo": "M1lhão",
-    "data_sorteio": "2026-03-27",
-    "data_aposta": "2026-03-10",
-    "data_emissao": "2026-03-10 18:25:00",
-    "referencia_unica": "569-08043757-EUR",
-    "concurso": "003/2026",
-    "valor_total": 0.3,
-    "valido": true,
-    "apostas": [
-      {
-        "indice": 1,
-        "codigo": "HNB00164"
-      }
-    ],
-    "imagem_origem": "foto_1773503326270_8xhncj.png",
-    "hash_imagem": "9300a892bfb2d8a8258dcfb5842149e7",
-    "data_processamento": "2026-03-14 15:49:35",
-    "confirmado": true,
-    "tipo_ficheiro": "milhao",
-    "_indice": 9,
-    "data_validacao": "2026-03-14T16:16:37.977Z",
-    "validado_por": "humano"
-  }
+    {
+        "tipo": "M1lhão",
+        "data_sorteio": "2026-02-27",
+        "data_aposta": "2026-02-27",
+        "data_emissao": "2026-02-27 18:11:22",
+        "referencia_unica": "558-04068700-EUR",
+        "concurso": "002/2026",
+        "valor_total": 0.3,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "codigo": "HBB29338"
+            }
+        ],
+        "imagem_origem": "foto_1773409047980_8l846z.png",
+        "hash_imagem": "6898805f8c60d543d02ebb02710e9a8a",
+        "data_processamento": "2026-03-13 13:38:15",
+        "confirmado": true,
+        "tipo_ficheiro": "milhao",
+        "_indice": 0,
+        "data_validacao": "2026-03-13T13:39:53.093Z",
+        "validado_por": "humano"
+    },
+    {
+        "tipo": "M1lhão",
+        "data_sorteio": "2026-03-27",
+        "data_aposta": "2026-03-13",
+        "data_emissao": "2026-03-13 18:17:29",
+        "referencia_unica": "572-01552696-EUR",
+        "concurso": "003/2026",
+        "valor_total": 0.3,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "codigo": "HQX07630"
+            }
+        ],
+        "imagem_origem": "foto_1773426251972_khwe4w.png",
+        "hash_imagem": "5ee83c75e44b45bfdb7c055259f35d90",
+        "data_processamento": "2026-03-13 18:25:13",
+        "confirmado": true,
+        "tipo_ficheiro": "milhao",
+        "_indice": 1,
+        "data_validacao": "2026-03-13T18:28:05.114Z",
+        "validado_por": "humano"
+    },
+    {
+        "tipo": "M1lhão",
+        "data_sorteio": "2026-02-27",
+        "data_aposta": "2026-02-13",
+        "data_emissao": "2026-02-13 18:03:35",
+        "referencia_unica": "544-06256031-EUR",
+        "concurso": "002/2026",
+        "valor_total": 0.3,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "codigo": "GLJ28595"
+            }
+        ],
+        "imagem_origem": "foto_1773484790283_v84eej.png",
+        "hash_imagem": "8079bcb2307f0ce9fa511ec27d631df6",
+        "data_processamento": "2026-03-14 10:40:33",
+        "confirmado": true,
+        "tipo_ficheiro": "milhao",
+        "_indice": 2,
+        "data_validacao": "2026-03-14T10:43:19.352Z",
+        "validado_por": "humano"
+    },
+    {
+        "tipo": "M1lhão",
+        "data_sorteio": "2026-02-27",
+        "data_aposta": "2026-02-20",
+        "data_emissao": "2026-02-20 08:37:32",
+        "referencia_unica": "551-04210522-EUR",
+        "concurso": "002/2026",
+        "valor_total": 0.3,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "codigo": "GQC37079"
+            }
+        ],
+        "imagem_origem": "foto_1773483396388_5k139y.png",
+        "hash_imagem": "67967417e5bc9e5016021595bf60d1b5",
+        "data_processamento": "2026-03-14 10:41:23",
+        "confirmado": true,
+        "tipo_ficheiro": "milhao",
+        "_indice": 3,
+        "data_validacao": "2026-03-14T10:43:43.523Z",
+        "validado_por": "humano"
+    },
+    {
+        "tipo": "M1lhão",
+        "data_sorteio": "2026-02-27",
+        "data_aposta": "2026-02-17",
+        "data_emissao": "2026-02-17 17:02:26",
+        "referencia_unica": "548-02491157-EUR",
+        "concurso": "002",
+        "valor_total": 0.3,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "codigo": "GNN36567"
+            }
+        ],
+        "imagem_origem": "foto_1773485212367_dzvohs.png",
+        "hash_imagem": "e9017c19129c93f4367b69973054a573",
+        "data_processamento": "2026-03-14 10:47:30",
+        "confirmado": true,
+        "tipo_ficheiro": "milhao",
+        "_indice": 4,
+        "data_validacao": "2026-03-14T10:49:11.462Z",
+        "validado_por": "humano"
+    },
+    {
+        "tipo": "M1lhão",
+        "data_sorteio": "2026-02-27",
+        "data_aposta": "2026-02-24",
+        "data_emissao": "2026-02-24 08:57:56",
+        "referencia_unica": "555-02820325-EUR",
+        "concurso": "002/2026",
+        "valor_total": 0.3,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "codigo": "GTP11668"
+            }
+        ],
+        "imagem_origem": "foto_1773490943017_syv24h.png",
+        "hash_imagem": "486b8dea920a73c4fcb9606a3e94184e",
+        "data_processamento": "2026-03-14 12:23:19",
+        "confirmado": true,
+        "tipo_ficheiro": "milhao",
+        "_indice": 5,
+        "data_validacao": "2026-03-14T12:26:06.104Z",
+        "validado_por": "humano"
+    },
+    {
+        "tipo": "M1lhão",
+        "data_sorteio": "2026-02-27",
+        "data_aposta": "2026-02-06",
+        "data_emissao": "2026-02-06 18:13:47",
+        "referencia_unica": "537-01276244-EUR",
+        "concurso": "002/2026",
+        "valor_total": 0.3,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "codigo": "GFQ14191"
+            }
+        ],
+        "imagem_origem": "foto_1773491509521_46ruo5.png",
+        "hash_imagem": "6b2b8799ebe1a8d164a2cd1d0b5815ad",
+        "data_processamento": "2026-03-14 12:32:42",
+        "confirmado": true,
+        "tipo_ficheiro": "milhao",
+        "_indice": 6,
+        "data_validacao": "2026-03-14T12:43:26.708Z",
+        "validado_por": "humano"
+    },
+    {
+        "tipo": "M1lhão",
+        "data_sorteio": "2026-03-27",
+        "data_aposta": "2026-03-03",
+        "data_emissao": "2026-03-03 18:41:13",
+        "referencia_unica": "562-06824411-EUR",
+        "concurso": "003/2026",
+        "valor_total": 0.3,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "codigo": "HFF17155"
+            }
+        ],
+        "imagem_origem": "foto_1773493855400_ncyuzo.png",
+        "hash_imagem": "162fbd09fbe586c5943abfc52a192466",
+        "data_processamento": "2026-03-14 13:11:31",
+        "confirmado": true,
+        "tipo_ficheiro": "milhao",
+        "_indice": 7,
+        "data_validacao": "2026-03-14T13:12:40.340Z",
+        "validado_por": "humano"
+    },
+    {
+        "tipo": "M1lhão",
+        "data_sorteio": "2026-03-27",
+        "data_aposta": "2026-03-06",
+        "data_emissao": "2026-03-06 17:51:09",
+        "referencia_unica": "565-06102529-EUR",
+        "concurso": "003/2026",
+        "valor_total": 0.3,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "codigo": "HJM25455"
+            }
+        ],
+        "imagem_origem": "foto_1773494756106_nswcz0.png",
+        "hash_imagem": "8333554c372e6e0fa4b2eb3c36bd21df",
+        "data_processamento": "2026-03-14 13:27:08",
+        "confirmado": true,
+        "tipo_ficheiro": "milhao",
+        "_indice": 8,
+        "data_validacao": "2026-03-14T13:28:40.035Z",
+        "validado_por": "humano"
+    },
+    {
+        "tipo": "M1lhão",
+        "data_sorteio": "2026-03-27",
+        "data_aposta": "2026-03-10",
+        "data_emissao": "2026-03-10 18:25:00",
+        "referencia_unica": "569-08043757-EUR",
+        "concurso": "003/2026",
+        "valor_total": 0.3,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "codigo": "HNB00164"
+            }
+        ],
+        "imagem_origem": "foto_1773503326270_8xhncj.png",
+        "hash_imagem": "9300a892bfb2d8a8258dcfb5842149e7",
+        "data_processamento": "2026-03-14 15:49:35",
+        "confirmado": true,
+        "tipo_ficheiro": "milhao",
+        "_indice": 9,
+        "data_validacao": "2026-03-14T16:16:37.977Z",
+        "validado_por": "humano"
+    },
+    {
+        "tipo": "M1lhão",
+        "data_sorteio": "2026-03-27",
+        "data_aposta": "2026-03-14",
+        "data_emissao": "2026-03-14 16:14:38",
+        "referencia_unica": "573-04773374-EUR",
+        "concurso": "003/2026",
+        "valor_total": 0.3,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "codigo": "HRJ36593"
+            }
+        ],
+        "imagem_origem": "foto_1773505817577_ztehx6.png",
+        "hash_imagem": "f0a5609bff8b3a4c0447ace20b8b9194",
+        "data_processamento": "2026-03-14 16:31:00",
+        "confirmado": false
+    }
 ]
