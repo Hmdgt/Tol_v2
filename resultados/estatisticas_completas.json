@@ -104,15 +104,15 @@
     },
     "milhao": {
       "2026-02": {
-        "total_apostas": 4,
-        "total_gasto": 1.2,
+        "total_apostas": 5,
+        "total_gasto": 1.5,
         "total_recebido": 0.0,
         "ganhadoras": 0,
         "acertos_numeros": 0,
         "acertos_especial": 0,
         "maior_premio": 0.0,
         "data_maior_premio": null,
-        "saldo": -1.2,
+        "saldo": -1.5,
         "percentagem_ganhadoras": 0.0,
         "media_premios": 0,
         "mediana_premios": 0.0,
@@ -175,15 +175,15 @@
     },
     "milhao": {
       "2026": {
-        "total_apostas": 4,
-        "total_gasto": 1.2,
+        "total_apostas": 5,
+        "total_gasto": 1.5,
         "total_recebido": 0.0,
         "ganhadoras": 0,
         "acertos_numeros": 0,
         "acertos_especial": 0,
         "maior_premio": 0.0,
         "data_maior_premio": null,
-        "saldo": -1.2,
+        "saldo": -1.5,
         "percentagem_ganhadoras": 0.0,
         "media_premios": 0,
         "media_acertos_numeros": 0.0,
@@ -194,14 +194,14 @@
   "global": {
     "mensal": {
       "2026-02": {
-        "total_apostas": 13,
-        "total_gasto": 15.3,
+        "total_apostas": 14,
+        "total_gasto": 15.600000000000001,
         "total_recebido": 10.15,
         "ganhadoras": 4,
         "maior_premio": 7.15,
         "data_maior_premio": "2026-02-27",
-        "saldo": -5.15,
-        "percentagem_ganhadoras": 30.77
+        "saldo": -5.45,
+        "percentagem_ganhadoras": 28.57
       },
       "2026-03": {
         "total_apostas": 7,
@@ -216,16 +216,16 @@
     },
     "anual": {
       "2026": {
-        "total_apostas": 20,
-        "total_gasto": 27.400000000000002,
+        "total_apostas": 21,
+        "total_gasto": 27.700000000000003,
         "total_recebido": 12.65,
         "ganhadoras": 5,
         "maior_premio": 7.15,
         "data_maior_premio": "2026-02-27",
-        "saldo": -14.75,
-        "percentagem_ganhadoras": 25.0
+        "saldo": -15.05,
+        "percentagem_ganhadoras": 23.81
       }
     }
   },
-  "ultima_atualizacao": "2026-03-14T11:18:05.151530"
+  "ultima_atualizacao": "2026-03-14T12:26:45.300940"
 }
