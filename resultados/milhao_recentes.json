@@ -1,6 +1,6 @@
 [
   {
-    "data_verificacao": "2026-03-14 10:53:30",
+    "data_verificacao": "2026-03-14 12:26:17",
     "boletim": {
       "referencia": "558-04068700-EUR",
       "data_sorteio": "2026-02-27",
@@ -27,7 +27,7 @@
     }
   },
   {
-    "data_verificacao": "2026-03-14 10:53:30",
+    "data_verificacao": "2026-03-14 12:26:17",
     "boletim": {
       "referencia": "544-06256031-EUR",
       "data_sorteio": "2026-02-27",
@@ -54,7 +54,7 @@
     }
   },
   {
-    "data_verificacao": "2026-03-14 10:53:30",
+    "data_verificacao": "2026-03-14 12:26:17",
     "boletim": {
       "referencia": "551-04210522-EUR",
       "data_sorteio": "2026-02-27",
@@ -81,7 +81,7 @@
     }
   },
   {
-    "data_verificacao": "2026-03-14 10:53:30",
+    "data_verificacao": "2026-03-14 12:26:17",
     "boletim": {
       "referencia": "548-02491157-EUR",
       "data_sorteio": "2026-02-27",
@@ -91,6 +91,33 @@
       "indice": 1,
       "codigo": "GNN36567",
       "codigo_original": "GNN36567"
+    },
+    "sorteio": {
+      "concurso": "002/2026",
+      "data": "27/02/2026",
+      "codigo_premiado": "GDH32855",
+      "codigo_original": "GDH 32855",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Código não premiado",
+      "valor": "€ 0,00"
+    }
+  },
+  {
+    "data_verificacao": "2026-03-14 12:26:17",
+    "boletim": {
+      "referencia": "555-02820325-EUR",
+      "data_sorteio": "2026-02-27",
+      "imagem_origem": "foto_1773490943017_syv24h.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "codigo": "GTP11668",
+      "codigo_original": "GTP11668"
     },
     "sorteio": {
       "concurso": "002/2026",
