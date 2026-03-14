@@ -25,5 +25,59 @@
       "descricao": "Código não premiado",
       "valor": "€ 0,00"
     }
+  },
+  {
+    "data_verificacao": "2026-03-14 10:43:32",
+    "boletim": {
+      "referencia": "544-06256031-EUR",
+      "data_sorteio": "2026-02-27",
+      "imagem_origem": "foto_1773484790283_v84eej.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "codigo": "GLJ28595",
+      "codigo_original": "GLJ28595"
+    },
+    "sorteio": {
+      "concurso": "002/2026",
+      "data": "27/02/2026",
+      "codigo_premiado": "GDH32855",
+      "codigo_original": "GDH 32855",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Código não premiado",
+      "valor": "€ 0,00"
+    }
+  },
+  {
+    "data_verificacao": "2026-03-14 10:43:32",
+    "boletim": {
+      "referencia": "551-04210522-EUR",
+      "data_sorteio": "2026-02-27",
+      "imagem_origem": "foto_1773483396388_5k139y.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "codigo": "GQC37079",
+      "codigo_original": "GQC37079"
+    },
+    "sorteio": {
+      "concurso": "002/2026",
+      "data": "27/02/2026",
+      "codigo_premiado": "GDH32855",
+      "codigo_original": "GDH 32855",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Código não premiado",
+      "valor": "€ 0,00"
+    }
   }
 ]
