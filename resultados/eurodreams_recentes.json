@@ -1,6 +1,6 @@
 [
   {
-    "data_verificacao": "2026-03-14 10:49:24",
+    "data_verificacao": "2026-03-14 11:13:20",
     "boletim": {
       "referencia": "260217-17-2156263608-098",
       "concurso_sorteio": "015/2026",
@@ -31,7 +31,7 @@
     }
   },
   {
-    "data_verificacao": "2026-03-14 10:49:24",
+    "data_verificacao": "2026-03-14 11:13:20",
     "boletim": {
       "referencia": "260227-17-7324481145-011",
       "concurso_sorteio": "018/2026",
@@ -52,13 +52,16 @@
       ]
     },
     "acertos": {
-      "numeros": 0,
+      "numeros": 2,
       "dream": false
     },
-    "ganhou": false,
+    "ganhou": true,
     "premio": {
-      "premio": "Sem prémio",
-      "valor": "€ 0,00"
+      "premio": "6.º Prémio",
+      "descricao": "2 Números",
+      "vencedores_pt": "59.621",
+      "vencedores_eu": "390.096",
+      "valor": "€ 2,50"
     }
   }
 ]
