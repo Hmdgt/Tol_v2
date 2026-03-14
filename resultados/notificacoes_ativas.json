@@ -1,1 +1,53 @@
-[]
+[
+  {
+    "id": "totoloto_069-06457998-027_1",
+    "jogo": "totoloto",
+    "data": "2026-03-14 10:00:47",
+    "lido": false,
+    "titulo": "🎫 Novo resultado TOTOLOTO",
+    "subtitulo": "Boletim: 069-06457998-027",
+    "resumo": "Não ganhou",
+    "detalhes": {
+      "data_verificacao": "2026-03-14 10:00:47",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "069-06457998-027",
+        "data_sorteio": "2026-03-11",
+        "concurso_sorteio": "020/2026",
+        "imagem_origem": "foto_1773482316926_nt2fh2.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "09",
+          "16",
+          "21",
+          "35",
+          "46"
+        ],
+        "numero_da_sorte": "10"
+      },
+      "sorteio": {
+        "concurso": "020/2026",
+        "data": "11/03/2026",
+        "numeros": [
+          "17",
+          "26",
+          "29",
+          "33",
+          "46"
+        ],
+        "numero_da_sorte": "03"
+      },
+      "acertos": {
+        "numeros": 1,
+        "numero_da_sorte": false,
+        "descricao": "1 número(s) sem Nº da Sorte"
+      },
+      "ganhou": false,
+      "premios": [],
+      "_jogo": "totoloto",
+      "_id": "totoloto_069-06457998-027_1"
+    }
+  }
+]
