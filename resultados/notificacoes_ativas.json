@@ -49,56 +49,5 @@
       "_jogo": "totoloto",
       "_id": "totoloto_072-01139302-005_1"
     }
-  },
-  {
-    "id": "totoloto_073-04582965-084_1",
-    "jogo": "totoloto",
-    "data": "2026-03-14 22:25:57",
-    "lido": false,
-    "titulo": "🎫 Novo resultado TOTOLOTO",
-    "subtitulo": "Boletim: 073-04582965-084",
-    "resumo": "Não ganhou",
-    "detalhes": {
-      "data_verificacao": "2026-03-14 22:25:57",
-      "metodo_validacao": "data + concurso",
-      "boletim": {
-        "referencia": "073-04582965-084",
-        "data_sorteio": "2026-03-14",
-        "concurso_sorteio": "021/2026",
-        "imagem_origem": "foto_1773505241547_fa1lfm.png"
-      },
-      "aposta": {
-        "indice": 1,
-        "numeros": [
-          "14",
-          "17",
-          "35",
-          "46",
-          "48"
-        ],
-        "numero_da_sorte": "03"
-      },
-      "sorteio": {
-        "concurso": "021/2026",
-        "data": "14/03/2026",
-        "numeros": [
-          "05",
-          "09",
-          "26",
-          "39",
-          "43"
-        ],
-        "numero_da_sorte": "11"
-      },
-      "acertos": {
-        "numeros": 0,
-        "numero_da_sorte": false,
-        "descricao": "0 número(s) sem Nº da Sorte"
-      },
-      "ganhou": false,
-      "premios": [],
-      "_jogo": "totoloto",
-      "_id": "totoloto_073-04582965-084_1"
-    }
   }
 ]
