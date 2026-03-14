@@ -89,6 +89,10 @@
     "imagem_origem": "foto_1773483396388_5k139y.png",
     "hash_imagem": "67967417e5bc9e5016021595bf60d1b5",
     "data_processamento": "2026-03-14 10:41:23",
-    "confirmado": false
+    "confirmado": true,
+    "tipo_ficheiro": "milhao",
+    "_indice": 3,
+    "data_validacao": "2026-03-14T10:43:43.523Z",
+    "validado_por": "humano"
   }
 ]
