@@ -289,6 +289,10 @@
       will-change: transform;
       pointer-events: none;
     }
+    .zoom-img {
+      transform: translate3d(0,0,0); /* Força camada GPU */
+      backface-visibility: hidden;   /* Otimização extra */
+    }
     .formularios-coluna {
       display: flex;
       flex-direction: column;
