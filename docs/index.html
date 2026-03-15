@@ -5,9 +5,11 @@
   <title>Apostas</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 
-  <!-- Barra preta -->
+  <!-- CORREÇÃO: Controlo total das cores no Android -->
   <meta name="theme-color" content="#000000">
-  <meta name="color-scheme" content="dark">
+  <meta name="color-scheme" content="dark only">  <!-- ← ALTERADO: "only" força modo escuro -->
+  <meta name="android-theme-color" content="#000000">  <!-- ← NOVO: específico Android -->
+  <meta name="msapplication-navbutton-color" content="#000000">  <!-- ← NOVO: Windows Phone -->
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="mobile-web-app-capable" content="yes">
 
@@ -20,26 +22,37 @@
   <style>
     /* ========== RESET ========== */
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { background: #000; height: 100%; color-scheme: dark; }
+    html { 
+      background: #000; 
+      height: 100%; 
+      color-scheme: dark; 
+      background-color: #000000 !important; /* ← FORÇADO */
+    }
     body {
       margin: 0;
       background: #000 !important;
       font-family: sans-serif;
       padding: env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);
-      height: 100vh;               /* ← ALTURA FIXA */
-      overflow: hidden;            /* ← BODY SEM SCROLL */
+      height: 100vh;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
       color-scheme: dark;
+      background-color: #000000 !important; /* ← FORÇADO */
+    }
+
+    /* ========== GARANTIR FUNDO PRETO EM TODOS OS ELEMENTOS ========== */
+    .view, #bottomNav, .modal-content, .jogo-form, .notification-card {
+      background-color: #111; /* Mantém teus estilos originais */
     }
 
     /* ========== VIEWS ========== */
     .view {
       display: none;
       flex: 1 1 auto;
-      overflow-y: auto;            /* ← SCROLL SÓ NA VIEW ACTIVA */
+      overflow-y: auto;
       -webkit-overflow-scrolling: touch;
-      overscroll-behavior: none;   /* ← DESATIVA PULL‑TO‑REFRESH */
+      overscroll-behavior: none;
       padding: 20px;
     }
     .view.active {
@@ -290,8 +303,8 @@
       pointer-events: none;
     }
     .zoom-img {
-      transform: translate3d(0,0,0); /* Força camada GPU */
-      backface-visibility: hidden;   /* Otimização extra */
+      transform: translate3d(0,0,0);
+      backface-visibility: hidden;
     }
     .formularios-coluna {
       display: flex;
