@@ -13,6 +13,45 @@ document.addEventListener('visibilitychange', () => {
 });
 window.addEventListener('scroll', fixThemeColor, { passive: true });
 
+// ========== FORÇAR NAVIGATION BAR PRETA NO ANDROID ==========
+function forceBlackNavigationBar() {
+  if (/Android/.test(navigator.userAgent)) {
+    // Forçar cor de fundo do documento
+    document.documentElement.style.backgroundColor = '#000000';
+    document.body.style.backgroundColor = '#000000';
+    
+    // Recriar meta tag theme-color para forçar refresh no Android
+    const oldMeta = document.querySelector('meta[name="theme-color"]');
+    if (oldMeta) oldMeta.remove();
+    
+    const newMeta = document.createElement('meta');
+    newMeta.name = 'theme-color';
+    newMeta.content = '#000000';
+    document.head.appendChild(newMeta);
+    
+    // Forçar também no CSS
+    const style = document.createElement('style');
+    style.textContent = `
+      html, body {
+        background-color: #000000 !important;
+      }
+    `;
+    document.head.appendChild(style);
+    
+    console.log('✅ Navigation bar forçada a preto no Android');
+  }
+}
+
+// Chamar quando a app inicia
+forceBlackNavigationBar();
+
+// Chamar quando a app volta a ficar visível
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    forceBlackNavigationBar();
+  }
+});
+
 // ========== CAPTURA DE ERROS PARA DEBUG ==========
 window.errorLog = [];
 
