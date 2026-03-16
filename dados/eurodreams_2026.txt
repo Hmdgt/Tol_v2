@@ -1,13 +1,15 @@
-Concurso: 021/2026
-Data: 12/03/2026
-Chave: 2 9 20 23 35 36 + 4
-Ordem de saída: 35 9 2 36 20 23 + 4
+Concurso: 022/2026
+Data: 16/03/2026
+Chave: 2 5 24 29 32 39 + 3
+Ordem de saída: 29 2 32 5 24 39 + 3
+Números: 02 05 24 29 32 39
+Dream: 3
 ----------------------------------------
 Prémios:
 1.º Prémio - 6 Números + 1 Nº de Sonho | PT: 0 | EU: 0 | Valor: € 30.000/mês x 30 anos
 2.º Prémio - 6 Números | PT: 0 | EU: 0 | Valor: € 2.000/mês x 5 anos
-3.º Prémio - 5 Números | PT: 11 | EU: 90 | Valor: € 724,15
-4.º Prémio - 4 Números | PT: 595 | EU: 4.075 | Valor: € 44,83
-5.º Prémio - 3 Números | PT: 9.193 | EU: 63.333 | Valor: € 6,05
-6.º Prémio - 2 Números | PT: 57.753 | EU: 389.738 | Valor: € 2,50
+3.º Prémio - 5 Números | PT: 15 | EU: 93 | Valor: € 684,35
+4.º Prémio - 4 Números | PT: 519 | EU: 4.087 | Valor: € 43,65
+5.º Prémio - 3 Números | PT: 8.802 | EU: 60.270 | Valor: € 6,21
+6.º Prémio - 2 Números | PT: 55.354 | EU: 366.371 | Valor: € 2,50
 ----------------------------------------
