@@ -162,6 +162,7 @@ async function carregarTodasApostas() {
         return [];
     }
 }
+
 // ---------- ATUALIZAR HISTÓRICO NO GITHUB (com flag arquivado) ----------
 async function atualizarHistorico(novoHistorico) {
     const token = localStorage.getItem("github_token");
@@ -226,6 +227,294 @@ function filtrarPorAno(dados, periodo, ano) {
     return { [periodo]: filtrado };
 }
 
+// ---------- GERAR CARD PADRÃO (estilo notificações) ----------
+function gerarCardPadrao(opcoes) {
+    const {
+        id,
+        jogo,
+        estado,          // texto do badge (ex: "PREMIADO", "PENDENTE")
+        corBadge,        // cor de fundo do badge (ex: "#ffd700", "#ffaa00")
+        icon,            // nome do ícone (ex: "trophy-outline", "time-outline")
+        dataSorteio,
+        titulo,          // concurso + referência
+        resumo,          // prémio + valor / números + valor
+        selecionado = false,
+        onclick = null
+    } = opcoes;
+
+    const selecionadoClass = selecionado ? 'selecionado' : '';
+    const dataFormatada = formatarData(dataSorteio);
+
+    return `
+        <div class="notification-card ${selecionadoClass}" 
+             data-id="${escapeHTML(id)}" 
+             style="${selecionado ? 'border-color: #ffd700; background: #222;' : ''}"
+             ${onclick ? `onclick="${onclick}"` : ''}>
+            <div class="notification-header">
+                <ion-icon name="${icon}" class="jogo-icon"></ion-icon>
+                <span class="jogo-nome">${escapeHTML(jogo.toUpperCase())}</span>
+                <span class="unread-badge" style="background: ${corBadge}">${escapeHTML(estado)}</span>
+                <span class="notification-date">${escapeHTML(dataFormatada)}</span>
+            </div>
+            <div class="notification-title">${escapeHTML(titulo)}</div>
+            <div class="notification-resumo">${escapeHTML(resumo)}</div>
+        </div>
+    `;
+}
+
+// ---------- GERAR LISTA DE PREMIADOS (com seleção e estilo unificado) ----------
+function gerarListaPremiadosInterativa(dados) {
+    // Filtrar apenas os que ganharam e NÃO estão arquivados
+    const premiados = dados.filter(item => item.detalhes?.ganhou === true && !item.arquivado);
+
+    if (premiados.length === 0) {
+        return '<p class="no-data">Nenhum boletim premiado encontrado.</p>';
+    }
+
+    // Ordenar por data do sorteio (mais recente primeiro)
+    premiados.sort((a, b) => {
+        const dataA = a.detalhes?.sorteio?.data || a.detalhes?.boletim?.data_sorteio || a.data;
+        const dataB = b.detalhes?.sorteio?.data || b.detalhes?.boletim?.data_sorteio || b.data;
+        return new Date(dataB) - new Date(dataA);
+    });
+
+    let html = '';
+
+    // Barra de ações (aparece apenas em modo de seleção)
+    if (modoSelecao) {
+        html += `
+            <div class="selecao-barra" style="display: flex; gap: 10px; margin-bottom: 15px; padding: 10px; background: #222; border-radius: 8px; align-items: center;">
+                <span style="flex: 1; color: #ffd700;">${itensSelecionados.size} selecionado(s)</span>
+                <button id="btnCancelarSelecao" class="btn-cancelar" style="padding: 8px 12px;">Cancelar</button>
+                <button id="btnArquivarSelecionados" class="btn-validar" style="padding: 8px 12px;">
+                    <ion-icon name="archive-outline"></ion-icon> Arquivar
+                </button>
+            </div>
+        `;
+    }
+
+    html += `<div class="premiados-lista" style="display: flex; flex-direction: column; gap: 12px;">`;
+
+    for (const p of premiados) {
+        const id = p.id;
+        const selecionado = itensSelecionados.has(id);
+        const jogo = p.jogo || p._jogo || 'desconhecido';
+        
+        // DATA DO SORTEIO
+        const dataSorteio = p.detalhes?.sorteio?.data || p.detalhes?.boletim?.data_sorteio || p.data;
+
+        // TÍTULO = concurso + referência
+        const concurso = p.detalhes?.sorteio?.concurso || p.detalhes?.boletim?.concurso_sorteio || '-';
+        const referencia = p.detalhes?.boletim?.referencia || '-';
+        const titulo = `Conc. ${concurso} • Ref. ${referencia}`;
+
+        // RESUMO = prémio + valor
+        let categorias = [];
+        let valorTotal = 0;
+
+        if (p.detalhes?.premios && Array.isArray(p.detalhes.premios)) {
+            p.detalhes.premios.forEach(prem => {
+                if (prem && prem.premio) categorias.push(prem.premio);
+                let valorStr = prem?.valor?.replace('€', '').replace(' ', '').replace(',', '.') || '0';
+                if (valorStr.includes('Reembolso')) valorStr = '1.0';
+                const num = parseFloat(valorStr);
+                if (!isNaN(num)) valorTotal += num;
+            });
+        } else if (p.detalhes?.premio) {
+            const prem = p.detalhes.premio;
+            if (prem.categoria || prem.premio) categorias.push(prem.categoria || prem.premio);
+            let valorStr = prem?.valor?.replace('€', '').replace(' ', '').replace(',', '.') || '0';
+            if (valorStr.includes('Reembolso')) valorStr = '1.0';
+            const num = parseFloat(valorStr);
+            if (!isNaN(num)) valorTotal += num;
+        }
+
+        if (categorias.length === 0) categorias.push('Prémio');
+        const categoriasStr = categorias.join(' + ');
+        const valorTotalStr = `€ ${valorTotal.toFixed(2).replace('.', ',')}`;
+        const resumo = `${categoriasStr} • ${valorTotalStr}`;
+
+        // Ícone baseado no jogo
+        let icon = 'trophy-outline';
+        if (jogo === 'euromilhoes') icon = 'star-outline';
+        else if (jogo === 'totoloto') icon = 'grid-outline';
+        else if (jogo === 'eurodreams') icon = 'moon-outline';
+        else if (jogo === 'milhao') icon = 'cash-outline';
+
+        html += gerarCardPadrao({
+            id,
+            jogo,
+            estado: 'PREMIADO',
+            corBadge: '#ffd700',
+            icon,
+            dataSorteio,
+            titulo,
+            resumo,
+            selecionado,
+            onclick: null // o clique é gerido pelo listener próprio (long press)
+        });
+    }
+
+    html += `</div>`;
+    return html;
+}
+
+// ---------- GERAR LISTA DE PENDENTES (sem seleção, estilo unificado) ----------
+function gerarListaPendentes(apostas) {
+    if (!apostas || apostas.length === 0) {
+        return '<p class="no-data">Nenhum boletim pendente encontrado.</p>';
+    }
+
+    // Ordenar por data do sorteio (mais próximo primeiro)
+    apostas.sort((a, b) => new Date(a.data_sorteio) - new Date(b.data_sorteio));
+
+    let html = '<div class="pendentes-lista" style="display: flex; flex-direction: column; gap: 12px;">';
+
+    for (const aposta of apostas) {
+        const jogo = aposta.tipo || aposta._tipo_ficheiro || 'desconhecido';
+        const dataSorteio = aposta.data_sorteio;
+        const concurso = aposta.concurso || '-';
+        const referencia = aposta.referencia_unica || '-';
+        const titulo = `Conc. ${concurso} • Ref. ${referencia}`;
+
+        // Construir resumo com números
+        let numeros = '';
+        if (aposta.apostas && Array.isArray(aposta.apostas)) {
+            const primeira = aposta.apostas[0];
+            if (primeira) {
+                if (primeira.numeros) {
+                    numeros = primeira.numeros.join(' ');
+                    if (primeira.estrelas) numeros += ` + ${primeira.estrelas.join(' ')}`;
+                    if (primeira.dream_number) numeros += ` Dream: ${primeira.dream_number}`;
+                    if (primeira.numero_da_sorte) numeros += ` Nº Sorte: ${primeira.numero_da_sorte}`;
+                } else if (primeira.codigo) {
+                    numeros = `Código: ${primeira.codigo}`;
+                }
+            }
+        } else if (aposta.numeros) {
+            numeros = aposta.numeros.join(' ');
+            if (aposta.estrelas) numeros += ` + ${aposta.estrelas.join(' ')}`;
+        }
+
+        const valor = aposta.valor_total || 1.0;
+        const resumo = `${numeros || 'Aposta'} • € ${valor.toFixed(2).replace('.', ',')}`;
+
+        // Ícone baseado no jogo
+        let icon = 'time-outline';
+        if (jogo === 'euromilhoes') icon = 'star-outline';
+        else if (jogo === 'totoloto') icon = 'grid-outline';
+        else if (jogo === 'eurodreams') icon = 'moon-outline';
+        else if (jogo === 'milhao') icon = 'cash-outline';
+
+        html += gerarCardPadrao({
+            id: aposta.referencia_unica || aposta.id,
+            jogo,
+            estado: 'PENDENTE',
+            corBadge: '#ffaa00',
+            icon,
+            dataSorteio,
+            titulo,
+            resumo,
+            selecionado: false,
+            onclick: null // sem clique por enquanto (podes adicionar se quiseres)
+        });
+    }
+
+    html += '</div>';
+    return html;
+}
+
+// ---------- INICIALIZAR LONG PRESS NOS CARDS (apenas premiados) ----------
+function inicializarLongPressCards() {
+    const cards = document.querySelectorAll('.notification-card[data-id]'); // seleciona todos os cards
+    cards.forEach(card => {
+        // Usar touch events para mobile
+        card.addEventListener('touchstart', (e) => {
+            longPressTimer = setTimeout(() => {
+                entrarModoSelecao(card);
+            }, 600);
+        });
+
+        card.addEventListener('touchend', () => {
+            clearTimeout(longPressTimer);
+        });
+
+        card.addEventListener('touchmove', () => {
+            clearTimeout(longPressTimer);
+        });
+
+        card.addEventListener('touchcancel', () => {
+            clearTimeout(longPressTimer);
+        });
+
+        card.addEventListener('click', (e) => {
+            // Só entra em modo de seleção se estivermos na aba premiados e o card for de premiado
+            // Como a função só é chamada na aba premiados, podemos prosseguir
+            if (modoSelecao) {
+                const id = card.dataset.id;
+                if (itensSelecionados.has(id)) {
+                    itensSelecionados.delete(id);
+                    card.style.borderColor = '#333';
+                    card.style.background = '#1a1a1a';
+                } else {
+                    itensSelecionados.add(id);
+                    card.style.borderColor = '#ffd700';
+                    card.style.background = '#222';
+                }
+                const barra = document.querySelector('.selecao-barra span');
+                if (barra) {
+                    barra.textContent = `${itensSelecionados.size} selecionado(s)`;
+                }
+            }
+        });
+    });
+}
+
+// ---------- ENTRAR EM MODO DE SELEÇÃO ----------
+function entrarModoSelecao(card) {
+    if (modoSelecao) return;
+    modoSelecao = true;
+    itensSelecionados.clear();
+    const id = card.dataset.id;
+    itensSelecionados.add(id);
+    card.style.borderColor = '#ffd700';
+    card.style.background = '#222';
+    renderizarEstatisticas(); // Recria a lista com a barra
+}
+
+// ---------- SAIR DO MODO DE SELEÇÃO ----------
+function sairModoSelecao() {
+    modoSelecao = false;
+    itensSelecionados.clear();
+    renderizarEstatisticas();
+}
+
+// ---------- ARQUIVAR SELECIONADOS ----------
+async function arquivarSelecionados() {
+    if (itensSelecionados.size === 0) {
+        ToastManager.mostrar("Nenhum item selecionado.", "info");
+        return;
+    }
+
+    const historicoAtual = await carregarHistorico();
+    if (!historicoAtual) return;
+
+    const novoHistorico = historicoAtual.map(item => {
+        if (itensSelecionados.has(item.id)) {
+            return { ...item, arquivado: true };
+        }
+        return item;
+    });
+
+    const sucesso = await atualizarHistorico(novoHistorico);
+    if (sucesso) {
+        modoSelecao = false;
+        itensSelecionados.clear();
+        historicoData = novoHistorico;
+        renderizarEstatisticas();
+    }
+}
+
 // ---------- RENDERIZAR ESTATÍSTICAS ----------
 async function renderizarEstatisticas() {
     const container = document.getElementById('estatisticasContainer');
@@ -254,7 +543,7 @@ async function renderizarEstatisticas() {
 
     const anos = obterAnosDisponiveis();
 
-    // Construir HTML com abas de modo (Resumo / Premiados / Pendentes)
+    // Construir HTML com abas de modo
     let html = `
         <div class="estatisticas-header">
             <div class="modo-tabs" style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 10px;">
@@ -343,7 +632,6 @@ async function renderizarEstatisticas() {
 
         html += `</div>`;
     } else if (modoAtivo === 'premiados') {
-        // Modo premiados – usa a função que gera lista interativa
         html += gerarListaPremiadosInterativa(historicoData);
     } else if (modoAtivo === 'pendentes') {
         // Modo pendentes – carrega apostas e filtra as que não estão no histórico
@@ -355,7 +643,6 @@ async function renderizarEstatisticas() {
         // Criar um Set com as referências únicas que já estão no histórico
         const refsHistorico = new Set();
         historico.forEach(item => {
-            // Tenta obter a referência única do boletim
             const ref = item.detalhes?.boletim?.referencia || item.id || item.referencia_unica;
             if (ref) refsHistorico.add(ref);
         });
@@ -404,281 +691,17 @@ async function renderizarEstatisticas() {
             });
         });
     } else if (modoAtivo === 'premiados') {
-        // Inicializar listeners para long press nos cards da lista de premiados
         inicializarLongPressCards();
-        // Listener para o botão de arquivar (se existir)
         const btnArquivar = document.getElementById('btnArquivarSelecionados');
         if (btnArquivar) {
             btnArquivar.addEventListener('click', arquivarSelecionados);
         }
-        // Listener para cancelar seleção (se existir)
         const btnCancelar = document.getElementById('btnCancelarSelecao');
         if (btnCancelar) {
             btnCancelar.addEventListener('click', sairModoSelecao);
         }
     }
-    // Nota: na aba pendentes não há listeners específicos (apenas visualização)
-}
-
-// ---------- GERAR LISTA DE PREMIADOS COM SELEÇÃO (agora com data do sorteio) ----------
-function gerarListaPremiadosInterativa(dados) {
-    // Filtrar apenas os que ganharam e NÃO estão arquivados
-    const premiados = dados.filter(item => item.detalhes?.ganhou === true && !item.arquivado);
-
-    if (premiados.length === 0) {
-        return '<p class="no-data">Nenhum boletim premiado encontrado.</p>';
-    }
-
-    // Ordenar por data do sorteio (mais recente primeiro)
-    premiados.sort((a, b) => {
-        const dataA = a.detalhes?.sorteio?.data || a.detalhes?.boletim?.data_sorteio || a.data;
-        const dataB = b.detalhes?.sorteio?.data || b.detalhes?.boletim?.data_sorteio || b.data;
-        return new Date(dataB) - new Date(dataA);
-    });
-
-    let html = '';
-
-    // Barra de ações (aparece apenas em modo de seleção)
-    if (modoSelecao) {
-        html += `
-            <div class="selecao-barra" style="display: flex; gap: 10px; margin-bottom: 15px; padding: 10px; background: #222; border-radius: 8px; align-items: center;">
-                <span style="flex: 1; color: #ffd700;">${itensSelecionados.size} selecionado(s)</span>
-                <button id="btnCancelarSelecao" class="btn-cancelar" style="padding: 8px 12px;">Cancelar</button>
-                <button id="btnArquivarSelecionados" class="btn-validar" style="padding: 8px 12px;">
-                    <ion-icon name="archive-outline"></ion-icon> Arquivar
-                </button>
-            </div>
-        `;
-    }
-
-    html += `<div class="premiados-lista" style="display: flex; flex-direction: column; gap: 12px;">`;
-
-    for (const p of premiados) {
-        const id = p.id;
-        const selecionado = itensSelecionados.has(id);
-        const jogo = p.jogo || p._jogo || 'desconhecido';
-        
-        // DATA DO SORTEIO (corrigido)
-        let dataSorteio = p.detalhes?.sorteio?.data || p.detalhes?.boletim?.data_sorteio || p.data;
-        dataSorteio = formatarData(dataSorteio);
-
-        const concurso = p.detalhes?.sorteio?.concurso || p.detalhes?.boletim?.concurso_sorteio || '-';
-        const referencia = p.detalhes?.boletim?.referencia || '-';
-
-        // --- Processar prémios (pode ser array ou objeto singular) ---
-        let categorias = [];
-        let valorTotal = 0;
-
-        if (p.detalhes?.premios && Array.isArray(p.detalhes.premios)) {
-            p.detalhes.premios.forEach(prem => {
-                if (prem && prem.premio) categorias.push(prem.premio);
-                let valorStr = prem?.valor?.replace('€', '').replace(' ', '').replace(',', '.') || '0';
-                if (valorStr.includes('Reembolso')) valorStr = '1.0';
-                const num = parseFloat(valorStr);
-                if (!isNaN(num)) valorTotal += num;
-            });
-        } else if (p.detalhes?.premio) {
-            const prem = p.detalhes.premio;
-            if (prem.categoria || prem.premio) categorias.push(prem.categoria || prem.premio);
-            let valorStr = prem?.valor?.replace('€', '').replace(' ', '').replace(',', '.') || '0';
-            if (valorStr.includes('Reembolso')) valorStr = '1.0';
-            const num = parseFloat(valorStr);
-            if (!isNaN(num)) valorTotal += num;
-        }
-
-        if (categorias.length === 0) categorias.push('Prémio');
-        const categoriasStr = categorias.join(' + ');
-        const valorTotalStr = `€ ${valorTotal.toFixed(2).replace('.', ',')}`;
-
-        // --- Construir descrição dos números/código ---
-        let numeros = '';
-        if (jogo === 'milhao') {
-            numeros = `Código: ${p.detalhes?.aposta?.codigo || '-'}`;
-        } else {
-            const nums = p.detalhes?.aposta?.numeros;
-            if (nums) {
-                numeros = nums.join(' ');
-                if (p.detalhes?.aposta?.estrelas) {
-                    numeros += ` + ${p.detalhes.aposta.estrelas.join(' ')}`;
-                }
-                if (p.detalhes?.aposta?.dream_number) {
-                    numeros += ` Dream: ${p.detalhes.aposta.dream_number}`;
-                }
-                if (p.detalhes?.aposta?.numero_da_sorte) {
-                    numeros += ` Nº Sorte: ${p.detalhes.aposta.numero_da_sorte}`;
-                }
-            } else {
-                numeros = '-';
-            }
-        }
-
-        const classeCard = `premiado-card ${selecionado ? 'selecionado' : ''}`;
-
-        html += `
-            <div class="${classeCard}" data-id="${escapeHTML(id)}" style="background: #1a1a1a; border: 2px solid ${selecionado ? '#ffd700' : '#333'}; border-radius: 12px; padding: 16px; cursor: pointer; transition: 0.2s;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                    <span style="background: #2a5a2a; padding: 4px 12px; border-radius: 20px; font-weight: bold; color: white;">${jogo.toUpperCase()}</span>
-                    <span style="color: #ffd700; font-weight: bold;">${categoriasStr}</span>
-                </div>
-                <div style="display: grid; grid-template-columns: auto 1fr; gap: 8px 12px; font-size: 14px;">
-                    <span style="color: #888;">Data sorteio:</span><span>${dataSorteio}</span>
-                    <span style="color: #888;">Concurso:</span><span>${concurso}</span>
-                    <span style="color: #888;">Referência:</span><span>${referencia}</span>
-                    <span style="color: #888;">Aposta:</span><span>${numeros}</span>
-                    <span style="color: #888;">Prémio:</span><span class="valor-premio" style="color: #ffd700;">${valorTotalStr}</span>
-                </div>
-            </div>
-        `;
-    }
-
-    html += `</div>`;
-    return html;
-}
-
-// ---------- GERAR LISTA DE PENDENTES (apostas não processadas) ----------
-function gerarListaPendentes(apostas) {
-    if (!apostas || apostas.length === 0) {
-        return '<p class="no-data">Nenhum boletim pendente encontrado.</p>';
-    }
-
-    // Ordenar por data do sorteio (mais próximo primeiro)
-    apostas.sort((a, b) => new Date(a.data_sorteio) - new Date(b.data_sorteio));
-
-    let html = '<div class="pendentes-lista" style="display: flex; flex-direction: column; gap: 12px;">';
-
-    for (const aposta of apostas) {
-        const jogo = aposta.tipo || aposta._tipo_ficheiro || 'desconhecido';
-        const dataSorteio = formatarData(aposta.data_sorteio);
-        const concurso = aposta.concurso || '-';
-        const referencia = aposta.referencia_unica || '-';
-        const valor = aposta.valor_total || 1.0;
-
-        // Construir descrição dos números
-        let numeros = '';
-        if (aposta.apostas && Array.isArray(aposta.apostas)) {
-            // Geralmente é um array, mas vamos usar a primeira aposta para simplificar
-            const primeira = aposta.apostas[0];
-            if (primeira) {
-                if (primeira.numeros) {
-                    numeros = primeira.numeros.join(' ');
-                    if (primeira.estrelas) numeros += ` + ${primeira.estrelas.join(' ')}`;
-                    if (primeira.dream_number) numeros += ` Dream: ${primeira.dream_number}`;
-                    if (primeira.numero_da_sorte) numeros += ` Nº Sorte: ${primeira.numero_da_sorte}`;
-                } else if (primeira.codigo) {
-                    numeros = `Código: ${primeira.codigo}`;
-                }
-            }
-        } else if (aposta.numeros) {
-            // Caso esteja diretamente no objeto
-            numeros = aposta.numeros.join(' ');
-            if (aposta.estrelas) numeros += ` + ${aposta.estrelas.join(' ')}`;
-        }
-
-        html += `
-            <div class="pendente-card" style="background: #1a1a1a; border: 2px solid #ffaa00; border-radius: 12px; padding: 16px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                    <span style="background: #ffaa00; padding: 4px 12px; border-radius: 20px; font-weight: bold; color: #000;">${jogo.toUpperCase()}</span>
-                    <span style="color: #ffaa00; font-weight: bold;">Aguardando sorteio</span>
-                </div>
-                <div style="display: grid; grid-template-columns: auto 1fr; gap: 8px 12px; font-size: 14px;">
-                    <span style="color: #888;">Data sorteio:</span><span>${dataSorteio}</span>
-                    <span style="color: #888;">Concurso:</span><span>${concurso}</span>
-                    <span style="color: #888;">Referência:</span><span>${referencia}</span>
-                    <span style="color: #888;">Aposta:</span><span>${numeros || '-'}</span>
-                    <span style="color: #888;">Valor:</span><span>€ ${valor.toFixed(2).replace('.', ',')}</span>
-                </div>
-            </div>
-        `;
-    }
-
-    html += '</div>';
-    return html;
-}
-
-// ---------- INICIALIZAR LONG PRESS NOS CARDS ----------
-function inicializarLongPressCards() {
-    const cards = document.querySelectorAll('.premiado-card');
-    cards.forEach(card => {
-        // Usar touch events para mobile
-        card.addEventListener('touchstart', (e) => {
-            longPressTimer = setTimeout(() => {
-                entrarModoSelecao(card);
-            }, 600);
-        });
-
-        card.addEventListener('touchend', () => {
-            clearTimeout(longPressTimer);
-        });
-
-        card.addEventListener('touchmove', () => {
-            clearTimeout(longPressTimer);
-        });
-
-        card.addEventListener('touchcancel', () => {
-            clearTimeout(longPressTimer);
-        });
-
-        card.addEventListener('click', (e) => {
-            if (modoSelecao) {
-                const id = card.dataset.id;
-                if (itensSelecionados.has(id)) {
-                    itensSelecionados.delete(id);
-                    card.style.borderColor = '#333';
-                } else {
-                    itensSelecionados.add(id);
-                    card.style.borderColor = '#ffd700';
-                }
-                const barra = document.querySelector('.selecao-barra span');
-                if (barra) {
-                    barra.textContent = `${itensSelecionados.size} selecionado(s)`;
-                }
-            }
-        });
-    });
-}
-
-// ---------- ENTRAR EM MODO DE SELEÇÃO ----------
-function entrarModoSelecao(card) {
-    if (modoSelecao) return;
-    modoSelecao = true;
-    itensSelecionados.clear();
-    const id = card.dataset.id;
-    itensSelecionados.add(id);
-    card.style.borderColor = '#ffd700';
-    renderizarEstatisticas(); // Recria a lista com a barra
-}
-
-// ---------- SAIR DO MODO DE SELEÇÃO ----------
-function sairModoSelecao() {
-    modoSelecao = false;
-    itensSelecionados.clear();
-    renderizarEstatisticas();
-}
-
-// ---------- ARQUIVAR SELECIONADOS ----------
-async function arquivarSelecionados() {
-    if (itensSelecionados.size === 0) {
-        ToastManager.mostrar("Nenhum item selecionado.", "info");
-        return;
-    }
-
-    const historicoAtual = await carregarHistorico();
-    if (!historicoAtual) return;
-
-    const novoHistorico = historicoAtual.map(item => {
-        if (itensSelecionados.has(item.id)) {
-            return { ...item, arquivado: true };
-        }
-        return item;
-    });
-
-    const sucesso = await atualizarHistorico(novoHistorico);
-    if (sucesso) {
-        modoSelecao = false;
-        itensSelecionados.clear();
-        historicoData = novoHistorico;
-        renderizarEstatisticas();
-    }
+    // Na aba pendentes não há listeners específicos
 }
 
 // ---------- GERAR TABELA GLOBAL ----------
