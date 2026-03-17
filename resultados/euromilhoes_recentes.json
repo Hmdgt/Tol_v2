@@ -1,6 +1,6 @@
 [
   {
-    "data_verificacao": "2026-03-17 19:42:20",
+    "data_verificacao": "2026-03-17 21:38:35",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "558-06034782-M1L",
@@ -53,7 +53,7 @@
     "ganhou": true
   },
   {
-    "data_verificacao": "2026-03-17 19:42:20",
+    "data_verificacao": "2026-03-17 21:38:35",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "551-05455705-M1L",
@@ -104,7 +104,7 @@
     }
   },
   {
-    "data_verificacao": "2026-03-17 19:42:20",
+    "data_verificacao": "2026-03-17 21:38:35",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "555-03672294-M1L",
@@ -155,7 +155,7 @@
     }
   },
   {
-    "data_verificacao": "2026-03-17 19:42:20",
+    "data_verificacao": "2026-03-17 21:38:35",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "562-01647066-M1L",
@@ -206,7 +206,7 @@
     }
   },
   {
-    "data_verificacao": "2026-03-17 19:42:20",
+    "data_verificacao": "2026-03-17 21:38:35",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "569-06929646-M1L",
@@ -257,7 +257,7 @@
     }
   },
   {
-    "data_verificacao": "2026-03-17 19:42:20",
+    "data_verificacao": "2026-03-17 21:38:35",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "572-00307515-M1L",
@@ -304,6 +304,108 @@
     "premio": {
       "categoria": "Sem prémio",
       "descricao": "0 acertos",
+      "valor": "€ 0,00"
+    }
+  },
+  {
+    "data_verificacao": "2026-03-17 21:38:35",
+    "metodo_validacao": "data + concurso",
+    "boletim": {
+      "referencia": "573-02086393-M1L",
+      "data_sorteio": "2026-03-17",
+      "concurso_sorteio": "022/2026",
+      "imagem_origem": "foto_1773505553264_qyicig.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "numeros": [
+        "08",
+        "22",
+        "37",
+        "47",
+        "48"
+      ],
+      "estrelas": [
+        "09",
+        "10"
+      ]
+    },
+    "sorteio": {
+      "concurso": "022/2026",
+      "data": "17/03/2026",
+      "chave": "5 17 28 33 41 + 3 9",
+      "numeros": [
+        "05",
+        "17",
+        "28",
+        "33",
+        "41"
+      ],
+      "estrelas": [
+        "03",
+        "09"
+      ]
+    },
+    "acertos": {
+      "numeros": 0,
+      "estrelas": 1,
+      "descricao": "0 número(s) e 1 estrela(s)"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Não corresponde a qualquer prémio",
+      "valor": "€ 0,00"
+    }
+  },
+  {
+    "data_verificacao": "2026-03-17 21:38:35",
+    "metodo_validacao": "data + concurso",
+    "boletim": {
+      "referencia": "576-01565603-M1L",
+      "data_sorteio": "2026-03-17",
+      "concurso_sorteio": "022/2026",
+      "imagem_origem": "foto_1773776006004_8n0kgt.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "numeros": [
+        "01",
+        "30",
+        "35",
+        "36",
+        "48"
+      ],
+      "estrelas": [
+        "02",
+        "03"
+      ]
+    },
+    "sorteio": {
+      "concurso": "022/2026",
+      "data": "17/03/2026",
+      "chave": "5 17 28 33 41 + 3 9",
+      "numeros": [
+        "05",
+        "17",
+        "28",
+        "33",
+        "41"
+      ],
+      "estrelas": [
+        "03",
+        "09"
+      ]
+    },
+    "acertos": {
+      "numeros": 0,
+      "estrelas": 1,
+      "descricao": "0 número(s) e 1 estrela(s)"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Não corresponde a qualquer prémio",
       "valor": "€ 0,00"
     }
   }
