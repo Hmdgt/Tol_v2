@@ -116,7 +116,7 @@ async function carregarTodasApostas() {
     const pasta = CONFIG.PASTAS.APOSTAS; // "apostas/"
 
     try {
-        // 1. Listar ficheiros na pasta
+        // 1. Listar ficheiros na pasta via API
         const listRes = await fetch(`https://api.github.com/repos/${CONFIG.REPO}/contents/${pasta}?t=${Date.now()}`, { headers });
         if (!listRes.ok) {
             console.error("Erro ao listar pasta apostas:", listRes.status);
@@ -124,23 +124,35 @@ async function carregarTodasApostas() {
         }
         const ficheiros = await listRes.json();
 
-        // 2. Filtrar apenas ficheiros .json
-        const jsonFiles = ficheiros.filter(f => f.name.endsWith('.json') && f.type === 'file');
+        // 2. Filtrar apenas ficheiros .json que correspondam a tipos de jogo (ignora cota_por_chave.json)
+        const tiposJogo = CONFIG.TIPOS_JOGO; // ['euromilhoes','totoloto','eurodreams','milhao']
+        const jsonFiles = ficheiros.filter(f => 
+            f.name.endsWith('.json') && 
+            f.type === 'file' &&
+            tiposJogo.some(tipo => f.name.startsWith(tipo)) // assume que os ficheiros começam com o nome do jogo
+        );
 
-        // 3. Para cada ficheiro, buscar o conteúdo e extrair os boletins
+        // 3. Para cada ficheiro, buscar o conteúdo usando a API (não raw) para evitar CORS
         const todasApostas = [];
         for (const file of jsonFiles) {
-            const contentRes = await fetch(file.download_url, { headers });
+            const contentRes = await fetch(`https://api.github.com/repos/${CONFIG.REPO}/contents/${file.path}?t=${Date.now()}`, { headers });
             if (!contentRes.ok) continue;
             const data = await contentRes.json();
-            // Se for um array, adiciona cada item com o tipo
-            if (Array.isArray(data)) {
-                data.forEach(item => {
-                    todasApostas.push({
-                        ...item,
-                        _tipo_ficheiro: file.name.replace('.json', '') // ex: "totoloto"
+            const jsonText = base64ToString(data.content);
+            try {
+                const conteudo = JSON.parse(jsonText);
+                if (Array.isArray(conteudo)) {
+                    conteudo.forEach(item => {
+                        todasApostas.push({
+                            ...item,
+                            _tipo_ficheiro: file.name.replace('.json', '')
+                        });
                     });
-                });
+                } else {
+                    console.warn(`Ficheiro ${file.name} não é um array, ignorado.`);
+                }
+            } catch (e) {
+                console.error(`Erro ao parsear JSON do ficheiro ${file.name}:`, e);
             }
         }
 
@@ -150,7 +162,6 @@ async function carregarTodasApostas() {
         return [];
     }
 }
-
 // ---------- ATUALIZAR HISTÓRICO NO GITHUB (com flag arquivado) ----------
 async function atualizarHistorico(novoHistorico) {
     const token = localStorage.getItem("github_token");
