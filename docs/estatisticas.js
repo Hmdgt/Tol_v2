@@ -11,7 +11,7 @@ let historicoData = null;
 let abaAtiva = 'global';          // 'global' ou nome do jogo
 let periodoAtivo = 'mensal';      // 'mensal' ou 'anual'
 let anoSelecionado = 'todos';     // 'todos' ou ano específico (ex: '2026')
-let modoAtivo = 'resumo';          // 'resumo' ou 'premiados'
+let modoAtivo = 'resumo';          // 'resumo', 'premiados' ou 'pendentes'
 
 // --- Variáveis para seleção na aba premiados ---
 let modoSelecao = false;           // true quando estamos em modo de seleção
@@ -32,6 +32,19 @@ function formatarMes(mesAno) {
         'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
     ];
     return meses[parseInt(mes) - 1];
+}
+
+// ---------- FORMATAR DATA (assumindo formato ISO ou DD/MM/YYYY) ----------
+// Se já existir uma função global formatarData, pode comentar esta.
+function formatarData(dataStr) {
+    if (!dataStr) return '-';
+    // Tenta converter ISO (YYYY-MM-DD) para DD/MM/YYYY
+    const partes = dataStr.split(' ')[0].split('-');
+    if (partes.length === 3) {
+        return `${partes[2]}/${partes[1]}/${partes[0]}`;
+    }
+    // Se já estiver no formato PT, retorna como está
+    return dataStr;
 }
 
 // ---------- OBTER ANOS DISPONÍVEIS A PARTIR DOS DADOS ----------
@@ -173,7 +186,7 @@ async function renderizarEstatisticas() {
             container.innerHTML = '<div class="no-notifications">Nenhuma estatística disponível.</div>';
             return;
         }
-    } else {
+    } else if (modoAtivo === 'premiados' || modoAtivo === 'pendentes') {
         historicoData = await carregarHistorico();
         if (!historicoData || historicoData.length === 0) {
             container.innerHTML = '<div class="no-notifications">Nenhum boletim no histórico.</div>';
@@ -183,13 +196,13 @@ async function renderizarEstatisticas() {
 
     const anos = obterAnosDisponiveis();
 
-    // Construir HTML com abas de modo (Resumo / Premiados)
+    // Construir HTML com abas de modo (Resumo / Premiados / Pendentes)
     let html = `
         <div class="estatisticas-header">
-            <h2></h2>
             <div class="modo-tabs" style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 10px;">
                 <button class="modo-btn ${modoAtivo === 'resumo' ? 'active' : ''}" data-modo="resumo">Resumo</button>
                 <button class="modo-btn ${modoAtivo === 'premiados' ? 'active' : ''}" data-modo="premiados">Premiados</button>
+                <button class="modo-btn ${modoAtivo === 'pendentes' ? 'active' : ''}" data-modo="pendentes">Pendentes</button>
             </div>
     `;
 
@@ -271,9 +284,12 @@ async function renderizarEstatisticas() {
         }
 
         html += `</div>`;
-    } else {
+    } else if (modoAtivo === 'premiados') {
         // Modo premiados – usa a função que gera lista interativa
         html += gerarListaPremiadosInterativa(historicoData);
+    } else if (modoAtivo === 'pendentes') {
+        // Modo pendentes – usa a função que gera lista de boletins aguardando sorteio
+        html += gerarListaPendentes(historicoData);
     }
 
     container.innerHTML = html;
@@ -310,7 +326,7 @@ async function renderizarEstatisticas() {
                 renderizarEstatisticas();
             });
         });
-    } else {
+    } else if (modoAtivo === 'premiados') {
         // Inicializar listeners para long press nos cards da lista de premiados
         inicializarLongPressCards();
         // Listener para o botão de arquivar (se existir)
@@ -324,6 +340,7 @@ async function renderizarEstatisticas() {
             btnCancelar.addEventListener('click', sairModoSelecao);
         }
     }
+    // Em 'pendentes' não há interação especial, apenas a lista estática.
 }
 
 // ---------- GERAR LISTA DE PREMIADOS COM SELEÇÃO ----------
@@ -442,6 +459,74 @@ function gerarListaPremiadosInterativa(dados) {
     }
 
     html += `</div>`;
+    return html;
+}
+
+// ---------- GERAR LISTA DE PENDENTES (boletins que ainda não foram sorteados) ----------
+function gerarListaPendentes(dados) {
+    // Filtrar os que NÃO têm o campo ganhou definido (ou seja, ainda não processados) e não estão arquivados
+    const pendentes = dados.filter(item => {
+        // Considera pendente se não existir a propriedade ganhou ou se for null/undefined
+        const temResultado = item.detalhes?.ganhou !== undefined && item.detalhes?.ganhou !== null;
+        return !temResultado && !item.arquivado;
+    });
+
+    if (pendentes.length === 0) {
+        return '<p class="no-data">Nenhum boletim pendente (a aguardar sorteio).</p>';
+    }
+
+    // Ordenar por data (mais recente primeiro)
+    pendentes.sort((a, b) => new Date(b.data) - new Date(a.data));
+
+    let html = '<div class="pendentes-lista" style="display: flex; flex-direction: column; gap: 12px;">';
+
+    for (const p of pendentes) {
+        const jogo = p.jogo || p._jogo || 'desconhecido';
+        const dataAposta = formatarData(p.data);
+        const concurso = p.detalhes?.boletim?.concurso_sorteio || p.detalhes?.sorteio?.concurso || '-';
+        const referencia = p.detalhes?.boletim?.referencia || '-';
+        const dataSorteio = p.detalhes?.boletim?.data_sorteio ? formatarData(p.detalhes.boletim.data_sorteio) : 'A definir';
+
+        // Construir descrição dos números
+        let numeros = '';
+        if (jogo === 'milhao') {
+            numeros = `Código: ${p.detalhes?.aposta?.codigo || '-'}`;
+        } else {
+            const nums = p.detalhes?.aposta?.numeros;
+            if (nums) {
+                numeros = nums.join(' ');
+                if (p.detalhes?.aposta?.estrelas) {
+                    numeros += ` + ${p.detalhes.aposta.estrelas.join(' ')}`;
+                }
+                if (p.detalhes?.aposta?.dream_number) {
+                    numeros += ` Dream: ${p.detalhes.aposta.dream_number}`;
+                }
+                if (p.detalhes?.aposta?.numero_da_sorte) {
+                    numeros += ` Nº Sorte: ${p.detalhes.aposta.numero_da_sorte}`;
+                }
+            } else {
+                numeros = '-';
+            }
+        }
+
+        html += `
+            <div class="pendente-card" style="background: #1a1a1a; border: 2px solid #ffaa00; border-radius: 12px; padding: 16px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <span style="background: #ffaa00; padding: 4px 12px; border-radius: 20px; font-weight: bold; color: #000;">${jogo.toUpperCase()}</span>
+                    <span style="color: #ffaa00; font-weight: bold;">Aguardando sorteio</span>
+                </div>
+                <div style="display: grid; grid-template-columns: auto 1fr; gap: 8px 12px; font-size: 14px;">
+                    <span style="color: #888;">Data aposta:</span><span>${dataAposta}</span>
+                    <span style="color: #888;">Concurso:</span><span>${concurso}</span>
+                    <span style="color: #888;">Referência:</span><span>${referencia}</span>
+                    <span style="color: #888;">Aposta:</span><span>${numeros}</span>
+                    <span style="color: #888;">Data sorteio:</span><span>${dataSorteio}</span>
+                </div>
+            </div>
+        `;
+    }
+
+    html += '</div>';
     return html;
 }
 
