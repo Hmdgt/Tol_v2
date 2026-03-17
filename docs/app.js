@@ -74,6 +74,7 @@ window.addEventListener('unhandledrejection', (event) => {
   if (window.errorLog.length > 20) window.errorLog.shift();
 });
 
+// Função para mostrar logs num modal (podes manter, mas não há botão na UI)
 function mostrarLogs() {
   const logs = window.errorLog || [];
   if (logs.length === 0) {
@@ -105,7 +106,7 @@ window.ViewManager = {
     const view = document.getElementById(viewId);
     if (view) view.classList.add('active');
 
-    // Atualizar botões da navegação
+    // Atualizar botões da navegação (apenas se a view tiver um botão correspondente)
     document.querySelectorAll('.navBtn').forEach(btn => btn.classList.remove('active'));
     const activeBtn = document.querySelector(`.navBtn[data-view="${viewId}"]`);
     if (activeBtn) activeBtn.classList.add('active');
@@ -120,14 +121,17 @@ window.ViewManager = {
     if (viewId === 'estatisticasView' && typeof window.renderizarEstatisticas === 'function') {
       window.renderizarEstatisticas();
     }
-    if (viewId === 'configView') {
-      const tokenInput = document.getElementById('token');
+    if (viewId === 'tokenEditView') {
+      // Ao abrir a view de edição, carregar o token atual no input
+      const tokenInput = document.getElementById('tokenInput');
       const saved = localStorage.getItem('github_token');
-      if (tokenInput && saved) tokenInput.value = saved;
+      if (tokenInput) tokenInput.value = saved || '';
     }
 
-    // Guardar última view
-    sessionStorage.setItem('lastView', viewId);
+    // Guardar última view (excepto se for a tokenEditView, que é temporária)
+    if (viewId !== 'tokenEditView') {
+      sessionStorage.setItem('lastView', viewId);
+    }
   }
 };
 
@@ -141,7 +145,7 @@ document.querySelectorAll('.navBtn').forEach(btn => {
 
 // Restaurar última view ao iniciar
 const lastView = sessionStorage.getItem('lastView');
-if (lastView && document.getElementById(lastView)) {
+if (lastView && document.getElementById(lastView) && lastView !== 'tokenEditView') {
   window.ViewManager.goTo(lastView);
 } else {
   window.ViewManager.goTo('homeView');
@@ -209,14 +213,24 @@ window.resetApp = async function () {
   }
 };
 
-// Guardar token
+// Guardar token (chamado pelo botão na tokenEditView)
 window.saveToken = function () {
-  const tokenInput = document.getElementById("token");
+  const tokenInput = document.getElementById("tokenInput");
   if (!tokenInput) return;
   const token = tokenInput.value.trim();
-  if (!token) return alert("Introduz um token válido.");
+  if (!token) {
+    ToastManager.mostrar("❌ Introduz um token válido.", "erro");
+    return;
+  }
   localStorage.setItem("github_token", token);
-  alert("Token guardado.");
+  ToastManager.mostrar("✅ Token guardado com sucesso!", "sucesso");
+  // Voltar para a view de configurações
+  window.ViewManager.goTo('configView');
+};
+
+// Abrir a view de edição do token (chamado pelo botão na configView)
+window.openTokenEdit = function () {
+  window.ViewManager.goTo('tokenEditView');
 };
 
 // ---------- EVENTOS CÂMARA/GALERIA (delegação) ----------
@@ -240,9 +254,36 @@ document.body.addEventListener("change", (e) => {
   }
 });
 
-// ---------- BOTÕES DA CONFIG (usam funções globais) ----------
-document.getElementById("saveTokenBtn")?.addEventListener("click", window.saveToken);
-document.getElementById("resetAppBtn")?.addEventListener("click", window.resetApp);
+// ---------- BOTÕES DA CONFIG (após DOM carregado) ----------
+document.addEventListener('DOMContentLoaded', () => {
+  // Botão "Guardar Token" na configView abre a tokenEditView
+  const editTokenBtn = document.getElementById('editTokenBtn');
+  if (editTokenBtn) {
+    editTokenBtn.addEventListener('click', window.openTokenEdit);
+  }
+
+  // Botão "Atualizar App" na configView
+  const resetAppBtn = document.getElementById('resetAppBtn');
+  if (resetAppBtn) {
+    resetAppBtn.addEventListener('click', window.resetApp);
+  }
+
+  // Botão "Gravar Token" na tokenEditView
+  const saveTokenBtn = document.getElementById('saveTokenBtn');
+  if (saveTokenBtn) {
+    saveTokenBtn.addEventListener('click', window.saveToken);
+  }
+
+  // Botão "Voltar" na tokenEditView
+  const backToConfigBtn = document.getElementById('backToConfigBtn');
+  if (backToConfigBtn) {
+    backToConfigBtn.addEventListener('click', () => {
+      window.ViewManager.goTo('configView');
+    });
+  }
+
+  // Nota: o botão "debugLogsBtn" foi removido, por isso não há listener.
+});
 
 // ---------- POLLING INTELIGENTE ----------
 let pollingInterval;
@@ -271,10 +312,5 @@ if (document.visibilityState === "visible") {
 // ---------- MOSTRAR BOTÃO DE ATUALIZAÇÃO (opcional) ----------
 function mostrarBotaoAtualizar() {
   console.log("Nova versão disponível. Atualize a app.");
+  // Se quiseres, podes implementar um toast ou snackbar aqui
 }
-
-// Ligar o botão de debug depois de a página carregar
-document.addEventListener('DOMContentLoaded', () => {
-  const btn = document.getElementById('debugLogsBtn');
-  if (btn) btn.addEventListener('click', mostrarLogs);
-});
