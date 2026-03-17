@@ -7,9 +7,9 @@
 
   <!-- CORREÇÃO: Controlo total das cores no Android -->
   <meta name="theme-color" content="#000000">
-  <meta name="color-scheme" content="dark only">  <!-- ← ALTERADO: "only" força modo escuro -->
-  <meta name="android-theme-color" content="#000000">  <!-- ← NOVO: específico Android -->
-  <meta name="msapplication-navbutton-color" content="#000000">  <!-- ← NOVO: Windows Phone -->
+  <meta name="color-scheme" content="dark only">
+  <meta name="android-theme-color" content="#000000">
+  <meta name="msapplication-navbutton-color" content="#000000">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="mobile-web-app-capable" content="yes">
 
@@ -26,7 +26,7 @@
       background: #000; 
       height: 100%; 
       color-scheme: dark; 
-      background-color: #000000 !important; /* ← FORÇADO */
+      background-color: #000000 !important;
     }
     body {
       margin: 0;
@@ -38,12 +38,12 @@
       display: flex;
       flex-direction: column;
       color-scheme: dark;
-      background-color: #000000 !important; /* ← FORÇADO */
+      background-color: #000000 !important;
     }
 
     /* ========== GARANTIR FUNDO PRETO EM TODOS OS ELEMENTOS ========== */
     .view, #bottomNav, .modal-content, .jogo-form, .notification-card {
-      background-color: #111; /* Mantém teus estilos originais */
+      background-color: #111;
     }
 
     /* ========== VIEWS ========== */
@@ -103,36 +103,44 @@
     button { padding: 14px; background: #222; border: 1px solid #444; color: white; border-radius: 8px; font-size: 16px; cursor: pointer; transition: 0.2s; margin-bottom: 12px; }
     button:active { opacity: 0.8; }
 
-    /* ========== NOTIFICAÇÕES ========== */
-    #notificationsList { 
+    /* ========== NOTIFICAÇÕES (também usado para premiados/pendentes) ========== */
+    #notificationsList, .premiados-lista, .pendentes-lista { 
       display: flex; 
       flex-direction: column; 
       gap: 15px; 
       min-height: min-content;
     }
     .notification-card {
-      background: #111; border: 1px solid #333; border-radius: 12px; padding: 16px;
-      cursor: pointer; position: relative; transition: 0.2s;
+      background: #111; 
+      border: 2px solid #333; 
+      border-radius: 12px; 
+      padding: 16px;
+      cursor: pointer; 
+      position: relative; 
+      transition: 0.2s;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
       touch-action: manipulation;
     }
     .notification-card:active { background: #222; transform: scale(0.98); }
+    .notification-card.selecionado {
+      border-color: #ffd700 !important;
+      background: #222 !important;
+    }
     .notification-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .jogo-icon { font-size: 20px; }
-    .jogo-nome { font-weight: bold; text-transform: capitalize; }
+    .jogo-nome { font-weight: bold; text-transform: uppercase; }
     .unread-badge {
-      background: #ff4444; color: white; font-size: 10px; padding: 2px 8px;
-      border-radius: 12px; font-weight: bold; margin-left: auto;
+      color: black; 
+      font-size: 10px; 
+      padding: 2px 8px;
+      border-radius: 12px; 
+      font-weight: bold; 
+      margin-left: auto;
       animation: pulse 2s infinite;
     }
     .notification-date { color: #999; font-size: 12px; white-space: nowrap; }
     .notification-title { font-size: 16px; font-weight: 500; margin: 8px 0 4px; }
-    .notification-concurso {
-      font-size: 13px; color: #888; margin-bottom: 6px;
-      font-family: monospace; background: #1a1a1a; padding: 4px 8px;
-      border-radius: 6px; display: inline-block;
-    }
     .notification-resumo {
       font-size: 18px; font-weight: bold; text-align: center; padding: 8px;
       background: #1a2a1a; border-radius: 8px; margin-top: 4px;
@@ -441,52 +449,21 @@
     }
     .custom-toast ion-icon { flex-shrink: 0; }
 
-    /* Estilos para a aba premiados com seleção */
-.premiado-card {
-    transition: border-color 0.2s, transform 0.1s;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-}
-.premiado-card.selecionado {
-    border-color: #ffd700 !important;
-    background: #222 !important;
-}
-.selecao-barra {
-    background: #222;
-    border: 1px solid #444;
-    border-radius: 8px;
-    padding: 10px;
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-.selecao-barra span {
-    color: #ffd700;
-    font-weight: bold;
-}
-.btn-cancelar {
-    background: #333;
-    border: 1px solid #555;
-    color: white;
-    padding: 8px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-}
-.btn-validar {
-    background: #2a5a2a;
-    border: 1px solid #4caf4c;
-    color: white;
-    padding: 8px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-.btn-validar ion-icon {
-    font-size: 18px;
-}
+    /* Barra de seleção (usada em premiados) */
+    .selecao-barra {
+      background: #222;
+      border: 1px solid #444;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .selecao-barra span {
+      color: #ffd700;
+      font-weight: bold;
+    }
 
     /* ========== ESTATÍSTICAS ========== */
     .estatisticas-header {
@@ -580,9 +557,7 @@
 
   <!-- VIEW: Estatísticas -->
   <div id="estatisticasView" class="view">
-    <div id="estatisticasContainer">
-      <p style="text-align: center; opacity: 0.6; margin-top: 40px;">Em breve...</p>
-    </div>
+    <div id="estatisticasContainer"></div> <!-- Conteúdo gerado por JS -->
   </div>
 
   <div id="configView" class="view">
