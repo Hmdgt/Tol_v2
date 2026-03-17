@@ -34,16 +34,16 @@ function formatarMes(mesAno) {
     return meses[parseInt(mes) - 1];
 }
 
-// ---------- FORMATAR DATA (assumindo formato ISO ou DD/MM/YYYY) ----------
-// Se já existir uma função global formatarData, pode comentar esta.
+// ---------- FORMATAR DATA (para exibição) ----------
 function formatarData(dataStr) {
     if (!dataStr) return '-';
-    // Tenta converter ISO (YYYY-MM-DD) para DD/MM/YYYY
-    const partes = dataStr.split(' ')[0].split('-');
-    if (partes.length === 3) {
-        return `${partes[2]}/${partes[1]}/${partes[0]}`;
+    // Se vier no formato ISO (YYYY-MM-DD)
+    if (dataStr.includes('-')) {
+        const [ano, mes, dia] = dataStr.split(' ')[0].split('-');
+        return `${dia}/${mes}/${ano}`;
     }
-    // Se já estiver no formato PT, retorna como está
+    // Se vier no formato DD/MM/YYYY
+    if (dataStr.includes('/')) return dataStr;
     return dataStr;
 }
 
@@ -100,6 +100,53 @@ async function carregarHistorico() {
         return JSON.parse(jsonText);
     } catch (err) {
         console.error("Erro ao carregar histórico:", err);
+        return [];
+    }
+}
+
+// ---------- CARREGAR TODAS AS APOSTAS DA PASTA /apostas/ ----------
+async function carregarTodasApostas() {
+    const token = localStorage.getItem("github_token");
+    if (!token) {
+        console.warn("Token não configurado. Não é possível carregar apostas.");
+        return [];
+    }
+
+    const headers = { Authorization: `Bearer ${token}` };
+    const pasta = CONFIG.PASTAS.APOSTAS; // "apostas/"
+
+    try {
+        // 1. Listar ficheiros na pasta
+        const listRes = await fetch(`https://api.github.com/repos/${CONFIG.REPO}/contents/${pasta}?t=${Date.now()}`, { headers });
+        if (!listRes.ok) {
+            console.error("Erro ao listar pasta apostas:", listRes.status);
+            return [];
+        }
+        const ficheiros = await listRes.json();
+
+        // 2. Filtrar apenas ficheiros .json
+        const jsonFiles = ficheiros.filter(f => f.name.endsWith('.json') && f.type === 'file');
+
+        // 3. Para cada ficheiro, buscar o conteúdo e extrair os boletins
+        const todasApostas = [];
+        for (const file of jsonFiles) {
+            const contentRes = await fetch(file.download_url, { headers });
+            if (!contentRes.ok) continue;
+            const data = await contentRes.json();
+            // Se for um array, adiciona cada item com o tipo
+            if (Array.isArray(data)) {
+                data.forEach(item => {
+                    todasApostas.push({
+                        ...item,
+                        _tipo_ficheiro: file.name.replace('.json', '') // ex: "totoloto"
+                    });
+                });
+            }
+        }
+
+        return todasApostas;
+    } catch (err) {
+        console.error("Erro ao carregar apostas:", err);
         return [];
     }
 }
@@ -186,7 +233,7 @@ async function renderizarEstatisticas() {
             container.innerHTML = '<div class="no-notifications">Nenhuma estatística disponível.</div>';
             return;
         }
-    } else if (modoAtivo === 'premiados' || modoAtivo === 'pendentes') {
+    } else {
         historicoData = await carregarHistorico();
         if (!historicoData || historicoData.length === 0) {
             container.innerHTML = '<div class="no-notifications">Nenhum boletim no histórico.</div>';
@@ -288,8 +335,27 @@ async function renderizarEstatisticas() {
         // Modo premiados – usa a função que gera lista interativa
         html += gerarListaPremiadosInterativa(historicoData);
     } else if (modoAtivo === 'pendentes') {
-        // Modo pendentes – usa a função que gera lista de boletins aguardando sorteio
-        html += gerarListaPendentes(historicoData);
+        // Modo pendentes – carrega apostas e filtra as que não estão no histórico
+        const [apostas, historico] = await Promise.all([
+            carregarTodasApostas(),
+            Promise.resolve(historicoData) // já está carregado
+        ]);
+
+        // Criar um Set com as referências únicas que já estão no histórico
+        const refsHistorico = new Set();
+        historico.forEach(item => {
+            // Tenta obter a referência única do boletim
+            const ref = item.detalhes?.boletim?.referencia || item.id || item.referencia_unica;
+            if (ref) refsHistorico.add(ref);
+        });
+
+        // Filtrar apostas que NÃO estão no histórico
+        const pendentes = apostas.filter(aposta => {
+            const refAposta = aposta.referencia_unica || aposta.id;
+            return !refsHistorico.has(refAposta);
+        });
+
+        html += gerarListaPendentes(pendentes);
     }
 
     container.innerHTML = html;
@@ -340,10 +406,10 @@ async function renderizarEstatisticas() {
             btnCancelar.addEventListener('click', sairModoSelecao);
         }
     }
-    // Em 'pendentes' não há interação especial, apenas a lista estática.
+    // Nota: na aba pendentes não há listeners específicos (apenas visualização)
 }
 
-// ---------- GERAR LISTA DE PREMIADOS COM SELEÇÃO ----------
+// ---------- GERAR LISTA DE PREMIADOS COM SELEÇÃO (agora com data do sorteio) ----------
 function gerarListaPremiadosInterativa(dados) {
     // Filtrar apenas os que ganharam e NÃO estão arquivados
     const premiados = dados.filter(item => item.detalhes?.ganhou === true && !item.arquivado);
@@ -352,8 +418,12 @@ function gerarListaPremiadosInterativa(dados) {
         return '<p class="no-data">Nenhum boletim premiado encontrado.</p>';
     }
 
-    // Ordenar por data (mais recente primeiro)
-    premiados.sort((a, b) => new Date(b.data) - new Date(a.data));
+    // Ordenar por data do sorteio (mais recente primeiro)
+    premiados.sort((a, b) => {
+        const dataA = a.detalhes?.sorteio?.data || a.detalhes?.boletim?.data_sorteio || a.data;
+        const dataB = b.detalhes?.sorteio?.data || b.detalhes?.boletim?.data_sorteio || b.data;
+        return new Date(dataB) - new Date(dataA);
+    });
 
     let html = '';
 
@@ -376,7 +446,11 @@ function gerarListaPremiadosInterativa(dados) {
         const id = p.id;
         const selecionado = itensSelecionados.has(id);
         const jogo = p.jogo || p._jogo || 'desconhecido';
-        const data = formatarData(p.data);
+        
+        // DATA DO SORTEIO (corrigido)
+        let dataSorteio = p.detalhes?.sorteio?.data || p.detalhes?.boletim?.data_sorteio || p.data;
+        dataSorteio = formatarData(dataSorteio);
+
         const concurso = p.detalhes?.sorteio?.concurso || p.detalhes?.boletim?.concurso_sorteio || '-';
         const referencia = p.detalhes?.boletim?.referencia || '-';
 
@@ -384,35 +458,24 @@ function gerarListaPremiadosInterativa(dados) {
         let categorias = [];
         let valorTotal = 0;
 
-        // Se existir premios (array) – usado no Totoloto e outros com múltiplos prémios
         if (p.detalhes?.premios && Array.isArray(p.detalhes.premios)) {
             p.detalhes.premios.forEach(prem => {
                 if (prem && prem.premio) categorias.push(prem.premio);
                 let valorStr = prem?.valor?.replace('€', '').replace(' ', '').replace(',', '.') || '0';
-                // Tratamento especial para "Reembolso do valor da aposta de Totoloto"
-                if (valorStr.includes('Reembolso')) {
-                    valorStr = '1.0'; // assumimos que a aposta custa 1€
-                }
+                if (valorStr.includes('Reembolso')) valorStr = '1.0';
                 const num = parseFloat(valorStr);
                 if (!isNaN(num)) valorTotal += num;
             });
-        } 
-        // Se existir premio (singular) – usado noutros jogos
-        else if (p.detalhes?.premio) {
+        } else if (p.detalhes?.premio) {
             const prem = p.detalhes.premio;
             if (prem.categoria || prem.premio) categorias.push(prem.categoria || prem.premio);
             let valorStr = prem?.valor?.replace('€', '').replace(' ', '').replace(',', '.') || '0';
-            // Tratamento especial para "Reembolso" (caso apareça aqui)
-            if (valorStr.includes('Reembolso')) {
-                valorStr = '1.0';
-            }
+            if (valorStr.includes('Reembolso')) valorStr = '1.0';
             const num = parseFloat(valorStr);
             if (!isNaN(num)) valorTotal += num;
         }
 
-        // Se não houver categorias, usar nome do jogo
         if (categorias.length === 0) categorias.push('Prémio');
-
         const categoriasStr = categorias.join(' + ');
         const valorTotalStr = `€ ${valorTotal.toFixed(2).replace('.', ',')}`;
 
@@ -438,7 +501,6 @@ function gerarListaPremiadosInterativa(dados) {
             }
         }
 
-        // Classe CSS adicional se selecionado
         const classeCard = `premiado-card ${selecionado ? 'selecionado' : ''}`;
 
         html += `
@@ -448,7 +510,7 @@ function gerarListaPremiadosInterativa(dados) {
                     <span style="color: #ffd700; font-weight: bold;">${categoriasStr}</span>
                 </div>
                 <div style="display: grid; grid-template-columns: auto 1fr; gap: 8px 12px; font-size: 14px;">
-                    <span style="color: #888;">Data:</span><span>${data}</span>
+                    <span style="color: #888;">Data sorteio:</span><span>${dataSorteio}</span>
                     <span style="color: #888;">Concurso:</span><span>${concurso}</span>
                     <span style="color: #888;">Referência:</span><span>${referencia}</span>
                     <span style="color: #888;">Aposta:</span><span>${numeros}</span>
@@ -462,51 +524,43 @@ function gerarListaPremiadosInterativa(dados) {
     return html;
 }
 
-// ---------- GERAR LISTA DE PENDENTES (boletins que ainda não foram sorteados) ----------
-function gerarListaPendentes(dados) {
-    // Filtrar os que NÃO têm o campo ganhou definido (ou seja, ainda não processados) e não estão arquivados
-    const pendentes = dados.filter(item => {
-        // Considera pendente se não existir a propriedade ganhou ou se for null/undefined
-        const temResultado = item.detalhes?.ganhou !== undefined && item.detalhes?.ganhou !== null;
-        return !temResultado && !item.arquivado;
-    });
-
-    if (pendentes.length === 0) {
-        return '<p class="no-data">Nenhum boletim pendente (a aguardar sorteio).</p>';
+// ---------- GERAR LISTA DE PENDENTES (apostas não processadas) ----------
+function gerarListaPendentes(apostas) {
+    if (!apostas || apostas.length === 0) {
+        return '<p class="no-data">Nenhum boletim pendente encontrado.</p>';
     }
 
-    // Ordenar por data (mais recente primeiro)
-    pendentes.sort((a, b) => new Date(b.data) - new Date(a.data));
+    // Ordenar por data do sorteio (mais próximo primeiro)
+    apostas.sort((a, b) => new Date(a.data_sorteio) - new Date(b.data_sorteio));
 
     let html = '<div class="pendentes-lista" style="display: flex; flex-direction: column; gap: 12px;">';
 
-    for (const p of pendentes) {
-        const jogo = p.jogo || p._jogo || 'desconhecido';
-        const dataAposta = formatarData(p.data);
-        const concurso = p.detalhes?.boletim?.concurso_sorteio || p.detalhes?.sorteio?.concurso || '-';
-        const referencia = p.detalhes?.boletim?.referencia || '-';
-        const dataSorteio = p.detalhes?.boletim?.data_sorteio ? formatarData(p.detalhes.boletim.data_sorteio) : 'A definir';
+    for (const aposta of apostas) {
+        const jogo = aposta.tipo || aposta._tipo_ficheiro || 'desconhecido';
+        const dataSorteio = formatarData(aposta.data_sorteio);
+        const concurso = aposta.concurso || '-';
+        const referencia = aposta.referencia_unica || '-';
+        const valor = aposta.valor_total || 1.0;
 
         // Construir descrição dos números
         let numeros = '';
-        if (jogo === 'milhao') {
-            numeros = `Código: ${p.detalhes?.aposta?.codigo || '-'}`;
-        } else {
-            const nums = p.detalhes?.aposta?.numeros;
-            if (nums) {
-                numeros = nums.join(' ');
-                if (p.detalhes?.aposta?.estrelas) {
-                    numeros += ` + ${p.detalhes.aposta.estrelas.join(' ')}`;
+        if (aposta.apostas && Array.isArray(aposta.apostas)) {
+            // Geralmente é um array, mas vamos usar a primeira aposta para simplificar
+            const primeira = aposta.apostas[0];
+            if (primeira) {
+                if (primeira.numeros) {
+                    numeros = primeira.numeros.join(' ');
+                    if (primeira.estrelas) numeros += ` + ${primeira.estrelas.join(' ')}`;
+                    if (primeira.dream_number) numeros += ` Dream: ${primeira.dream_number}`;
+                    if (primeira.numero_da_sorte) numeros += ` Nº Sorte: ${primeira.numero_da_sorte}`;
+                } else if (primeira.codigo) {
+                    numeros = `Código: ${primeira.codigo}`;
                 }
-                if (p.detalhes?.aposta?.dream_number) {
-                    numeros += ` Dream: ${p.detalhes.aposta.dream_number}`;
-                }
-                if (p.detalhes?.aposta?.numero_da_sorte) {
-                    numeros += ` Nº Sorte: ${p.detalhes.aposta.numero_da_sorte}`;
-                }
-            } else {
-                numeros = '-';
             }
+        } else if (aposta.numeros) {
+            // Caso esteja diretamente no objeto
+            numeros = aposta.numeros.join(' ');
+            if (aposta.estrelas) numeros += ` + ${aposta.estrelas.join(' ')}`;
         }
 
         html += `
@@ -516,11 +570,11 @@ function gerarListaPendentes(dados) {
                     <span style="color: #ffaa00; font-weight: bold;">Aguardando sorteio</span>
                 </div>
                 <div style="display: grid; grid-template-columns: auto 1fr; gap: 8px 12px; font-size: 14px;">
-                    <span style="color: #888;">Data aposta:</span><span>${dataAposta}</span>
+                    <span style="color: #888;">Data sorteio:</span><span>${dataSorteio}</span>
                     <span style="color: #888;">Concurso:</span><span>${concurso}</span>
                     <span style="color: #888;">Referência:</span><span>${referencia}</span>
-                    <span style="color: #888;">Aposta:</span><span>${numeros}</span>
-                    <span style="color: #888;">Data sorteio:</span><span>${dataSorteio}</span>
+                    <span style="color: #888;">Aposta:</span><span>${numeros || '-'}</span>
+                    <span style="color: #888;">Valor:</span><span>€ ${valor.toFixed(2).replace('.', ',')}</span>
                 </div>
             </div>
         `;
@@ -536,30 +590,25 @@ function inicializarLongPressCards() {
     cards.forEach(card => {
         // Usar touch events para mobile
         card.addEventListener('touchstart', (e) => {
-            // Iniciar timer para long press
             longPressTimer = setTimeout(() => {
                 entrarModoSelecao(card);
-            }, 600); // 600ms
+            }, 600);
         });
 
         card.addEventListener('touchend', () => {
             clearTimeout(longPressTimer);
-            // Se não estamos em modo de seleção, e foi um toque curto, pode ser clique normal (mas aqui não queremos ação)
-            // Se quiser permitir clique normal, pode adicionar um handler de click.
         });
 
         card.addEventListener('touchmove', () => {
-            clearTimeout(longPressTimer); // cancelar se mover o dedo
+            clearTimeout(longPressTimer);
         });
 
         card.addEventListener('touchcancel', () => {
             clearTimeout(longPressTimer);
         });
 
-        // Para clique normal (em modo de seleção, serve para selecionar/deselecionar)
         card.addEventListener('click', (e) => {
             if (modoSelecao) {
-                // Toggle seleção
                 const id = card.dataset.id;
                 if (itensSelecionados.has(id)) {
                     itensSelecionados.delete(id);
@@ -568,7 +617,6 @@ function inicializarLongPressCards() {
                     itensSelecionados.add(id);
                     card.style.borderColor = '#ffd700';
                 }
-                // Atualizar contador na barra
                 const barra = document.querySelector('.selecao-barra span');
                 if (barra) {
                     barra.textContent = `${itensSelecionados.size} selecionado(s)`;
@@ -580,15 +628,13 @@ function inicializarLongPressCards() {
 
 // ---------- ENTRAR EM MODO DE SELEÇÃO ----------
 function entrarModoSelecao(card) {
-    if (modoSelecao) return; // já estamos
+    if (modoSelecao) return;
     modoSelecao = true;
     itensSelecionados.clear();
-    // Adicionar este card à seleção
     const id = card.dataset.id;
     itensSelecionados.add(id);
     card.style.borderColor = '#ffd700';
-    // Re-renderizar para mostrar a barra
-    renderizarEstatisticas(); // Isso recria a lista com a barra
+    renderizarEstatisticas(); // Recria a lista com a barra
 }
 
 // ---------- SAIR DO MODO DE SELEÇÃO ----------
@@ -605,11 +651,9 @@ async function arquivarSelecionados() {
         return;
     }
 
-    // Obter o histórico atual novamente (para garantir que está atualizado)
     const historicoAtual = await carregarHistorico();
     if (!historicoAtual) return;
 
-    // Marcar os selecionados como arquivado: true
     const novoHistorico = historicoAtual.map(item => {
         if (itensSelecionados.has(item.id)) {
             return { ...item, arquivado: true };
@@ -619,18 +663,15 @@ async function arquivarSelecionados() {
 
     const sucesso = await atualizarHistorico(novoHistorico);
     if (sucesso) {
-        // Sair do modo de seleção e recarregar a lista
         modoSelecao = false;
         itensSelecionados.clear();
-        // Recarregar dados do histórico e re-renderizar
-        historicoData = novoHistorico; // atualizar cache local
+        historicoData = novoHistorico;
         renderizarEstatisticas();
     }
 }
 
 // ---------- GERAR TABELA GLOBAL ----------
 function gerarTabelaGlobal(periodo, dadosGlobais) {
-    // ... (igual ao original, sem alterações)
     if (!dadosGlobais || !dadosGlobais[periodo] || Object.keys(dadosGlobais[periodo]).length === 0) {
         return '<p class="no-data">Sem dados globais disponíveis para este período.</p>';
     }
@@ -675,7 +716,6 @@ function gerarTabelaGlobal(periodo, dadosGlobais) {
 
 // ---------- GERAR TABELA POR JOGO ----------
 function gerarTabelaJogo(periodo, dadosJogo, jogo) {
-    // ... (igual ao original)
     if (!dadosJogo || Object.keys(dadosJogo).length === 0) {
         return '<p class="no-data">Sem dados disponíveis para este jogo neste período.</p>';
     }
