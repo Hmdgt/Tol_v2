@@ -186,7 +186,7 @@ async function renderizarEstatisticas() {
     // Construir HTML com abas de modo (Resumo / Premiados)
     let html = `
         <div class="estatisticas-header">
-            <h2>Estatísticas</h2>
+            <h2></h2>
             <div class="modo-tabs" style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 10px;">
                 <button class="modo-btn ${modoAtivo === 'resumo' ? 'active' : ''}" data-modo="resumo">Resumo</button>
                 <button class="modo-btn ${modoAtivo === 'premiados' ? 'active' : ''}" data-modo="premiados">Premiados</button>
