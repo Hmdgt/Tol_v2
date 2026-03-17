@@ -1,5 +1,5 @@
 // ===============================
-// 🔔 NOTIFICAÇÕES
+// 🔔 
 // ===============================
 
 // Usar configuração global (do config.js)
@@ -239,13 +239,13 @@ async function lerFicheiroGitHub(urlApi) {
   }
 }
 
-// ---------- CARREGAR NOTIFICAÇÕES ----------
+// ---------- CARREGAR  ----------
 async function carregarNotificacoes() {
   try {
     const { content } = await lerFicheiroGitHub(GITHUB_API);
     return content;
   } catch (err) {
-    console.error("Erro ao carregar notificações:", err);
+    console.error("Erro ao carregar :", err);
     return [];
   }
 }
@@ -396,7 +396,7 @@ window.voltarParaLista = function() {
   renderizarNotificacoes();
 };
 
-// ---------- RENDERIZAR NOTIFICAÇÕES (LISTA MISTURADA) ----------
+// ---------- RENDERIZAR  (LISTA MISTURADA) ----------
 async function renderizarNotificacoes() {
   const lista = document.getElementById("notificationsList");
   if (!lista) {
@@ -407,7 +407,7 @@ async function renderizarNotificacoes() {
   lista.innerHTML = '<div class="loading"><ion-icon name="sync-outline" class="spin"></ion-icon></div>';
 
   try {
-    // Carregar notificações não lidas
+    // Carregar  não lidas
     const notificacoes = await carregarNotificacoes();
     const notificacoesNaoLidas = notificacoes.filter(n => !n.lido).map(n => ({
       ...n,
@@ -469,7 +469,7 @@ async function renderizarNotificacoes() {
     
   } catch (err) {
     console.error("❌ Erro ao renderizar:", err);
-    lista.innerHTML = '<div class="error">Erro ao carregar notificações</div>';
+    lista.innerHTML = '<div class="error">Erro ao carregar </div>';
   }
 }
 
@@ -538,7 +538,7 @@ window.atualizarBadge = async function() {
   if (!badge) return;
   
   try {
-    // Contar notificações não lidas
+    // Contar  não lidas
     const notificacoes = await carregarNotificacoes();
     const naoLidas = notificacoes.filter(n => !n.lido).length;
     
