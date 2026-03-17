@@ -166,17 +166,17 @@ async function renderizarEstatisticas() {
     if (modoAtivo === 'resumo') {
         estatisticasData = await carregarEstatisticas();
         if (!estatisticasData) {
-            container.innerHTML = '<div class="error">❌ Não foi possível carregar estatísticas. Verifica se o ficheiro existe e o token tem permissões.</div>';
+            container.innerHTML = '<div class="error">Não foi possível carregar estatísticas. Verifica se o ficheiro existe e o token tem permissões.</div>';
             return;
         }
         if (Object.keys(estatisticasData).length === 0) {
-            container.innerHTML = '<div class="no-notifications">📊 Nenhuma estatística disponível.</div>';
+            container.innerHTML = '<div class="no-notifications">Nenhuma estatística disponível.</div>';
             return;
         }
     } else {
         historicoData = await carregarHistorico();
         if (!historicoData || historicoData.length === 0) {
-            container.innerHTML = '<div class="no-notifications">📭 Nenhum boletim no histórico.</div>';
+            container.innerHTML = '<div class="no-notifications">Nenhum boletim no histórico.</div>';
             return;
         }
     }
@@ -188,8 +188,8 @@ async function renderizarEstatisticas() {
         <div class="estatisticas-header">
             <h2>Estatísticas</h2>
             <div class="modo-tabs" style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 10px;">
-                <button class="modo-btn ${modoAtivo === 'resumo' ? 'active' : ''}" data-modo="resumo">📊 Resumo</button>
-                <button class="modo-btn ${modoAtivo === 'premiados' ? 'active' : ''}" data-modo="premiados">🏆 Premiados</button>
+                <button class="modo-btn ${modoAtivo === 'resumo' ? 'active' : ''}" data-modo="resumo">Resumo</button>
+                <button class="modo-btn ${modoAtivo === 'premiados' ? 'active' : ''}" data-modo="premiados">Premiados</button>
             </div>
     `;
 
@@ -211,7 +211,7 @@ async function renderizarEstatisticas() {
         }
 
         // Abas de jogos
-        html += `<div class="jogo-tabs"><button class="jogo-btn ${abaAtiva === 'global' ? 'active' : ''}" data-jogo="global">🌍 Global</button>`;
+        html += `<div class="jogo-tabs"><button class="jogo-btn ${abaAtiva === 'global' ? 'active' : ''}" data-jogo="global">Global</button>`;
 
         const jogos = ['totoloto', 'euromilhoes', 'eurodreams', 'milhao'];
         const nomesJogo = {
