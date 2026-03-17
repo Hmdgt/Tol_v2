@@ -5,7 +5,7 @@
   <title>Apostas</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 
-  <!-- TEMA CLARO (barras brancas com texto preto) -->
+  <!-- TEMA CLARO: barras brancas com texto preto -->
   <meta name="theme-color" content="#ffffff">
   <meta name="color-scheme" content="light only">
   <meta name="android-theme-color" content="#ffffff">
@@ -20,17 +20,17 @@
   <link rel="manifest" href="/Tol_v2/manifest.json">
 
   <style>
-    /* ========== RESET ========== */
+    /* ========== RESET E FUNDO CLARO ========== */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { 
-      background: #000; 
+      background: #f5f5f5; 
       height: 100%; 
       color-scheme: light; 
-      background-color: #000000 !important; 
+      background-color: #f5f5f5 !important; 
     }
     body {
       margin: 0;
-      background: #000 !important;
+      background: #f5f5f5 !important;
       font-family: sans-serif;
       padding: env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);
       height: 100vh;
@@ -38,12 +38,13 @@
       display: flex;
       flex-direction: column;
       color-scheme: light;
-      background-color: #000000 !important;
+      background-color: #f5f5f5 !important;
+      color: #111; /* texto base escuro */
     }
 
-    /* ========== GARANTIR FUNDO PRETO EM TODOS OS ELEMENTOS ========== */
+    /* ========== CORES CLARAS PARA ELEMENTOS PRINCIPAIS ========== */
     .view, #bottomNav, .modal-content, .jogo-form, .notification-card {
-      background-color: #111;
+      background-color: #ffffff; /* fundo branco */
     }
 
     /* ========== VIEWS ========== */
@@ -71,58 +72,70 @@
       justify-content: space-around;
       padding: 12px;
       padding-bottom: calc(12px + env(safe-area-inset-bottom));
-      background: #111;
-      border-top: 1px solid #222;
+      background: #ffffff;
+      border-top: 1px solid #ddd;
       z-index: 10;
     }
-    .navBtn { color: white; font-size: 28px; cursor: pointer; opacity: 0.3; transition: 0.2s; position: relative; }
-    .navBtn.active { opacity: 1; }
+    .navBtn { 
+      color: #333; 
+      font-size: 28px; 
+      cursor: pointer; 
+      opacity: 0.5; 
+      transition: 0.2s; 
+      position: relative; 
+    }
+    .navBtn.active { 
+      opacity: 1; 
+      color: #000; 
+    }
     .notification-badge {
       position: absolute; top: -5px; right: -5px; background: #ff4444; color: white;
       font-size: 11px; font-weight: bold; min-width: 18px; height: 18px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center; border: 2px solid #000;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      display: flex; align-items: center; justify-content: center; border: 2px solid #fff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
 
     /* ========== CÂMARA / GALERIA ========== */
     #cameraButton, #galleryButton {
       display: flex; justify-content: center; align-items: center; border-radius: 50%;
-      background: #111; border: 3px solid #444; cursor: pointer; transition: 0.1s;
+      background: #e0e0e0; border: 3px solid #ccc; cursor: pointer; transition: 0.1s;
       margin: 20px auto;
     }
     #cameraButton { width: 150px; height: 150px; }
-    #cameraButton ion-icon { font-size: 80px; color: white; opacity: 0.9; }
+    #cameraButton ion-icon { font-size: 80px; color: #333; opacity: 0.9; }
     #galleryButton { width: 120px; height: 120px; }
-    #galleryButton ion-icon { font-size: 60px; color: white; opacity: 0.9; }
-    #cameraButton:active, #galleryButton:active { transform: scale(0.92); border-color: #777; }
+    #galleryButton ion-icon { font-size: 60px; color: #333; opacity: 0.9; }
+    #cameraButton:active, #galleryButton:active { transform: scale(0.92); border-color: #999; }
 
-    /* ========== CONFIG ========== */
+    /* ========== FORMULÁRIOS E BOTÕES ========== */
     input, .input-token {
       width: 100%;
       padding: 12px;
       border-radius: 8px;
-      border: none;
-      background: #222;
-      color: white;
+      border: 1px solid #ccc;
+      background: #fff;
+      color: #111;
       font-size: 16px;
       margin-bottom: 12px;
     }
     button {
       padding: 14px;
-      background: #222;
-      border: 1px solid #444;
-      color: white;
+      background: #e0e0e0;
+      border: 1px solid #ccc;
+      color: #111;
       border-radius: 8px;
       font-size: 16px;
       cursor: pointer;
       transition: 0.2s;
       margin-bottom: 12px;
     }
-    button:active { opacity: 0.8; }
+    button:active { opacity: 0.8; background: #d0d0d0; }
     button.primary {
       background: #2a5a2a;
-      border-color: #4caf4c;
+      border-color: #1e4a1e;
+      color: white;
     }
+    button.primary:active { background: #1e4a1e; }
 
     /* ========== NOTIFICAÇÕES ========== */
     #notificationsList { 
@@ -132,33 +145,33 @@
       min-height: min-content;
     }
     .notification-card {
-      background: #111; border: 1px solid #333; border-radius: 12px; padding: 16px;
+      background: #ffffff; border: 1px solid #ddd; border-radius: 12px; padding: 16px;
       cursor: pointer; position: relative; transition: 0.2s;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
       touch-action: manipulation;
     }
-    .notification-card:active { background: #222; transform: scale(0.98); }
+    .notification-card:active { background: #f0f0f0; transform: scale(0.98); }
     .notification-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-    .jogo-icon { font-size: 20px; }
-    .jogo-nome { font-weight: bold; text-transform: capitalize; }
+    .jogo-icon { font-size: 20px; color: #333; }
+    .jogo-nome { font-weight: bold; text-transform: capitalize; color: #111; }
     .unread-badge {
       background: #ff4444; color: white; font-size: 10px; padding: 2px 8px;
       border-radius: 12px; font-weight: bold; margin-left: auto;
       animation: pulse 2s infinite;
     }
-    .notification-date { color: #999; font-size: 12px; white-space: nowrap; }
-    .notification-title { font-size: 16px; font-weight: 500; margin: 8px 0 4px; }
+    .notification-date { color: #666; font-size: 12px; white-space: nowrap; }
+    .notification-title { font-size: 16px; font-weight: 500; margin: 8px 0 4px; color: #111; }
     .notification-concurso {
-      font-size: 13px; color: #888; margin-bottom: 6px;
-      font-family: monospace; background: #1a1a1a; padding: 4px 8px;
+      font-size: 13px; color: #555; margin-bottom: 6px;
+      font-family: monospace; background: #f0f0f0; padding: 4px 8px;
       border-radius: 6px; display: inline-block;
     }
     .notification-resumo {
       font-size: 18px; font-weight: bold; text-align: center; padding: 8px;
-      background: #1a2a1a; border-radius: 8px; margin-top: 4px;
+      background: #e0f0e0; border-radius: 8px; margin-top: 4px; color: #1e4a1e;
     }
-    .no-notifications { text-align: center; opacity: 0.6; margin-top: 40px; }
+    .no-notifications { text-align: center; opacity: 0.6; margin-top: 40px; color: #555; }
     .loading, .error { text-align: center; padding: 40px 20px; opacity: 0.7; }
     .error { color: #ff4444; }
 
@@ -174,7 +187,7 @@
     }
     .loading ion-icon {
       font-size: 32px;
-      color: #888;
+      color: #666;
       animation: spin 1s linear infinite;
     }
 
@@ -186,9 +199,9 @@
       margin-bottom: 20px;
     }
     .btn-voltar {
-      background: #222;
-      border: 1px solid #444;
-      color: white;
+      background: #e0e0e0;
+      border: 1px solid #ccc;
+      color: #111;
       padding: 8px 12px;
       border-radius: 8px;
       font-size: 14px;
@@ -206,7 +219,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.8);
+      background: rgba(0, 0, 0, 0.5);
       z-index: 1000;
       align-items: center;
       justify-content: center;
@@ -214,8 +227,8 @@
       backdrop-filter: blur(5px);
     }
     .modal-content {
-      background: #111;
-      border: 1px solid #333;
+      background: #fff;
+      border: 1px solid #ddd;
       border-radius: 20px;
       width: 100%;
       max-width: 500px;
@@ -233,11 +246,11 @@
       justify-content: space-between;
       align-items: center;
       padding: 20px;
-      border-bottom: 1px solid #333;
+      border-bottom: 1px solid #ddd;
     }
-    .modal-header h3 { margin: 0; font-weight: 300; }
+    .modal-header h3 { margin: 0; font-weight: 300; color: #111; }
     .modal-close {
-      background: none; border: none; color: white; font-size: 28px;
+      background: none; border: none; color: #333; font-size: 28px;
       cursor: pointer; padding: 0; width: 40px; height: 40px;
       display: flex; align-items: center; justify-content: center;
     }
@@ -245,26 +258,26 @@
 
     /* Detalhes das apostas */
     .detalhes-jogo { display: flex; flex-direction: column; gap: 16px; }
-    .detalhes-jogo h4 { font-size: 20px; margin: 0 0 10px 0; color: #ffd700; }
+    .detalhes-jogo h4 { font-size: 20px; margin: 0 0 10px 0; color: #b8860b; } /* dourado escuro */
     .detalhes-resultado {
-      font-size: 18px; font-weight: bold; color: #4caf50;
-      text-align: center; padding: 12px; background: #1a2a1a;
+      font-size: 18px; font-weight: bold; color: #1e4a1e;
+      text-align: center; padding: 12px; background: #e0f0e0;
       border-radius: 10px; margin-bottom: 10px;
     }
     .detalhes-secao {
-      background: #1a1a1a; border-radius: 12px; padding: 15px;
-      border: 1px solid #333;
+      background: #f9f9f9; border-radius: 12px; padding: 15px;
+      border: 1px solid #eee;
     }
     .detalhes-secao h5 {
-      margin: 0 0 10px 0; color: #888; font-size: 14px;
+      margin: 0 0 10px 0; color: #555; font-size: 14px;
       text-transform: uppercase; letter-spacing: 1px;
     }
-    .detalhes-secao p { margin: 5px 0; line-height: 1.5; }
-    .detalhes-secao.premio { background: #2a1a1a; border-color: #ff4444; }
-    .detalhes-secao.premio h5 { color: #ff4444; }
-    .valor-premio { font-size: 24px; font-weight: bold; color: #ffd700; text-align: center; margin-top: 10px; }
-    .valor-total { font-size: 18px; color: #4caf50; text-align: center; margin-top: 5px; }
-    .sem-premio { background: #222; opacity: 0.8; }
+    .detalhes-secao p { margin: 5px 0; line-height: 1.5; color: #111; }
+    .detalhes-secao.premio { background: #fff0f0; border-color: #ffaaaa; }
+    .detalhes-secao.premio h5 { color: #aa2222; }
+    .valor-premio { font-size: 24px; font-weight: bold; color: #b8860b; text-align: center; margin-top: 10px; }
+    .valor-total { font-size: 18px; color: #1e4a1e; text-align: center; margin-top: 5px; }
+    .sem-premio { background: #eee; opacity: 0.8; }
 
     /* Esconder inputs nativos */
     #cameraInput, #galleryInput { display: none; }
@@ -277,11 +290,11 @@
       margin-bottom: 20px;
       flex-wrap: wrap;
     }
-    .validacao-header h3 { margin: 0; flex: 1; }
+    .validacao-header h3 { margin: 0; flex: 1; color: #111; }
     .imagem-nome {
       font-size: 14px;
-      color: #888;
-      background: #1a1a1a;
+      color: #555;
+      background: #f0f0f0;
       padding: 4px 8px;
       border-radius: 6px;
       word-break: break-all;
@@ -306,9 +319,9 @@
       overflow: hidden;
       position: relative;
       touch-action: none;
-      background: #111;
+      background: #eee;
       border-radius: 12px;
-      border: 1px solid #333;
+      border: 1px solid #ccc;
       cursor: grab;
     }
     .zoom-container.dragging { cursor: grabbing; }
@@ -333,14 +346,14 @@
       gap: 20px;
     }
     .jogo-form {
-      background: #111;
-      border: 1px solid #333;
+      background: #fff;
+      border: 1px solid #ddd;
       border-radius: 12px;
       padding: 20px;
     }
     .jogo-form h3 {
       margin: 0 0 15px 0;
-      color: #ffd700;
+      color: #b8860b;
       font-size: 18px;
     }
     .form-campos {
@@ -355,12 +368,12 @@
     }
     .campo label {
       font-size: 14px;
-      color: #888;
+      color: #555;
     }
     .campo input, .campo select {
-      background: #222;
-      border: 1px solid #444;
-      color: white;
+      background: #fff;
+      border: 1px solid #ccc;
+      color: #111;
       padding: 8px 12px;
       border-radius: 6px;
       font-size: 16px;
@@ -389,7 +402,7 @@
     }
     hr {
       border: none;
-      border-top: 1px solid #333;
+      border-top: 1px solid #ddd;
       margin: 20px 0;
     }
     .botoes-validacao {
@@ -398,13 +411,15 @@
       margin-top: 20px;
     }
     .btn-cancelar {
-      background: #222;
-      border: 1px solid #444;
+      background: #e0e0e0;
+      border: 1px solid #ccc;
+      color: #111;
       flex: 1;
     }
     .btn-validar {
       background: #2a5a2a;
-      border: 1px solid #4caf4c;
+      border: 1px solid #1e4a1e;
+      color: white;
       flex: 2;
       display: flex;
       align-items: center;
@@ -413,8 +428,8 @@
     }
     .btn-validar ion-icon { font-size: 20px; }
     .validacao-card {
-      background: #111;
-      border: 1px solid #333;
+      background: #fff;
+      border: 1px solid #ddd;
       border-radius: 12px;
       padding: 16px;
       margin-bottom: 12px;
@@ -422,7 +437,7 @@
       transition: 0.2s;
     }
     .validacao-card:active {
-      background: #222;
+      background: #f0f0f0;
       transform: scale(0.98);
     }
     .validacao-card-header {
@@ -432,13 +447,13 @@
     }
     .validacao-imagem {
       font-size: 14px;
-      color: #aaa;
+      color: #555;
       word-break: break-all;
       flex: 1;
     }
     .validacao-badge {
       background: #ffaa00;
-      color: black;
+      color: #111;
       font-size: 12px;
       font-weight: bold;
       padding: 2px 8px;
@@ -446,19 +461,19 @@
     }
     .validacao-tipos {
       font-size: 14px;
-      color: #888;
+      color: #666;
       margin: 8px 0;
     }
     .validacao-preview {
       font-size: 13px;
-      color: #4caf50;
+      color: #1e4a1e;
     }
 
     /* ========== TOAST ========== */
     .custom-toast {
       font-family: sans-serif;
       backdrop-filter: blur(4px);
-      border: 1px solid rgba(255,255,255,0.1);
+      border: 1px solid rgba(0,0,0,0.1);
     }
     .custom-toast ion-icon { flex-shrink: 0; }
 
@@ -467,14 +482,18 @@
       transition: border-color 0.2s, transform 0.1s;
       user-select: none;
       -webkit-tap-highlight-color: transparent;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 16px;
     }
     .premiado-card.selecionado {
       border-color: #ffd700 !important;
-      background: #222 !important;
+      background: #f9f9c0 !important;
     }
     .selecao-barra {
-      background: #222;
-      border: 1px solid #444;
+      background: #f0f0f0;
+      border: 1px solid #ccc;
       border-radius: 8px;
       padding: 10px;
       margin-bottom: 15px;
@@ -483,20 +502,20 @@
       gap: 10px;
     }
     .selecao-barra span {
-      color: #ffd700;
+      color: #b8860b;
       font-weight: bold;
     }
     .btn-cancelar {
-      background: #333;
-      border: 1px solid #555;
-      color: white;
+      background: #ccc;
+      border: 1px solid #aaa;
+      color: #111;
       padding: 8px 12px;
       border-radius: 6px;
       cursor: pointer;
     }
     .btn-validar {
       background: #2a5a2a;
-      border: 1px solid #4caf4c;
+      border: 1px solid #1e4a1e;
       color: white;
       padding: 8px 12px;
       border-radius: 6px;
@@ -523,9 +542,9 @@
       justify-content: center;
     }
     .periodo-btn, .jogo-btn {
-      background: #222;
-      border: 1px solid #444;
-      color: white;
+      background: #e0e0e0;
+      border: 1px solid #ccc;
+      color: #111;
       padding: 8px 16px;
       border-radius: 20px;
       font-size: 14px;
@@ -534,7 +553,8 @@
     }
     .periodo-btn.active, .jogo-btn.active {
       background: #2a5a2a;
-      border-color: #4caf4c;
+      border-color: #1e4a1e;
+      color: white;
     }
     .estatisticas-tabela {
       width: 100%;
@@ -542,21 +562,21 @@
       font-size: 14px;
     }
     .estatisticas-tabela th {
-      background: #1a1a1a;
-      color: #888;
+      background: #f0f0f0;
+      color: #333;
       font-weight: normal;
       padding: 12px 8px;
       text-align: center;
-      border-bottom: 2px solid #333;
+      border-bottom: 2px solid #ccc;
     }
     .estatisticas-tabela td {
       padding: 10px 8px;
       text-align: center;
-      border-bottom: 1px solid #222;
+      border-bottom: 1px solid #eee;
     }
-    .estatisticas-tabela td.positivo { color: #4caf4c; }
+    .estatisticas-tabela td.positivo { color: #1e4a1e; }
     .estatisticas-tabela td.negativo { color: #ff4444; }
-    .estatisticas-tabela tbody tr:hover { background: #1a1a1a; }
+    .estatisticas-tabela tbody tr:hover { background: #f9f9f9; }
     .no-data {
       text-align: center;
       padding: 40px;
@@ -585,7 +605,6 @@
   </div>
 
   <div id="notificacoesView" class="view">
-    <!-- <h2>Notificações</h2> removido conforme solicitado anteriormente -->
     <div id="notificationsList"></div>
   </div>
 
@@ -598,33 +617,29 @@
   </div>
 
   <div id="estatisticasView" class="view">
-    <!-- <h2>Estatísticas</h2> removido -->
-    <div id="estatisticasContainer">
-      <p style="text-align: center; opacity: 0.6; margin-top: 40px;">Em breve...</p>
-    </div>
+    <div id="estatisticasContainer">      
   </div>
 
-  <!-- VIEW DE CONFIGURAÇÕES (agora sem input de token e sem botão "Ver Erros") -->
+  <!-- VIEW DE CONFIGURAÇÕES (sem input de token) -->
   <div id="configView" class="view">
     <div style="padding: 20px;">
-      <h2 style="text-align: center; font-weight: 300; margin-bottom: 20px;">Configurações</h2>
-      <button id="editTokenBtn" class="primary" style="width: 100%;">🔑 Guardar Token</button>
-      <button id="resetAppBtn" style="width: 100%;">🔄 Atualizar App</button>
-      <!-- Botão "Ver Erros" removido -->
+      <h2 style="text-align: center; font-weight: 300; margin-bottom: 20px; color: #111;">Configurações</h2>
+      <button id="editTokenBtn" class="primary" style="width: 100%;">Guardar Token</button>
+      <button id="resetAppBtn" style="width: 100%;">Atualizar App</button>
     </div>
   </div>
 
-  <!-- NOVA VIEW: EDIÇÃO DO TOKEN -->
+  <!-- VIEW DE EDIÇÃO DO TOKEN -->
   <div id="tokenEditView" class="view">
     <div style="padding: 20px;">
       <div class="detalhe-header" style="margin-bottom: 20px;">
         <button class="btn-voltar" id="backToConfigBtn">
           <ion-icon name="arrow-back-outline"></ion-icon> Voltar
         </button>
-        <h3 style="flex:1; text-align: center;">Editar Token</h3>
+        <h3 style="flex:1; text-align: center; color: #111;">Editar Token</h3>
       </div>
       <input type="password" id="tokenInput" class="input-token" placeholder="Introduz o token GitHub..." value="" autocomplete="off">
-      <button id="saveTokenBtn" class="primary" style="width: 100%;">💾 Gravar Token</button>
+      <button id="saveTokenBtn" class="primary" style="width: 100%;">Gravar Token</button>
     </div>
   </div>
 
@@ -641,7 +656,7 @@
     <div class="navBtn" data-view="configView"><ion-icon name="settings-outline"></ion-icon></div>
   </div>
 
-  <!-- Modal de detalhes (mantido para logs) -->
+  <!-- Modal de detalhes (para logs) -->
   <div id="modalDetalhes" class="modal" style="display:none;">
     <div class="modal-content">
       <div class="modal-header">
@@ -654,7 +669,7 @@
     </div>
   </div>
 
-  <!-- Scripts - ORDEM CORRETA -->
+  <!-- Scripts -->
   <script src="config.js" defer></script>
   <script src="utils.js" defer></script>
   <script src="notificacoes.js" defer></script>
