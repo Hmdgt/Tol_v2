@@ -5,12 +5,12 @@
   <title>Apostas</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 
-  <!-- CORREÇÃO: Controlo total das cores no Android -->
-  <meta name="theme-color" content="#000000">
-  <meta name="color-scheme" content="dark only">  <!-- ← ALTERADO: "only" força modo escuro -->
-  <meta name="android-theme-color" content="#000000">  <!-- ← NOVO: específico Android -->
-  <meta name="msapplication-navbutton-color" content="#000000">  <!-- ← NOVO: Windows Phone -->
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <!-- TEMA CLARO (barras brancas com texto preto) -->
+  <meta name="theme-color" content="#ffffff">
+  <meta name="color-scheme" content="light only">
+  <meta name="android-theme-color" content="#ffffff">
+  <meta name="msapplication-navbutton-color" content="#ffffff">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="mobile-web-app-capable" content="yes">
 
   <!-- Ionicons -->
@@ -25,8 +25,8 @@
     html { 
       background: #000; 
       height: 100%; 
-      color-scheme: dark; 
-      background-color: #000000 !important; /* ← FORÇADO */
+      color-scheme: light; 
+      background-color: #000000 !important; 
     }
     body {
       margin: 0;
@@ -37,13 +37,13 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      color-scheme: dark;
-      background-color: #000000 !important; /* ← FORÇADO */
+      color-scheme: light;
+      background-color: #000000 !important;
     }
 
     /* ========== GARANTIR FUNDO PRETO EM TODOS OS ELEMENTOS ========== */
     .view, #bottomNav, .modal-content, .jogo-form, .notification-card {
-      background-color: #111; /* Mantém teus estilos originais */
+      background-color: #111;
     }
 
     /* ========== VIEWS ========== */
@@ -59,8 +59,6 @@
       display: flex;
       flex-direction: column;
     }
-
-    h2 { text-align: center; font-weight: 300; margin-bottom: 20px; }
 
     #homeView.active {
       justify-content: center;
@@ -99,9 +97,32 @@
     #cameraButton:active, #galleryButton:active { transform: scale(0.92); border-color: #777; }
 
     /* ========== CONFIG ========== */
-    input { width: 100%; padding: 12px; border-radius: 8px; border: none; background: #111; color: white; font-size: 16px; margin-bottom: 12px; }
-    button { padding: 14px; background: #222; border: 1px solid #444; color: white; border-radius: 8px; font-size: 16px; cursor: pointer; transition: 0.2s; margin-bottom: 12px; }
+    input, .input-token {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      background: #222;
+      color: white;
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+    button {
+      padding: 14px;
+      background: #222;
+      border: 1px solid #444;
+      color: white;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.2s;
+      margin-bottom: 12px;
+    }
     button:active { opacity: 0.8; }
+    button.primary {
+      background: #2a5a2a;
+      border-color: #4caf4c;
+    }
 
     /* ========== NOTIFICAÇÕES ========== */
     #notificationsList { 
@@ -442,51 +463,51 @@
     .custom-toast ion-icon { flex-shrink: 0; }
 
     /* Estilos para a aba premiados com seleção */
-.premiado-card {
-    transition: border-color 0.2s, transform 0.1s;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-}
-.premiado-card.selecionado {
-    border-color: #ffd700 !important;
-    background: #222 !important;
-}
-.selecao-barra {
-    background: #222;
-    border: 1px solid #444;
-    border-radius: 8px;
-    padding: 10px;
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-.selecao-barra span {
-    color: #ffd700;
-    font-weight: bold;
-}
-.btn-cancelar {
-    background: #333;
-    border: 1px solid #555;
-    color: white;
-    padding: 8px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-}
-.btn-validar {
-    background: #2a5a2a;
-    border: 1px solid #4caf4c;
-    color: white;
-    padding: 8px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-.btn-validar ion-icon {
-    font-size: 18px;
-}
+    .premiado-card {
+      transition: border-color 0.2s, transform 0.1s;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .premiado-card.selecionado {
+      border-color: #ffd700 !important;
+      background: #222 !important;
+    }
+    .selecao-barra {
+      background: #222;
+      border: 1px solid #444;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .selecao-barra span {
+      color: #ffd700;
+      font-weight: bold;
+    }
+    .btn-cancelar {
+      background: #333;
+      border: 1px solid #555;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .btn-validar {
+      background: #2a5a2a;
+      border: 1px solid #4caf4c;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .btn-validar ion-icon {
+      font-size: 18px;
+    }
 
     /* ========== ESTATÍSTICAS ========== */
     .estatisticas-header {
@@ -557,40 +578,54 @@
   <input type="file" accept="image/*" capture="environment" id="cameraInput">
   <input type="file" accept="image/*" id="galleryInput">
 
-  <!-- Views -->
+  <!-- Views principais -->
   <div id="homeView" class="view active">
     <div id="cameraButton"><ion-icon name="camera-outline"></ion-icon></div>
     <div id="galleryButton"><ion-icon name="image-outline"></ion-icon></div>
   </div>
 
   <div id="notificacoesView" class="view">
-    <h2>Notificações</h2>
+    <!-- <h2>Notificações</h2> removido conforme solicitado anteriormente -->
     <div id="notificationsList"></div>
   </div>
 
-  <!-- VIEW: Detalhe da Notificação -->
   <div id="detalheNotificacaoView" class="view">
     <div id="detalheContainer"></div>
   </div>
 
-  <!-- VIEW: Validação de Boletins -->
   <div id="validacaoView" class="view">
     <div id="validacaoContainer"></div>
   </div>
 
-  <!-- VIEW: Estatísticas -->
   <div id="estatisticasView" class="view">
+    <!-- <h2>Estatísticas</h2> removido -->
     <div id="estatisticasContainer">
       <p style="text-align: center; opacity: 0.6; margin-top: 40px;">Em breve...</p>
     </div>
   </div>
 
+  <!-- VIEW DE CONFIGURAÇÕES (agora sem input de token e sem botão "Ver Erros") -->
   <div id="configView" class="view">
-    <h2>Configurações</h2>
-    <input type="password" id="token" placeholder="Introduz o token...">
-    <button id="saveTokenBtn">Guardar Token</button>
-    <button id="resetAppBtn">Atualizar App</button>
-    <button id="debugLogsBtn" style="margin-top: 20px; background: #333;">Ver Erros</button>
+    <div style="padding: 20px;">
+      <h2 style="text-align: center; font-weight: 300; margin-bottom: 20px;">Configurações</h2>
+      <button id="editTokenBtn" class="primary" style="width: 100%;">🔑 Guardar Token</button>
+      <button id="resetAppBtn" style="width: 100%;">🔄 Atualizar App</button>
+      <!-- Botão "Ver Erros" removido -->
+    </div>
+  </div>
+
+  <!-- NOVA VIEW: EDIÇÃO DO TOKEN -->
+  <div id="tokenEditView" class="view">
+    <div style="padding: 20px;">
+      <div class="detalhe-header" style="margin-bottom: 20px;">
+        <button class="btn-voltar" id="backToConfigBtn">
+          <ion-icon name="arrow-back-outline"></ion-icon> Voltar
+        </button>
+        <h3 style="flex:1; text-align: center;">Editar Token</h3>
+      </div>
+      <input type="password" id="tokenInput" class="input-token" placeholder="Introduz o token GitHub..." value="" autocomplete="off">
+      <button id="saveTokenBtn" class="primary" style="width: 100%;">💾 Gravar Token</button>
+    </div>
   </div>
 
   <!-- Bottom navigation -->
