@@ -397,7 +397,7 @@ function gerarListaPendentes(apostas) {
         }
 
         const valor = aposta.valor_total || 1.0;
-        const resumo = `${numeros || 'Aposta'} • € ${valor.toFixed(2).replace('.', ',')}`;
+        const resumo = numeros || 'Aposta';
 
         // Ícone baseado no jogo
         let icon = 'time-outline';
