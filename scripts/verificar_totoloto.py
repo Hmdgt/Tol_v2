@@ -79,18 +79,62 @@ def calcular_acertos(aposta_numeros: List[str], aposta_especial: str,
 
 def encontrar_premios(sorteio: dict, acertos_n: int, acertou_especial: bool) -> List[dict]:
     premios_ganhos = []
-    if acertou_especial:
-        for premio in sorteio.get("premios", []):
-            if premio.get("premio") == "Nº da Sorte":
-                premios_ganhos.append(premio)
-                break
-    if acertos_n >= 2:
-        nome_premio = PREMIOS_NUMEROS_TOTOLOTO.get(acertos_n)
-        if nome_premio:
-            for premio in sorteio.get("premios", []):
-                if premio.get("premio") == nome_premio:
-                    premios_ganhos.append(premio)
-                    break
+
+    def procurar(padrao: str):
+        # Normaliza o padrão: remove pontuação e converte para minúsculas
+        padrao_clean = re.sub(r'[^\w\s]', '', padrao).lower()
+        for p in sorteio.get("premios", []):
+            nome = p.get("premio", "")
+            nome_clean = re.sub(r'[^\w\s]', '', nome).lower()
+            if padrao_clean in nome_clean:
+                return p
+        return None
+
+    # 5 números
+    if acertos_n == 5:
+        if acertou_especial:
+            p = procurar("1")          # 1.º Prémio
+        else:
+            p = procurar("2")          # 2.º Prémio
+        if p:
+            premios_ganhos.append(p)
+
+    # 4 números
+    elif acertos_n == 4:
+        p = procurar("3")               # 3.º Prémio
+        if p:
+            premios_ganhos.append(p)
+        if acertou_especial:
+            p_sorte = procurar("sorte")
+            if p_sorte:
+                premios_ganhos.append(p_sorte)
+
+    # 3 números
+    elif acertos_n == 3:
+        p = procurar("4")               # 4.º Prémio
+        if p:
+            premios_ganhos.append(p)
+        if acertou_especial:
+            p_sorte = procurar("sorte")
+            if p_sorte:
+                premios_ganhos.append(p_sorte)
+
+    # 2 números
+    elif acertos_n == 2:
+        p = procurar("5")               # 5.º Prémio
+        if p:
+            premios_ganhos.append(p)
+        if acertou_especial:
+            p_sorte = procurar("sorte")
+            if p_sorte:
+                premios_ganhos.append(p_sorte)
+
+    # 1 ou 0 números → só nº da sorte
+    elif acertos_n <= 1 and acertou_especial:
+        p_sorte = procurar("sorte")
+        if p_sorte:
+            premios_ganhos.append(p_sorte)
+
     return premios_ganhos
 
 # ============================================================
