@@ -379,13 +379,12 @@
     },
     "ganhou": true,
     "premios": [
-          {
-      "premio": "Nº da Sorte",
-      "descricao": "Nº da Sorte",
-      "vencedores": "77.078",
-      "valor": "Reembolso do valor da aposta de Totoloto"
-    }
-
+      {
+        "premio": "Nº da Sorte",
+        "descricao": "Nº da Sorte",
+        "vencedores": "77.078",
+        "valor": "Reembolso do valor da aposta de Totoloto"
+      }
     ]
   },
   {
