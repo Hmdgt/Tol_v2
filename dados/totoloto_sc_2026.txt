@@ -1,13 +1,7 @@
-Concurso: 021/2026
-Data: 14/03/2026
-Números: 5 9 26 39 43
-Especial: 11
+Concurso: 022/2026
+Data: 18/03/2026
+Números: 1 8 22 35 37
+Especial: 7
 ----------------------------------------
 Prémios:
-1.º Prémio - 5 Números + Nº da Sorte | Vencedores: 0 | Valor: (1)
-2.º Prémio - 5 Números | Vencedores: 0 | Valor: (2)
-3.º Prémio - 4 Números | Vencedores: 127 | Valor: € 416,42
-4.º Prémio - 3 Números | Vencedores: 5.702 | Valor: € 5,15
-5.º Prémio - 2 Números | Vencedores: 82.151 | Valor: € 2,14
-Nº da Sorte - Nº da Sorte | Vencedores: 77.078 | Valor: Reembolso do valor da aposta de Totoloto
 ----------------------------------------
