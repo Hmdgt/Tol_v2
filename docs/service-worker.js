@@ -168,8 +168,6 @@ self.addEventListener("message", event => {
   }
 });
 
-console.log(`[SW] Service Worker carregado (${CACHE_VERSION})`);
-
 // ===============================
 // 🔔 RECEBER PUSH (Web Push API)
 // ===============================
@@ -190,3 +188,5 @@ self.addEventListener("push", event => {
     self.registration.showNotification(title, options)
   );
 });
+
+console.log(`[SW] Service Worker carregado (${CACHE_VERSION})`);
