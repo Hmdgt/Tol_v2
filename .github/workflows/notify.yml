@@ -4,8 +4,9 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - 'resultados/estatisticas_completas.json'
-      - 'resultados/historico.json'
+      - 'resultados/notificacoes_ativas.json'
+      - 'resultados/*_recentes.json'
+      - 'resultados/*_verificacoes.json'
 
 jobs:
   notify:
