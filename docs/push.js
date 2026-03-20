@@ -3,7 +3,7 @@
 // ===============================
 
 // 👉 Chave VAPID PÚBLICA (esta pode estar no frontend)
-const VAPID_PUBLIC_KEY = "BJiUie1vt12aee7fgOWh581KJlkDEdkmcjarrXJ73ApcTW3hzDUhoRmUPCv3j4ITvQs584G42l74_qedUYO7hL8";
+const VAPID_PUBLIC_KEY = "BGrN0Gg3Vw2mas0ckywKfkp-zw2wV6PrKB46tBqSUGbk7oaZRW1uO8m3HWxaiJqrtPZyBKubOI0bmeh4efLGSpA";
 
 // Caminho para guardar a subscription no GitHub
 const SUBSCRIPTION_FILE = `https://api.github.com/repos/${CONFIG.REPO}/contents/subscription.json`;
