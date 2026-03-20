@@ -385,7 +385,7 @@ function gerarListaPendentes(apostas) {
                 if (primeira.numeros) {
                     numeros = primeira.numeros.join(' ');
                     if (primeira.estrelas) numeros += ` + ${primeira.estrelas.join(' ')}`;
-                    if (primeira.dream_number) numeros += ` Dream: ${primeira.dream_number}`;
+                    if (primeira.dream) numeros += ` Dream: ${primeira.dream}`;
                     if (primeira.numero_da_sorte) numeros += ` Nº Sorte: ${primeira.numero_da_sorte}`;
                 } else if (primeira.codigo) {
                     numeros = `Código: ${primeira.codigo}`;
