@@ -526,15 +526,6 @@
       width: 100%;
       height: 100%;
     }
-
-    /* ========== BOTÃO DE ATIVAR NOTIFICAÇÕES ========== */
-    .btn-ativar-notificacoes {
-      background: #2a5a2a;
-      border: 1px solid #4caf4c;
-      margin: 20px auto;
-      display: block;
-      width: fit-content;
-    }
   </style>
 </head>
 <body>
@@ -550,7 +541,7 @@
   </div>
 
   <div id="notificacoesView" class="view">
-    <h2>Notificações</h2>
+    <h2></h2>
     <div id="notificationsList"></div>
   </div>
 
@@ -570,13 +561,10 @@
   </div>
 
   <div id="configView" class="view">
-    <h2>Configurações</h2>
-    <input type="password" id="token" placeholder="Introduz o token GitHub...">
+    <h2></h2>
+    <input type="password" id="token" placeholder="Introduz o token...">
     <button id="saveTokenBtn">Guardar Token</button>
     <button id="resetAppBtn">Atualizar App</button>
-    <button id="ativarNotificacoesBtn" class="btn-ativar-notificacoes" style="display: none;">
-      <ion-icon name="notifications-outline"></ion-icon> Ativar Notificações Push
-    </button>
     <button id="debugLogsBtn" style="margin-top: 20px; background: #333;">Ver Erros</button>
   </div>
 
@@ -614,207 +602,5 @@
   <script src="estatisticas.js" defer></script>
   <script src="upload.js" defer></script>
   <script src="app.js" defer></script>
-
-  <!-- Firebase SDK (notificações push) -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging.js";
-
-    // Configuração Firebase (do teu projeto)
-    const firebaseConfig = {
-      apiKey: "AIzaSyAcUc1wu97-3d7kn1TdZp7eOXfT0BAJKHM",
-      authDomain: "apostasnotificacoes-9d332.firebaseapp.com",
-      projectId: "apostasnotificacoes-9d332",
-      storageBucket: "apostasnotificacoes-9d332.firebasestorage.app",
-      messagingSenderId: "739974685994",
-      appId: "1:739974685994:web:bae50bb7a45d84730a2a53"
-    };
-
-    // Chave VAPID pública (do Firebase Console > Project Settings > Cloud Messaging)
-    const VAPID_PUBLIC_KEY = "BJiUie1vt12aee7fgOWh581KJlkDEdkmcjarrXJ73ApcTW3hzDUhoRmUPCv3j4ITvQs584G42l74_qedUYO7hL8";
-
-    // Inicializar Firebase
-    const app = initializeApp(firebaseConfig);
-    const messaging = getMessaging(app);
-
-    // Variáveis globais
-    let fcmTokenAtual = null;
-
-    // ========== GUARDAR TOKEN NO GITHUB ==========
-    async function guardarTokenGitHub(token) {
-      const githubToken = localStorage.getItem("github_token");
-      if (!githubToken) {
-        console.warn("⚠️ Token GitHub não configurado, não foi possível guardar FCM token");
-        return false;
-      }
-
-      const url = `https://api.github.com/repos/${CONFIG.REPO}/contents/fcm_token.json`;
-      
-      try {
-        // Tentar ler ficheiro existente
-        const res = await fetch(url, {
-          headers: { Authorization: `Bearer ${githubToken}` }
-        });
-        
-        let sha = null;
-        let tokens = [];
-        
-        if (res.ok) {
-          const data = await res.json();
-          sha = data.sha;
-          const content = base64ToString(data.content);
-          tokens = JSON.parse(content);
-        }
-        
-        // Adicionar token se não existir
-        if (!tokens.includes(token)) {
-          tokens.push(token);
-          
-          const body = {
-            message: "📱 Atualizar token FCM",
-            content: stringToBase64(JSON.stringify(tokens, null, 2))
-          };
-          if (sha) body.sha = sha;
-          
-          const putRes = await fetch(url, {
-            method: "PUT",
-            headers: {
-              Authorization: `Bearer ${githubToken}`,
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify(body)
-          });
-          
-          if (putRes.ok) {
-            console.log("✅ Token FCM guardado no GitHub");
-            return true;
-          } else {
-            console.error("❌ Erro ao guardar token no GitHub");
-            return false;
-          }
-        }
-        
-        return true;
-      } catch (err) {
-        console.error("❌ Erro ao guardar token FCM:", err);
-        return false;
-      }
-    }
-
-    // ========== SOLICITAR PERMISSÃO E OBTER TOKEN ==========
-    async function requestPushPermission() {
-      try {
-        // Verificar se o browser suporta notificações
-        if (!("Notification" in window)) {
-          console.warn("⚠️ Este browser não suporta notificações");
-          if (typeof ToastManager !== 'undefined') ToastManager.mostrar("Este browser não suporta notificações", "info");
-          return;
-        }
-
-        // Pedir permissão
-        const permission = await Notification.requestPermission();
-        
-        if (permission === 'granted') {
-          if (typeof ToastManager !== 'undefined') ToastManager.mostrar("🔔 Notificações ativadas!", "sucesso");
-          
-          // Obter token FCM
-          const token = await getToken(messaging, {
-            vapidKey: VAPID_PUBLIC_KEY
-          });
-          
-          if (token) {
-            console.log("✅ Token FCM obtido:", token);
-            fcmTokenAtual = token;
-            
-            // Guardar no GitHub
-            const guardado = await guardarTokenGitHub(token);
-            if (guardado) {
-              // Esconder botão de ativação
-              const btn = document.getElementById('ativarNotificacoesBtn');
-              if (btn) btn.style.display = 'none';
-            }
-          } else {
-            console.warn("⚠️ Não foi possível obter token FCM");
-            if (typeof ToastManager !== 'undefined') ToastManager.mostrar("Erro ao obter token de notificação", "erro");
-          }
-        } else {
-          console.warn("❌ Permissão de notificações negada");
-          if (typeof ToastManager !== 'undefined') ToastManager.mostrar("Permissão de notificações negada", "info");
-        }
-      } catch (err) {
-        console.error("❌ Erro ao solicitar permissão push:", err);
-        if (typeof ToastManager !== 'undefined') ToastManager.mostrar("Erro ao ativar notificações", "erro");
-      }
-    }
-
-    // ========== RECEBER NOTIFICAÇÕES EM PRIMEIRO PLANO ==========
-    onMessage(messaging, (payload) => {
-      console.log("📨 Notificação em primeiro plano:", payload);
-      
-      // Mostrar notificação customizada
-      if (Notification.permission === 'granted') {
-        const title = payload.notification?.title || "Nova notificação";
-        const body = payload.notification?.body || "";
-        
-        new Notification(title, {
-          body: body,
-          icon: "/Tol_v2/icons/icon-192.png",
-          badge: "/Tol_v2/icons/icon-192.png"
-        });
-        
-        // Atualizar badge interno
-        if (typeof window.atualizarBadge === 'function') {
-          window.atualizarBadge();
-        }
-      }
-    });
-
-    // ========== VERIFICAR SE JÁ TEM PERMISSÃO ==========
-    async function verificarPermissaoExistente() {
-      if (Notification.permission === 'granted') {
-        // Tentar obter token existente
-        try {
-          const token = await getToken(messaging, {
-            vapidKey: VAPID_PUBLIC_KEY
-          });
-          if (token) {
-            fcmTokenAtual = token;
-            await guardarTokenGitHub(token);
-            // Esconder botão de ativação
-            const btn = document.getElementById('ativarNotificacoesBtn');
-            if (btn) btn.style.display = 'none';
-          }
-        } catch (err) {
-          console.error("Erro ao verificar token existente:", err);
-        }
-      } else if (Notification.permission !== 'denied') {
-        // Mostrar botão para ativar notificações
-        const btn = document.getElementById('ativarNotificacoesBtn');
-        if (btn) btn.style.display = 'block';
-      }
-    }
-
-    // ========== EXPOR FUNÇÕES GLOBAIS ==========
-    window.requestPushPermission = requestPushPermission;
-    window.fcmTokenAtual = () => fcmTokenAtual;
-
-    // ========== INICIALIZAR ==========
-    // Aguardar CONFIG estar disponível
-    if (typeof CONFIG !== 'undefined') {
-      verificarPermissaoExistente();
-    } else {
-      document.addEventListener('DOMContentLoaded', () => {
-        verificarPermissaoExistente();
-      });
-    }
-
-    // Botão de ativar notificações
-    document.addEventListener('DOMContentLoaded', () => {
-      const btn = document.getElementById('ativarNotificacoesBtn');
-      if (btn) {
-        btn.addEventListener('click', requestPushPermission);
-      }
-    });
-  </script>
 </body>
 </html>
