@@ -1,0 +1,90 @@
+name: Enviar notificação push
+
+on:
+  push:
+    paths:
+      - 'resultados/estatisticas_completas.json'
+      - 'resultados/historico.json'
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Instalar jq
+        run: sudo apt-get install -y jq
+        
+      - name: Enviar notificação FCM
+        env:
+          FCM_PROJECT_ID: ${{ secrets.FCM_PROJECT_ID }}
+          FCM_PRIVATE_KEY: ${{ secrets.FCM_PRIVATE_KEY }}
+          FCM_CLIENT_EMAIL: ${{ secrets.FCM_CLIENT_EMAIL }}
+        run: |
+          # Verificar se existe ficheiro de token
+          if [ ! -f "fcm_token.json" ]; then
+            echo "❌ fcm_token.json não encontrado"
+            exit 0
+          fi
+          
+          # Ler o token
+          TOKEN=$(cat fcm_token.json | jq -r '.[0]')
+          
+          if [ -z "$TOKEN" ] || [ "$TOKEN" = "null" ]; then
+            echo "❌ Nenhum token FCM encontrado"
+            exit 0
+          fi
+          
+          echo "✅ Token encontrado: $TOKEN"
+          
+          # Criar ficheiro de credenciais
+          echo '{
+            "type": "service_account",
+            "project_id": "'"$FCM_PROJECT_ID"'",
+            "private_key": "'"$FCM_PRIVATE_KEY"'",
+            "client_email": "'"$FCM_CLIENT_EMAIL"'",
+            "token_uri": "https://oauth2.googleapis.com/token"
+          }' > service-account.json
+          
+          # Obter access token
+          ACCESS_TOKEN=$(curl -s -X POST \
+            -H "Content-Type: application/json" \
+            -d @service-account.json \
+            "https://oauth2.googleapis.com/token" | jq -r '.access_token')
+          
+          if [ -z "$ACCESS_TOKEN" ] || [ "$ACCESS_TOKEN" = "null" ]; then
+            echo "❌ Falha ao obter access token"
+            exit 1
+          fi
+          
+          echo "✅ Access token obtido"
+          
+          # Enviar notificação
+          RESPONSE=$(curl -s -X POST \
+            -H "Authorization: Bearer $ACCESS_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "message": {
+                "token": "'"$TOKEN"'",
+                "notification": {
+                  "title": "✅ Nova validação!",
+                  "body": "Um boletim foi validado com sucesso no Tol_v2."
+                },
+                "webpush": {
+                  "fcm_options": {
+                    "link": "/Tol_v2/index.html"
+                  }
+                }
+              }
+            }' \
+            "https://fcm.googleapis.com/v1/projects/$FCM_PROJECT_ID/messages:send")
+          
+          echo "📨 Resposta FCM: $RESPONSE"
+          
+          # Verificar se a notificação foi enviada com sucesso
+          if echo "$RESPONSE" | jq -e '.name' > /dev/null 2>&1; then
+            echo "✅ Notificação enviada com sucesso!"
+          else
+            echo "❌ Erro ao enviar notificação"
+            exit 1
+          fi
