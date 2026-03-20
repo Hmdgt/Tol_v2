@@ -5,6 +5,7 @@ on:
     paths:
       - 'resultados/estatisticas_completas.json'
       - 'resultados/historico.json'
+  workflow_dispatch:   # 👈 permite correr manualmente
 
 jobs:
   notify:
