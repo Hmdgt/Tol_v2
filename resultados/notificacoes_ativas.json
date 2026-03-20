@@ -270,51 +270,6 @@
     }
   },
   {
-    "id": "eurodreams_260227-17-7324481145-011_1",
-    "jogo": "eurodreams",
-    "data": "2026-03-20 12:47:24",
-    "lido": false,
-    "titulo": "🎫 Novo resultado EURODREAMS",
-    "subtitulo": "Boletim: 260227-17-7324481145-011",
-    "resumo": "2 acertos",
-    "detalhes": {
-      "data_verificacao": "2026-03-20 12:47:24",
-      "boletim": {
-        "referencia": "260227-17-7324481145-011",
-        "concurso_sorteio": "018/2026",
-        "data_sorteio": "2026-03-02"
-      },
-      "aposta": {
-        "indice": 1,
-        "numeros": [
-          "08",
-          "09",
-          "18",
-          "25",
-          "33",
-          "39"
-        ],
-        "dream": [
-          "03"
-        ]
-      },
-      "acertos": {
-        "numeros": 2,
-        "dream": false
-      },
-      "ganhou": true,
-      "premio": {
-        "premio": "6.º Prémio",
-        "descricao": "2 Números",
-        "vencedores_pt": "59.621",
-        "vencedores_eu": "390.096",
-        "valor": "€ 2,50"
-      },
-      "_jogo": "eurodreams",
-      "_id": "eurodreams_260227-17-7324481145-011_1"
-    }
-  },
-  {
     "id": "totoloto_037-03194624-022_1",
     "jogo": "totoloto",
     "data": "2026-03-20 12:59:15",
