@@ -1,1 +1,64 @@
-[]
+[
+  {
+    "id": "euromilhoes_579-02688892-012_1",
+    "jogo": "euromilhoes",
+    "data": "2026-03-20 21:27:34",
+    "lido": false,
+    "titulo": "🎫 Novo resultado EUROMILHOES",
+    "subtitulo": "Boletim: 579-02688892-012",
+    "resumo": "0 números + 0 estrelas",
+    "detalhes": {
+      "data_verificacao": "2026-03-20 21:27:34",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "579-02688892-012",
+        "data_sorteio": "2026-03-20",
+        "concurso_sorteio": "023/2026",
+        "imagem_origem": "foto_1774010946740_nref31.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "04",
+          "06",
+          "10",
+          "20",
+          "34"
+        ],
+        "estrelas": [
+          "01",
+          "12"
+        ]
+      },
+      "sorteio": {
+        "concurso": "023/2026",
+        "data": "20/03/2026",
+        "chave": "5 12 16 37 46 + 8 10",
+        "numeros": [
+          "05",
+          "12",
+          "16",
+          "37",
+          "46"
+        ],
+        "estrelas": [
+          "08",
+          "10"
+        ]
+      },
+      "acertos": {
+        "numeros": 0,
+        "estrelas": 0,
+        "descricao": "0 número(s) e 0 estrela(s)"
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem prémio",
+        "descricao": "0 acertos",
+        "valor": "€ 0,00"
+      },
+      "_jogo": "euromilhoes",
+      "_id": "euromilhoes_579-02688892-012_1"
+    }
+  }
+]
