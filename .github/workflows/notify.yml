@@ -28,21 +28,55 @@ jobs:
           const fs = require("fs");
           const webpush = require("web-push");
 
+          // Configurar VAPID
           webpush.setVapidDetails(
             "mailto:teuemail@example.com",
             process.env.VAPID_PUBLIC,
             process.env.VAPID_PRIVATE
           );
 
+          // Ler subscrição
           const sub = JSON.parse(fs.readFileSync("subscription.json", "utf8"));
 
-          webpush.sendNotification(sub, JSON.stringify({
-            title: "✅ Nova validação!",
-            body: "Um boletim foi validado com sucesso no Tol_v2."
-          }))
-          .then(() => console.log("Push enviado!"))
-          .catch(err => {
-            console.error("Erro ao enviar push:", err);
-            process.exit(1);
-          });
+          // Ler evento do GitHub
+          const event = JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH));
+          const changedFiles = event.commits.flatMap(c => [...c.added, ...c.modified]);
+
+          let jogo = "Jogo";
+          let tipo = "info";
+
+          for (const file of changedFiles) {
+
+            // Tipo de notificação
+            if (file.includes("_recentes")) tipo = "resultados";
+            if (file.includes("_verificacoes")) tipo = "validacao";
+
+            // Identificar jogo
+            if (file.includes("euromilhoes")) jogo = "EuroMilhões";
+            if (file.includes("eurodreams")) jogo = "EuroDreams";
+            if (file.includes("totoloto")) jogo = "Totoloto";
+            if (file.includes("milhao")) jogo = "M1lhão";
+          }
+
+          // Criar mensagem
+          let title = "";
+          let body = "";
+
+          if (tipo === "resultados") {
+            title = "Novos resultados";
+            body = `Já saíram os resultados do ${jogo}.`;
+          }
+
+          if (tipo === "validacao") {
+            title = "Validação pendente";
+            body = `Tens boletins do ${jogo} por validar.`;
+          }
+
+          // Enviar push
+          webpush.sendNotification(sub, JSON.stringify({ title, body }))
+            .then(() => console.log("Push enviado:", title, body))
+            .catch(err => {
+              console.error("Erro ao enviar push:", err);
+              process.exit(1);
+            });
           EOF
