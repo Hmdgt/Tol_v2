@@ -40,7 +40,13 @@ jobs:
 
           // Ler evento do GitHub
           const event = JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH));
-          const changedFiles = event.commits.flatMap(c => [...c.added, ...c.modified]);
+
+          // Obter ficheiros alterados (forma correta)
+          const changedFiles = [
+            ...(event.head_commit?.added || []),
+            ...(event.head_commit?.modified || []),
+            ...(event.head_commit?.removed || [])
+          ];
 
           let jogo = "Jogo";
           let tipo = "info";
