@@ -41,17 +41,31 @@ jobs:
           // Ler evento do GitHub
           const event = JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH));
 
-          // Obter ficheiros alterados (forma correta)
+          // Obter ficheiros alterados
           const changedFiles = [
             ...(event.head_commit?.added || []),
             ...(event.head_commit?.modified || []),
             ...(event.head_commit?.removed || [])
           ];
 
+          // Ignorar se notificacoes_ativas.json estiver vazio
+          try {
+            const notificacoes = JSON.parse(fs.readFileSync("resultados/notificacoes_ativas.json", "utf8"));
+            if (Array.isArray(notificacoes) && notificacoes.length === 0) {
+              console.log("Nenhuma notificação ativa — push ignorada.");
+              process.exit(0);
+            }
+          } catch (err) {
+            console.log("Não foi possível ler notificacoes_ativas.json — ignorar verificação.");
+          }
+
           let jogo = "Jogo";
           let tipo = "info";
 
           for (const file of changedFiles) {
+
+            // Ignorar notificações internas
+            if (file.includes("notificacoes_ativas.json")) continue;
 
             // Tipo de notificação
             if (file.includes("_recentes")) tipo = "resultados";
@@ -78,9 +92,15 @@ jobs:
             body = `Tens boletins do ${jogo} por validar.`;
           }
 
+          // Se não houver mensagem, não enviar
+          if (!title || !body) {
+            console.log("Nenhuma mensagem válida — push ignorada.");
+            process.exit(0);
+          }
+
           // Enviar push
           webpush.sendNotification(sub, JSON.stringify({ title, body }))
-            .then(() => console.log("Push enviado:", title, body))
+            .then(() => console.log("Push enviada:", title, body))
             .catch(err => {
               console.error("Erro ao enviar push:", err);
               process.exit(1);
