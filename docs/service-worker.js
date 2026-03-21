@@ -177,11 +177,12 @@ self.addEventListener("push", event => {
     data = event.data ? event.data.json() : {};
   } catch (_) {}
 
-  const title = data.title || "Nova notificação";
+  const title = data.title || "Notificação";
   const options = {
     body: data.body || "",
-    icon: "/Tol_v2/icons/icon-192.png",
-    badge: "/Tol_v2/icons/icon-192.png"
+    icon: undefined,
+    badge: undefined,
+    data: data
   };
 
   event.waitUntil(
