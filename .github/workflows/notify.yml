@@ -2,11 +2,11 @@ name: Enviar Web Push
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - 'resultados/notificacoes_ativas.json'
-      - 'resultados/*_recentes.json'
-      - 'resultados/*_verificacoes.json'
+    inputs:
+      tipo:
+        required: true
+      jogo:
+        required: true
 
 jobs:
   notify:
@@ -23,86 +23,40 @@ jobs:
         env:
           VAPID_PUBLIC: ${{ secrets.VAPID_PUBLIC }}
           VAPID_PRIVATE: ${{ secrets.VAPID_PRIVATE }}
+          TIPO: ${{ github.event.inputs.tipo }}
+          JOGO: ${{ github.event.inputs.jogo }}
         run: |
           node << 'EOF'
           const fs = require("fs");
           const webpush = require("web-push");
 
-          // Configurar VAPID
           webpush.setVapidDetails(
             "mailto:teuemail@example.com",
             process.env.VAPID_PUBLIC,
             process.env.VAPID_PRIVATE
           );
 
-          // Ler subscrição
-          const sub = JSON.parse(fs.readFileSync("subscription.json", "utf8"));
-
-          // Ler evento do GitHub
-          const event = JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH));
-
-          // Obter ficheiros alterados
-          const changedFiles = [
-            ...(event.head_commit?.added || []),
-            ...(event.head_commit?.modified || []),
-            ...(event.head_commit?.removed || [])
-          ];
-
-          // Ignorar se notificacoes_ativas.json estiver vazio
-          try {
-            const notificacoes = JSON.parse(fs.readFileSync("resultados/notificacoes_ativas.json", "utf8"));
-            if (Array.isArray(notificacoes) && notificacoes.length === 0) {
-              console.log("Nenhuma notificação ativa — push ignorada.");
-              process.exit(0);
-            }
-          } catch (err) {
-            console.log("Não foi possível ler notificacoes_ativas.json — ignorar verificação.");
-          }
-
-          let jogo = "Jogo";
-          let tipo = "info";
-
-          for (const file of changedFiles) {
-
-            // Ignorar notificações internas
-            if (file.includes("notificacoes_ativas.json")) continue;
-
-            // Tipo de notificação
-            if (file.includes("_recentes")) tipo = "resultados";
-            if (file.includes("_verificacoes")) tipo = "validacao";
-
-            // Identificar jogo
-            if (file.includes("euromilhoes")) jogo = "EuroMilhões";
-            if (file.includes("eurodreams")) jogo = "EuroDreams";
-            if (file.includes("totoloto")) jogo = "Totoloto";
-            if (file.includes("milhao")) jogo = "M1lhão";
-          }
-
-          // Criar mensagem
-          let title = "";
-          let body = "";
-
-          if (tipo === "resultados") {
-            title = "Novos resultados";
-            body = `Já saíram os resultados do ${jogo}.`;
-          }
-
-          if (tipo === "validacao") {
-            title = "Validação pendente";
-            body = `Tens boletins do ${jogo} por validar.`;
-          }
-
-          // Se não houver mensagem, não enviar
-          if (!title || !body) {
-            console.log("Nenhuma mensagem válida — push ignorada.");
+          if (!fs.existsSync("subscription.json")) {
+            console.log("Sem subscription");
             process.exit(0);
           }
 
-          // Enviar push
+          const sub = JSON.parse(fs.readFileSync("subscription.json", "utf8"));
+          
+          const tipo = process.env.TIPO;
+          const jogo = process.env.JOGO;
+          
+          let title = "", body = "";
+          
+          if (tipo === "resultados") {
+            title = `${jogo} - Novos resultados`;
+            body = "Já saíram os resultados";
+          } else {
+            title = `${jogo} - Validação pendente`;
+            body = "Tens boletins por validar";
+          }
+          
           webpush.sendNotification(sub, JSON.stringify({ title, body }))
-            .then(() => console.log("Push enviada:", title, body))
-            .catch(err => {
-              console.error("Erro ao enviar push:", err);
-              process.exit(1);
-            });
+            .then(() => console.log("Push enviada"))
+            .catch(err => console.error("Erro:", err));
           EOF
