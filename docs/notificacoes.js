@@ -1,5 +1,5 @@
 // ===============================
-// 🔔 
+// 🔔 NOTIFICAÇÕES
 // ===============================
 
 // Usar configuração global (do config.js)
@@ -239,13 +239,13 @@ async function lerFicheiroGitHub(urlApi) {
   }
 }
 
-// ---------- CARREGAR  ----------
+// ---------- CARREGAR NOTIFICAÇÕES ----------
 async function carregarNotificacoes() {
   try {
     const { content } = await lerFicheiroGitHub(GITHUB_API);
     return content;
   } catch (err) {
-    console.error("Erro ao carregar :", err);
+    console.error("Erro ao carregar notificações:", err);
     return [];
   }
 }
@@ -396,7 +396,7 @@ window.voltarParaLista = function() {
   renderizarNotificacoes();
 };
 
-// ---------- RENDERIZAR  (LISTA MISTURADA) ----------
+// ---------- RENDERIZAR NOTIFICAÇÕES (LISTA MISTURADA) ----------
 async function renderizarNotificacoes() {
   const lista = document.getElementById("notificationsList");
   if (!lista) {
@@ -407,7 +407,7 @@ async function renderizarNotificacoes() {
   lista.innerHTML = '<div class="loading"><ion-icon name="sync-outline" class="spin"></ion-icon></div>';
 
   try {
-    // Carregar  não lidas
+    // Carregar notificações não lidas
     const notificacoes = await carregarNotificacoes();
     const notificacoesNaoLidas = notificacoes.filter(n => !n.lido).map(n => ({
       ...n,
@@ -433,7 +433,7 @@ async function renderizarNotificacoes() {
     });
 
     if (todosCards.length === 0) {
-      lista.innerHTML = '<div class="no-notifications">Sem notificaçoes!</div>';
+      lista.innerHTML = '<div class="no-notifications">Sem notificações!</div>';
       return;
     }
 
@@ -461,19 +461,18 @@ async function renderizarNotificacoes() {
       `;
     }).join("");
 
-    // Adicionar event listeners (removidos os touchstart com preventDefault)
+    // Adicionar event listeners
     document.querySelectorAll(".notification-card").forEach(card => {
       card.addEventListener("click", handleNotificationClick);
-      // NOTA: removido o event listener touchstart que bloqueava o scroll
     });
     
   } catch (err) {
     console.error("❌ Erro ao renderizar:", err);
-    lista.innerHTML = '<div class="error">Erro ao carregar </div>';
+    lista.innerHTML = '<div class="error">Erro ao carregar notificações</div>';
   }
 }
 
-// ---------- HANDLER PARA CLIQUE NOS CARDS (COM FEEDBACK E PREVENÇÃO DE MÚLTIPLOS CLIQUES) ----------
+// ---------- HANDLER PARA CLIQUE NOS CARDS ----------
 let clicking = false;
 
 async function handleNotificationClick(e) {
@@ -512,7 +511,6 @@ async function handleNotificationClick(e) {
       await window.renderizarDetalheNotificacao(id);
     } else if (tipo === 'validacao') {
       if (imagem && typeof window.abrirValidacao === 'function') {
-        // A função abrirValidacao já deve tratar da mudança de view e loading
         await window.abrirValidacao(imagem);
       } else {
         console.error("❌ Função abrirValidacao não disponível");
@@ -520,9 +518,7 @@ async function handleNotificationClick(e) {
     }
   } catch (error) {
     console.error('Erro no clique:', error);
-    // Poderia mostrar um toast de erro aqui
   } finally {
-    // Restaurar o card (se ele ainda existir na DOM)
     clicking = false;
     const updatedCard = document.querySelector(`[data-id="${id}"]`);
     if (updatedCard) {
@@ -538,7 +534,7 @@ window.atualizarBadge = async function() {
   if (!badge) return;
   
   try {
-    // Contar  não lidas
+    // Contar notificações não lidas
     const notificacoes = await carregarNotificacoes();
     const naoLidas = notificacoes.filter(n => !n.lido).length;
     
@@ -551,9 +547,133 @@ window.atualizarBadge = async function() {
     
     badge.style.display = total > 0 ? "flex" : "none";
     badge.textContent = total > 99 ? "99+" : total;
+    
+    // NOVO: Atualizar badge do ícone da app
+    await atualizarBadgeIcone(total);
+    
   } catch (err) {
     console.error("Erro ao atualizar badge:", err);
   }
+};
+
+// ========== NOVAS FUNÇÕES ==========
+
+// Variáveis para controlo de novidades
+let ultimoTotal = 0;
+let ultimoEstadoNotificacoes = 0;
+let ultimoEstadoValidacoes = 0;
+
+// Badge no ícone da app (home screen)
+async function atualizarBadgeIcone(total) {
+  if ('setAppBadge' in navigator) {
+    try {
+      if (total > 0 && !window.isAppEmPrimeiroPlano()) {
+        await navigator.setAppBadge(total);
+        console.log(`🔴 Badge do ícone: ${total}`);
+      } else if (window.isAppEmPrimeiroPlano()) {
+        await navigator.clearAppBadge();
+      }
+    } catch (err) {
+      console.error("Erro ao atualizar badge do ícone:", err);
+    }
+  }
+}
+
+// Disparar push via GitHub Actions
+async function dispararPush(tipo, jogo) {
+  const token = localStorage.getItem("github_token");
+  if (!token) {
+    console.warn("Token não configurado");
+    return false;
+  }
+  
+  try {
+    const response = await fetch(
+      `https://api.github.com/repos/${CONFIG.REPO}/actions/workflows/push.yml/dispatches`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          ref: "main",
+          inputs: { tipo, jogo }
+        })
+      }
+    );
+    
+    if (response.ok) {
+      console.log(`🚀 Push disparada: ${tipo} - ${jogo}`);
+      return true;
+    } else {
+      console.error("Erro ao disparar push:", await response.text());
+      return false;
+    }
+  } catch (err) {
+    console.error("Erro de rede:", err);
+    return false;
+  }
+}
+
+// Verificar novidades e disparar push se app fechada
+async function verificarEDispararPush() {
+  try {
+    // Obter estado atual
+    const notificacoes = await carregarNotificacoes();
+    const naoLidas = notificacoes.filter(n => !n.lido).length;
+    
+    const validacoes = await listarValidacoesPendentes();
+    const totalValidacoes = validacoes.length;
+    
+    const totalAtual = naoLidas + totalValidacoes;
+    
+    // Verificar se aumentou
+    if (totalAtual > ultimoTotal) {
+      let tipo = "resultados";
+      let jogo = "Jogo";
+      
+      // Descobrir o que é
+      if (totalValidacoes > ultimoEstadoValidacoes) {
+        tipo = "validacao";
+        const primeira = Object.values(validacoes)[0];
+        if (primeira && primeira[0]) {
+          jogo = primeira[0].tipo;
+        }
+      } else if (naoLidas > ultimoEstadoNotificacoes) {
+        const novas = notificacoes.filter(n => !n.lido);
+        if (novas.length) {
+          jogo = novas[0].jogo || "Jogo";
+        }
+      }
+      
+      // Disparar push apenas se app fechada
+      if (!window.isAppEmPrimeiroPlano()) {
+        console.log("📱 App fechada, enviando push...");
+        await dispararPush(tipo, jogo);
+      } else {
+        console.log("👁️ App aberta, apenas badge");
+      }
+    }
+    
+    // Guardar estado atual
+    ultimoTotal = totalAtual;
+    ultimoEstadoNotificacoes = naoLidas;
+    ultimoEstadoValidacoes = totalValidacoes;
+    
+  } catch (err) {
+    console.error("Erro ao verificar novidades:", err);
+  }
+}
+
+// Sobrescrever a função original para incluir verificação
+const originalAtualizarBadge = window.atualizarBadge;
+
+window.atualizarBadge = async function() {
+  if (originalAtualizarBadge) {
+    await originalAtualizarBadge();
+  }
+  await verificarEDispararPush();
 };
 
 // ---------- FECHAR MODAL (mantido para compatibilidade) ----------
@@ -579,5 +699,7 @@ document.addEventListener('DOMContentLoaded', () => {
 window.renderizarNotificacoes = renderizarNotificacoes;
 window.marcarComoLida = marcarComoLida;
 window.carregarNotificacoes = carregarNotificacoes;
-window.atualizarBadge = window.atualizarBadge;  // Mantido, mas é redundante
 window.listarValidacoesPendentes = listarValidacoesPendentes;
+window.verificarEDispararPush = verificarEDispararPush;
+window.dispararPush = dispararPush;
+window.atualizarBadgeIcone = atualizarBadgeIcone;
