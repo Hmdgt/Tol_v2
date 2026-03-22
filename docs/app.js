@@ -45,10 +45,28 @@ function forceBlackNavigationBar() {
 // Chamar quando a app inicia
 forceBlackNavigationBar();
 
+// ✅ NOVO: Variável para saber se app está em primeiro plano
+let appEmPrimeiroPlano = true;
+
+// ✅ NOVO: Função para outros scripts consultarem
+window.isAppEmPrimeiroPlano = () => appEmPrimeiroPlano;
+
 // Chamar quando a app volta a ficar visível
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible') {
+    appEmPrimeiroPlano = true;
+    
+    // ✅ NOVO: Limpar badge do ícone quando app abre
+    if ('clearAppBadge' in navigator) {
+      navigator.clearAppBadge();
+      console.log("🧹 Badge do ícone limpo (app aberta)");
+    }
+    
     forceBlackNavigationBar();
+    startPolling();
+  } else {
+    appEmPrimeiroPlano = false;
+    clearInterval(pollingInterval);
   }
 });
 
@@ -247,7 +265,10 @@ document.getElementById("resetAppBtn")?.addEventListener("click", window.resetAp
 // ---------- POLLING INTELIGENTE ----------
 let pollingInterval;
 async function pollBadge() {
-  if (typeof window.atualizarBadge === "function") await window.atualizarBadge();
+  // Chamar atualizarBadge (que já inclui verificação de push)
+  if (typeof window.atualizarBadge === "function") {
+    await window.atualizarBadge();
+  }
 }
 
 function startPolling() {
@@ -256,13 +277,8 @@ function startPolling() {
   pollingInterval = setInterval(pollBadge, 60000);
 }
 
-document.addEventListener("visibilitychange", () => {
-  if (document.visibilityState === "visible") {
-    startPolling();
-  } else {
-    clearInterval(pollingInterval);
-  }
-});
+// ✅ NOTA: O event listener visibilitychange já foi atualizado acima
+// com a lógica de appEmPrimeiroPlano e limpeza do badge
 
 if (document.visibilityState === "visible") {
   startPolling();
