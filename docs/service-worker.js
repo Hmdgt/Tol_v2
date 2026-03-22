@@ -190,4 +190,32 @@ self.addEventListener("push", event => {
   );
 });
 
+// ===============================
+// 🔔 CLIQUE NA NOTIFICAÇÃO (NOVO)
+// ===============================
+self.addEventListener("notificationclick", event => {
+  console.log("[SW] Notificação clicada:", event.notification);
+  
+  event.notification.close();
+  
+  const data = event.notification.data || {};
+  const urlToOpen = data.url || "/Tol_v2/";
+  
+  event.waitUntil(
+    clients.matchAll({ type: "window", includeUncontrolled: true })
+      .then(windowClients => {
+        // Se já existe uma janela aberta, foca nela
+        for (let client of windowClients) {
+          if (client.url === urlToOpen && "focus" in client) {
+            return client.focus();
+          }
+        }
+        // Senão, abre uma nova
+        if (clients.openWindow) {
+          return clients.openWindow(urlToOpen);
+        }
+      })
+  );
+});
+
 console.log(`[SW] Service Worker carregado (${CACHE_VERSION})`);
