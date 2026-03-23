@@ -18,6 +18,23 @@ let modoSelecao = false;           // true quando estamos em modo de seleção
 let itensSelecionados = new Set(); // guarda os ids dos itens selecionados
 let longPressTimer = null;         // timer para detectar long press
 
+// ---------- FUNÇÃO PARA OBTER LOGO DO JOGO ----------
+function getLogoHTML(jogo) {
+    const jogoLower = (jogo || '').toLowerCase();
+    
+    if (jogoLower === 'euromilhoes') {
+        return '<div class="logo-sprite logo-euromilhoes">Euromilhões</div>';
+    } else if (jogoLower === 'totoloto') {
+        return '<div class="logo-sprite logo-totoloto">Totoloto</div>';
+    } else if (jogoLower === 'eurodreams') {
+        return '<div class="logo-sprite logo-eurodreams">EuroDreams</div>';
+    } else if (jogoLower === 'milhao' || jogoLower === 'm1lhão') {
+        return '<div class="logo-milhao">M1lhão</div>';
+    } else {
+        return `<span class="logo-placeholder">${escapeHTML(jogo.toUpperCase())}</span>`;
+    }
+}
+
 // ---------- FORMATAÇÃO DE MOEDA (vírgula) ----------
 function formatarMoeda(valor) {
     if (valor === undefined || valor === null) return '-';
@@ -37,12 +54,10 @@ function formatarMes(mesAno) {
 // ---------- FORMATAR DATA (para exibição) ----------
 function formatarData(dataStr) {
     if (!dataStr) return '-';
-    // Se vier no formato ISO (YYYY-MM-DD)
     if (dataStr.includes('-')) {
         const [ano, mes, dia] = dataStr.split(' ')[0].split('-');
         return `${dia}/${mes}/${ano}`;
     }
-    // Se vier no formato DD/MM/YYYY
     if (dataStr.includes('/')) return dataStr;
     return dataStr;
 }
@@ -113,10 +128,9 @@ async function carregarTodasApostas() {
     }
 
     const headers = { Authorization: `Bearer ${token}` };
-    const pasta = CONFIG.PASTAS.APOSTAS; // "apostas/"
+    const pasta = CONFIG.PASTAS.APOSTAS;
 
     try {
-        // 1. Listar ficheiros na pasta via API
         const listRes = await fetch(`https://api.github.com/repos/${CONFIG.REPO}/contents/${pasta}?t=${Date.now()}`, { headers });
         if (!listRes.ok) {
             console.error("Erro ao listar pasta apostas:", listRes.status);
@@ -124,15 +138,13 @@ async function carregarTodasApostas() {
         }
         const ficheiros = await listRes.json();
 
-        // 2. Filtrar apenas ficheiros .json que correspondam a tipos de jogo (ignora cota_por_chave.json)
-        const tiposJogo = CONFIG.TIPOS_JOGO; // ['euromilhoes','totoloto','eurodreams','milhao']
+        const tiposJogo = CONFIG.TIPOS_JOGO;
         const jsonFiles = ficheiros.filter(f => 
             f.name.endsWith('.json') && 
             f.type === 'file' &&
-            tiposJogo.some(tipo => f.name.startsWith(tipo)) // assume que os ficheiros começam com o nome do jogo
+            tiposJogo.some(tipo => f.name.startsWith(tipo))
         );
 
-        // 3. Para cada ficheiro, buscar o conteúdo usando a API (não raw) para evitar CORS
         const todasApostas = [];
         for (const file of jsonFiles) {
             const contentRes = await fetch(`https://api.github.com/repos/${CONFIG.REPO}/contents/${file.path}?t=${Date.now()}`, { headers });
@@ -172,7 +184,6 @@ async function atualizarHistorico(novoHistorico) {
     }
 
     try {
-        // Primeiro, obtém o SHA atual do ficheiro
         const res = await fetch(HISTORICO_API + `?t=${Date.now()}`, {
             headers: { Authorization: `Bearer ${token}` }
         });
@@ -180,7 +191,6 @@ async function atualizarHistorico(novoHistorico) {
         const data = await res.json();
         const sha = data.sha;
 
-        // Prepara o conteúdo atualizado
         const conteudo = JSON.stringify(novoHistorico, null, 2);
         const base64 = stringToBase64(conteudo);
 
@@ -227,32 +237,32 @@ function filtrarPorAno(dados, periodo, ano) {
     return { [periodo]: filtrado };
 }
 
-// ---------- GERAR CARD PADRÃO (estilo notificações) ----------
+// ---------- GERAR CARD PADRÃO (com LOGOS em vez de ícones) ----------
 function gerarCardPadrao(opcoes) {
     const {
         id,
         jogo,
-        estado,          // texto do badge (ex: "PREMIADO", "PENDENTE")
-        corBadge,        // cor de fundo do badge (ex: "#ffd700", "#ffaa00")
-        icon,            // nome do ícone (ex: "trophy-outline", "time-outline")
+        estado,
+        corBadge,
+        icon,
         dataSorteio,
-        titulo,          // concurso + referência
-        resumo,          // prémio + valor / números + valor
+        titulo,
+        resumo,
         selecionado = false,
         onclick = null
     } = opcoes;
 
     const selecionadoClass = selecionado ? 'selecionado' : '';
     const dataFormatada = formatarData(dataSorteio);
+    const logoHTML = getLogoHTML(jogo);
 
     return `
         <div class="notification-card ${selecionadoClass}" 
              data-id="${escapeHTML(id)}" 
-             style="${selecionado ? 'border-color: #ffd700; background: #222;' : ''}"
+             style="${selecionado ? 'border-color: #ffd700; background: var(--bg-card-hover);' : ''}"
              ${onclick ? `onclick="${onclick}"` : ''}>
             <div class="notification-header">
-                <ion-icon name="${icon}" class="jogo-icon"></ion-icon>
-                <span class="jogo-nome">${escapeHTML(jogo.toUpperCase())}</span>
+                ${logoHTML}
                 <span class="unread-badge" style="background: ${corBadge}">${escapeHTML(estado)}</span>
                 <span class="notification-date">${escapeHTML(dataFormatada)}</span>
             </div>
@@ -264,14 +274,12 @@ function gerarCardPadrao(opcoes) {
 
 // ---------- GERAR LISTA DE PREMIADOS (com seleção e estilo unificado) ----------
 function gerarListaPremiadosInterativa(dados) {
-    // Filtrar apenas os que ganharam e NÃO estão arquivados
     const premiados = dados.filter(item => item.detalhes?.ganhou === true && !item.arquivado);
 
     if (premiados.length === 0) {
         return '<p class="no-data">Nenhum boletim premiado encontrado.</p>';
     }
 
-    // Ordenar por data do sorteio (mais recente primeiro)
     premiados.sort((a, b) => {
         const dataA = a.detalhes?.sorteio?.data || a.detalhes?.boletim?.data_sorteio || a.data;
         const dataB = b.detalhes?.sorteio?.data || b.detalhes?.boletim?.data_sorteio || b.data;
@@ -280,35 +288,30 @@ function gerarListaPremiadosInterativa(dados) {
 
     let html = '';
 
-    // Barra de ações (aparece apenas em modo de seleção)
     if (modoSelecao) {
         html += `
-            <div class="selecao-barra" style="display: flex; gap: 10px; margin-bottom: 15px; padding: 10px; background: #222; border-radius: 8px; align-items: center;">
-                <span style="flex: 1; color: #ffd700;">${itensSelecionados.size} selecionado(s)</span>
-                <button id="btnCancelarSelecao" class="btn-cancelar" style="padding: 8px 12px;">Cancelar</button>
-                <button id="btnArquivarSelecionados" class="btn-validar" style="padding: 8px 12px;">
+            <div class="selecao-barra">
+                <span>${itensSelecionados.size} selecionado(s)</span>
+                <button id="btnCancelarSelecao" class="btn-cancelar">Cancelar</button>
+                <button id="btnArquivarSelecionados" class="btn-validar">
                     <ion-icon name="archive-outline"></ion-icon> Arquivar
                 </button>
             </div>
         `;
     }
 
-    html += `<div class="premiados-lista" style="display: flex; flex-direction: column; gap: 12px;">`;
+    html += `<div class="premiados-lista">`;
 
     for (const p of premiados) {
         const id = p.id;
         const selecionado = itensSelecionados.has(id);
         const jogo = p.jogo || p._jogo || 'desconhecido';
         
-        // DATA DO SORTEIO
         const dataSorteio = p.detalhes?.sorteio?.data || p.detalhes?.boletim?.data_sorteio || p.data;
-
-        // TÍTULO = concurso + referência
         const concurso = p.detalhes?.sorteio?.concurso || p.detalhes?.boletim?.concurso_sorteio || '-';
         const referencia = p.detalhes?.boletim?.referencia || '-';
         const titulo = `Conc. ${concurso} • Ref. ${referencia}`;
 
-        // RESUMO = prémio + valor
         let categorias = [];
         let valorTotal = 0;
 
@@ -334,24 +337,17 @@ function gerarListaPremiadosInterativa(dados) {
         const valorTotalStr = `€ ${valorTotal.toFixed(2).replace('.', ',')}`;
         const resumo = `${categoriasStr} • ${valorTotalStr}`;
 
-        // Ícone baseado no jogo
-        let icon = 'trophy-outline';
-        if (jogo === 'euromilhoes') icon = 'star-outline';
-        else if (jogo === 'totoloto') icon = 'grid-outline';
-        else if (jogo === 'eurodreams') icon = 'moon-outline';
-        else if (jogo === 'milhao') icon = 'cash-outline';
-
         html += gerarCardPadrao({
             id,
             jogo,
             estado: 'PREMIADO',
             corBadge: '#ffd700',
-            icon,
+            icon: 'trophy-outline',
             dataSorteio,
             titulo,
             resumo,
             selecionado,
-            onclick: null // o clique é gerido pelo listener próprio (long press)
+            onclick: null
         });
     }
 
@@ -359,16 +355,15 @@ function gerarListaPremiadosInterativa(dados) {
     return html;
 }
 
-// ---------- GERAR LISTA DE PENDENTES (sem seleção, estilo unificado) ----------
+// ---------- GERAR LISTA DE PENDENTES (sem seleção) ----------
 function gerarListaPendentes(apostas) {
     if (!apostas || apostas.length === 0) {
         return '<p class="no-data">Nenhum boletim pendente encontrado.</p>';
     }
 
-    // Ordenar por data do sorteio (mais próximo primeiro)
     apostas.sort((a, b) => new Date(a.data_sorteio) - new Date(b.data_sorteio));
 
-    let html = '<div class="pendentes-lista" style="display: flex; flex-direction: column; gap: 12px;">';
+    let html = '<div class="pendentes-lista">';
 
     for (const aposta of apostas) {
         const jogo = aposta.tipo || aposta._tipo_ficheiro || 'desconhecido';
@@ -377,7 +372,6 @@ function gerarListaPendentes(apostas) {
         const referencia = aposta.referencia_unica || '-';
         const titulo = `Conc. ${concurso} • Ref. ${referencia}`;
 
-        // Construir resumo com números
         let numeros = '';
         if (aposta.apostas && Array.isArray(aposta.apostas)) {
             const primeira = aposta.apostas[0];
@@ -396,27 +390,19 @@ function gerarListaPendentes(apostas) {
             if (aposta.estrelas) numeros += ` + ${aposta.estrelas.join(' ')}`;
         }
 
-        const valor = aposta.valor_total || 1.0;
         const resumo = numeros || 'Aposta';
-
-        // Ícone baseado no jogo
-        let icon = 'time-outline';
-        if (jogo === 'euromilhoes') icon = 'star-outline';
-        else if (jogo === 'totoloto') icon = 'grid-outline';
-        else if (jogo === 'eurodreams') icon = 'moon-outline';
-        else if (jogo === 'milhao') icon = 'cash-outline';
 
         html += gerarCardPadrao({
             id: aposta.referencia_unica || aposta.id,
             jogo,
             estado: 'PENDENTE',
             corBadge: '#ffaa00',
-            icon,
+            icon: 'time-outline',
             dataSorteio,
             titulo,
             resumo,
             selecionado: false,
-            onclick: null // sem clique por enquanto (podes adicionar se quiseres)
+            onclick: null
         });
     }
 
@@ -424,42 +410,41 @@ function gerarListaPendentes(apostas) {
     return html;
 }
 
-// ---------- INICIALIZAR LONG PRESS NOS CARDS (apenas premiados) ----------
+// ---------- INICIALIZAR LONG PRESS NOS CARDS ----------
 function inicializarLongPressCards() {
-    const cards = document.querySelectorAll('.notification-card[data-id]'); // seleciona todos os cards
+    const cards = document.querySelectorAll('.notification-card[data-id]');
     cards.forEach(card => {
-        // Usar touch events para mobile
+        let timer = null;
+        
         card.addEventListener('touchstart', (e) => {
-            longPressTimer = setTimeout(() => {
+            timer = setTimeout(() => {
                 entrarModoSelecao(card);
             }, 600);
         });
 
         card.addEventListener('touchend', () => {
-            clearTimeout(longPressTimer);
+            clearTimeout(timer);
         });
 
         card.addEventListener('touchmove', () => {
-            clearTimeout(longPressTimer);
+            clearTimeout(timer);
         });
 
         card.addEventListener('touchcancel', () => {
-            clearTimeout(longPressTimer);
+            clearTimeout(timer);
         });
 
         card.addEventListener('click', (e) => {
-            // Só entra em modo de seleção se estivermos na aba premiados e o card for de premiado
-            // Como a função só é chamada na aba premiados, podemos prosseguir
             if (modoSelecao) {
                 const id = card.dataset.id;
                 if (itensSelecionados.has(id)) {
                     itensSelecionados.delete(id);
-                    card.style.borderColor = '#333';
-                    card.style.background = '#1a1a1a';
+                    card.style.borderColor = 'var(--border-color)';
+                    card.style.background = 'var(--bg-card)';
                 } else {
                     itensSelecionados.add(id);
                     card.style.borderColor = '#ffd700';
-                    card.style.background = '#222';
+                    card.style.background = 'var(--bg-card-hover)';
                 }
                 const barra = document.querySelector('.selecao-barra span');
                 if (barra) {
@@ -478,8 +463,8 @@ function entrarModoSelecao(card) {
     const id = card.dataset.id;
     itensSelecionados.add(id);
     card.style.borderColor = '#ffd700';
-    card.style.background = '#222';
-    renderizarEstatisticas(); // Recria a lista com a barra
+    card.style.background = 'var(--bg-card-hover)';
+    renderizarEstatisticas();
 }
 
 // ---------- SAIR DO MODO DE SELEÇÃO ----------
@@ -522,7 +507,6 @@ async function renderizarEstatisticas() {
 
     container.innerHTML = '<div class="loading"><ion-icon name="sync-outline" class="spin"></ion-icon><p>A carregar estatísticas...</p></div>';
 
-    // Carregar dados conforme o modo
     if (modoAtivo === 'resumo') {
         estatisticasData = await carregarEstatisticas();
         if (!estatisticasData) {
@@ -543,10 +527,9 @@ async function renderizarEstatisticas() {
 
     const anos = obterAnosDisponiveis();
 
-    // Construir HTML com abas de modo
     let html = `
         <div class="estatisticas-header">
-            <div class="modo-tabs" style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 10px;">
+            <div class="modo-tabs">
                 <button class="modo-btn ${modoAtivo === 'resumo' ? 'active' : ''}" data-modo="resumo">Resumo</button>
                 <button class="modo-btn ${modoAtivo === 'premiados' ? 'active' : ''}" data-modo="premiados">Premiados</button>
                 <button class="modo-btn ${modoAtivo === 'pendentes' ? 'active' : ''}" data-modo="pendentes">Pendentes</button>
@@ -554,15 +537,13 @@ async function renderizarEstatisticas() {
     `;
 
     if (modoAtivo === 'resumo') {
-        // Abas de período
         html += `<div class="periodo-tabs">
                 <button class="periodo-btn ${periodoAtivo === 'mensal' ? 'active' : ''}" data-periodo="mensal">Mensal</button>
                 <button class="periodo-btn ${periodoAtivo === 'anual' ? 'active' : ''}" data-periodo="anual">Anual</button>
             </div>`;
 
-        // Seletor de anos
         if (anos.length > 1) {
-            html += `<div class="ano-tabs" style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 10px;">`;
+            html += `<div class="ano-tabs">`;
             html += `<button class="ano-btn ${anoSelecionado === 'todos' ? 'active' : ''}" data-ano="todos">Todos</button>`;
             anos.forEach(ano => {
                 html += `<button class="ano-btn ${anoSelecionado === ano ? 'active' : ''}" data-ano="${ano}">${ano}</button>`;
@@ -570,7 +551,6 @@ async function renderizarEstatisticas() {
             html += `</div>`;
         }
 
-        // Abas de jogos
         html += `<div class="jogo-tabs"><button class="jogo-btn ${abaAtiva === 'global' ? 'active' : ''}" data-jogo="global">Global</button>`;
 
         const jogos = ['totoloto', 'euromilhoes', 'eurodreams', 'milhao'];
@@ -591,7 +571,6 @@ async function renderizarEstatisticas() {
 
         html += `<div class="estatisticas-conteudo" style="overflow-x: auto;">`;
 
-        // Aplicar filtro de ano
         let dadosFiltrados = estatisticasData;
         if (anoSelecionado !== 'todos') {
             if (abaAtiva === 'global') {
@@ -622,7 +601,6 @@ async function renderizarEstatisticas() {
             }
         }
 
-        // Conteúdo conforme aba e período
         if (abaAtiva === 'global') {
             html += gerarTabelaGlobal(periodoAtivo, dadosFiltrados.global);
         } else {
@@ -634,20 +612,17 @@ async function renderizarEstatisticas() {
     } else if (modoAtivo === 'premiados') {
         html += gerarListaPremiadosInterativa(historicoData);
     } else if (modoAtivo === 'pendentes') {
-        // Modo pendentes – carrega apostas e filtra as que não estão no histórico
         const [apostas, historico] = await Promise.all([
             carregarTodasApostas(),
-            Promise.resolve(historicoData) // já está carregado
+            Promise.resolve(historicoData)
         ]);
 
-        // Criar um Set com as referências únicas que já estão no histórico
         const refsHistorico = new Set();
         historico.forEach(item => {
             const ref = item.detalhes?.boletim?.referencia || item.id || item.referencia_unica;
             if (ref) refsHistorico.add(ref);
         });
 
-        // Filtrar apostas que NÃO estão no histórico
         const pendentes = apostas.filter(aposta => {
             const refAposta = aposta.referencia_unica || aposta.id;
             return !refsHistorico.has(refAposta);
@@ -658,11 +633,9 @@ async function renderizarEstatisticas() {
 
     container.innerHTML = html;
 
-    // Event listeners para os botões de modo
     document.querySelectorAll('.modo-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             modoAtivo = btn.dataset.modo;
-            // Sair do modo de seleção ao mudar de aba
             modoSelecao = false;
             itensSelecionados.clear();
             renderizarEstatisticas();
@@ -701,7 +674,6 @@ async function renderizarEstatisticas() {
             btnCancelar.addEventListener('click', sairModoSelecao);
         }
     }
-    // Na aba pendentes não há listeners específicos
 }
 
 // ---------- GERAR TABELA GLOBAL ----------
@@ -711,7 +683,7 @@ function gerarTabelaGlobal(periodo, dadosGlobais) {
     }
 
     const periodos = Object.keys(dadosGlobais[periodo]).sort().reverse();
-    let html = `<table class="estatisticas-tabela"><thead><tr>`;
+    let html = `<table class="estatisticas-tabela"><thead>`;
 
     if (periodo === 'mensal') {
         html += `<th>Mês</th>`;
@@ -727,21 +699,23 @@ function gerarTabelaGlobal(periodo, dadosGlobais) {
         <th>% Ganho</th>
         <th>Maior prémio (€)</th>
         <th>Data</th>
-    </tr></thead><tbody>`;
+     </thead><tbody>`;
 
     for (const periodoKey of periodos) {
         const dados = dadosGlobais[periodo][periodoKey];
-        html += `<tr>
-            <td><strong>${periodo === 'mensal' ? formatarMes(periodoKey) : periodoKey}</strong></td>
-            <td>${dados.total_apostas}</td>
-            <td>${formatarMoeda(dados.total_gasto)}</td>
-            <td>${formatarMoeda(dados.total_recebido)}</td>
-            <td class="${dados.saldo >= 0 ? 'positivo' : 'negativo'}">${formatarMoeda(dados.saldo)}</td>
-            <td>${dados.ganhadoras}</td>
-            <td>${dados.percentagem_ganhadoras?.toFixed(1) ?? '0'}%</td>
-            <td>${formatarMoeda(dados.maior_premio)}</td>
-            <td>${dados.data_maior_premio ? dados.data_maior_premio : '-'}</td>
-        </tr>`;
+        html += `
+            <tr>
+                <td><strong>${periodo === 'mensal' ? formatarMes(periodoKey) : periodoKey}</strong></td>
+                <td>${dados.total_apostas}</td>
+                <td>${formatarMoeda(dados.total_gasto)}</td>
+                <td>${formatarMoeda(dados.total_recebido)}</td>
+                <td class="${dados.saldo >= 0 ? 'positivo' : 'negativo'}">${formatarMoeda(dados.saldo)}</td>
+                <td>${dados.ganhadoras}</td>
+                <td>${dados.percentagem_ganhadoras?.toFixed(1) ?? '0'}%</td>
+                <td>${formatarMoeda(dados.maior_premio)}</td>
+                <td>${dados.data_maior_premio ? dados.data_maior_premio : '-'}</td>
+            </tr>
+        `;
     }
 
     html += `</tbody></table>`;
@@ -755,7 +729,7 @@ function gerarTabelaJogo(periodo, dadosJogo, jogo) {
     }
 
     const periodos = Object.keys(dadosJogo).sort().reverse();
-    let html = `<table class="estatisticas-tabela"><thead><tr>`;
+    let html = `<table class="estatisticas-tabela"><thead>`;
 
     if (periodo === 'mensal') {
         html += `<th>Mês</th>`;
@@ -774,27 +748,29 @@ function gerarTabelaJogo(periodo, dadosJogo, jogo) {
         <th>Mediana prémios (€)</th>
         <th>Média acertos nº</th>
         <th>Média acertos esp.</th>
-    </tr></thead><tbody>`;
+     </thead><tbody>`;
 
     for (const periodoKey of periodos) {
         const dados = dadosJogo[periodoKey];
-        html += `<tr>
-            <td><strong>${periodo === 'mensal' ? formatarMes(periodoKey) : periodoKey}</strong></td>
-            <td>${dados.total_apostas}</td>
-            <td>${formatarMoeda(dados.total_gasto)}</td>
-            <td>${formatarMoeda(dados.total_recebido)}</td>
-            <td class="${dados.saldo >= 0 ? 'positivo' : 'negativo'}">${formatarMoeda(dados.saldo)}</td>
-            <td>${dados.ganhadoras}</td>
-            <td>${dados.percentagem_ganhadoras?.toFixed(1) ?? '0'}%</td>
-            <td>${formatarMoeda(dados.maior_premio)}</td>
-            <td>${formatarMoeda(dados.media_premios)}</td>
-            <td>${formatarMoeda(dados.mediana_premios)}</td>
-            <td>${dados.media_acertos_numeros?.toFixed(2) ?? '0'}</td>
-            <td>${dados.media_acertos_especial?.toFixed(2) ?? '0'}</td>
-        </tr>`;
+        html += `
+            <tr>
+                <td><strong>${periodo === 'mensal' ? formatarMes(periodoKey) : periodoKey}</strong></td>
+                <td>${dados.total_apostas}</td>
+                <td>${formatarMoeda(dados.total_gasto)}</td>
+                <td>${formatarMoeda(dados.total_recebido)}</td>
+                <td class="${dados.saldo >= 0 ? 'positivo' : 'negativo'}">${formatarMoeda(dados.saldo)}</td>
+                <td>${dados.ganhadoras}</td>
+                <td>${dados.percentagem_ganhadoras?.toFixed(1) ?? '0'}%</td>
+                <td>${formatarMoeda(dados.maior_premio)}</td>
+                <td>${formatarMoeda(dados.media_premios)}</td>
+                <td>${formatarMoeda(dados.mediana_premios)}</td>
+                <td>${dados.media_acertos_numeros?.toFixed(2) ?? '0'}</td>
+                <td>${dados.media_acertos_especial?.toFixed(2) ?? '0'}</td>
+             </tr>
+        `;
     }
 
-    html += `</tbody></table>`;
+    html += `</tbody>`;
     return html;
 }
 
