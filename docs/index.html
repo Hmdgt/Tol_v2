@@ -228,24 +228,32 @@
     gap: 15px; 
     min-height: min-content;
   }
+  
+  /* ========== CARDS ESTILO SANTA CASA (FLAT) ========== */
   .notification-card {
-    background: var(--bg-card); 
-    border: 2px solid var(--border-color); 
-    border-radius: 12px; 
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 0;
     padding: 16px;
-    cursor: pointer; 
-    position: relative; 
-    transition: 0.2s;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.15s ease, background 0.2s ease;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
     touch-action: manipulation;
-    box-shadow: var(--shadow-card);
+    box-shadow: none;
   }
-  .notification-card:active { background: var(--bg-card-hover); transform: scale(0.98); }
+
+  .notification-card:active {
+    transform: scale(0.98);
+    background: var(--bg-card-hover);
+  }
+
   .notification-card.selecionado {
     border-color: var(--accent-gold) !important;
     background: var(--bg-card-hover) !important;
   }
+  
   .notification-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .jogo-icon { font-size: 20px; }
   .jogo-nome { font-weight: bold; text-transform: uppercase; }
@@ -269,27 +277,21 @@
   .loading, .error { text-align: center; padding: 40px 20px; opacity: 0.7; color: var(--text-secondary); }
   .error { color: var(--negative); }
 
-/* ========== LOGOS SPRITE ========== */
-.logo-sprite {
+  /* ========== LOGOS SPRITE ========== */
+  .logo-sprite {
     background: url('assets/logo-jogos-sprite.png') no-repeat;
     display: inline-block;
     text-indent: -9999px;
     height: 29px;
-}
-.logo-euromilhoes { background-position: left top; width: 102px; }
-.logo-totoloto { background-position: left -33px; width: 89px; }
-.logo-eurodreams { background-position: left -362px; width: 112px; }
-.logo-milhao { 
-    background: url('assets/logo-milhao.png') no-repeat; 
-    width: 104px; 
-    height: 29px; 
-    display: inline-block; 
-    text-indent: -9999px; 
-}
+  }
+  .logo-euromilhoes { background-position: left top; width: 102px; }
+  .logo-totoloto { background-position: left -33px; width: 89px; }
+  .logo-eurodreams { background-position: left -362px; width: 112px; }
+  .logo-milhao { background-position: left -284px; width: 104px; }
 
-/* ========== NÚMEROS E ESTRELAS ========== */
-[data-theme="light"] .numero-santacas,
-[data-theme="light"] .estrela-santacas {
+  /* ========== NÚMEROS E ESTRELAS ========== */
+  [data-theme="light"] .numero-santacas,
+  [data-theme="light"] .estrela-santacas {
     background: url('assets/bg-number.png') left top no-repeat;
     display: inline-block;
     width: 23px;
@@ -300,11 +302,11 @@
     font-weight: bold;
     color: var(--santacas-cinza-numeros);
     margin: 0 2px;
-}
+  }
 
-[data-theme="light"] .estrela-santacas {
+  [data-theme="light"] .estrela-santacas {
     background: url('assets/bg-star.png') left top no-repeat;
-}
+  }
   
   [data-theme="light"] .numero-extra-santacas {
     background: var(--accent-gold);
@@ -348,31 +350,20 @@
     font-weight: bold;
   }
 
-  /* ========== BOTÃO ESTILO SANTA CASA (light mode) ========== */
-  [data-theme="light"] .btn-santacas {
+  /* ========== BOTÃO ESTILO SANTA CASA ========== */
+  .btn-santacas {
     background: var(--button-primary-bg);
     color: white;
+    padding: 4px 12px;
+    font-size: 10px;
+    text-transform: uppercase;
+    font-weight: bold;
+    border-radius: 3px;
+    cursor: pointer;
     border: none;
-    padding: 4px 12px;
-    font-size: 10px;
-    text-transform: uppercase;
-    font-weight: bold;
-    border-radius: 3px;
-    cursor: pointer;
   }
-  [data-theme="light"] .btn-santacas:hover {
+  .btn-santacas:hover {
     background: var(--button-primary-hover);
-  }
-  
-  [data-theme="dark"] .btn-santacas {
-    background: var(--button-primary-bg);
-    color: white;
-    padding: 4px 12px;
-    font-size: 10px;
-    text-transform: uppercase;
-    font-weight: bold;
-    border-radius: 3px;
-    cursor: pointer;
   }
 
   /* ========== LOADING SPINNER ========== */
