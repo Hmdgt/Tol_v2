@@ -63,5 +63,36 @@
       "vencedores_eu": "390.096",
       "valor": "€ 2,50"
     }
+  },
+  {
+    "data_verificacao": "2026-03-23 21:36:31",
+    "boletim": {
+      "referencia": "260320-17-2808127123-297",
+      "concurso_sorteio": "024/2026",
+      "data_sorteio": "2026-03-23"
+    },
+    "aposta": {
+      "indice": 1,
+      "numeros": [
+        "02",
+        "09",
+        "18",
+        "20",
+        "25",
+        "29"
+      ],
+      "dream": [
+        "02"
+      ]
+    },
+    "acertos": {
+      "numeros": 0,
+      "dream": false
+    },
+    "ganhou": false,
+    "premio": {
+      "premio": "Sem prémio",
+      "valor": "€ 0,00"
+    }
   }
 ]
