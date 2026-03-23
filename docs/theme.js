@@ -23,6 +23,9 @@ function toggleTheme() {
         }
     }
     
+    // Disparar evento para outros componentes (ex: app.js)
+    window.dispatchEvent(new Event('themeChanged'));
+    
     console.log(`🎨 Tema alterado para: ${newTheme}`);
 }
 
@@ -65,6 +68,9 @@ function loadTheme() {
             metaThemeColor.setAttribute('content', '#000000');
         }
     }
+    
+    // Disparar evento para outros componentes (ex: app.js)
+    window.dispatchEvent(new Event('themeChanged'));
     
     console.log(`🎨 Tema carregado: ${theme}`);
 }
