@@ -339,10 +339,8 @@ async function renderizarFormValidacao(imagem, jogos) {
             </div>
           `;
         } else {
-          // Números: grid varia conforme o jogo
           if (aposta.numeros) {
             const numCount = aposta.numeros.length;
-            // Escolhe a classe de grid adequada: 5 para Euromilhões/Totoloto, 6 para EuroDreams
             const gridClass = (jogo.tipo === 'Eurodreams' || jogo.tipo === 'EuroDreams') ? 'numeros-grid-6' : 'numeros-grid';
             html += `
               <div class="campo-numeros">
@@ -356,7 +354,6 @@ async function renderizarFormValidacao(imagem, jogos) {
             html += `</div></div>`;
           }
           
-          // Estrelas (apenas para Euromilhões)
           if (aposta.estrelas) {
             html += `
               <div class="campo-estrelas">
@@ -370,7 +367,6 @@ async function renderizarFormValidacao(imagem, jogos) {
             html += `</div></div>`;
           }
           
-          // Número da Sorte (Totoloto)
           if (aposta.numero_da_sorte) {
             const sorteEscaped = escapeHTML(aposta.numero_da_sorte);
             html += `
@@ -381,7 +377,6 @@ async function renderizarFormValidacao(imagem, jogos) {
             `;
           }
 
-          // Dream Number (EuroDreams) – aceita tanto campo 'dream' (array) como 'dream_number'
           let dreamValue = '';
           if (aposta.dream && Array.isArray(aposta.dream) && aposta.dream.length > 0) {
             dreamValue = aposta.dream[0];
@@ -421,221 +416,193 @@ async function renderizarFormValidacao(imagem, jogos) {
   `;
   
   container.innerHTML = html;
-  
-// ========== INICIALIZAR ZOOM/PAN MELHORADO ==========
-const zoomContainer = document.getElementById('zoomContainer');
-const zoomImg = zoomContainer.querySelector('img');
 
-// Variáveis únicas para transformação
-let scale = 1.5;              // escala única (simplificado)
-let translateX = 0;
-let translateY = 0;
+  // ========== INICIALIZAR ZOOM/PAN ==========
+  const zoomContainer = document.getElementById('zoomContainer');
+  const zoomImg = zoomContainer.querySelector('img');
 
-// Estado para pan (arrastar)
-let isDragging = false;
-let startDrag = { x: 0, y: 0 };
-let startTranslate = { x: 0, y: 0 };
+  let scale = 1.5;
+  let translateX = 0;
+  let translateY = 0;
+  let isDragging = false;
+  let startDrag = { x: 0, y: 0 };
+  let startTranslate = { x: 0, y: 0 };
+  let initialPinchDistance = 0;
+  let initialPinchScale = 1;
+  let pinchMidpoint = { x: 0, y: 0 };
+  let pinchStartTranslate = { x: 0, y: 0 };
 
-// Estado para pinch (zoom com 2 dedos)
-let initialPinchDistance = 0;
-let initialPinchScale = 1;
-let pinchMidpoint = { x: 0, y: 0 };
-let pinchStartTranslate = { x: 0, y: 0 };
+  const MIN_SCALE = 1;
+  const MAX_SCALE = 5;
 
-const MIN_SCALE = 1;
-const MAX_SCALE = 5;
+  let containerWidth = 0;
+  let containerHeight = 0;
+  let imgWidth = 0;
+  let imgHeight = 0;
 
-// Dimensões em cache para evitar reflows
-let containerWidth = 0;
-let containerHeight = 0;
-let imgWidth = 0;
-let imgHeight = 0;
-
-function updateTransform() {
-  zoomImg.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
-}
-
-function clampScale() {
-  scale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, scale));
-}
-
-function constrainPan() {
-  if (imgWidth === 0 || containerWidth === 0) return;
-  
-  // Calcula limites baseados nas dimensões atuais com escala
-  const scaledImgWidth = imgWidth * scale;
-  const scaledImgHeight = imgHeight * scale;
-  
-  // Limites: a imagem nunca pode sair completamente do ecrã
-  const minX = Math.min(0, containerWidth - scaledImgWidth);
-  const maxX = Math.max(0, containerWidth - scaledImgWidth);
-  const minY = Math.min(0, containerHeight - scaledImgHeight);
-  const maxY = Math.max(0, containerHeight - scaledImgHeight);
-  
-  translateX = Math.min(maxX, Math.max(minX, translateX));
-  translateY = Math.min(maxY, Math.max(minY, translateY));
-}
-
-// ---- Pan com rato/touch (1 dedo) ----
-zoomContainer.addEventListener('pointerdown', (e) => {
-  if (e.pointerType === 'touch' && e.isPrimary === false) return;
-  
-  isDragging = true;
-  startDrag.x = e.clientX;
-  startDrag.y = e.clientY;
-  startTranslate.x = translateX;
-  startTranslate.y = translateY;
-  zoomContainer.setPointerCapture(e.pointerId);
-  zoomContainer.classList.add('dragging');
-});
-
-zoomContainer.addEventListener('pointermove', (e) => {
-  if (!isDragging) return;
-  
-  const dx = e.clientX - startDrag.x;
-  const dy = e.clientY - startDrag.y;
-  
-  translateX = startTranslate.x + dx;
-  translateY = startTranslate.y + dy;
-  
-  constrainPan();
-  updateTransform();
-});
-
-zoomContainer.addEventListener('pointerup', () => {
-  isDragging = false;
-  zoomContainer.classList.remove('dragging');
-});
-
-zoomContainer.addEventListener('pointerleave', () => {
-  isDragging = false;
-  zoomContainer.classList.remove('dragging');
-});
-
-// ---- Pinch (2 dedos) - ZOOM CENTRADO NO GESTO ----
-zoomContainer.addEventListener('touchstart', (e) => {
-  if (e.touches.length === 2) {
-    e.preventDefault();
-    
-    // Distância inicial entre os dedos
-    const dx = e.touches[0].clientX - e.touches[1].clientX;
-    const dy = e.touches[0].clientY - e.touches[1].clientY;
-    initialPinchDistance = Math.hypot(dx, dy);
-    initialPinchScale = scale;
-    
-    // Ponto médio inicial dos dedos
-    pinchMidpoint.x = (e.touches[0].clientX + e.touches[1].clientX) / 2;
-    pinchMidpoint.y = (e.touches[0].clientY + e.touches[1].clientY) / 2;
-    pinchStartTranslate.x = translateX;
-    pinchStartTranslate.y = translateY;
+  function updateTransform() {
+    zoomImg.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
   }
-});
 
-zoomContainer.addEventListener('touchmove', (e) => {
-  if (e.touches.length === 2) {
+  function clampScale() {
+    scale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, scale));
+  }
+
+  function constrainPan() {
+    if (imgWidth === 0 || containerWidth === 0) return;
+    
+    const scaledImgWidth = imgWidth * scale;
+    const scaledImgHeight = imgHeight * scale;
+    
+    const minX = Math.min(0, containerWidth - scaledImgWidth);
+    const maxX = Math.max(0, containerWidth - scaledImgWidth);
+    const minY = Math.min(0, containerHeight - scaledImgHeight);
+    const maxY = Math.max(0, containerHeight - scaledImgHeight);
+    
+    translateX = Math.min(maxX, Math.max(minX, translateX));
+    translateY = Math.min(maxY, Math.max(minY, translateY));
+  }
+
+  zoomContainer.addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'touch' && e.isPrimary === false) return;
+    
+    isDragging = true;
+    startDrag.x = e.clientX;
+    startDrag.y = e.clientY;
+    startTranslate.x = translateX;
+    startTranslate.y = translateY;
+    zoomContainer.setPointerCapture(e.pointerId);
+    zoomContainer.classList.add('dragging');
+  });
+
+  zoomContainer.addEventListener('pointermove', (e) => {
+    if (!isDragging) return;
+    
+    const dx = e.clientX - startDrag.x;
+    const dy = e.clientY - startDrag.y;
+    
+    translateX = startTranslate.x + dx;
+    translateY = startTranslate.y + dy;
+    
+    constrainPan();
+    updateTransform();
+  });
+
+  zoomContainer.addEventListener('pointerup', () => {
+    isDragging = false;
+    zoomContainer.classList.remove('dragging');
+  });
+
+  zoomContainer.addEventListener('pointerleave', () => {
+    isDragging = false;
+    zoomContainer.classList.remove('dragging');
+  });
+
+  zoomContainer.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 2) {
+      e.preventDefault();
+      
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      initialPinchDistance = Math.hypot(dx, dy);
+      initialPinchScale = scale;
+      
+      pinchMidpoint.x = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+      pinchMidpoint.y = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+      pinchStartTranslate.x = translateX;
+      pinchStartTranslate.y = translateY;
+    }
+  });
+
+  zoomContainer.addEventListener('touchmove', (e) => {
+    if (e.touches.length === 2) {
+      e.preventDefault();
+      
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      const currentDistance = Math.hypot(dx, dy);
+      
+      if (initialPinchDistance === 0) return;
+      
+      let newScale = initialPinchScale * (currentDistance / initialPinchDistance);
+      newScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, newScale));
+      
+      const midX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+      const midY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+      
+      const pX = (pinchMidpoint.x - pinchStartTranslate.x) / initialPinchScale;
+      const pY = (pinchMidpoint.y - pinchStartTranslate.y) / initialPinchScale;
+      
+      translateX = midX - pX * newScale;
+      translateY = midY - pY * newScale;
+      scale = newScale;
+      
+      constrainPan();
+      updateTransform();
+    }
+  }, { passive: false });
+
+  zoomContainer.addEventListener('touchend', (e) => {
+    if (e.touches.length < 2) {
+      initialPinchDistance = 0;
+    }
+  });
+
+  zoomContainer.addEventListener('touchcancel', () => {
+    initialPinchDistance = 0;
+  });
+
+  zoomContainer.addEventListener('wheel', (e) => {
     e.preventDefault();
     
-    // Distância atual entre os dedos
-    const dx = e.touches[0].clientX - e.touches[1].clientX;
-    const dy = e.touches[0].clientY - e.touches[1].clientY;
-    const currentDistance = Math.hypot(dx, dy);
+    const rect = zoomContainer.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
     
-    if (initialPinchDistance === 0) return;
+    const imgX = (mouseX - translateX) / scale;
+    const imgY = (mouseY - translateY) / scale;
     
-    // Nova escala baseada na variação da distância
-    let newScale = initialPinchScale * (currentDistance / initialPinchDistance);
+    const delta = e.deltaY > 0 ? 0.9 : 1.1;
+    let newScale = scale * delta;
     newScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, newScale));
     
-    // Ponto médio atual dos dedos
-    const midX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
-    const midY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
-    
-    // Calcula o ponto da imagem que estava sob o centro inicial dos dedos
-    // p = (centro_inicial_ecrã - translação_inicial) / escala_inicial
-    const pX = (pinchMidpoint.x - pinchStartTranslate.x) / initialPinchScale;
-    const pY = (pinchMidpoint.y - pinchStartTranslate.y) / initialPinchScale;
-    
-    // Nova translação para que o mesmo ponto da imagem fique sob o novo centro
-    translateX = midX - pX * newScale;
-    translateY = midY - pY * newScale;
+    translateX = mouseX - imgX * newScale;
+    translateY = mouseY - imgY * newScale;
     scale = newScale;
     
     constrainPan();
     updateTransform();
-  }
-}, { passive: false });
+  }, { passive: false });
 
-zoomContainer.addEventListener('touchend', (e) => {
-  if (e.touches.length < 2) {
-    initialPinchDistance = 0;
-  }
-});
-
-zoomContainer.addEventListener('touchcancel', () => {
-  initialPinchDistance = 0;
-});
-
-// ---- Zoom com roda do rato (centrado no cursor) ----
-zoomContainer.addEventListener('wheel', (e) => {
-  e.preventDefault();
-  
-  // Posição do rato relativa ao container
-  const rect = zoomContainer.getBoundingClientRect();
-  const mouseX = e.clientX - rect.left;
-  const mouseY = e.clientY - rect.top;
-  
-  // Ponto da imagem antes do zoom (em px, relativo à imagem)
-  const imgX = (mouseX - translateX) / scale;
-  const imgY = (mouseY - translateY) / scale;
-  
-  // Fator de zoom (roda para cima = zoom in)
-  const delta = e.deltaY > 0 ? 0.9 : 1.1;
-  let newScale = scale * delta;
-  newScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, newScale));
-  
-  // Nova translação para que o ponto da imagem permaneça sob o rato
-  translateX = mouseX - imgX * newScale;
-  translateY = mouseY - imgY * newScale;
-  scale = newScale;
-  
-  constrainPan();
-  updateTransform();
-}, { passive: false });
-
-// ---- Inicialização após carregar a imagem ----
-zoomImg.onload = () => {
-  // Guarda dimensões em cache
-  containerWidth = zoomContainer.clientWidth;
-  containerHeight = zoomContainer.clientHeight;
-  imgWidth = zoomImg.naturalWidth;
-  imgHeight = zoomImg.naturalHeight;
-  
-  // Reset da transformação
-  scale = 1.5;
-  translateX = 0;
-  translateY = 0;
-  
-  constrainPan();
-  updateTransform();
-};
-
-// Se a imagem já estiver carregada
-if (zoomImg.complete) {
-  zoomImg.onload();
-}
-
-// ---- Opcional: double-tap para zoom rápido ----
-let lastTap = 0;
-zoomContainer.addEventListener('touchend', (e) => {
-  const now = Date.now();
-  if (e.touches.length === 0 && now - lastTap < 300) {
-    // Alterna entre zoom 1.5x e 1x (ou 2x e 1x, como preferires)
-    scale = scale === 1.5 ? 1 : 1.5;
+  zoomImg.onload = () => {
+    containerWidth = zoomContainer.clientWidth;
+    containerHeight = zoomContainer.clientHeight;
+    imgWidth = zoomImg.naturalWidth;
+    imgHeight = zoomImg.naturalHeight;
+    
+    scale = 1.5;
+    translateX = 0;
+    translateY = 0;
+    
     constrainPan();
     updateTransform();
+  };
+
+  if (zoomImg.complete) {
+    zoomImg.onload();
   }
-  lastTap = now;
-});
+
+  let lastTap = 0;
+  zoomContainer.addEventListener('touchend', (e) => {
+    const now = Date.now();
+    if (e.touches.length === 0 && now - lastTap < 300) {
+      scale = scale === 1.5 ? 1 : 1.5;
+      constrainPan();
+      updateTransform();
+    }
+    lastTap = now;
+  });
+  
   document.getElementById('btnVoltarValidacao').addEventListener('click', window.voltarListaValidacao);
   document.getElementById('btnCancelarValidacao').addEventListener('click', window.voltarListaValidacao);
   document.getElementById('btnConfirmarValidacao').addEventListener('click', () => window.confirmarValidacao(imagem));
@@ -693,13 +660,10 @@ window.confirmarValidacao = async function(imagem) {
         const inputDream = form.querySelector('.campo-dream');
         
         original.apostas.forEach((apostaOriginal, idx) => {
-          // Determinar quantos números tem esta aposta (5 ou 6)
           const numCount = apostaOriginal.numeros ? apostaOriginal.numeros.length : 0;
           
-          // Recolher números editados
           const numeros = [];
           for (let i = 0; i < numCount; i++) {
-            // O índice no array de inputs é: idx * numCount + i
             const inputIndex = idx * numCount + i;
             const input = inputsNumero[inputIndex];
             if (input && input.value) {
@@ -707,7 +671,6 @@ window.confirmarValidacao = async function(imagem) {
             }
           }
           
-          // Estrelas (sempre 2 para Euromilhões)
           const estrelas = [];
           if (apostaOriginal.estrelas) {
             for (let i = 0; i < 2; i++) {
@@ -731,7 +694,6 @@ window.confirmarValidacao = async function(imagem) {
             novaAposta.numero_da_sorte = inputSorte.value.padStart(2, '0');
           }
           
-          // Dream: preservar o formato original (array 'dream' ou string 'dream_number')
           if (inputDream) {
             const dreamVal = inputDream.value.padStart(2, '0');
             if (apostaOriginal.dream && Array.isArray(apostaOriginal.dream)) {
