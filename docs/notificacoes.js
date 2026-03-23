@@ -6,23 +6,37 @@
 const GITHUB_API = `https://api.github.com/repos/${CONFIG.REPO}/contents/${CONFIG.FICHEIROS.NOTIFICACOES}`;
 const GITHUB_HISTORICO_API = `https://api.github.com/repos/${CONFIG.REPO}/contents/${CONFIG.FICHEIROS.HISTORICO}`;
 
+// ---------- FUNÇÃO PARA OBTER LOGO DO JOGO (para notificações) ----------
+function getLogoHTMLNotificacao(jogo) {
+    const jogoLower = (jogo || '').toLowerCase();
+    
+    if (jogoLower === 'euromilhoes') {
+        return '<div class="logo-sprite logo-euromilhoes">Euromilhões</div>';
+    } else if (jogoLower === 'totoloto') {
+        return '<div class="logo-sprite logo-totoloto">Totoloto</div>';
+    } else if (jogoLower === 'eurodreams') {
+        return '<div class="logo-sprite logo-eurodreams">EuroDreams</div>';
+    } else if (jogoLower === 'milhao' || jogoLower === 'm1lhão') {
+        return '<div class="logo-milhao">M1lhão</div>';
+    } else {
+        return `<span class="logo-placeholder">${escapeHTML(jogo.toUpperCase())}</span>`;
+    }
+}
+
 // ---------- FUNÇÃO PARA OBTER DATA DO SORTEIO ----------
 function obterDataSorteio(notificacao) {
   if (!notificacao.detalhes) return formatarData(notificacao.data);
   
   const { detalhes } = notificacao;
   
-  // Tentar obter do boletim
   if (detalhes.boletim && detalhes.boletim.data_sorteio) {
     return formatarData(detalhes.boletim.data_sorteio);
   }
   
-  // Tentar obter do sorteio
   if (detalhes.sorteio && detalhes.sorteio.data) {
     return formatarData(detalhes.sorteio.data);
   }
   
-  // Fallback para data da notificação
   return formatarData(notificacao.data);
 }
 
@@ -32,17 +46,49 @@ function obterNumeroConcurso(notificacao) {
   
   const { sorteio, boletim } = notificacao.detalhes;
   
-  // Tentar obter do sorteio
   if (sorteio.concurso) {
     return sorteio.concurso;
   }
   
-  // Tentar obter do boletim
   if (boletim && boletim.concurso_sorteio) {
     return boletim.concurso_sorteio;
   }
   
   return '';
+}
+
+// ---------- FUNÇÃO PARA FORMATAR NÚMEROS COM ESTILO SANTA CASA ----------
+function formatarNumerosSantacas(numeros, tipo = 'numero', extra = null) {
+    if (!numeros || numeros.length === 0) return '';
+    
+    let html = '<div class="numeros-container" style="display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; margin-top: 10px;">';
+    
+    for (const num of numeros) {
+        const numStr = String(num).padStart(2, '0');
+        html += `<span class="numero-santacas">${escapeHTML(numStr)}</span>`;
+    }
+    
+    if (extra) {
+        const extraStr = String(extra).padStart(2, '0');
+        html += `<span class="numero-extra-santacas">${escapeHTML(extraStr)}</span>`;
+    }
+    
+    html += '</div>';
+    return html;
+}
+
+function formatarEstrelasSantacas(estrelas) {
+    if (!estrelas || estrelas.length === 0) return '';
+    
+    let html = '<div class="estrelas-container" style="display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; margin-top: 10px;">';
+    
+    for (const est of estrelas) {
+        const estStr = String(est).padStart(2, '0');
+        html += `<span class="estrela-santacas">${escapeHTML(estStr)}</span>`;
+    }
+    
+    html += '</div>';
+    return html;
 }
 
 // ---------- FUNÇÃO PARA GERAR CONTEÚDO DO DETALHE (COM ESCAPE HTML) ----------
@@ -53,14 +99,18 @@ function gerarConteudoDetalhes(notificacao) {
     return `<p>Sem detalhes disponíveis</p>`;
   }
   
-  // Aplicar escape em todos os campos dinâmicos
   const tituloEscaped = escapeHTML(titulo);
   const resumoEscaped = escapeHTML(resumo);
   const jogoEscaped = escapeHTML(jogo);
   
   let html = `
     <div class="detalhes-jogo ${jogoEscaped}">
-      <h4>${tituloEscaped}</h4>
+      <div class="detalhe-header">
+        <button class="btn-voltar" onclick="window.voltarParaLista()">
+          <ion-icon name="arrow-back-outline"></ion-icon> Voltar
+        </button>
+        <h4>${tituloEscaped}</h4>
+      </div>
       <div class="detalhes-resultado">${resumoEscaped}</div>
   `;
   
@@ -91,19 +141,24 @@ function gerarConteudoDetalhes(notificacao) {
       if (aposta.numeros) {
         const numerosStr = aposta.numeros.map(n => escapeHTML(n)).join(' - ');
         html += `<p><strong>Números:</strong> ${numerosStr}</p>`;
+        // Adicionar visual estilo Santa Casa
+        html += formatarNumerosSantacas(aposta.numeros, 'numero', null);
       }
       if (aposta.estrelas) {
         const estrelasStr = aposta.estrelas.map(e => escapeHTML(e)).join(' - ');
         html += `<p><strong>Estrelas:</strong> ${estrelasStr}</p>`;
+        html += formatarEstrelasSantacas(aposta.estrelas);
       }
       if (aposta.numero_da_sorte) {
         html += `<p><strong>Nº da Sorte:</strong> ${escapeHTML(aposta.numero_da_sorte)}</p>`;
+        html += formatarNumerosSantacas([aposta.numero_da_sorte], 'extra', null);
       }
-      // Dream Number para EuroDreams (pode vir como array 'dream' ou string 'dream_number')
       if (aposta.dream && Array.isArray(aposta.dream) && aposta.dream.length > 0) {
         html += `<p><strong>Dream Number:</strong> ${escapeHTML(aposta.dream[0])}</p>`;
+        html += formatarNumerosSantacas([aposta.dream[0]], 'extra', null);
       } else if (aposta.dream_number !== undefined) {
         html += `<p><strong>Dream Number:</strong> ${escapeHTML(aposta.dream_number)}</p>`;
+        html += formatarNumerosSantacas([aposta.dream_number], 'extra', null);
       }
     }
     
@@ -128,16 +183,23 @@ function gerarConteudoDetalhes(notificacao) {
       if (sorteio.numeros) {
         const nums = sorteio.numeros.map(n => escapeHTML(n)).join(' - ');
         html += `<p><strong>Números sorteados:</strong> ${nums}</p>`;
+        html += formatarNumerosSantacas(sorteio.numeros, 'numero', null);
       }
       if (sorteio.estrelas) {
         const estrs = sorteio.estrelas.map(e => escapeHTML(e)).join(' - ');
         html += `<p><strong>Estrelas sorteadas:</strong> ${estrs}</p>`;
+        html += formatarEstrelasSantacas(sorteio.estrelas);
       }
       if (sorteio.chave) {
         html += `<p><strong>Chave:</strong> ${escapeHTML(sorteio.chave)}</p>`;
       }
+      if (sorteio.numero_da_sorte) {
+        html += `<p><strong>Nº da Sorte sorteado:</strong> ${escapeHTML(sorteio.numero_da_sorte)}</p>`;
+        html += formatarNumerosSantacas([sorteio.numero_da_sorte], 'extra', null);
+      }
       if (sorteio.dream) {
         html += `<p><strong>Dream Number sorteado:</strong> ${escapeHTML(sorteio.dream)}</p>`;
+        html += formatarNumerosSantacas([sorteio.dream], 'extra', null);
       }
     }
     
@@ -167,47 +229,45 @@ function gerarConteudoDetalhes(notificacao) {
   }
   
   // Prémio (se ganhou)
-if (detalhes.ganhou) {
-  html += `<div class="detalhes-secao premio"><h5>🏆 GANHOU!</h5>`;
+  if (detalhes.ganhou) {
+    html += `<div class="detalhes-secao premio"><h5>🏆 GANHOU!</h5>`;
 
-  if (detalhes.premios && detalhes.premios.length > 0) {
-    detalhes.premios.forEach(p => {
-      const nomePremio = p.premio || p.categoria || 'Prémio';
+    if (detalhes.premios && detalhes.premios.length > 0) {
+      detalhes.premios.forEach(p => {
+        const nomePremio = p.premio || p.categoria || 'Prémio';
+        html += `
+          <p><strong>${escapeHTML(nomePremio)}</strong></p>
+          <p>${escapeHTML(p.descricao || '')}</p>
+        `;
+        if (p.valor) {
+          html += `<p class="valor-premio">${escapeHTML(p.valor)}</p>`;
+        }
+        if (p.vencedores) {
+          html += `<p><small>${escapeHTML(p.vencedores)} vencedores</small></p>`;
+        }
+      });
+    } else if (detalhes.premio) {
+      const p = detalhes.premio;
       html += `
-        <p><strong>${escapeHTML(nomePremio)}</strong></p>
+        <p><strong>${escapeHTML(p.categoria || p.premio || 'Prémio')}</strong></p>
         <p>${escapeHTML(p.descricao || '')}</p>
+        ${p.valor ? `<p class="valor-premio">${escapeHTML(p.valor)}</p>` : ''}
+        ${p.vencedores ? `<p><small>${escapeHTML(p.vencedores)} vencedores</small></p>` : ''}
       `;
-      if (p.valor) {
-        html += `<p class="valor-premio">${escapeHTML(p.valor)}</p>`;
-      }
-      if (p.vencedores) {
-        html += `<p><small>${escapeHTML(p.vencedores)} vencedores</small></p>`;
-      }
-    });
+    }
+
+    if (detalhes.valor_total) {
+      html += `<p class="valor-total">Total: ${escapeHTML(detalhes.valor_total)}</p>`;
+    }
+    html += `</div>`;
   } else if (detalhes.premio) {
-    // fallback (improvável, mas mantém compatibilidade)
-    const p = detalhes.premio;
     html += `
-      <p><strong>${escapeHTML(p.categoria || p.premio || 'Prémio')}</strong></p>
-      <p>${escapeHTML(p.descricao || '')}</p>
-      ${p.valor ? `<p class="valor-premio">${escapeHTML(p.valor)}</p>` : ''}
-      ${p.vencedores ? `<p><small>${escapeHTML(p.vencedores)} vencedores</small></p>` : ''}
+      <div class="detalhes-secao sem-premio">
+        <h5>😕 Sem prémio</h5>
+        <p>${escapeHTML(detalhes.premio.descricao || 'Não ganhou desta vez')}</p>
+      </div>
     `;
   }
-
-  if (detalhes.valor_total) {
-    html += `<p class="valor-total">Total: ${escapeHTML(detalhes.valor_total)}</p>`;
-  }
-  html += `</div>`;
-} else if (detalhes.premio) {
-  // improvável
-  html += `
-    <div class="detalhes-secao sem-premio">
-      <h5>😕 Sem prémio</h5>
-      <p>${escapeHTML(detalhes.premio.descricao || 'Não ganhou desta vez')}</p>
-    </div>
-  `;
-}
   
   html += `</div>`;
   
@@ -370,23 +430,13 @@ window.renderizarDetalheNotificacao = async function(idNotificacao) {
     return;
   }
   
-  container.innerHTML = `
-    <div class="detalhe-header">
-      <button class="btn-voltar" onclick="window.voltarParaLista()">
-        <ion-icon name="arrow-back-outline"></ion-icon> Voltar
-      </button>
-      <h2>Detalhes</h2>
-    </div>
-    ${gerarConteudoDetalhes(notificacao)}
-  `;
+  container.innerHTML = gerarConteudoDetalhes(notificacao);
   
-  // Marcar como lida em background
   marcarComoLida(idNotificacao);
 };
 
 // ---------- VOLTAR PARA A LISTA ----------
 window.voltarParaLista = function() {
-  // Usar ViewManager se disponível, senão fallback
   if (window.ViewManager) {
     window.ViewManager.goTo('notificacoesView');
   } else {
@@ -407,7 +457,6 @@ async function renderizarNotificacoes() {
   lista.innerHTML = '<div class="loading"><ion-icon name="sync-outline" class="spin"></ion-icon></div>';
 
   try {
-    // Carregar notificações não lidas
     const notificacoes = await carregarNotificacoes();
     const notificacoesNaoLidas = notificacoes.filter(n => !n.lido).map(n => ({
       ...n,
@@ -418,7 +467,6 @@ async function renderizarNotificacoes() {
       icon: 'notifications-outline'
     }));
     
-    // Carregar validações pendentes
     const validacoesPendentes = await listarValidacoesPendentes();
     const validacoesComFormato = validacoesPendentes.map(v => ({
       ...v,
@@ -427,7 +475,6 @@ async function renderizarNotificacoes() {
       icon: 'create-outline'
     }));
     
-    // Juntar tudo e ordenar por data (mais recente primeiro)
     const todosCards = [...notificacoesNaoLidas, ...validacoesComFormato].sort((a, b) => {
       return new Date(b.data) - new Date(a.data);
     });
@@ -437,12 +484,12 @@ async function renderizarNotificacoes() {
       return;
     }
 
-    // Renderizar cards misturados (com escape nos campos)
     lista.innerHTML = todosCards.map(card => {
       const dataFormatada = formatarData(card.data);
       const jogoNome = escapeHTML(card.jogo || card.tipo);
       const titulo = escapeHTML(card.titulo || '');
       const resumo = card.resumo ? escapeHTML(card.resumo) : '';
+      const logoHTML = getLogoHTMLNotificacao(jogoNome);
       
       return `
         <div class="notification-card" 
@@ -450,8 +497,7 @@ async function renderizarNotificacoes() {
              data-tipo="${escapeHTML(card.tipo)}"
              data-imagem="${escapeHTML(card.imagem || '')}">
           <div class="notification-header">
-            <ion-icon name="${escapeHTML(card.icon)}" class="jogo-icon"></ion-icon>
-            <span class="jogo-nome">${jogoNome}</span>
+            ${logoHTML}
             <span class="unread-badge" style="background: ${escapeHTML(card.badge_color)}">${escapeHTML(card.badge_text)}</span>
             <span class="notification-date">${escapeHTML(dataFormatada)}</span>
           </div>
@@ -461,7 +507,6 @@ async function renderizarNotificacoes() {
       `;
     }).join("");
 
-    // Adicionar event listeners
     document.querySelectorAll(".notification-card").forEach(card => {
       card.addEventListener("click", handleNotificationClick);
     });
@@ -486,14 +531,12 @@ async function handleNotificationClick(e) {
   const tipo = card.dataset.tipo;
   const imagem = card.dataset.imagem;
   
-  // Feedback visual imediato
   clicking = true;
   card.style.opacity = '0.5';
   card.style.pointerEvents = 'none';
   
   try {
     if (tipo === 'notificacao') {
-      // 1. Mudar de view IMEDIATAMENTE
       if (window.ViewManager) {
         window.ViewManager.goTo('detalheNotificacaoView');
       } else {
@@ -501,13 +544,11 @@ async function handleNotificationClick(e) {
         document.getElementById('detalheNotificacaoView').classList.add('active');
       }
       
-      // 2. Mostrar loading
       const container = document.getElementById('detalheContainer');
       if (container) {
         container.innerHTML = '<div class="loading"><ion-icon name="sync-outline" class="spin"></ion-icon></div>';
       }
       
-      // 3. Carregar dados
       await window.renderizarDetalheNotificacao(id);
     } else if (tipo === 'validacao') {
       if (imagem && typeof window.abrirValidacao === 'function') {
@@ -528,27 +569,23 @@ async function handleNotificationClick(e) {
   }
 }
 
-// ---------- ATUALIZAR BADGE (SOMA TUDO) ----------
+// ---------- ATUALIZAR BADGE ----------
 window.atualizarBadge = async function() {
   const badge = document.getElementById("notificationBadge");
   if (!badge) return;
   
   try {
-    // Contar notificações não lidas
     const notificacoes = await carregarNotificacoes();
     const naoLidas = notificacoes.filter(n => !n.lido).length;
     
-    // Contar validações pendentes
     const validacoes = await listarValidacoesPendentes();
     const totalValidacoes = validacoes.length;
     
-    // Somar tudo
     const total = naoLidas + totalValidacoes;
     
     badge.style.display = total > 0 ? "flex" : "none";
     badge.textContent = total > 99 ? "99+" : total;
     
-    // NOVO: Atualizar badge do ícone da app
     await atualizarBadgeIcone(total);
     
   } catch (err) {
@@ -558,12 +595,10 @@ window.atualizarBadge = async function() {
 
 // ========== NOVAS FUNÇÕES ==========
 
-// Variáveis para controlo de novidades
 let ultimoTotal = 0;
 let ultimoEstadoNotificacoes = 0;
 let ultimoEstadoValidacoes = 0;
 
-// Badge no ícone da app (home screen)
 async function atualizarBadgeIcone(total) {
   if ('setAppBadge' in navigator) {
     try {
@@ -579,7 +614,6 @@ async function atualizarBadgeIcone(total) {
   }
 }
 
-// Disparar push via GitHub Actions
 async function dispararPush(tipo, jogo) {
   const token = localStorage.getItem("github_token");
   if (!token) {
@@ -616,10 +650,8 @@ async function dispararPush(tipo, jogo) {
   }
 }
 
-// Verificar novidades e disparar push se app fechada
 async function verificarEDispararPush() {
   try {
-    // Obter estado atual
     const notificacoes = await carregarNotificacoes();
     const naoLidas = notificacoes.filter(n => !n.lido).length;
     
@@ -628,12 +660,10 @@ async function verificarEDispararPush() {
     
     const totalAtual = naoLidas + totalValidacoes;
     
-    // Verificar se aumentou
     if (totalAtual > ultimoTotal) {
       let tipo = "resultados";
       let jogo = "Jogo";
       
-      // Descobrir o que é
       if (totalValidacoes > ultimoEstadoValidacoes) {
         tipo = "validacao";
         const primeira = Object.values(validacoes)[0];
@@ -647,7 +677,6 @@ async function verificarEDispararPush() {
         }
       }
       
-      // Disparar push apenas se app fechada
       if (!window.isAppEmPrimeiroPlano()) {
         console.log("📱 App fechada, enviando push...");
         await dispararPush(tipo, jogo);
@@ -656,7 +685,6 @@ async function verificarEDispararPush() {
       }
     }
     
-    // Guardar estado atual
     ultimoTotal = totalAtual;
     ultimoEstadoNotificacoes = naoLidas;
     ultimoEstadoValidacoes = totalValidacoes;
@@ -666,7 +694,6 @@ async function verificarEDispararPush() {
   }
 }
 
-// Sobrescrever a função original para incluir verificação
 const originalAtualizarBadge = window.atualizarBadge;
 
 window.atualizarBadge = async function() {
@@ -676,7 +703,7 @@ window.atualizarBadge = async function() {
   await verificarEDispararPush();
 };
 
-// ---------- FECHAR MODAL (mantido para compatibilidade) ----------
+// ---------- FECHAR MODAL ----------
 document.addEventListener('DOMContentLoaded', () => {
   const modal = document.getElementById('modalDetalhes');
   if (modal) {
