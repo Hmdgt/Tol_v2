@@ -2,7 +2,7 @@
 // 🚀 APP PRINCIPAL (SPA)
 // ===============================
 
-// ========== GARANTIR COR PRETA DA BARRA DE ESTADO ==========
+// ========== ATUALIZAR BARRA DE ESTADO CONFORME TEMA ==========
 function fixThemeColor() {
   const theme = document.documentElement.getAttribute('data-theme') || 'dark';
   const color = theme === 'light' ? '#ffffff' : '#000000';
@@ -15,34 +15,36 @@ document.addEventListener('visibilitychange', () => {
 });
 window.addEventListener('scroll', fixThemeColor, { passive: true });
 
-// ========== FORÇAR NAVIGATION BAR PRETA NO ANDROID ==========
-function forceBlackNavigationBar() {
+// ========== FORÇAR COR DA BARRA DE NAVEGAÇÃO NO ANDROID (RESPEITA TEMA) ==========
+function forceNavigationBarColor() {
   if (/Android/.test(navigator.userAgent)) {
-    document.documentElement.style.backgroundColor = '#000000';
-    document.body.style.backgroundColor = '#000000';
+    const theme = document.documentElement.getAttribute('data-theme') || 'dark';
+    const bgColor = theme === 'light' ? '#ffffff' : '#000000';
     
+    // Atualizar fundo do html/body (mas sem forçar preto fixo)
+    document.documentElement.style.backgroundColor = bgColor;
+    document.body.style.backgroundColor = bgColor;
+    
+    // Atualizar meta theme-color
     const oldMeta = document.querySelector('meta[name="theme-color"]');
     if (oldMeta) oldMeta.remove();
     
     const newMeta = document.createElement('meta');
     newMeta.name = 'theme-color';
-    const theme = document.documentElement.getAttribute('data-theme') || 'dark';
-    newMeta.content = theme === 'light' ? '#ffffff' : '#000000';
+    newMeta.content = bgColor;
     document.head.appendChild(newMeta);
     
-    const style = document.createElement('style');
-    style.textContent = `
-      html, body {
-        background-color: #000000 !important;
-      }
-    `;
-    document.head.appendChild(style);
-    
-    console.log('✅ Navigation bar forçada a preto no Android');
+    console.log(`✅ Navigation bar forçada para ${bgColor} no Android`);
   }
 }
 
-forceBlackNavigationBar();
+// Chamar inicialmente e sempre que o tema mudar
+forceNavigationBarColor();
+
+// Ouvir mudanças de tema (disparado pelo theme.js)
+window.addEventListener('themeChanged', () => {
+  forceNavigationBarColor();
+});
 
 let appEmPrimeiroPlano = true;
 window.isAppEmPrimeiroPlano = () => appEmPrimeiroPlano;
@@ -56,7 +58,7 @@ document.addEventListener('visibilitychange', () => {
       console.log("🧹 Badge do ícone limpo (app aberta)");
     }
     
-    forceBlackNavigationBar();
+    forceNavigationBarColor();
     startPolling();
   } else {
     appEmPrimeiroPlano = false;
@@ -269,9 +271,4 @@ function mostrarBotaoAtualizar() {
 document.addEventListener('DOMContentLoaded', () => {
   const btn = document.getElementById('debugLogsBtn');
   if (btn) btn.addEventListener('click', mostrarLogs);
-  
-  // Carregar tema (garantir que o tema.js já executou)
-  if (typeof window.loadTheme === 'function') {
-    // Já foi chamado pelo theme.js
-  }
 });
