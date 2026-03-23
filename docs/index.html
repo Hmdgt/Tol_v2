@@ -27,6 +27,7 @@
   html { 
     height: 100%; 
     transition: background-color 0.3s ease;
+    background-color: var(--bg-primary) !important;
   }
   body {
     margin: 0;
@@ -37,6 +38,8 @@
     display: flex;
     flex-direction: column;
     transition: background-color 0.3s ease, color 0.3s ease;
+    background-color: var(--bg-primary) !important;
+    color: var(--text-primary);
   }
 
   /* ========== TEMAS ========== */
@@ -81,7 +84,6 @@
     --toast-error-bg: #8b2c2c;
     --toast-info-bg: #2a4a6a;
     
-    /* Santa Casa específicos (dark fallback) */
     --santacas-verde: #7fc241;
     --santacas-cinza-texto: #585858;
     --santacas-cinza-numeros: #898989;
@@ -127,16 +129,33 @@
     --toast-error-bg: #dc3545;
     --toast-info-bg: #17a2b8;
     
-    /* Santa Casa específicos (light) */
     --santacas-verde: #7fc241;
     --santacas-cinza-texto: #585858;
     --santacas-cinza-numeros: #898989;
   }
 
-  /* Aplicar cores */
-  body {
-    background-color: var(--bg-primary);
+  /* ========== GARANTIR QUE TODOS OS ELEMENTOS USAM AS CORES DO TEMA ========== */
+  .view, #bottomNav, .modal-content, .jogo-form, .notification-card,
+  .validacao-card, .estatisticas-tabela, .zoom-container {
+    background-color: var(--bg-card);
     color: var(--text-primary);
+  }
+
+  #bottomNav {
+    background-color: var(--bg-secondary);
+    border-top-color: var(--border-color);
+  }
+
+  .zoom-container {
+    background-color: var(--bg-secondary);
+  }
+
+  .loading, .error, .no-notifications, .no-data {
+    color: var(--text-secondary);
+  }
+
+  #estatisticasContainer, #notificationsList, #validacaoContainer, #detalheContainer {
+    background-color: transparent;
   }
 
   /* ========== VIEWS ========== */
@@ -147,6 +166,7 @@
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: none;
     padding: 20px;
+    background-color: var(--bg-primary);
   }
   .view.active {
     display: flex;
@@ -166,7 +186,6 @@
     justify-content: space-around;
     padding: 12px;
     padding-bottom: calc(12px + env(safe-area-inset-bottom));
-    background: var(--bg-secondary);
     border-top: 1px solid var(--border-color);
     z-index: 10;
   }
@@ -262,7 +281,6 @@
   .logo-eurodreams { background-position: left -362px; width: 112px; }
   .logo-milhao { background: url('/Tol_v2/assets/santacasa/logo-milhao.png') no-repeat; width: 104px; height: 29px; display: inline-block; text-indent: -9999px; }
   
-  /* Fallback para quando as imagens não existirem */
   .logo-placeholder {
     font-weight: bold;
     text-transform: uppercase;
@@ -504,7 +522,6 @@
     overflow: hidden;
     position: relative;
     touch-action: none;
-    background: var(--bg-secondary);
     border-radius: 12px;
     border: 1px solid var(--border-color);
     cursor: grab;
@@ -797,13 +814,12 @@
 
   <!-- VIEW: Estatísticas -->
   <div id="estatisticasView" class="view">
-    <div id="estatisticasContainer"></div> <!-- Conteúdo gerado por JS -->
+    <div id="estatisticasContainer"></div>
   </div>
 
   <div id="configView" class="view">
     <h2>Configurações</h2>
     
-    <!-- Botão de alternar tema -->
     <button id="themeToggleBtn" class="theme-toggle">
       <ion-icon id="themeIcon" name="sunny-outline"></ion-icon>
       <span id="themeText">Light Mode</span>
@@ -812,9 +828,8 @@
     <input type="password" id="token" placeholder="Introduz o token...">
     <button id="saveTokenBtn">Guardar Token</button>
     <button id="resetAppBtn">Atualizar App</button>
-    <button id="debugLogsBtn" style="margin-top: 20px; background: var(--button-secondary-bg);">Ver Erros</button>
+    <button id="debugLogsBtn" style="margin-top: 20px;">Ver Erros</button>
     
-    <!-- BOTÃO DE PUSH -->
     <button onclick="ativarPush()" style="margin-top:20px; background: var(--button-primary-bg); border:1px solid var(--accent-green-light); color: white;">
       Ativar notificações
     </button>
@@ -833,7 +848,7 @@
     <div class="navBtn" data-view="configView"><ion-icon name="settings-outline"></ion-icon></div>
   </div>
 
-  <!-- Modal de detalhes (mantido para logs) -->
+  <!-- Modal de detalhes -->
   <div id="modalDetalhes" class="modal" style="display:none;">
     <div class="modal-content">
       <div class="modal-header">
@@ -841,12 +856,11 @@
         <button class="modal-close">&times;</button>
       </div>
       <div class="modal-body" id="modalBody">
-        <!-- Conteúdo dinâmico -->
       </div>
     </div>
   </div>
 
-  <!-- Scripts - ORDEM CORRETA -->
+  <!-- Scripts -->
   <script src="config.js" defer></script>
   <script src="utils.js" defer></script>
   <script src="notificacoes.js" defer></script>
