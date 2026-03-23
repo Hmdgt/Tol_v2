@@ -4,8 +4,10 @@
 
 // ========== GARANTIR COR PRETA DA BARRA DE ESTADO ==========
 function fixThemeColor() {
+  const theme = document.documentElement.getAttribute('data-theme') || 'dark';
+  const color = theme === 'light' ? '#ffffff' : '#000000';
   const meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.setAttribute('content', '#000000');
+  if (meta) meta.setAttribute('content', color);
 }
 fixThemeColor();
 document.addEventListener('visibilitychange', () => {
@@ -16,20 +18,18 @@ window.addEventListener('scroll', fixThemeColor, { passive: true });
 // ========== FORÇAR NAVIGATION BAR PRETA NO ANDROID ==========
 function forceBlackNavigationBar() {
   if (/Android/.test(navigator.userAgent)) {
-    // Forçar cor de fundo do documento
     document.documentElement.style.backgroundColor = '#000000';
     document.body.style.backgroundColor = '#000000';
     
-    // Recriar meta tag theme-color para forçar refresh no Android
     const oldMeta = document.querySelector('meta[name="theme-color"]');
     if (oldMeta) oldMeta.remove();
     
     const newMeta = document.createElement('meta');
     newMeta.name = 'theme-color';
-    newMeta.content = '#000000';
+    const theme = document.documentElement.getAttribute('data-theme') || 'dark';
+    newMeta.content = theme === 'light' ? '#ffffff' : '#000000';
     document.head.appendChild(newMeta);
     
-    // Forçar também no CSS
     const style = document.createElement('style');
     style.textContent = `
       html, body {
@@ -42,21 +42,15 @@ function forceBlackNavigationBar() {
   }
 }
 
-// Chamar quando a app inicia
 forceBlackNavigationBar();
 
-// ✅ NOVO: Variável para saber se app está em primeiro plano
 let appEmPrimeiroPlano = true;
-
-// ✅ NOVO: Função para outros scripts consultarem
 window.isAppEmPrimeiroPlano = () => appEmPrimeiroPlano;
 
-// Chamar quando a app volta a ficar visível
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible') {
     appEmPrimeiroPlano = true;
     
-    // ✅ NOVO: Limpar badge do ícone quando app abre
     if ('clearAppBadge' in navigator) {
       navigator.clearAppBadge();
       console.log("🧹 Badge do ícone limpo (app aberta)");
@@ -117,18 +111,14 @@ function mostrarLogs() {
 // ========== GESTOR DE VIEWS ==========
 window.ViewManager = {
   goTo(viewId) {
-    // Esconder todas as views
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-    // Mostrar a nova
     const view = document.getElementById(viewId);
     if (view) view.classList.add('active');
 
-    // Atualizar botões da navegação
     document.querySelectorAll('.navBtn').forEach(btn => btn.classList.remove('active'));
     const activeBtn = document.querySelector(`.navBtn[data-view="${viewId}"]`);
     if (activeBtn) activeBtn.classList.add('active');
 
-    // Executar funções específicas de cada view
     if (viewId === 'notificacoesView' && typeof window.renderizarNotificacoes === 'function') {
       window.renderizarNotificacoes();
     }
@@ -144,12 +134,10 @@ window.ViewManager = {
       if (tokenInput && saved) tokenInput.value = saved;
     }
 
-    // Guardar última view
     sessionStorage.setItem('lastView', viewId);
   }
 };
 
-// Substituir a navegação manual pelo ViewManager
 document.querySelectorAll('.navBtn').forEach(btn => {
   btn.addEventListener('click', () => {
     const viewId = btn.dataset.view;
@@ -157,7 +145,6 @@ document.querySelectorAll('.navBtn').forEach(btn => {
   });
 });
 
-// Restaurar última view ao iniciar
 const lastView = sessionStorage.getItem('lastView');
 if (lastView && document.getElementById(lastView)) {
   window.ViewManager.goTo(lastView);
@@ -188,8 +175,6 @@ if ("serviceWorker" in navigator) {
 }
 
 // ---------- FUNÇÕES GLOBAIS ----------
-
-// Atualizar app (nova versão SW)
 window.atualizarApp = async function () {
   const reg = await navigator.serviceWorker.getRegistration();
   if (reg?.waiting) {
@@ -202,7 +187,6 @@ window.atualizarApp = async function () {
   }
 };
 
-// Reset app (hard reset: limpa caches, remove SW, mantém token)
 window.resetApp = async function () {
   try {
     const token = localStorage.getItem("github_token");
@@ -227,7 +211,6 @@ window.resetApp = async function () {
   }
 };
 
-// Guardar token
 window.saveToken = function () {
   const tokenInput = document.getElementById("token");
   if (!tokenInput) return;
@@ -237,7 +220,7 @@ window.saveToken = function () {
   alert("Token guardado.");
 };
 
-// ---------- EVENTOS CÂMARA/GALERIA (delegação) ----------
+// ---------- EVENTOS CÂMARA/GALERIA ----------
 document.body.addEventListener("click", (e) => {
   const btn = e.target.closest("#cameraButton, #galleryButton");
   if (!btn) return;
@@ -258,14 +241,12 @@ document.body.addEventListener("change", (e) => {
   }
 });
 
-// ---------- BOTÕES DA CONFIG (usam funções globais) ----------
 document.getElementById("saveTokenBtn")?.addEventListener("click", window.saveToken);
 document.getElementById("resetAppBtn")?.addEventListener("click", window.resetApp);
 
 // ---------- POLLING INTELIGENTE ----------
 let pollingInterval;
 async function pollBadge() {
-  // Chamar atualizarBadge (que já inclui verificação de push)
   if (typeof window.atualizarBadge === "function") {
     await window.atualizarBadge();
   }
@@ -277,20 +258,20 @@ function startPolling() {
   pollingInterval = setInterval(pollBadge, 60000);
 }
 
-// ✅ NOTA: O event listener visibilitychange já foi atualizado acima
-// com a lógica de appEmPrimeiroPlano e limpeza do badge
-
 if (document.visibilityState === "visible") {
   startPolling();
 }
 
-// ---------- MOSTRAR BOTÃO DE ATUALIZAÇÃO (opcional) ----------
 function mostrarBotaoAtualizar() {
   console.log("Nova versão disponível. Atualize a app.");
 }
 
-// Ligar o botão de debug depois de a página carregar
 document.addEventListener('DOMContentLoaded', () => {
   const btn = document.getElementById('debugLogsBtn');
   if (btn) btn.addEventListener('click', mostrarLogs);
+  
+  // Carregar tema (garantir que o tema.js já executou)
+  if (typeof window.loadTheme === 'function') {
+    // Já foi chamado pelo theme.js
+  }
 });
