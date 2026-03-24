@@ -250,7 +250,7 @@
   }
 
   .notification-card.selecionado {
-    border-color: var(--accent-gold) !important;
+    border-color: var(--accent-green-light) !important;
     background: var(--bg-card-hover) !important;
   }
   
@@ -667,22 +667,61 @@
   }
   .custom-toast ion-icon { flex-shrink: 0; }
 
-  /* Barra de seleção (usada em premiados) */
-  .selecao-barra {
-    background: var(--bg-secondary);
+/* ========== BARRA DE SELEÇÃO (estilo consistente com cards) ========== */
+.selecao-barra {
+    background: var(--bg-card);
     border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 10px;
+    border-radius: 0;
+    padding: 12px 16px;
     margin-bottom: 15px;
     display: flex;
     align-items: center;
-    gap: 10px;
-  }
-  .selecao-barra span {
-    color: var(--accent-gold);
-    font-weight: bold;
-  }
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    box-sizing: border-box;
+}
 
+.selecao-barra span {
+    color: var(--accent-green-light);
+    font-size: 12px;
+    font-weight: normal;
+    letter-spacing: 0.5px;
+}
+
+.selecao-barra .btn-cancelar,
+.selecao-barra .btn-validar {
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: normal;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin: 0;
+    text-transform: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.selecao-barra .btn-cancelar:hover,
+.selecao-barra .btn-validar:hover {
+    opacity: 0.7;
+}
+
+.selecao-barra .btn-validar {
+    color: var(--accent-green-light);
+}
+
+.selecao-barra .btn-cancelar {
+    color: var(--text-secondary);
+}
+
+.selecao-barra .btn-cancelar:hover {
+    color: var(--accent-red);
+}
   /* ========== ESTATÍSTICAS ========== */
   .estatisticas-header {
     display: flex;
