@@ -287,7 +287,7 @@
   .logo-euromilhoes { background-position: left top; width: 102px; }
   .logo-totoloto { background-position: left -33px; width: 89px; }
   .logo-eurodreams { background-position: left -362px; width: 112px; }
-  .logo-milhao { background-position: left -285px; width: 89px; }
+  .logo-milhao { background-position: left -284px; width: 104px; }
   
   /* ========== NÚMEROS E ESTRELAS ========== */
   [data-theme="light"] .numero-santacas,
@@ -810,7 +810,6 @@ button[onclick="ativarPush()"]:hover {
 
 /* Cada botão usa o sprite na posição correta */
 .jogo-btn[data-jogo="global"] {
-    /* "Global" mantém texto */
     background: transparent !important;
     color: var(--text-secondary) !important;
     font-size: 12px;
@@ -1013,41 +1012,66 @@ button[onclick="ativarPush()"]:hover {
     color: var(--text-secondary);
   }
 
+  /* ========== ESTILOS PARA CARDS DE PREMIADOS ========== */
+  .notification-date-label {
+    color: var(--text-secondary);
+    font-size: 12px;
+    margin-left: auto;
+  }
+
+  .notification-date {
+    color: var(--text-secondary);
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .notification-info-right {
+    text-align: right;
+    margin: 8px 0 4px;
+  }
+
+  .notification-concurso,
+  .notification-referencia {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+  }
+
   /* ========== RESUMO DOS PENDENTES (números apostados) ========== */
-.notification-resumo-pendente {
+  .notification-resumo-pendente {
     text-align: center;
     padding: 8px;
     background: var(--bg-secondary);
     border-radius: 8px;
     margin-top: 8px;
-}
+  }
 
-.notification-resumo-pendente .numero-santacas,
-.notification-resumo-pendente .estrela-santacas,
-.notification-resumo-pendente .numero-extra-santacas {
+  .notification-resumo-pendente .numero-santacas,
+  .notification-resumo-pendente .estrela-santacas,
+  .notification-resumo-pendente .numero-extra-santacas {
     margin: 0 4px;
-}
+  }
 
-.notification-resumo-pendente .spacer {
+  .notification-resumo-pendente .spacer {
     font-size: 14px;
     font-weight: bold;
     color: var(--text-secondary);
-}
+  }
 
-/* ========== CÓDIGO M1LHÃO (estilo botão) ========== */
-.codigo-milhao {
+  /* ========== CÓDIGO M1LHÃO (estilo botão) ========== */
+  .codigo-milhao {
     display: inline-block;
-    background: url('assets/btn-links.png') left -144px no-repeat;
-    height: 21px;
-    padding-left: 10px;
-    padding-right: 15px;
-    font-size: 11px;
+    background: var(--button-primary-bg);
+    border: 1px solid var(--accent-green-light);
+    padding: 6px 12px;
+    font-size: 12px;
     font-weight: bold;
     color: white;
-    line-height: 21px;
     text-transform: uppercase;
-    background-size: auto 100%;
-}
+    border-radius: 0;
+    white-space: nowrap;
+    margin-top: 4px;
+  }
 
   /* ========== BLOQUEIO DE SCROLL ========== */
   body.modal-open {
