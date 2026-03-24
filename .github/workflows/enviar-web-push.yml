@@ -10,7 +10,7 @@ on:
 
 permissions:
   contents: read
-  actions: write   # ← necessário para o workflow ser acionado
+  actions: write   # ← essencial
 
 jobs:
   notify:
@@ -41,7 +41,7 @@ jobs:
           );
 
           if (!fs.existsSync("subscription.json")) {
-            console.log("Sem subscription");
+            console.log("⚠️ Sem subscription.json");
             process.exit(0);
           }
 
@@ -54,13 +54,21 @@ jobs:
           
           if (tipo === "resultados") {
             title = `${jogo} - Novos resultados`;
-            body = "Já saíram os resultados";
+            body = "Já saíram os resultados! Consulta na app.";
           } else {
             title = `${jogo} - Validação pendente`;
-            body = "Tens boletins por validar";
+            body = "Tens boletins por validar. Verifica na app.";
           }
           
-          webpush.sendNotification(sub, JSON.stringify({ title, body }))
-            .then(() => console.log("Push enviada"))
-            .catch(err => console.error("Erro:", err));
+          const payload = JSON.stringify({ title, body });
+          
+          webpush.sendNotification(sub, payload)
+            .then(() => console.log("✅ Push enviada"))
+            .catch(err => {
+              console.error("❌ Erro:", err);
+              if (err.statusCode === 410) {
+                console.log("Subscription expirada, a remover ficheiro...");
+                fs.unlinkSync("subscription.json");
+              }
+            });
           EOF
