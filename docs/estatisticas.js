@@ -389,7 +389,95 @@ function gerarListaPremiadosInterativa(dados) {
     return html;
 }
 
-// ---------- GERAR LISTA DE PENDENTES ----------
+// ---------- FORMATAR NÚMEROS DA APOSTA (com estilos Santa Casa) ----------
+function formatarNumerosAposta(aposta, jogo) {
+    let html = '<div class="numeros-aposta" style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; align-items: center;">';
+    
+    const jogoLower = (jogo || '').toLowerCase();
+    
+    // Números principais
+    if (aposta.numeros && aposta.numeros.length > 0) {
+        aposta.numeros.forEach(num => {
+            const numStr = String(num).padStart(2, '0');
+            html += `<span class="numero-santacas">${escapeHTML(numStr)}</span>`;
+        });
+    }
+    
+    // Estrelas (Euromilhões)
+    if (aposta.estrelas && aposta.estrelas.length > 0) {
+        html += `<span class="spacer" style="margin: 0 4px; font-size: 14px; font-weight: bold; color: var(--text-secondary);">+</span>`;
+        aposta.estrelas.forEach(est => {
+            const estStr = String(est).padStart(2, '0');
+            html += `<span class="estrela-santacas">${escapeHTML(estStr)}</span>`;
+        });
+    }
+    
+    // Dream Number (EuroDreams) - usa bg-star
+    let dreamValue = '';
+    if (aposta.dream && Array.isArray(aposta.dream) && aposta.dream.length > 0) {
+        dreamValue = aposta.dream[0];
+    } else if (aposta.dream_number !== undefined) {
+        dreamValue = aposta.dream_number;
+    }
+    if (dreamValue && (jogoLower === 'eurodreams' || jogoLower === 'eurodream')) {
+        const dreamStr = String(dreamValue).padStart(2, '0');
+        html += `<span class="estrela-santacas">${escapeHTML(dreamStr)}</span>`;
+    }
+    
+    // Nº da Sorte (Totoloto) - usa bg-star
+    if (aposta.numero_da_sorte && jogoLower === 'totoloto') {
+        const sorteStr = String(aposta.numero_da_sorte).padStart(2, '0');
+        html += `<span class="estrela-santacas">${escapeHTML(sorteStr)}</span>`;
+    }
+    
+    // Código (M1lhão) - usa btn-links.png sprite
+    if (aposta.codigo && jogoLower === 'milhao') {
+        html += `<span class="codigo-milhao">${escapeHTML(aposta.codigo)}</span>`;
+    }
+    
+    html += '</div>';
+    return html;
+}
+
+// ---------- GERAR CARD PARA PENDENTES (mesmo estilo dos premiados) ----------
+function gerarCardPendente(opcoes) {
+    const {
+        id,
+        jogo,
+        dataSorteio,
+        concurso,
+        referencia,
+        numerosHTML,
+        selecionado = false,
+        onclick = null
+    } = opcoes;
+
+    const selecionadoClass = selecionado ? 'selecionado' : '';
+    const dataFormatada = formatarData(dataSorteio);
+    const logoHTML = getLogoHTML(jogo);
+
+    return `
+        <div class="notification-card ${selecionadoClass}" 
+             data-id="${escapeHTML(id)}" 
+             style="${selecionado ? 'border-color: var(--accent-green-light); background: var(--bg-card-hover);' : ''}"
+             ${onclick ? `onclick="${onclick}"` : ''}>
+            <div class="notification-header">
+                ${logoHTML}
+                <span class="notification-date-label">DATA DO SORTEIO:</span>
+                <span class="notification-date">${escapeHTML(dataFormatada)}</span>
+            </div>
+            <div class="notification-info-right">
+                <div class="notification-concurso">CONCURSO ${escapeHTML(concurso)}</div>
+                <div class="notification-referencia">REF. ${escapeHTML(referencia)}</div>
+            </div>
+            <div class="notification-resumo-pendente">
+                ${numerosHTML}
+            </div>
+        </div>
+    `;
+}
+
+// ---------- GERAR LISTA DE PENDENTES (com estilo igual aos premiados) ----------
 function gerarListaPendentes(apostas) {
     if (!apostas || apostas.length === 0) {
         return '<p class="no-data">Nenhum boletim pendente encontrado.</p>';
@@ -404,37 +492,25 @@ function gerarListaPendentes(apostas) {
         const dataSorteio = aposta.data_sorteio;
         const concurso = aposta.concurso || '-';
         const referencia = aposta.referencia_unica || '-';
-        const titulo = `Conc. ${concurso} • Ref. ${referencia}`;
 
-        let numeros = '';
+        // Formatar números da aposta
+        let numerosHTML = '';
         if (aposta.apostas && Array.isArray(aposta.apostas)) {
-            const primeira = aposta.apostas[0];
-            if (primeira) {
-                if (primeira.numeros) {
-                    numeros = primeira.numeros.join(' ');
-                    if (primeira.estrelas) numeros += ` + ${primeira.estrelas.join(' ')}`;
-                    if (primeira.dream) numeros += ` Dream: ${primeira.dream}`;
-                    if (primeira.numero_da_sorte) numeros += ` Nº Sorte: ${primeira.numero_da_sorte}`;
-                } else if (primeira.codigo) {
-                    numeros = `Código: ${primeira.codigo}`;
-                }
-            }
-        } else if (aposta.numeros) {
-            numeros = aposta.numeros.join(' ');
-            if (aposta.estrelas) numeros += ` + ${aposta.estrelas.join(' ')}`;
+            // Se houver múltiplas apostas, mostrar todas
+            const apostasLista = aposta.apostas;
+            numerosHTML = apostasLista.map(ap => formatarNumerosAposta(ap, jogo)).join('<div style="margin: 8px 0;"></div>');
+        } else {
+            // Aposta única
+            numerosHTML = formatarNumerosAposta(aposta, jogo);
         }
 
-        const resumo = numeros || 'Aposta';
-
-        html += gerarCardPadrao({
+        html += gerarCardPendente({
             id: aposta.referencia_unica || aposta.id,
             jogo,
-            estado: 'PENDENTE',
-            corBadge: '#ffaa00',
-            icon: 'time-outline',
             dataSorteio,
-            titulo,
-            resumo,
+            concurso,
+            referencia,
+            numerosHTML,
             selecionado: false,
             onclick: null
         });
