@@ -17,7 +17,7 @@ function getLogoHTMLNotificacao(jogo) {
     } else if (jogoLower === 'eurodreams') {
         return '<div class="logo-sprite logo-eurodreams">EuroDreams</div>';
     } else if (jogoLower === 'milhao' || jogoLower === 'm1lhão') {
-        return '<div class="logo-milhao">M1lhão</div>';
+        return '<div class="logo-sprite logo-milhao">M1lhão</div>';
     } else {
         return `<span class="logo-placeholder">${escapeHTML(jogo.toUpperCase())}</span>`;
     }
