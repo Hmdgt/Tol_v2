@@ -257,7 +257,7 @@ function gerarCardPremiado(opcoes) {
     return `
         <div class="notification-card ${selecionadoClass}" 
              data-id="${escapeHTML(id)}" 
-             style="${selecionado ? 'border-color: #ffd700; background: var(--bg-card-hover);' : ''}"
+             style="${selecionado ? 'border-color: var(--accent-green-light); background: var(--bg-card-hover);' : ''}"
              ${onclick ? `onclick="${onclick}"` : ''}>
             <div class="notification-header">
                 ${logoHTML}
@@ -273,7 +273,7 @@ function gerarCardPremiado(opcoes) {
     `;
 }
 
-// ---------- GERAR CARD PADRÃO (para pendentes e outros) ----------
+// ---------- GERAR CARD PADRÃO (para pendentes) ----------
 function gerarCardPadrao(opcoes) {
     const {
         id,
@@ -295,7 +295,7 @@ function gerarCardPadrao(opcoes) {
     return `
         <div class="notification-card ${selecionadoClass}" 
              data-id="${escapeHTML(id)}" 
-             style="${selecionado ? 'border-color: #ffd700; background: var(--bg-card-hover);' : ''}"
+             style="${selecionado ? 'border-color: var(--accent-green-light); background: var(--bg-card-hover);' : ''}"
              ${onclick ? `onclick="${onclick}"` : ''}>
             <div class="notification-header">
                 ${logoHTML}
@@ -333,9 +333,8 @@ function gerarListaPremiadosInterativa(dados) {
                     <button id="btnArquivarSelecionados" class="btn-validar">ARQUIVAR</button>
                 </div>
             </div>
-       `;
+        `;
     }
-    
 
     html += `<div class="premiados-lista">`;
 
@@ -390,7 +389,7 @@ function gerarListaPremiadosInterativa(dados) {
     return html;
 }
 
-// ---------- GERAR LISTA DE PENDENTES (sem seleção) ----------
+// ---------- GERAR LISTA DE PENDENTES ----------
 function gerarListaPendentes(apostas) {
     if (!apostas || apostas.length === 0) {
         return '<p class="no-data">Nenhum boletim pendente encontrado.</p>';
@@ -478,7 +477,7 @@ function inicializarLongPressCards() {
                     card.style.background = 'var(--bg-card)';
                 } else {
                     itensSelecionados.add(id);
-                    card.style.borderColor = '#ffd700';
+                    card.style.borderColor = 'var(--accent-green-light)';
                     card.style.background = 'var(--bg-card-hover)';
                 }
                 const barra = document.querySelector('.selecao-barra span');
@@ -497,7 +496,7 @@ function entrarModoSelecao(card) {
     itensSelecionados.clear();
     const id = card.dataset.id;
     itensSelecionados.add(id);
-    card.style.borderColor = '#ffd700';
+    card.style.borderColor = 'var(--accent-green-light)';
     card.style.background = 'var(--bg-card-hover)';
     renderizarEstatisticas();
 }
@@ -739,16 +738,16 @@ function gerarTabelaGlobal(periodo, dadosGlobais) {
     for (const periodoKey of periodos) {
         const dados = dadosGlobais[periodo][periodoKey];
         html += `
-            <tr>
-                <td><strong>${periodo === 'mensal' ? formatarMes(periodoKey) : periodoKey}</strong>\\
-                <td>${dados.total_apostas}\\
-                <td>${formatarMoeda(dados.total_gasto)}\\
-                <td>${formatarMoeda(dados.total_recebido)}\\
-                <td class="${dados.saldo >= 0 ? 'positivo' : 'negativo'}">${formatarMoeda(dados.saldo)}\\
-                <td>${dados.ganhadoras}\\
-                <td>${dados.percentagem_ganhadoras?.toFixed(1) ?? '0'}%\\
-                <td>${formatarMoeda(dados.maior_premio)}\\
-                <td>${dados.data_maior_premio ? dados.data_maior_premio : '-'}\\
+             <tr>
+                 <td><strong>${periodo === 'mensal' ? formatarMes(periodoKey) : periodoKey}</strong></td>
+                 <td>${dados.total_apostas}</td>
+                 <td>${formatarMoeda(dados.total_gasto)}</td>
+                 <td>${formatarMoeda(dados.total_recebido)}</td>
+                <td class="${dados.saldo >= 0 ? 'positivo' : 'negativo'}">${formatarMoeda(dados.saldo)}</td>
+                 <td>${dados.ganhadoras}</td>
+                 <td>${dados.percentagem_ganhadoras?.toFixed(1) ?? '0'}%</td>
+                 <td>${formatarMoeda(dados.maior_premio)}</td>
+                 <td>${dados.data_maior_premio ? dados.data_maior_premio : '-'}</td>
              </tr>
         `;
     }
@@ -788,19 +787,19 @@ function gerarTabelaJogo(periodo, dadosJogo, jogo) {
     for (const periodoKey of periodos) {
         const dados = dadosJogo[periodoKey];
         html += `
-            <tr>
-                <td><strong>${periodo === 'mensal' ? formatarMes(periodoKey) : periodoKey}</strong>\\
-                <td>${dados.total_apostas}\\
-                <td>${formatarMoeda(dados.total_gasto)}\\
-                <td>${formatarMoeda(dados.total_recebido)}\\
-                <td class="${dados.saldo >= 0 ? 'positivo' : 'negativo'}">${formatarMoeda(dados.saldo)}\\
-                <td>${dados.ganhadoras}\\
-                <td>${dados.percentagem_ganhadoras?.toFixed(1) ?? '0'}%\\
-                <td>${formatarMoeda(dados.maior_premio)}\\
-                <td>${formatarMoeda(dados.media_premios)}\\
-                <td>${formatarMoeda(dados.mediana_premios)}\\
-                <td>${dados.media_acertos_numeros?.toFixed(2) ?? '0'}\\
-                <td>${dados.media_acertos_especial?.toFixed(2) ?? '0'}\\
+             <tr>
+                 <td><strong>${periodo === 'mensal' ? formatarMes(periodoKey) : periodoKey}</strong></td>
+                 <td>${dados.total_apostas}</td>
+                 <td>${formatarMoeda(dados.total_gasto)}</td>
+                 <td>${formatarMoeda(dados.total_recebido)}</td>
+                <td class="${dados.saldo >= 0 ? 'positivo' : 'negativo'}">${formatarMoeda(dados.saldo)}</td>
+                 <td>${dados.ganhadoras}</td>
+                 <td>${dados.percentagem_ganhadoras?.toFixed(1) ?? '0'}%</td>
+                 <td>${formatarMoeda(dados.maior_premio)}</td>
+                 <td>${formatarMoeda(dados.media_premios)}</td>
+                 <td>${formatarMoeda(dados.mediana_premios)}</td>
+                 <td>${dados.media_acertos_numeros?.toFixed(2) ?? '0'}</td>
+                 <td>${dados.media_acertos_especial?.toFixed(2) ?? '0'}</td>
               </tr>
         `;
     }
