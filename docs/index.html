@@ -722,6 +722,127 @@
 .selecao-barra .btn-cancelar:hover {
     color: var(--accent-red);
 }
+
+/* ========== ESTILO UNIFICADO PARA BOTÕES (FLAT) ========== */
+.periodo-btn, .jogo-btn, .modo-btn, .ano-btn, 
+.btn-cancelar, .btn-validar, .btn-voltar,
+#saveTokenBtn, #resetAppBtn, #debugLogsBtn,
+button:not(.theme-toggle):not(.btn-santacas) {
+    background: transparent !important;
+    border: none !important;
+    color: var(--text-secondary) !important;
+    padding: 8px 16px;
+    font-size: 12px;
+    font-weight: normal;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin: 0;
+    border-radius: 0 !important;
+    letter-spacing: 0.5px;
+}
+
+.periodo-btn.active, .jogo-btn.active, .modo-btn.active, .ano-btn.active {
+    color: var(--accent-green-light) !important;
+    font-weight: normal;
+}
+
+.periodo-btn:hover, .jogo-btn:hover, .modo-btn:hover, .ano-btn:hover,
+.btn-cancelar:hover, .btn-validar:hover, .btn-voltar:hover,
+#saveTokenBtn:hover, #resetAppBtn:hover, #debugLogsBtn:hover {
+    color: var(--text-primary) !important;
+    opacity: 0.8;
+}
+
+/* Botão Voltar específico (pode ter ícone) */
+.btn-voltar {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: transparent !important;
+    border: none !important;
+}
+
+/* Botões da Config (exceto o de push) */
+#saveTokenBtn, #resetAppBtn, #debugLogsBtn {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 12px;
+    background: transparent !important;
+}
+
+/* Botão de ativar push (mantém verde) */
+button[onclick="ativarPush()"] {
+    background: var(--button-primary-bg) !important;
+    border: 1px solid var(--accent-green-light) !important;
+    color: white !important;
+    padding: 14px;
+    border-radius: 0 !important;
+    text-transform: uppercase;
+}
+
+button[onclick="ativarPush()"]:hover {
+    background: var(--button-primary-hover) !important;
+}
+
+/* ========== BOTÕES DE JOGO COM LOGOS SPRITE ========== */
+.jogo-btn {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    width: auto;
+    height: 29px;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.jogo-btn.active {
+    opacity: 1;
+}
+
+.jogo-btn:not(.active) {
+    opacity: 0.5;
+}
+
+.jogo-btn:hover {
+    opacity: 0.8;
+}
+
+/* Cada botão usa o sprite na posição correta */
+.jogo-btn[data-jogo="global"] {
+    /* "Global" mantém texto */
+    background: transparent !important;
+    color: var(--text-secondary) !important;
+    font-size: 12px;
+    text-transform: uppercase;
+    padding: 8px 16px !important;
+    height: auto;
+}
+
+.jogo-btn[data-jogo="totoloto"] {
+    background: url('assets/logo-jogos-sprite.png') no-repeat left -33px !important;
+    width: 89px;
+    text-indent: -9999px;
+}
+
+.jogo-btn[data-jogo="euromilhoes"] {
+    background: url('assets/logo-jogos-sprite.png') no-repeat left top !important;
+    width: 102px;
+    text-indent: -9999px;
+}
+
+.jogo-btn[data-jogo="eurodreams"] {
+    background: url('assets/logo-jogos-sprite.png') no-repeat left -362px !important;
+    width: 112px;
+    text-indent: -9999px;
+}
+
+.jogo-btn[data-jogo="milhao"] {
+    background: url('assets/logo-jogos-sprite.png') no-repeat left -284px !important;
+    width: 104px;
+    text-indent: -9999px;
+}
+  
   /* ========== ESTATÍSTICAS ========== */
   .estatisticas-header {
     display: flex;
@@ -729,27 +850,137 @@
     gap: 15px;
     margin-bottom: 20px;
   }
-  .periodo-tabs, .jogo-tabs, .modo-tabs {
+  
+  /* Contêineres com scroll horizontal para botões em linha */
+  .periodo-tabs, .jogo-tabs, .modo-tabs, .ano-tabs {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 8px;
-    justify-content: center;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    padding-bottom: 4px;
   }
-  .periodo-btn, .jogo-btn, .modo-btn, .ano-btn {
-    background: var(--button-secondary-bg);
-    border: 1px solid var(--border-color);
-    color: var(--text-primary);
+  
+  .periodo-tabs::-webkit-scrollbar,
+  .jogo-tabs::-webkit-scrollbar,
+  .modo-tabs::-webkit-scrollbar,
+  .ano-tabs::-webkit-scrollbar {
+    height: 3px;
+  }
+  
+  .periodo-tabs::-webkit-scrollbar-track,
+  .jogo-tabs::-webkit-scrollbar-track,
+  .modo-tabs::-webkit-scrollbar-track,
+  .ano-tabs::-webkit-scrollbar-track {
+    background: var(--border-color);
+    border-radius: 3px;
+  }
+  
+  .periodo-tabs::-webkit-scrollbar-thumb,
+  .jogo-tabs::-webkit-scrollbar-thumb,
+  .modo-tabs::-webkit-scrollbar-thumb,
+  .ano-tabs::-webkit-scrollbar-thumb {
+    background: var(--accent-green-light);
+    border-radius: 3px;
+  }
+  
+  /* Botões flat com scroll horizontal */
+  .periodo-btn, .modo-btn, .ano-btn {
+    background: transparent !important;
+    border: none !important;
+    color: var(--text-secondary) !important;
     padding: 8px 16px;
-    border-radius: 20px;
-    font-size: 14px;
+    font-size: 12px;
+    font-weight: normal;
+    text-transform: uppercase;
     cursor: pointer;
-    transition: 0.2s;
+    transition: all 0.2s ease;
+    margin: 0;
+    border-radius: 0 !important;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
-  .periodo-btn.active, .jogo-btn.active, .modo-btn.active, .ano-btn.active {
-    background: var(--button-primary-bg);
-    border-color: var(--accent-green-light);
-    color: white;
+  
+  .periodo-btn.active, .modo-btn.active, .ano-btn.active {
+    color: var(--accent-green-light) !important;
   }
+  
+  .periodo-btn:hover, .modo-btn:hover, .ano-btn:hover {
+    color: var(--text-primary) !important;
+    opacity: 0.8;
+  }
+  
+  /* Botões de jogo com logos sprite (scroll horizontal) */
+  .jogo-tabs {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 12px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    padding-bottom: 4px;
+    align-items: center;
+  }
+  
+  .jogo-btn {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    width: auto;
+    height: 29px;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+    flex-shrink: 0;
+  }
+  
+  .jogo-btn.active {
+    opacity: 1;
+  }
+  
+  .jogo-btn:not(.active) {
+    opacity: 0.5;
+  }
+  
+  .jogo-btn:hover {
+    opacity: 0.8;
+  }
+  
+  .jogo-btn[data-jogo="global"] {
+    background: transparent !important;
+    color: var(--text-secondary) !important;
+    font-size: 12px;
+    text-transform: uppercase;
+    padding: 8px 16px !important;
+    height: auto;
+  }
+  
+  .jogo-btn[data-jogo="totoloto"] {
+    background: url('assets/logo-jogos-sprite.png') no-repeat left -33px !important;
+    width: 89px;
+    text-indent: -9999px;
+  }
+  
+  .jogo-btn[data-jogo="euromilhoes"] {
+    background: url('assets/logo-jogos-sprite.png') no-repeat left top !important;
+    width: 102px;
+    text-indent: -9999px;
+  }
+  
+  .jogo-btn[data-jogo="eurodreams"] {
+    background: url('assets/logo-jogos-sprite.png') no-repeat left -362px !important;
+    width: 112px;
+    text-indent: -9999px;
+  }
+  
+  .jogo-btn[data-jogo="milhao"] {
+    background: url('assets/logo-jogos-sprite.png') no-repeat left -284px !important;
+    width: 104px;
+    text-indent: -9999px;
+  }
+  
   .estatisticas-tabela {
     width: 100%;
     border-collapse: collapse;
@@ -780,31 +1011,6 @@
     padding: 40px;
     opacity: 0.6;
     color: var(--text-secondary);
-  }
-
-    /* ========== ESTILOS PARA CARDS DE PREMIADOS ========== */
-  .notification-date-label {
-    color: var(--text-secondary);
-    font-size: 12px;
-    margin-left: auto;
-  }
-
-  .notification-date {
-    color: var(--text-secondary);
-    font-size: 12px;
-    white-space: nowrap;
-  }
-
-  .notification-info-right {
-    text-align: right;
-    margin: 8px 0 4px;
-  }
-
-  .notification-concurso,
-  .notification-referencia {
-    font-size: 12px;
-    color: var(--text-secondary);
-    line-height: 1.4;
   }
 
   /* ========== RESUMO DOS PENDENTES (números apostados) ========== */
