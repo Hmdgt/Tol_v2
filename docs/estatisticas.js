@@ -29,7 +29,6 @@ function getLogoHTML(jogo) {
     } else if (jogoLower === 'eurodreams') {
         return '<div class="logo-sprite logo-eurodreams">EuroDreams</div>';
     } else if (jogoLower === 'milhao' || jogoLower === 'm1lhão') {
-        // CORREÇÃO: adicionar logo-sprite + logo-milhao
         return '<div class="logo-sprite logo-milhao">M1lhão</div>';
     } else {
         return `<span class="logo-placeholder">${escapeHTML(jogo.toUpperCase())}</span>`;
@@ -238,7 +237,43 @@ function filtrarPorAno(dados, periodo, ano) {
     return { [periodo]: filtrado };
 }
 
-// ---------- GERAR CARD PADRÃO (com LOGOS em vez de ícones) ----------
+// ---------- GERAR CARD PARA PREMIADOS (sem badge, com data label) ----------
+function gerarCardPremiado(opcoes) {
+    const {
+        id,
+        jogo,
+        dataSorteio,
+        concurso,
+        referencia,
+        resumo,
+        selecionado = false,
+        onclick = null
+    } = opcoes;
+
+    const selecionadoClass = selecionado ? 'selecionado' : '';
+    const dataFormatada = formatarData(dataSorteio);
+    const logoHTML = getLogoHTML(jogo);
+
+    return `
+        <div class="notification-card ${selecionadoClass}" 
+             data-id="${escapeHTML(id)}" 
+             style="${selecionado ? 'border-color: #ffd700; background: var(--bg-card-hover);' : ''}"
+             ${onclick ? `onclick="${onclick}"` : ''}>
+            <div class="notification-header">
+                ${logoHTML}
+                <span class="notification-date-label">DATA DO SORTEIO:</span>
+                <span class="notification-date">${escapeHTML(dataFormatada)}</span>
+            </div>
+            <div class="notification-info-right">
+                <div class="notification-concurso">CONCURSO ${escapeHTML(concurso)}</div>
+                <div class="notification-referencia">REF. ${escapeHTML(referencia)}</div>
+            </div>
+            <div class="notification-resumo">${escapeHTML(resumo)}</div>
+        </div>
+    `;
+}
+
+// ---------- GERAR CARD PADRÃO (para pendentes e outros) ----------
 function gerarCardPadrao(opcoes) {
     const {
         id,
@@ -311,8 +346,8 @@ function gerarListaPremiadosInterativa(dados) {
         const dataSorteio = p.detalhes?.sorteio?.data || p.detalhes?.boletim?.data_sorteio || p.data;
         const concurso = p.detalhes?.sorteio?.concurso || p.detalhes?.boletim?.concurso_sorteio || '-';
         const referencia = p.detalhes?.boletim?.referencia || '-';
-        const titulo = `Conc. ${concurso} • Ref. ${referencia}`;
 
+        // Calcular resumo do prémio
         let categorias = [];
         let valorTotal = 0;
 
@@ -338,14 +373,12 @@ function gerarListaPremiadosInterativa(dados) {
         const valorTotalStr = `€ ${valorTotal.toFixed(2).replace('.', ',')}`;
         const resumo = `${categoriasStr} • ${valorTotalStr}`;
 
-        html += gerarCardPadrao({
+        html += gerarCardPremiado({
             id,
             jogo,
-            estado: 'PREMIADO',
-            corBadge: '#ffd700',
-            icon: 'trophy-outline',
             dataSorteio,
-            titulo,
+            concurso,
+            referencia,
             resumo,
             selecionado,
             onclick: null
@@ -706,20 +739,20 @@ function gerarTabelaGlobal(periodo, dadosGlobais) {
         const dados = dadosGlobais[periodo][periodoKey];
         html += `
             <tr>
-                <td><strong>${periodo === 'mensal' ? formatarMes(periodoKey) : periodoKey}</strong></td>
-                <td>${dados.total_apostas}</td>
-                <td>${formatarMoeda(dados.total_gasto)}</td>
-                <td>${formatarMoeda(dados.total_recebido)}</td>
-                <td class="${dados.saldo >= 0 ? 'positivo' : 'negativo'}">${formatarMoeda(dados.saldo)}</td>
-                <td>${dados.ganhadoras}</td>
-                <td>${dados.percentagem_ganhadoras?.toFixed(1) ?? '0'}%</td>
-                <td>${formatarMoeda(dados.maior_premio)}</td>
-                <td>${dados.data_maior_premio ? dados.data_maior_premio : '-'}</td>
-            </tr>
+                <td><strong>${periodo === 'mensal' ? formatarMes(periodoKey) : periodoKey}</strong>\\
+                <td>${dados.total_apostas}\\
+                <td>${formatarMoeda(dados.total_gasto)}\\
+                <td>${formatarMoeda(dados.total_recebido)}\\
+                <td class="${dados.saldo >= 0 ? 'positivo' : 'negativo'}">${formatarMoeda(dados.saldo)}\\
+                <td>${dados.ganhadoras}\\
+                <td>${dados.percentagem_ganhadoras?.toFixed(1) ?? '0'}%\\
+                <td>${formatarMoeda(dados.maior_premio)}\\
+                <td>${dados.data_maior_premio ? dados.data_maior_premio : '-'}\\
+             </tr>
         `;
     }
 
-    html += `</tbody></table>`;
+    html += `</tbody>`;
     return html;
 }
 
@@ -755,19 +788,19 @@ function gerarTabelaJogo(periodo, dadosJogo, jogo) {
         const dados = dadosJogo[periodoKey];
         html += `
             <tr>
-                <td><strong>${periodo === 'mensal' ? formatarMes(periodoKey) : periodoKey}</strong></td>
-                <td>${dados.total_apostas}</td>
-                <td>${formatarMoeda(dados.total_gasto)}</td>
-                <td>${formatarMoeda(dados.total_recebido)}</td>
-                <td class="${dados.saldo >= 0 ? 'positivo' : 'negativo'}">${formatarMoeda(dados.saldo)}</td>
-                <td>${dados.ganhadoras}</td>
-                <td>${dados.percentagem_ganhadoras?.toFixed(1) ?? '0'}%</td>
-                <td>${formatarMoeda(dados.maior_premio)}</td>
-                <td>${formatarMoeda(dados.media_premios)}</td>
-                <td>${formatarMoeda(dados.mediana_premios)}</td>
-                <td>${dados.media_acertos_numeros?.toFixed(2) ?? '0'}</td>
-                <td>${dados.media_acertos_especial?.toFixed(2) ?? '0'}</td>
-             </tr>
+                <td><strong>${periodo === 'mensal' ? formatarMes(periodoKey) : periodoKey}</strong>\\
+                <td>${dados.total_apostas}\\
+                <td>${formatarMoeda(dados.total_gasto)}\\
+                <td>${formatarMoeda(dados.total_recebido)}\\
+                <td class="${dados.saldo >= 0 ? 'positivo' : 'negativo'}">${formatarMoeda(dados.saldo)}\\
+                <td>${dados.ganhadoras}\\
+                <td>${dados.percentagem_ganhadoras?.toFixed(1) ?? '0'}%\\
+                <td>${formatarMoeda(dados.maior_premio)}\\
+                <td>${formatarMoeda(dados.media_premios)}\\
+                <td>${formatarMoeda(dados.mediana_premios)}\\
+                <td>${dados.media_acertos_numeros?.toFixed(2) ?? '0'}\\
+                <td>${dados.media_acertos_especial?.toFixed(2) ?? '0'}\\
+              </tr>
         `;
     }
 
