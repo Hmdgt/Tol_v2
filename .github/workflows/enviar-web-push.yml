@@ -8,6 +8,10 @@ on:
       jogo:
         required: true
 
+permissions:
+  contents: read
+  actions: write   # ← necessário para o workflow ser acionado
+
 jobs:
   notify:
     runs-on: ubuntu-latest
