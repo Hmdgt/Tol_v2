@@ -327,14 +327,15 @@ function gerarListaPremiadosInterativa(dados) {
     if (modoSelecao) {
         html += `
             <div class="selecao-barra">
-                <span>${itensSelecionados.size} selecionado(s)</span>
-                <button id="btnCancelarSelecao" class="btn-cancelar">Cancelar</button>
-                <button id="btnArquivarSelecionados" class="btn-validar">
-                    <ion-icon name="archive-outline"></ion-icon> Arquivar
-                </button>
+                <span>${itensSelecionados.size} SELECIONADO(S)</span>
+                <div style="display: flex; gap: 8px;">
+                    <button id="btnCancelarSelecao" class="btn-cancelar">CANCELAR</button>
+                    <button id="btnArquivarSelecionados" class="btn-validar">ARQUIVAR</button>
+                </div>
             </div>
-        `;
+       `;
     }
+    
 
     html += `<div class="premiados-lista">`;
 
