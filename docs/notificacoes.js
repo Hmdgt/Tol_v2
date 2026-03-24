@@ -623,7 +623,7 @@ async function dispararPush(tipo, jogo) {
   
   try {
     const response = await fetch(
-      `https://api.github.com/repos/${CONFIG.REPO}/actions/workflows/push.yml/dispatches`,
+      `https://api.github.com/repos/${CONFIG.REPO}/actions/workflows/enviar-web-push.yml/dispatches`,
       {
         method: "POST",
         headers: {
