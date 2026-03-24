@@ -1101,6 +1101,66 @@ button[onclick="ativarPush()"]:hover {
   .theme-toggle ion-icon {
     font-size: 18px;
   }
+
+  /* ========== FORÇAR LOGOS DOS JOGOS (ÚLTIMA PRIORIDADE) ========== */
+.estatisticas-header .jogo-tabs button.jogo-btn[data-jogo="totoloto"],
+.estatisticas-header .jogo-tabs .jogo-btn[data-jogo="totoloto"] {
+    background: url('assets/logo-jogos-sprite.png') no-repeat left -33px !important;
+    width: 89px !important;
+    height: 29px !important;
+    text-indent: -9999px !important;
+    display: inline-block !important;
+    padding: 0 !important;
+    border: none !important;
+    background-size: auto 29px !important;
+}
+
+.estatisticas-header .jogo-tabs button.jogo-btn[data-jogo="euromilhoes"],
+.estatisticas-header .jogo-tabs .jogo-btn[data-jogo="euromilhoes"] {
+    background: url('assets/logo-jogos-sprite.png') no-repeat left top !important;
+    width: 102px !important;
+    height: 29px !important;
+    text-indent: -9999px !important;
+    display: inline-block !important;
+    padding: 0 !important;
+    border: none !important;
+    background-size: auto 29px !important;
+}
+
+.estatisticas-header .jogo-tabs button.jogo-btn[data-jogo="eurodreams"],
+.estatisticas-header .jogo-tabs .jogo-btn[data-jogo="eurodreams"] {
+    background: url('assets/logo-jogos-sprite.png') no-repeat left -362px !important;
+    width: 112px !important;
+    height: 29px !important;
+    text-indent: -9999px !important;
+    display: inline-block !important;
+    padding: 0 !important;
+    border: none !important;
+    background-size: auto 29px !important;
+}
+
+.estatisticas-header .jogo-tabs button.jogo-btn[data-jogo="milhao"],
+.estatisticas-header .jogo-tabs .jogo-btn[data-jogo="milhao"] {
+    background: url('assets/logo-jogos-sprite.png') no-repeat left -284px !important;
+    width: 104px !important;
+    height: 29px !important;
+    text-indent: -9999px !important;
+    display: inline-block !important;
+    padding: 0 !important;
+    border: none !important;
+    background-size: auto 29px !important;
+}
+
+/* Garantir que o botão Global não é afetado */
+.estatisticas-header .jogo-tabs button.jogo-btn[data-jogo="global"] {
+    background: transparent !important;
+    text-indent: 0 !important;
+    padding: 8px 16px !important;
+    width: auto !important;
+    height: auto !important;
+    color: var(--text-secondary) !important;
+}
+  
 </style>
 </head>
 <body>
