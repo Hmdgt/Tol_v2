@@ -667,8 +667,8 @@
   }
   .custom-toast ion-icon { flex-shrink: 0; }
 
-/* ========== BARRA DE SELEÇÃO (estilo consistente com cards) ========== */
-.selecao-barra {
+  /* ========== BARRA DE SELEÇÃO ========== */
+  .selecao-barra {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: 0;
@@ -680,17 +680,15 @@
     gap: 12px;
     width: 100%;
     box-sizing: border-box;
-}
-
-.selecao-barra span {
+  }
+  .selecao-barra span {
     color: var(--accent-green-light);
     font-size: 12px;
     font-weight: normal;
     letter-spacing: 0.5px;
-}
-
-.selecao-barra .btn-cancelar,
-.selecao-barra .btn-validar {
+  }
+  .selecao-barra .btn-cancelar,
+  .selecao-barra .btn-validar {
     background: transparent;
     border: none;
     color: var(--text-primary);
@@ -704,33 +702,19 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-}
+  }
+  .selecao-barra .btn-cancelar:hover,
+  .selecao-barra .btn-validar:hover { opacity: 0.7; }
+  .selecao-barra .btn-validar { color: var(--accent-green-light); }
+  .selecao-barra .btn-cancelar { color: var(--text-secondary); }
+  .selecao-barra .btn-cancelar:hover { color: var(--accent-red); }
 
-.selecao-barra .btn-cancelar:hover,
-.selecao-barra .btn-validar:hover {
-    opacity: 0.7;
-}
-
-.selecao-barra .btn-validar {
-    color: var(--accent-green-light);
-}
-
-.selecao-barra .btn-cancelar {
+  /* ========== BOTÕES GERAIS (FLAT) ========== */
+  .periodo-btn, .modo-btn, .ano-btn, .btn-cancelar, .btn-validar, .btn-voltar,
+  #saveTokenBtn, #resetAppBtn, #debugLogsBtn {
+    background: transparent;
+    border: none;
     color: var(--text-secondary);
-}
-
-.selecao-barra .btn-cancelar:hover {
-    color: var(--accent-red);
-}
-
-/* ========== ESTILO UNIFICADO PARA BOTÕES (FLAT) ========== */
-.periodo-btn, .jogo-btn, .modo-btn, .ano-btn, 
-.btn-cancelar, .btn-validar, .btn-voltar,
-#saveTokenBtn, #resetAppBtn, #debugLogsBtn,
-button:not(.theme-toggle):not(.btn-santacas) {
-    background: transparent !important;
-    border: none !important;
-    color: var(--text-secondary) !important;
     padding: 8px 16px;
     font-size: 12px;
     font-weight: normal;
@@ -738,110 +722,90 @@ button:not(.theme-toggle):not(.btn-santacas) {
     cursor: pointer;
     transition: all 0.2s ease;
     margin: 0;
-    border-radius: 0 !important;
+    border-radius: 0;
     letter-spacing: 0.5px;
-}
-
-.periodo-btn.active, .jogo-btn.active, .modo-btn.active, .ano-btn.active {
-    color: var(--accent-green-light) !important;
-    font-weight: normal;
-}
-
-.periodo-btn:hover, .jogo-btn:hover, .modo-btn:hover, .ano-btn:hover,
-.btn-cancelar:hover, .btn-validar:hover, .btn-voltar:hover,
-#saveTokenBtn:hover, #resetAppBtn:hover, #debugLogsBtn:hover {
-    color: var(--text-primary) !important;
+  }
+  .periodo-btn.active, .modo-btn.active, .ano-btn.active {
+    color: var(--accent-green-light);
+  }
+  .periodo-btn:hover, .modo-btn:hover, .ano-btn:hover,
+  .btn-cancelar:hover, .btn-validar:hover, .btn-voltar:hover,
+  #saveTokenBtn:hover, #resetAppBtn:hover, #debugLogsBtn:hover {
+    color: var(--text-primary);
     opacity: 0.8;
-}
-
-/* Botão Voltar específico (pode ter ícone) */
-.btn-voltar {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    background: transparent !important;
-    border: none !important;
-}
-
-/* Botões da Config (exceto o de push) */
-#saveTokenBtn, #resetAppBtn, #debugLogsBtn {
+  }
+  .btn-voltar { display: inline-flex; align-items: center; gap: 4px; }
+  #saveTokenBtn, #resetAppBtn, #debugLogsBtn {
     width: 100%;
     text-align: center;
     margin-bottom: 12px;
-    background: transparent !important;
-}
+  }
 
-/* Botão de ativar push (mantém verde) */
-button[onclick="ativarPush()"] {
-    background: var(--button-primary-bg) !important;
-    border: 1px solid var(--accent-green-light) !important;
-    color: white !important;
+  /* Botão de ativar push (mantém verde) */
+  button[onclick="ativarPush()"] {
+    background: var(--button-primary-bg);
+    border: 1px solid var(--accent-green-light);
+    color: white;
     padding: 14px;
-    border-radius: 0 !important;
+    border-radius: 0;
     text-transform: uppercase;
-}
+  }
+  button[onclick="ativarPush()"]:hover {
+    background: var(--button-primary-hover);
+  }
 
-button[onclick="ativarPush()"]:hover {
-    background: var(--button-primary-hover) !important;
-}
-
-/* ========== BOTÕES DE JOGO COM LOGOS SPRITE ========== */
-.jogo-btn {
-    background: transparent !important;
-    border: none !important;
-    padding: 0 !important;
-    width: auto;
+  /* ========== BOTÕES DE JOGO COM LOGOS SPRITE ========== */
+  .jogo-btn {
+    border: none;
+    padding: 0;
     height: 29px;
     cursor: pointer;
+    background-color: transparent;
     transition: opacity 0.2s ease;
-}
+  }
+  .jogo-btn.active { opacity: 1; }
+  .jogo-btn:not(.active) { opacity: 0.5; }
+  .jogo-btn:hover { opacity: 0.8; }
 
-.jogo-btn.active {
-    opacity: 1;
-}
-
-.jogo-btn:not(.active) {
-    opacity: 0.5;
-}
-
-.jogo-btn:hover {
-    opacity: 0.8;
-}
-
-/* Cada botão usa o sprite na posição correta */
-.jogo-btn[data-jogo="global"] {
-    background: transparent !important;
-    color: var(--text-secondary) !important;
+  .jogo-btn[data-jogo="global"] {
+    background: transparent;
+    color: var(--text-secondary);
     font-size: 12px;
     text-transform: uppercase;
-    padding: 8px 16px !important;
+    padding: 8px 16px;
     height: auto;
-}
+    width: auto;
+  }
 
-.jogo-btn[data-jogo="totoloto"] {
-    background: url('assets/logo-jogos-sprite.png') no-repeat left -33px !important;
-    width: 89px;
-    text-indent: -9999px;
-}
-
-.jogo-btn[data-jogo="euromilhoes"] {
-    background: url('assets/logo-jogos-sprite.png') no-repeat left top !important;
+  .jogo-btn[data-jogo="euromilhoes"] {
+    background-image: url('assets/logo-jogos-sprite.png');
+    background-repeat: no-repeat;
+    background-position: left top;
     width: 102px;
     text-indent: -9999px;
-}
-
-.jogo-btn[data-jogo="eurodreams"] {
-    background: url('assets/logo-jogos-sprite.png') no-repeat left -362px !important;
+  }
+  .jogo-btn[data-jogo="totoloto"] {
+    background-image: url('assets/logo-jogos-sprite.png');
+    background-repeat: no-repeat;
+    background-position: left -33px;
+    width: 89px;
+    text-indent: -9999px;
+  }
+  .jogo-btn[data-jogo="eurodreams"] {
+    background-image: url('assets/logo-jogos-sprite.png');
+    background-repeat: no-repeat;
+    background-position: left -362px;
     width: 112px;
     text-indent: -9999px;
-}
-
-.jogo-btn[data-jogo="milhao"] {
-    background: url('assets/logo-jogos-sprite.png') no-repeat left -284px !important;
+  }
+  .jogo-btn[data-jogo="milhao"] {
+    background-image: url('assets/logo-jogos-sprite.png');
+    background-repeat: no-repeat;
+    background-position: left -284px;
     width: 104px;
     text-indent: -9999px;
-}
-  
+  }
+
   /* ========== ESTATÍSTICAS ========== */
   .estatisticas-header {
     display: flex;
@@ -850,7 +814,6 @@ button[onclick="ativarPush()"]:hover {
     margin-bottom: 20px;
   }
   
-  /* Contêineres com scroll horizontal para botões em linha */
   .periodo-tabs, .jogo-tabs, .modo-tabs, .ano-tabs {
     display: flex;
     flex-wrap: nowrap;
@@ -868,7 +831,6 @@ button[onclick="ativarPush()"]:hover {
   .ano-tabs::-webkit-scrollbar {
     height: 3px;
   }
-  
   .periodo-tabs::-webkit-scrollbar-track,
   .jogo-tabs::-webkit-scrollbar-track,
   .modo-tabs::-webkit-scrollbar-track,
@@ -876,7 +838,6 @@ button[onclick="ativarPush()"]:hover {
     background: var(--border-color);
     border-radius: 3px;
   }
-  
   .periodo-tabs::-webkit-scrollbar-thumb,
   .jogo-tabs::-webkit-scrollbar-thumb,
   .modo-tabs::-webkit-scrollbar-thumb,
@@ -885,11 +846,10 @@ button[onclick="ativarPush()"]:hover {
     border-radius: 3px;
   }
   
-  /* Botões flat com scroll horizontal */
   .periodo-btn, .modo-btn, .ano-btn {
-    background: transparent !important;
-    border: none !important;
-    color: var(--text-secondary) !important;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
     padding: 8px 16px;
     font-size: 12px;
     font-weight: normal;
@@ -897,22 +857,19 @@ button[onclick="ativarPush()"]:hover {
     cursor: pointer;
     transition: all 0.2s ease;
     margin: 0;
-    border-radius: 0 !important;
+    border-radius: 0;
     letter-spacing: 0.5px;
     white-space: nowrap;
     flex-shrink: 0;
   }
-  
   .periodo-btn.active, .modo-btn.active, .ano-btn.active {
-    color: var(--accent-green-light) !important;
+    color: var(--accent-green-light);
   }
-  
   .periodo-btn:hover, .modo-btn:hover, .ano-btn:hover {
-    color: var(--text-primary) !important;
+    color: var(--text-primary);
     opacity: 0.8;
   }
   
-  /* Botões de jogo com logos sprite (scroll horizontal) */
   .jogo-tabs {
     display: flex;
     flex-wrap: nowrap;
@@ -925,59 +882,7 @@ button[onclick="ativarPush()"]:hover {
   }
   
   .jogo-btn {
-    background: transparent !important;
-    border: none !important;
-    padding: 0 !important;
-    width: auto;
-    height: 29px;
-    cursor: pointer;
-    transition: opacity 0.2s ease;
     flex-shrink: 0;
-  }
-  
-  .jogo-btn.active {
-    opacity: 1;
-  }
-  
-  .jogo-btn:not(.active) {
-    opacity: 0.5;
-  }
-  
-  .jogo-btn:hover {
-    opacity: 0.8;
-  }
-  
-  .jogo-btn[data-jogo="global"] {
-    background: transparent !important;
-    color: var(--text-secondary) !important;
-    font-size: 12px;
-    text-transform: uppercase;
-    padding: 8px 16px !important;
-    height: auto;
-  }
-  
-  .jogo-btn[data-jogo="totoloto"] {
-    background: url('assets/logo-jogos-sprite.png') no-repeat left -33px !important;
-    width: 89px;
-    text-indent: -9999px;
-  }
-  
-  .jogo-btn[data-jogo="euromilhoes"] {
-    background: url('assets/logo-jogos-sprite.png') no-repeat left top !important;
-    width: 102px;
-    text-indent: -9999px;
-  }
-  
-  .jogo-btn[data-jogo="eurodreams"] {
-    background: url('assets/logo-jogos-sprite.png') no-repeat left -362px !important;
-    width: 112px;
-    text-indent: -9999px;
-  }
-  
-  .jogo-btn[data-jogo="milhao"] {
-    background: url('assets/logo-jogos-sprite.png') no-repeat left -284px !important;
-    width: 104px;
-    text-indent: -9999px;
   }
   
   .estatisticas-tabela {
@@ -1012,24 +917,21 @@ button[onclick="ativarPush()"]:hover {
     color: var(--text-secondary);
   }
 
-  /* ========== ESTILOS PARA CARDS DE PREMIADOS ========== */
+  /* ========== ESTILOS PARA CARDS ========== */
   .notification-date-label {
     color: var(--text-secondary);
     font-size: 12px;
     margin-left: auto;
   }
-
   .notification-date {
     color: var(--text-secondary);
     font-size: 12px;
     white-space: nowrap;
   }
-
   .notification-info-right {
     text-align: right;
     margin: 8px 0 4px;
   }
-
   .notification-concurso,
   .notification-referencia {
     font-size: 12px;
@@ -1037,7 +939,7 @@ button[onclick="ativarPush()"]:hover {
     line-height: 1.4;
   }
 
-  /* ========== RESUMO DOS PENDENTES (números apostados) ========== */
+  /* ========== RESUMO DOS PENDENTES ========== */
   .notification-resumo-pendente {
     text-align: center;
     padding: 8px;
@@ -1045,20 +947,18 @@ button[onclick="ativarPush()"]:hover {
     border-radius: 8px;
     margin-top: 8px;
   }
-
   .notification-resumo-pendente .numero-santacas,
   .notification-resumo-pendente .estrela-santacas,
   .notification-resumo-pendente .numero-extra-santacas {
     margin: 0 4px;
   }
-
   .notification-resumo-pendente .spacer {
     font-size: 14px;
     font-weight: bold;
     color: var(--text-secondary);
   }
 
-  /* ========== CÓDIGO M1LHÃO (estilo botão) ========== */
+  /* ========== CÓDIGO M1LHÃO ========== */
   .codigo-milhao {
     display: inline-block;
     background: var(--button-primary-bg);
@@ -1101,66 +1001,6 @@ button[onclick="ativarPush()"]:hover {
   .theme-toggle ion-icon {
     font-size: 18px;
   }
-
-  /* ========== FORÇAR LOGOS DOS JOGOS (ÚLTIMA PRIORIDADE) ========== */
-.estatisticas-header .jogo-tabs button.jogo-btn[data-jogo="totoloto"],
-.estatisticas-header .jogo-tabs .jogo-btn[data-jogo="totoloto"] {
-    background: url('assets/logo-jogos-sprite.png') no-repeat left -33px !important;
-    width: 89px !important;
-    height: 29px !important;
-    text-indent: -9999px !important;
-    display: inline-block !important;
-    padding: 0 !important;
-    border: none !important;
-    background-size: auto 29px !important;
-}
-
-.estatisticas-header .jogo-tabs button.jogo-btn[data-jogo="euromilhoes"],
-.estatisticas-header .jogo-tabs .jogo-btn[data-jogo="euromilhoes"] {
-    background: url('assets/logo-jogos-sprite.png') no-repeat left top !important;
-    width: 102px !important;
-    height: 29px !important;
-    text-indent: -9999px !important;
-    display: inline-block !important;
-    padding: 0 !important;
-    border: none !important;
-    background-size: auto 29px !important;
-}
-
-.estatisticas-header .jogo-tabs button.jogo-btn[data-jogo="eurodreams"],
-.estatisticas-header .jogo-tabs .jogo-btn[data-jogo="eurodreams"] {
-    background: url('assets/logo-jogos-sprite.png') no-repeat left -362px !important;
-    width: 112px !important;
-    height: 29px !important;
-    text-indent: -9999px !important;
-    display: inline-block !important;
-    padding: 0 !important;
-    border: none !important;
-    background-size: auto 29px !important;
-}
-
-.estatisticas-header .jogo-tabs button.jogo-btn[data-jogo="milhao"],
-.estatisticas-header .jogo-tabs .jogo-btn[data-jogo="milhao"] {
-    background: url('assets/logo-jogos-sprite.png') no-repeat left -284px !important;
-    width: 104px !important;
-    height: 29px !important;
-    text-indent: -9999px !important;
-    display: inline-block !important;
-    padding: 0 !important;
-    border: none !important;
-    background-size: auto 29px !important;
-}
-
-/* Garantir que o botão Global não é afetado */
-.estatisticas-header .jogo-tabs button.jogo-btn[data-jogo="global"] {
-    background: transparent !important;
-    text-indent: 0 !important;
-    padding: 8px 16px !important;
-    width: auto !important;
-    height: auto !important;
-    color: var(--text-secondary) !important;
-}
-  
 </style>
 </head>
 <body>
