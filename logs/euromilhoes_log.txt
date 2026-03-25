@@ -16,3 +16,4 @@
 [2026-03-24 21:38:26] [euromilhoes] Resultado do concurso 024/2026 adicionado ao JSON euromilhoes_2026.
 [2026-03-24 22:21:37] [euromilhoes] Concurso 024/2026 já está completo. Nada a atualizar.
 [2026-03-24 23:31:19] [euromilhoes] Concurso 024/2026 já está completo. Nada a atualizar.
+[2026-03-25 10:53:29] [euromilhoes] Concurso 024/2026 já está completo. Nada a atualizar.
