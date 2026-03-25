@@ -1,50 +1,13 @@
 {
-  "concurso": "023/2026",
-  "data": "21/03/2026",
+  "concurso": "024/2026",
+  "data": "25/03/2026",
   "numeros": [
-    11,
-    12,
-    13,
-    38,
-    45
+    14,
+    15,
+    17,
+    37,
+    39
   ],
   "especial": 1,
-  "premios": [
-    {
-      "premio": "1.º Prémio",
-      "descricao": "5 Números + Nº da Sorte",
-      "vencedores": "0",
-      "valor": "(1)"
-    },
-    {
-      "premio": "2.º Prémio",
-      "descricao": "5 Números",
-      "vencedores": "0",
-      "valor": "(2)"
-    },
-    {
-      "premio": "3.º Prémio",
-      "descricao": "4 Números",
-      "vencedores": "124",
-      "valor": "€ 414,51"
-    },
-    {
-      "premio": "4.º Prémio",
-      "descricao": "3 Números",
-      "vencedores": "5.806",
-      "valor": "€ 4,91"
-    },
-    {
-      "premio": "5.º Prémio",
-      "descricao": "2 Números",
-      "vencedores": "87.568",
-      "valor": "€ 1,95"
-    },
-    {
-      "premio": "Nº da Sorte",
-      "descricao": "Nº da Sorte",
-      "vencedores": "58.055",
-      "valor": "Reembolso do valor da aposta de Totoloto"
-    }
-  ]
+  "premios": []
 }
