@@ -961,8 +961,8 @@
   /* ========== CÓDIGO M1LHÃO ========== */
   .codigo-milhao {
     display: inline-block;
-    background: var(--button-primary-bg);
-    border: 1px solid var(--accent-green-light);
+    /* background: var(--button-primary-bg); */  /* ← Comente esta linha */
+    /* border: 1px solid var(--accent-green-light); */  /* Opcional: comente também */
     padding: 6px 12px;
     font-size: 12px;
     font-weight: bold;
@@ -971,6 +971,12 @@
     border-radius: 0;
     white-space: nowrap;
     margin-top: 4px;
+    
+    /* 🔥 ADICIONE ESTAS LINHAS TEMPORARIAMENTE PARA TESTE */
+    background: red !important;
+    color: black !important;
+    font-size: 16px !important;
+    padding: 10px 20px !important;
   }
 
   /* ========== BLOQUEIO DE SCROLL ========== */
