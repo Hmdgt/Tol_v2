@@ -1,11 +1,11 @@
-Concurso: 002/2026
-Data: 27/02/2026
-Código vencedor: GDH 32855
+Concurso: 003/2026
+Data: 27/03/2026
+Código vencedor: HHM 05795
 Vencedores: 1
 ----------------------------------------
 Estatísticas:
-Receita ilíquida apostas: € 4.983.492,30
+Receita ilíquida apostas: € 5.249.046,90
 Montante para prémios: € 1.000.000,00
-Nº de Registos: 9.388.373
-Nº de Códigos atribuídos: 16.611.641
+Nº de Registos: 9.850.637
+Nº de Códigos atribuídos: 17.496.823
 ----------------------------------------

@@ -49,6 +49,31 @@
           "valor": "16.611.641"
         }
       ]
+    },
+    {
+      "concurso": "003/2026",
+      "data": "27/03/2026",
+      "codigo": "HHM 05795",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1",
+      "estatisticas": [
+        {
+          "nome": "Receita ilíquida apostas",
+          "valor": "€ 5.249.046,90"
+        },
+        {
+          "nome": "Montante para prémios",
+          "valor": "€ 1.000.000,00"
+        },
+        {
+          "nome": "Nº de Registos",
+          "valor": "9.850.637"
+        },
+        {
+          "nome": "Nº de Códigos atribuídos",
+          "valor": "17.496.823"
+        }
+      ]
     }
   ]
 }
