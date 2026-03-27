@@ -141,7 +141,7 @@ function gerarConteudoDetalhes(notificacao) {
   // ========== APOSTA ==========
   if (detalhes.aposta) {
     const aposta = detalhes.aposta;
-    html += `<div style="margin: 16px 0 12px 0;"><strong>🎯 Aposta</strong><br>`;
+    html += `<div style="margin: 16px 0 12px 0;"><strong>Aposta</strong><br>`;
     
     // M1LHÃO (código)
     if ((jogoLower === 'milhao' || jogoLower === 'm1lhão') && aposta.codigo) {
@@ -181,7 +181,7 @@ function gerarConteudoDetalhes(notificacao) {
   // ========== SORTEIO ==========
   if (detalhes.sorteio) {
     const sorteio = detalhes.sorteio;
-    html += `<div style="margin: 12px 0;"><strong>⭐ Sorteio</strong><br>`;
+    html += `<div style="margin: 12px 0;"><strong>Sorteio</strong><br>`;
     
     // M1LHÃO (código premiado)
     if ((jogoLower === 'milhao' || jogoLower === 'm1lhão') && sorteio.codigo_premiado) {
@@ -251,13 +251,13 @@ function gerarConteudoDetalhes(notificacao) {
         html += `<div style="font-size: 12px; color: var(--text-secondary);">${escapeHTML(detalhes.premio.descricao)}</div>`;
       }
     }
-    html += `<div style="color: var(--positive); font-weight: bold;">🏆 ${escapeHTML(valorPremio)}</div>`;
+    html += `<div style="color: var(--positive); font-weight: bold;">${escapeHTML(valorPremio)}</div>`;
     
     if (detalhes.valor_total) {
       html += `<div style="font-size: 12px; color: var(--text-secondary);">Total: ${escapeHTML(detalhes.valor_total)}</div>`;
     }
   } else {
-    html += `<div style="color: var(--text-secondary);">😕 Não ganhou</div>`;
+    html += `<div style="color: var(--text-secondary);">Não ganhou</div>`;
   }
   
   if (acertoTexto) {
