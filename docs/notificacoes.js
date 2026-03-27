@@ -143,9 +143,9 @@ function gerarConteudoDetalhes(notificacao) {
     const aposta = detalhes.aposta;
     html += `<div style="margin: 16px 0 12px 0;"><strong>Aposta</strong><br>`;
     
-    // M1LHÃO (código)
+    // M1LHÃO (código - sem fundo)
     if ((jogoLower === 'milhao' || jogoLower === 'm1lhão') && aposta.codigo) {
-      html += `<div class="codigo-milhao" style="background: var(--accent-green); display: inline-block; margin-top: 8px;">${escapeHTML(aposta.codigo)}</div>`;
+      html += `<div style="margin-top: 8px; font-family: monospace; font-weight: bold;">${escapeHTML(aposta.codigo)}</div>`;
       if (aposta.codigo_original) {
         html += `<div style="font-size: 10px; color: var(--text-secondary); margin-top: 4px;">Original: ${escapeHTML(aposta.codigo_original)}</div>`;
       }
@@ -183,9 +183,9 @@ function gerarConteudoDetalhes(notificacao) {
     const sorteio = detalhes.sorteio;
     html += `<div style="margin: 12px 0;"><strong>Sorteio</strong><br>`;
     
-    // M1LHÃO (código premiado)
+    // M1LHÃO (código premiado - sem fundo)
     if ((jogoLower === 'milhao' || jogoLower === 'm1lhão') && sorteio.codigo_premiado) {
-      html += `<div class="codigo-milhao" style="background: var(--accent-gold); color: #000; display: inline-block;">${escapeHTML(sorteio.codigo_premiado)}</div>`;
+      html += `<div style="margin-top: 8px; font-family: monospace; font-weight: bold;">${escapeHTML(sorteio.codigo_premiado)}</div>`;
       if (sorteio.premio_nome) {
         html += `<div style="font-size: 12px; margin-top: 4px;">${escapeHTML(sorteio.premio_nome)}</div>`;
       }
@@ -222,7 +222,7 @@ function gerarConteudoDetalhes(notificacao) {
   // ========== ACERTOS (se existir e não extraído do resumo) ==========
   if (detalhes.acertos && !acertoTexto) {
     const acertos = detalhes.acertos;
-    html += `<div style="margin: 12px 0;"><strong>✅ Acertos</strong><br>`;
+    html += `<div style="margin: 12px 0;"><strong>Acertos</strong><br>`;
     html += `<div>${escapeHTML(acertos.descricao || resumo || '')}</div>`;
     if (acertos.numeros !== undefined) {
       html += `<div>Números: ${escapeHTML(acertos.numeros)}</div>`;
@@ -269,7 +269,6 @@ function gerarConteudoDetalhes(notificacao) {
   
   return html;
 }
-
 // ---------- LER FICHEIRO (com suporte UTF-8) ----------
 async function lerFicheiroGitHub(urlApi) {
   const token = localStorage.getItem("github_token");
