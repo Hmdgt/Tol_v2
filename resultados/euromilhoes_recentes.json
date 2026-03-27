@@ -1,6 +1,6 @@
 [
   {
-    "data_verificacao": "2026-03-27 13:42:57",
+    "data_verificacao": "2026-03-27 21:31:35",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "558-06034782-M1L",
@@ -53,7 +53,7 @@
     "ganhou": true
   },
   {
-    "data_verificacao": "2026-03-27 13:42:57",
+    "data_verificacao": "2026-03-27 21:31:35",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "551-05455705-M1L",
@@ -104,7 +104,7 @@
     }
   },
   {
-    "data_verificacao": "2026-03-27 13:42:57",
+    "data_verificacao": "2026-03-27 21:31:35",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "555-03672294-M1L",
@@ -155,7 +155,7 @@
     }
   },
   {
-    "data_verificacao": "2026-03-27 13:42:57",
+    "data_verificacao": "2026-03-27 21:31:35",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "562-01647066-M1L",
@@ -206,7 +206,7 @@
     }
   },
   {
-    "data_verificacao": "2026-03-27 13:42:57",
+    "data_verificacao": "2026-03-27 21:31:35",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "569-06929646-M1L",
@@ -257,7 +257,7 @@
     }
   },
   {
-    "data_verificacao": "2026-03-27 13:42:57",
+    "data_verificacao": "2026-03-27 21:31:35",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "572-00307515-M1L",
@@ -308,7 +308,7 @@
     }
   },
   {
-    "data_verificacao": "2026-03-27 13:42:57",
+    "data_verificacao": "2026-03-27 21:31:35",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "573-02086393-M1L",
@@ -359,7 +359,7 @@
     }
   },
   {
-    "data_verificacao": "2026-03-27 13:42:57",
+    "data_verificacao": "2026-03-27 21:31:35",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "576-01565603-M1L",
@@ -410,7 +410,7 @@
     }
   },
   {
-    "data_verificacao": "2026-03-27 13:42:57",
+    "data_verificacao": "2026-03-27 21:31:35",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "579-02688892-012",
@@ -446,6 +446,57 @@
       "estrelas": [
         "08",
         "10"
+      ]
+    },
+    "acertos": {
+      "numeros": 0,
+      "estrelas": 0,
+      "descricao": "0 número(s) e 0 estrela(s)"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "0 acertos",
+      "valor": "€ 0,00"
+    }
+  },
+  {
+    "data_verificacao": "2026-03-27 21:31:35",
+    "metodo_validacao": "data + concurso",
+    "boletim": {
+      "referencia": "586-00336115-M1L",
+      "data_sorteio": "2026-03-27",
+      "concurso_sorteio": "025/2026",
+      "imagem_origem": "foto_1774617218703_likrdl.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "numeros": [
+        "03",
+        "09",
+        "20",
+        "34",
+        "42"
+      ],
+      "estrelas": [
+        "03",
+        "05"
+      ]
+    },
+    "sorteio": {
+      "concurso": "025/2026",
+      "data": "27/03/2026",
+      "chave": "4 10 43 44 48 + 2 4",
+      "numeros": [
+        "04",
+        "10",
+        "43",
+        "44",
+        "48"
+      ],
+      "estrelas": [
+        "02",
+        "04"
       ]
     },
     "acertos": {
