@@ -127,11 +127,11 @@ function gerarConteudoDetalhes(notificacao) {
       </div>
   `;
   
-  // Informação do boletim (ref e concurso)
+  // Informação do boletim (ref e concurso - alinhados à direita)
   if (detalhes.boletim) {
     const boletim = detalhes.boletim;
     html += `
-      <div style="font-size: 12px; color: var(--text-secondary); margin: 8px 0 4px 0;">
+      <div style="font-size: 12px; color: var(--text-secondary); text-align: right; margin: 8px 0 4px 0;">
         ${boletim.referencia ? `Ref: ${escapeHTML(boletim.referencia)}` : ''}
         ${boletim.concurso_sorteio ? `<br>Concurso: ${escapeHTML(boletim.concurso_sorteio)}` : ''}
       </div>
@@ -141,57 +141,64 @@ function gerarConteudoDetalhes(notificacao) {
   // ========== APOSTA ==========
   if (detalhes.aposta) {
     const aposta = detalhes.aposta;
-    html += `<div style="margin: 16px 0 12px 0;"><strong>Aposta</strong><br>`;
     
-    // M1LHÃO (código - sem fundo)
+    // M1LHÃO (código - alinhado à esquerda)
     if ((jogoLower === 'milhao' || jogoLower === 'm1lhão') && aposta.codigo) {
-      html += `<div style="margin-top: 8px; font-family: monospace; font-weight: bold;">${escapeHTML(aposta.codigo)}</div>`;
+      html += `<div style="margin: 16px 0 8px 0; display: flex; align-items: baseline; gap: 12px;">`;
+      html += `<strong style="min-width: 60px;">Aposta</strong>`;
+      html += `<div style="font-family: monospace; font-weight: bold;">${escapeHTML(aposta.codigo)}</div>`;
+      html += `</div>`;
       if (aposta.codigo_original) {
-        html += `<div style="font-size: 10px; color: var(--text-secondary); margin-top: 4px;">Original: ${escapeHTML(aposta.codigo_original)}</div>`;
+        html += `<div style="font-size: 10px; color: var(--text-secondary); margin-left: 72px; margin-bottom: 8px;">Original: ${escapeHTML(aposta.codigo_original)}</div>`;
       }
     } 
-    // EUROMILHÕES (números + estrelas)
+    // EUROMILHÕES (números + estrelas - centralizado)
     else if (jogoLower === 'euromilhoes') {
+      html += `<div style="margin: 16px 0 12px 0;"><strong>Aposta</strong><br>`;
       if (aposta.numeros) html += formatarNumerosSantacas(aposta.numeros);
       if (aposta.estrelas && aposta.estrelas.length > 0) {
         html += `<span style="margin: 0 8px; font-weight: bold;">+</span>`;
         html += formatarEstrelasSantacas(aposta.estrelas);
       }
+      html += `</div>`;
     }
-    // TOTOLOTO (números + número da sorte)
+    // TOTOLOTO (números + número da sorte - centralizado)
     else if (jogoLower === 'totoloto') {
+      html += `<div style="margin: 16px 0 12px 0;"><strong>Aposta</strong><br>`;
       if (aposta.numeros) html += formatarNumerosSantacas(aposta.numeros);
       if (aposta.numero_da_sorte) {
         html += `<div style="margin-top: 8px;">Nº Sorte: ${formatarNumerosSantacas([aposta.numero_da_sorte], 'extra')}</div>`;
       }
+      html += `</div>`;
     }
-    // EURODREAMS (6 números + dream)
+    // EURODREAMS (6 números + dream - centralizado)
     else if (jogoLower === 'eurodreams') {
+      html += `<div style="margin: 16px 0 12px 0;"><strong>Aposta</strong><br>`;
       if (aposta.numeros) html += formatarNumerosSantacas(aposta.numeros);
       if (aposta.dream && aposta.dream.length > 0) {
         html += `<div style="margin-top: 8px;">Dream: ${formatarNumerosSantacas([aposta.dream[0]], 'extra')}</div>`;
       } else if (aposta.dream_number !== undefined) {
         html += `<div style="margin-top: 8px;">Dream: ${formatarNumerosSantacas([aposta.dream_number], 'extra')}</div>`;
       }
+      html += `</div>`;
     }
-    
-    html += `</div>`;
   }
   
   // ========== SORTEIO ==========
   if (detalhes.sorteio) {
     const sorteio = detalhes.sorteio;
-    html += `<div style="margin: 12px 0;"><strong>Sorteio</strong><br>`;
     
-    // M1LHÃO (código premiado - sem fundo)
+    // M1LHÃO (código premiado - alinhado à esquerda, sem prémio nome)
     if ((jogoLower === 'milhao' || jogoLower === 'm1lhão') && sorteio.codigo_premiado) {
-      html += `<div style="margin-top: 8px; font-family: monospace; font-weight: bold;">${escapeHTML(sorteio.codigo_premiado)}</div>`;
-      if (sorteio.premio_nome) {
-        html += `<div style="font-size: 12px; margin-top: 4px;">${escapeHTML(sorteio.premio_nome)}</div>`;
-      }
+      html += `<div style="margin: 8px 0; display: flex; align-items: baseline; gap: 12px;">`;
+      html += `<strong style="min-width: 60px;">Sorteio</strong>`;
+      html += `<div style="font-family: monospace; font-weight: bold;">${escapeHTML(sorteio.codigo_premiado)}</div>`;
+      html += `</div>`;
+      // REMOVIDO o prémio nome (1.º Prémio)
     }
-    // EUROMILHÕES (números + estrelas)
+    // EUROMILHÕES (números + estrelas - centralizado)
     else if (jogoLower === 'euromilhoes') {
+      html += `<div style="margin: 12px 0;"><strong>Sorteio</strong><br>`;
       if (sorteio.numeros) html += formatarNumerosSantacas(sorteio.numeros);
       if (sorteio.estrelas && sorteio.estrelas.length > 0) {
         html += `<span style="margin: 0 8px; font-weight: bold;">+</span>`;
@@ -200,25 +207,27 @@ function gerarConteudoDetalhes(notificacao) {
       if (sorteio.chave) {
         html += `<div style="margin-top: 8px; font-size: 12px;">Chave: ${escapeHTML(sorteio.chave)}</div>`;
       }
+      html += `</div>`;
     }
-    // TOTOLOTO (números + número da sorte)
+    // TOTOLOTO (números + número da sorte - centralizado)
     else if (jogoLower === 'totoloto') {
+      html += `<div style="margin: 12px 0;"><strong>Sorteio</strong><br>`;
       if (sorteio.numeros) html += formatarNumerosSantacas(sorteio.numeros);
       if (sorteio.numero_da_sorte) {
         html += `<div style="margin-top: 8px;">Nº Sorte: ${formatarNumerosSantacas([sorteio.numero_da_sorte], 'extra')}</div>`;
       }
+      html += `</div>`;
     }
-    // EURODREAMS (6 números + dream)
+    // EURODREAMS (6 números + dream - centralizado)
     else if (jogoLower === 'eurodreams') {
+      html += `<div style="margin: 12px 0;"><strong>Sorteio</strong><br>`;
       if (sorteio.numeros) html += formatarNumerosSantacas(sorteio.numeros);
       if (sorteio.dream) {
         html += `<div style="margin-top: 8px;">Dream: ${formatarNumerosSantacas([sorteio.dream], 'extra')}</div>`;
       }
+      html += `</div>`;
     }
-    
-    html += `</div>`;
-  }
-  
+  }  
   // ========== ACERTOS (se existir e não extraído do resumo) ==========
   if (detalhes.acertos && !acertoTexto) {
     const acertos = detalhes.acertos;
