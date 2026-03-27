@@ -324,6 +324,7 @@ async function listarValidacoesPendentes() {
       validacoes.push({
         id: `valid_${imagem}`,
         tipo: 'validacao',
+        jogo: jogos[0]?.tipo || 'validação',  // ← ADICIONAR
         titulo: `📸 ${jogos.length} boletim(ins) por validar`,
         resumo: jogos.map(j => j.tipo).join(', '),
         data: jogos[0].data_processamento,
