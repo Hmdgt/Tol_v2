@@ -261,7 +261,7 @@ function gerarCardPremiado(opcoes) {
              ${onclick ? `onclick="${onclick}"` : ''}>
             <div class="notification-header">
                 ${logoHTML}
-                <span class="notification-date-label">DATA DO SORTEIO:</span>
+                <span class="notification-date-label">DATA:</span>
                 <span class="notification-date">${escapeHTML(dataFormatada)}</span>
             </div>
             <div class="notification-info-right">
@@ -463,7 +463,7 @@ function gerarCardPendente(opcoes) {
              ${onclick ? `onclick="${onclick}"` : ''}>
             <div class="notification-header">
                 ${logoHTML}
-                <span class="notification-date-label">DATA DO SORTEIO:</span>
+                <span class="notification-date-label">DATA:</span>
                 <span class="notification-date">${escapeHTML(dataFormatada)}</span>
             </div>
             <div class="notification-info-right">
