@@ -91,7 +91,7 @@ function formatarEstrelasSantacas(estrelas) {
     return html;
 }
 
-// ---------- FUNÇÃO PARA GERAR CONTEÚDO DO DETALHE (COM ESCAPE HTML) ----------
+// ---------- FUNÇÃO PARA GERAR CONTEÚDO DO DETALHE (VERSÃO SIMPLIFICADA) ----------
 function gerarConteudoDetalhes(notificacao) {
   const { jogo, titulo, resumo, detalhes } = notificacao;
   
@@ -99,176 +99,172 @@ function gerarConteudoDetalhes(notificacao) {
     return `<p>Sem detalhes disponíveis</p>`;
   }
   
-  const tituloEscaped = escapeHTML(titulo);
-  const resumoEscaped = escapeHTML(resumo);
-  const jogoEscaped = escapeHTML(jogo);
+  const jogoLower = (jogo || '').toLowerCase();
+  const dataFormatada = formatarData(notificacao.data);
+  
+  // Extrair acertos do resumo
+  let acertoTexto = '';
+  if (resumo) {
+    if (jogoLower === 'euromilhoes') {
+      const match = resumo.match(/(\d+)\s*números?\s*\+\s*(\d+)\s*estrela?s?/i);
+      if (match) acertoTexto = `${match[1]} + ${match[2]} ✅`;
+    } else if (jogoLower === 'totoloto') {
+      const match = resumo.match(/(\d+)\s*números?\s*\+\s*(\d+)\s*n[º°]?\s*sorte?/i);
+      if (match) acertoTexto = `${match[1]} + ${match[2]} (Nº Sorte) ✅`;
+    } else if (jogoLower === 'eurodreams') {
+      const match = resumo.match(/(\d+)\s*números?\s*\+\s*(\d+)\s*dream/i);
+      if (match) acertoTexto = `${match[1]} + ${match[2]} (Dream) ✅`;
+    } else if (jogoLower === 'milhao' || jogoLower === 'm1lhão') {
+      if (resumo.includes('acertou')) acertoTexto = 'Código premiado! ✅';
+    }
+  }
   
   let html = `
-    <div class="detalhes-jogo ${jogoEscaped}">
-      <div class="detalhe-header">
-        <button class="btn-voltar" onclick="window.voltarParaLista()">
-          <ion-icon name="arrow-back-outline"></ion-icon> Voltar
-        </button>
-        <h4>${tituloEscaped}</h4>
+    <div class="notification-card" style="margin-bottom: 0;">
+      <div class="notification-header" style="justify-content: space-between;">
+        ${getLogoHTMLNotificacao(jogo)}
+        <span class="notification-date">${escapeHTML(dataFormatada)}</span>
       </div>
-      <div class="detalhes-resultado">${resumoEscaped}</div>
   `;
   
-  // Informação do Boletim
+  // Informação do boletim (ref e concurso)
   if (detalhes.boletim) {
     const boletim = detalhes.boletim;
     html += `
-      <div class="detalhes-secao">
-        <h5>📋 Boletim</h5>
-        <p><strong>Referência:</strong> ${escapeHTML(boletim.referencia || 'N/A')}</p>
-        <p><strong>Data do sorteio:</strong> ${escapeHTML(formatarData(boletim.data_sorteio) || 'N/A')}</p>
-        ${boletim.concurso_sorteio ? `<p><strong>Concurso:</strong> ${escapeHTML(boletim.concurso_sorteio)}</p>` : ''}
+      <div style="font-size: 12px; color: var(--text-secondary); margin: 8px 0 4px 0;">
+        ${boletim.referencia ? `Ref: ${escapeHTML(boletim.referencia)}` : ''}
+        ${boletim.concurso_sorteio ? `<br>Concurso: ${escapeHTML(boletim.concurso_sorteio)}` : ''}
       </div>
     `;
   }
   
-  // Informação da Aposta (diferente por jogo)
+  // ========== APOSTA ==========
   if (detalhes.aposta) {
     const aposta = detalhes.aposta;
-    html += `<div class="detalhes-secao"><h5>🎯 Aposta</h5>`;
+    html += `<div style="margin: 16px 0 12px 0;"><strong>🎯 Aposta</strong><br>`;
     
-    if (jogo === 'milhao' && aposta.codigo) {
-      html += `<p><strong>Código:</strong> ${escapeHTML(aposta.codigo)}</p>`;
+    // M1LHÃO (código)
+    if ((jogoLower === 'milhao' || jogoLower === 'm1lhão') && aposta.codigo) {
+      html += `<div class="codigo-milhao" style="background: var(--accent-green); display: inline-block; margin-top: 8px;">${escapeHTML(aposta.codigo)}</div>`;
       if (aposta.codigo_original) {
-        html += `<p><small>Original: ${escapeHTML(aposta.codigo_original)}</small></p>`;
+        html += `<div style="font-size: 10px; color: var(--text-secondary); margin-top: 4px;">Original: ${escapeHTML(aposta.codigo_original)}</div>`;
       }
-    } else {
-      if (aposta.numeros) {
-        const numerosStr = aposta.numeros.map(n => escapeHTML(n)).join(' - ');
-        html += `<p><strong>Números:</strong> ${numerosStr}</p>`;
-        // Adicionar visual estilo Santa Casa
-        html += formatarNumerosSantacas(aposta.numeros, 'numero', null);
-      }
-      if (aposta.estrelas) {
-        const estrelasStr = aposta.estrelas.map(e => escapeHTML(e)).join(' - ');
-        html += `<p><strong>Estrelas:</strong> ${estrelasStr}</p>`;
+    } 
+    // EUROMILHÕES (números + estrelas)
+    else if (jogoLower === 'euromilhoes') {
+      if (aposta.numeros) html += formatarNumerosSantacas(aposta.numeros);
+      if (aposta.estrelas && aposta.estrelas.length > 0) {
+        html += `<span style="margin: 0 8px; font-weight: bold;">+</span>`;
         html += formatarEstrelasSantacas(aposta.estrelas);
       }
+    }
+    // TOTOLOTO (números + número da sorte)
+    else if (jogoLower === 'totoloto') {
+      if (aposta.numeros) html += formatarNumerosSantacas(aposta.numeros);
       if (aposta.numero_da_sorte) {
-        html += `<p><strong>Nº da Sorte:</strong> ${escapeHTML(aposta.numero_da_sorte)}</p>`;
-        html += formatarNumerosSantacas([aposta.numero_da_sorte], 'extra', null);
+        html += `<div style="margin-top: 8px;">Nº Sorte: ${formatarNumerosSantacas([aposta.numero_da_sorte], 'extra')}</div>`;
       }
-      if (aposta.dream && Array.isArray(aposta.dream) && aposta.dream.length > 0) {
-        html += `<p><strong>Dream Number:</strong> ${escapeHTML(aposta.dream[0])}</p>`;
-        html += formatarNumerosSantacas([aposta.dream[0]], 'extra', null);
+    }
+    // EURODREAMS (6 números + dream)
+    else if (jogoLower === 'eurodreams') {
+      if (aposta.numeros) html += formatarNumerosSantacas(aposta.numeros);
+      if (aposta.dream && aposta.dream.length > 0) {
+        html += `<div style="margin-top: 8px;">Dream: ${formatarNumerosSantacas([aposta.dream[0]], 'extra')}</div>`;
       } else if (aposta.dream_number !== undefined) {
-        html += `<p><strong>Dream Number:</strong> ${escapeHTML(aposta.dream_number)}</p>`;
-        html += formatarNumerosSantacas([aposta.dream_number], 'extra', null);
+        html += `<div style="margin-top: 8px;">Dream: ${formatarNumerosSantacas([aposta.dream_number], 'extra')}</div>`;
       }
     }
     
     html += `</div>`;
   }
   
-  // Informação do Sorteio
+  // ========== SORTEIO ==========
   if (detalhes.sorteio) {
     const sorteio = detalhes.sorteio;
-    html += `<div class="detalhes-secao"><h5>⭐ Sorteio</h5>`;
+    html += `<div style="margin: 12px 0;"><strong>⭐ Sorteio</strong><br>`;
     
-    if (sorteio.concurso) {
-      html += `<p><strong>Concurso:</strong> ${escapeHTML(sorteio.concurso)}</p>`;
+    // M1LHÃO (código premiado)
+    if ((jogoLower === 'milhao' || jogoLower === 'm1lhão') && sorteio.codigo_premiado) {
+      html += `<div class="codigo-milhao" style="background: var(--accent-gold); color: #000; display: inline-block;">${escapeHTML(sorteio.codigo_premiado)}</div>`;
+      if (sorteio.premio_nome) {
+        html += `<div style="font-size: 12px; margin-top: 4px;">${escapeHTML(sorteio.premio_nome)}</div>`;
+      }
     }
-    
-    if (jogo === 'milhao') {
-      if (sorteio.codigo_premiado) {
-        html += `<p><strong>Código premiado:</strong> ${escapeHTML(sorteio.codigo_premiado)}</p>`;
-        html += `<p><strong>Prémio:</strong> ${escapeHTML(sorteio.premio_nome || '1.º Prémio')}</p>`;
-      }
-    } else {
-      if (sorteio.numeros) {
-        const nums = sorteio.numeros.map(n => escapeHTML(n)).join(' - ');
-        html += `<p><strong>Números sorteados:</strong> ${nums}</p>`;
-        html += formatarNumerosSantacas(sorteio.numeros, 'numero', null);
-      }
-      if (sorteio.estrelas) {
-        const estrs = sorteio.estrelas.map(e => escapeHTML(e)).join(' - ');
-        html += `<p><strong>Estrelas sorteadas:</strong> ${estrs}</p>`;
+    // EUROMILHÕES (números + estrelas)
+    else if (jogoLower === 'euromilhoes') {
+      if (sorteio.numeros) html += formatarNumerosSantacas(sorteio.numeros);
+      if (sorteio.estrelas && sorteio.estrelas.length > 0) {
+        html += `<span style="margin: 0 8px; font-weight: bold;">+</span>`;
         html += formatarEstrelasSantacas(sorteio.estrelas);
       }
       if (sorteio.chave) {
-        html += `<p><strong>Chave:</strong> ${escapeHTML(sorteio.chave)}</p>`;
+        html += `<div style="margin-top: 8px; font-size: 12px;">Chave: ${escapeHTML(sorteio.chave)}</div>`;
       }
+    }
+    // TOTOLOTO (números + número da sorte)
+    else if (jogoLower === 'totoloto') {
+      if (sorteio.numeros) html += formatarNumerosSantacas(sorteio.numeros);
       if (sorteio.numero_da_sorte) {
-        html += `<p><strong>Nº da Sorte sorteado:</strong> ${escapeHTML(sorteio.numero_da_sorte)}</p>`;
-        html += formatarNumerosSantacas([sorteio.numero_da_sorte], 'extra', null);
+        html += `<div style="margin-top: 8px;">Nº Sorte: ${formatarNumerosSantacas([sorteio.numero_da_sorte], 'extra')}</div>`;
       }
+    }
+    // EURODREAMS (6 números + dream)
+    else if (jogoLower === 'eurodreams') {
+      if (sorteio.numeros) html += formatarNumerosSantacas(sorteio.numeros);
       if (sorteio.dream) {
-        html += `<p><strong>Dream Number sorteado:</strong> ${escapeHTML(sorteio.dream)}</p>`;
-        html += formatarNumerosSantacas([sorteio.dream], 'extra', null);
+        html += `<div style="margin-top: 8px;">Dream: ${formatarNumerosSantacas([sorteio.dream], 'extra')}</div>`;
       }
     }
     
     html += `</div>`;
   }
   
-  // Acertos
-  if (detalhes.acertos) {
+  // ========== ACERTOS (se existir e não extraído do resumo) ==========
+  if (detalhes.acertos && !acertoTexto) {
     const acertos = detalhes.acertos;
-    html += `<div class="detalhes-secao"><h5>✅ Acertos</h5>`;
-    html += `<p>${escapeHTML(acertos.descricao || resumo)}</p>`;
-    
+    html += `<div style="margin: 12px 0;"><strong>✅ Acertos</strong><br>`;
+    html += `<div>${escapeHTML(acertos.descricao || resumo || '')}</div>`;
     if (acertos.numeros !== undefined) {
-      html += `<p><strong>Números:</strong> ${escapeHTML(acertos.numeros)}</p>`;
+      html += `<div>Números: ${escapeHTML(acertos.numeros)}</div>`;
     }
     if (acertos.estrelas !== undefined) {
-      html += `<p><strong>Estrelas:</strong> ${escapeHTML(acertos.estrelas)}</p>`;
+      html += `<div>Estrelas: ${escapeHTML(acertos.estrelas)}</div>`;
     }
-    if (acertos.numero_da_sorte !== undefined) {
-      html += `<p><strong>Nº Sorte:</strong> ${acertos.numero_da_sorte ? 'Sim' : 'Não'}</p>`;
-    }
-    if (acertos.dream !== undefined) {
-      html += `<p><strong>Dream:</strong> ${acertos.dream ? 'Sim' : 'Não'}</p>`;
-    }
-    
     html += `</div>`;
   }
   
-  // Prémio (se ganhou)
+  // ========== RODAPÉ: PRÉMIO ==========
+  html += `<hr style="margin: 12px 0;">`;
+  html += `<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">`;
+  
   if (detalhes.ganhou) {
-    html += `<div class="detalhes-secao premio"><h5>🏆 GANHOU!</h5>`;
-
+    let valorPremio = '';
     if (detalhes.premios && detalhes.premios.length > 0) {
-      detalhes.premios.forEach(p => {
-        const nomePremio = p.premio || p.categoria || 'Prémio';
-        html += `
-          <p><strong>${escapeHTML(nomePremio)}</strong></p>
-          <p>${escapeHTML(p.descricao || '')}</p>
-        `;
-        if (p.valor) {
-          html += `<p class="valor-premio">${escapeHTML(p.valor)}</p>`;
-        }
-        if (p.vencedores) {
-          html += `<p><small>${escapeHTML(p.vencedores)} vencedores</small></p>`;
-        }
-      });
+      const primeiroPremio = detalhes.premios[0];
+      valorPremio = primeiroPremio.valor || primeiroPremio.premio || primeiroPremio.categoria || 'Ganhou!';
+      if (primeiroPremio.descricao) {
+        html += `<div style="font-size: 12px; color: var(--text-secondary);">${escapeHTML(primeiroPremio.descricao)}</div>`;
+      }
     } else if (detalhes.premio) {
-      const p = detalhes.premio;
-      html += `
-        <p><strong>${escapeHTML(p.categoria || p.premio || 'Prémio')}</strong></p>
-        <p>${escapeHTML(p.descricao || '')}</p>
-        ${p.valor ? `<p class="valor-premio">${escapeHTML(p.valor)}</p>` : ''}
-        ${p.vencedores ? `<p><small>${escapeHTML(p.vencedores)} vencedores</small></p>` : ''}
-      `;
+      valorPremio = detalhes.premio.valor || detalhes.premio.premio || detalhes.premio.categoria || 'Ganhou!';
+      if (detalhes.premio.descricao) {
+        html += `<div style="font-size: 12px; color: var(--text-secondary);">${escapeHTML(detalhes.premio.descricao)}</div>`;
+      }
     }
-
+    html += `<div style="color: var(--positive); font-weight: bold;">🏆 ${escapeHTML(valorPremio)}</div>`;
+    
     if (detalhes.valor_total) {
-      html += `<p class="valor-total">Total: ${escapeHTML(detalhes.valor_total)}</p>`;
+      html += `<div style="font-size: 12px; color: var(--text-secondary);">Total: ${escapeHTML(detalhes.valor_total)}</div>`;
     }
-    html += `</div>`;
-  } else if (detalhes.premio) {
-    html += `
-      <div class="detalhes-secao sem-premio">
-        <h5>😕 Sem prémio</h5>
-        <p>${escapeHTML(detalhes.premio.descricao || 'Não ganhou desta vez')}</p>
-      </div>
-    `;
+  } else {
+    html += `<div style="color: var(--text-secondary);">😕 Não ganhou</div>`;
   }
   
+  if (acertoTexto) {
+    html += `<div style="color: var(--positive);">${acertoTexto}</div>`;
+  }
+  
+  html += `</div>`;
   html += `</div>`;
   
   return html;
