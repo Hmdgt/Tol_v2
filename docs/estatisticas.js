@@ -612,39 +612,53 @@ async function arquivarSelecionados() {
 
 // ---------- RENDERIZAR ESTATÍSTICAS ----------
 async function renderizarEstatisticas() {
-    const container = document.getElementById('estatisticasContainer');
-    if (!container) return;
+  const container = document.getElementById('estatisticasContainer');
+  if (!container) return;
 
-    container.innerHTML = '<div class="loading"><ion-icon name="sync-outline" class="spin"></ion-icon><p>A carregar estatísticas...</p></div>';
+  // ========== SPINNER COM MENSAGEM CONFORME ABA ==========
+  let mensagem = '';
+  if (modoAtivo === 'resumo') {
+    mensagem = 'A carregar estatísticas...';
+  } else if (modoAtivo === 'premiados') {
+    mensagem = 'A carregar prémios...';
+  } else if (modoAtivo === 'pendentes') {
+    mensagem = 'A carregar apostas pendentes...';
+  }
+  
+  container.innerHTML = `<div class="loading"><ion-icon name="sync-outline" class="spin"></ion-icon><p>${mensagem}</p></div>`;
 
-    if (modoAtivo === 'resumo') {
-        estatisticasData = await carregarEstatisticas();
-        if (!estatisticasData) {
-            container.innerHTML = '<div class="error">Não foi possível carregar estatísticas. Verifica se o ficheiro existe e o token tem permissões.</div>';
-            return;
-        }
-        if (Object.keys(estatisticasData).length === 0) {
-            container.innerHTML = '<div class="no-notifications">Nenhuma estatística disponível.</div>';
-            return;
-        }
-    } else {
-        historicoData = await carregarHistorico();
-        if (!historicoData || historicoData.length === 0) {
-            container.innerHTML = '<div class="no-notifications">Nenhum boletim no histórico.</div>';
-            return;
-        }
+  if (modoAtivo === 'resumo') {
+    estatisticasData = await carregarEstatisticas();
+    if (!estatisticasData) {
+      container.innerHTML = '<div class="error">Não foi possível carregar estatísticas. Verifica se o ficheiro existe e o token tem permissões.</div>';
+      return;
     }
+    if (Object.keys(estatisticasData).length === 0) {
+      container.innerHTML = '<div class="no-notifications">Nenhuma estatística disponível.</div>';
+      return;
+    }
+  } else {
+    historicoData = await carregarHistorico();
+    if (!historicoData || historicoData.length === 0) {
+      if (modoAtivo === 'premiados') {
+        container.innerHTML = '<div class="no-notifications">Nenhum prémio encontrado.</div>';
+      } else {
+        container.innerHTML = '<div class="no-notifications">Nenhuma aposta pendente encontrada.</div>';
+      }
+      return;
+    }
+  }
 
-    const anos = obterAnosDisponiveis();
+  const anos = obterAnosDisponiveis();
 
-    let html = `
-        <div class="estatisticas-header">
-            <div class="modo-tabs">
-                <button class="modo-btn ${modoAtivo === 'resumo' ? 'active' : ''}" data-modo="resumo">Resumo</button>
-                <button class="modo-btn ${modoAtivo === 'premiados' ? 'active' : ''}" data-modo="premiados">Premiados</button>
-                <button class="modo-btn ${modoAtivo === 'pendentes' ? 'active' : ''}" data-modo="pendentes">Pendentes</button>
-            </div>
-    `;
+  let html = `
+    <div class="estatisticas-header">
+      <div class="modo-tabs">
+        <button class="modo-btn ${modoAtivo === 'resumo' ? 'active' : ''}" data-modo="resumo">Resumo</button>
+        <button class="modo-btn ${modoAtivo === 'premiados' ? 'active' : ''}" data-modo="premiados">Premiados</button>
+        <button class="modo-btn ${modoAtivo === 'pendentes' ? 'active' : ''}" data-modo="pendentes">Pendentes</button>
+      </div>
+  `;
 
     if (modoAtivo === 'resumo') {
         html += `<div class="periodo-tabs">
