@@ -1849,5 +1849,44 @@
       "_id": "milhao_573-04773374-EUR_1"
     },
     "data_leitura": "2026-03-27T22:47:47.648Z"
+  },
+  {
+    "id": "milhao_576-03728348-EUR_1",
+    "jogo": "milhao",
+    "data": "2026-03-27 21:54:55",
+    "lido": true,
+    "titulo": "🎫 Novo resultado MILHAO",
+    "subtitulo": "Boletim: 576-03728348-EUR",
+    "resumo": "0 acertos",
+    "detalhes": {
+      "data_verificacao": "2026-03-27 21:54:55",
+      "boletim": {
+        "referencia": "576-03728348-EUR",
+        "data_sorteio": "2026-03-27",
+        "imagem_origem": "foto_1773776702860_jp7hxz.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "codigo": "HTG01448",
+        "codigo_original": "HTG01448"
+      },
+      "sorteio": {
+        "concurso": "003/2026",
+        "data": "27/03/2026",
+        "codigo_premiado": "HHM05795",
+        "codigo_original": "HHM 05795",
+        "premio_nome": "1.º Prémio",
+        "vencedores": "1"
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem prémio",
+        "descricao": "Código não premiado",
+        "valor": "€ 0,00"
+      },
+      "_jogo": "milhao",
+      "_id": "milhao_576-03728348-EUR_1"
+    },
+    "data_leitura": "2026-03-27T22:54:47.285Z"
   }
 ]
