@@ -506,5 +506,45 @@
     },
     "ganhou": false,
     "premios": []
+  },
+  {
+    "data_verificacao": "2026-03-28 22:28:47",
+    "metodo_validacao": "data + concurso",
+    "boletim": {
+      "referencia": "086-08200358-225",
+      "data_sorteio": "2026-03-28",
+      "concurso_sorteio": "025/2026",
+      "imagem_origem": "foto_1774687211471_9ywiwe.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "numeros": [
+        "01",
+        "08",
+        "25",
+        "38",
+        "44"
+      ],
+      "numero_da_sorte": "03"
+    },
+    "sorteio": {
+      "concurso": "025/2026",
+      "data": "28/03/2026",
+      "numeros": [
+        "05",
+        "07",
+        "09",
+        "10",
+        "48"
+      ],
+      "numero_da_sorte": "10"
+    },
+    "acertos": {
+      "numeros": 0,
+      "numero_da_sorte": false,
+      "descricao": "0 número(s) sem Nº da Sorte"
+    },
+    "ganhou": false,
+    "premios": []
   }
 ]
