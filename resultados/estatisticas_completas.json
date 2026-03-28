@@ -120,15 +120,15 @@
         "media_acertos_especial": 0.0
       },
       "2026-03": {
-        "total_apostas": 7,
-        "total_gasto": 2.1,
+        "total_apostas": 8,
+        "total_gasto": 2.4,
         "total_recebido": 0.0,
         "ganhadoras": 0,
         "acertos_numeros": 0,
         "acertos_especial": 0,
         "maior_premio": 0.0,
         "data_maior_premio": null,
-        "saldo": -2.1,
+        "saldo": -2.4,
         "percentagem_ganhadoras": 0.0,
         "media_premios": 0,
         "mediana_premios": 0.0,
@@ -191,15 +191,15 @@
     },
     "milhao": {
       "2026": {
-        "total_apostas": 13,
-        "total_gasto": 3.9000000000000004,
+        "total_apostas": 14,
+        "total_gasto": 4.2,
         "total_recebido": 0.0,
         "ganhadoras": 0,
         "acertos_numeros": 0,
         "acertos_especial": 0,
         "maior_premio": 0.0,
         "data_maior_premio": null,
-        "saldo": -3.9,
+        "saldo": -4.2,
         "percentagem_ganhadoras": 0.0,
         "media_premios": 0,
         "media_acertos_numeros": 0.0,
@@ -220,28 +220,28 @@
         "percentagem_ganhadoras": 26.67
       },
       "2026-03": {
-        "total_apostas": 23,
-        "total_gasto": 29.5,
+        "total_apostas": 24,
+        "total_gasto": 29.799999999999997,
         "total_recebido": 3.5,
         "ganhadoras": 2,
         "maior_premio": 2.5,
         "data_maior_premio": "2026-03-02",
-        "saldo": -26.0,
-        "percentagem_ganhadoras": 8.7
+        "saldo": -26.3,
+        "percentagem_ganhadoras": 8.33
       }
     },
     "anual": {
       "2026": {
-        "total_apostas": 38,
-        "total_gasto": 45.400000000000006,
+        "total_apostas": 39,
+        "total_gasto": 45.7,
         "total_recebido": 13.65,
         "ganhadoras": 6,
         "maior_premio": 7.15,
         "data_maior_premio": "2026-02-27",
-        "saldo": -31.75,
-        "percentagem_ganhadoras": 15.79
+        "saldo": -32.05,
+        "percentagem_ganhadoras": 15.38
       }
     }
   },
-  "ultima_atualizacao": "2026-03-27T23:51:06.672333"
+  "ultima_atualizacao": "2026-03-28T00:07:29.501691"
 }
