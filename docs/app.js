@@ -204,7 +204,7 @@ window.resetApp = async function () {
     }
     localStorage.clear();
     if (token) localStorage.setItem("github_token", token);
-    sessionStorage.clear();   // ← limpa também a última view guardada
+    sessionStorage.clear();   // limpa também a última view guardada
     // Força reload sem cache
     window.location.href = "/Tol_v2/index.html?reset=" + Date.now();
   } catch (err) {
