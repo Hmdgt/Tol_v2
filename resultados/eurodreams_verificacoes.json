@@ -94,5 +94,36 @@
       "premio": "Sem prémio",
       "valor": "€ 0,00"
     }
+  },
+  {
+    "data_verificacao": "2026-03-30 22:23:26",
+    "boletim": {
+      "referencia": "260327-17-1668370231-876",
+      "concurso_sorteio": "026/2026",
+      "data_sorteio": "2026-03-30"
+    },
+    "aposta": {
+      "indice": 1,
+      "numeros": [
+        "08",
+        "10",
+        "12",
+        "22",
+        "32",
+        "38"
+      ],
+      "dream": [
+        "03"
+      ]
+    },
+    "acertos": {
+      "numeros": 0,
+      "dream": false
+    },
+    "ganhou": false,
+    "premio": {
+      "premio": "Sem prémio",
+      "valor": "€ 0,00"
+    }
   }
 ]
