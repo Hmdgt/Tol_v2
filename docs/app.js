@@ -192,21 +192,21 @@ window.atualizarApp = async function () {
 window.resetApp = async function () {
   try {
     const token = localStorage.getItem("github_token");
-
     if ("caches" in window) {
       const keys = await caches.keys();
       await Promise.all(keys.map(k => caches.delete(k)));
     }
-
     if ("serviceWorker" in navigator) {
       const registrations = await navigator.serviceWorker.getRegistrations();
       await Promise.all(registrations.map(reg => reg.unregister()));
+      // Aguarda um pouco para garantir que o SW foi removido
+      await new Promise(resolve => setTimeout(resolve, 300));
     }
-
     localStorage.clear();
     if (token) localStorage.setItem("github_token", token);
-
-    window.location.href = "/Tol_v2/index.html";
+    sessionStorage.clear();   // ← limpa também a última view guardada
+    // Força reload sem cache
+    window.location.href = "/Tol_v2/index.html?reset=" + Date.now();
   } catch (err) {
     console.error("Erro ao fazer reset:", err);
     alert("Erro ao atualizar a aplicação. Tenta novamente.");
