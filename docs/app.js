@@ -269,6 +269,14 @@ function mostrarBotaoAtualizar() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Força a reavaliação da view ativa (caso o sessionStorage tenha sido limpo)
+  const lastView = sessionStorage.getItem('lastView');
+  if (lastView && document.getElementById(lastView)) {
+    ViewManager.goTo(lastView);
+  } else {
+    ViewManager.goTo('homeView');
+  }
+  
   const btn = document.getElementById('debugLogsBtn');
   if (btn) btn.addEventListener('click', mostrarLogs);
 });
