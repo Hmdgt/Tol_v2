@@ -21,20 +21,20 @@ function forceNavigationBarColor() {
     const theme = document.documentElement.getAttribute('data-theme') || 'dark';
     const bgColor = theme === 'light' ? '#ffffff' : '#000000';
     
-    // Atualizar fundo do html/body (mas sem forçar preto fixo)
-    document.documentElement.style.backgroundColor = bgColor;
-    document.body.style.backgroundColor = bgColor;
+    // Remove estilos inline anteriores para não conflituar com o CSS
+    document.documentElement.style.removeProperty('background-color');
+    document.body.style.removeProperty('background-color');
     
-    // Atualizar meta theme-color
-    const oldMeta = document.querySelector('meta[name="theme-color"]');
-    if (oldMeta) oldMeta.remove();
+    // Atualizar meta theme-color (única função necessária)
+    let meta = document.querySelector('meta[name="theme-color"]');
+    if (!meta) {
+      meta = document.createElement('meta');
+      meta.name = 'theme-color';
+      document.head.appendChild(meta);
+    }
+    meta.content = bgColor;
     
-    const newMeta = document.createElement('meta');
-    newMeta.name = 'theme-color';
-    newMeta.content = bgColor;
-    document.head.appendChild(newMeta);
-    
-    console.log(`✅ Navigation bar forçada para ${bgColor} no Android`);
+    console.log(`✅ theme-color definido para ${bgColor} no Android`);
   }
 }
 
