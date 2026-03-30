@@ -389,11 +389,18 @@ function gerarListaPremiadosInterativa(dados) {
     return html;
 }
 
-// ---------- FORMATAR NÚMEROS DA APOSTA (com estilos Santa Casa) ----------
+// ---------- FORMATAR NÚMEROS DA APOSTA (com estilos Santa Casa, numa linha) ----------
 function formatarNumerosAposta(aposta, jogo) {
-    let html = '<div class="numeros-aposta" style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; align-items: center;">';
-    
     const jogoLower = (jogo || '').toLowerCase();
+
+    // M1LHÃO: código sem círculos, sem sinal "+"
+    if (jogoLower === 'milhao' && aposta.codigo) {
+        return `<div class="numeros-aposta" style="display: flex; align-items: center; gap: 6px;">
+                    <span class="codigo-milhao">${escapeHTML(aposta.codigo)}</span>
+                </div>`;
+    }
+
+    let html = '<div class="numeros-aposta">';
     
     // Números principais
     if (aposta.numeros && aposta.numeros.length > 0) {
@@ -403,16 +410,25 @@ function formatarNumerosAposta(aposta, jogo) {
         });
     }
     
+    // Verificar se há elementos especiais
+    let temEspeciais = false;
+    if ((aposta.estrelas && aposta.estrelas.length > 0) ||
+        (aposta.dream && aposta.dream.length > 0) ||
+        aposta.dream_number !== undefined ||
+        (aposta.numero_da_sorte && jogoLower === 'totoloto')) {
+        temEspeciais = true;
+        html += `<span class="separador-mais">+</span>`;
+    }
+    
     // Estrelas (Euromilhões)
     if (aposta.estrelas && aposta.estrelas.length > 0) {
-        html += `<span class="spacer" style="margin: 0 4px; font-size: 14px; font-weight: bold; color: var(--text-secondary);">+</span>`;
         aposta.estrelas.forEach(est => {
             const estStr = String(est).padStart(2, '0');
             html += `<span class="estrela-santacas">${escapeHTML(estStr)}</span>`;
         });
     }
     
-    // Dream Number (EuroDreams) - usa bg-star
+    // Dream Number (EuroDreams)
     let dreamValue = '';
     if (aposta.dream && Array.isArray(aposta.dream) && aposta.dream.length > 0) {
         dreamValue = aposta.dream[0];
@@ -424,15 +440,10 @@ function formatarNumerosAposta(aposta, jogo) {
         html += `<span class="estrela-santacas">${escapeHTML(dreamStr)}</span>`;
     }
     
-    // Nº da Sorte (Totoloto) - usa bg-star
+    // Nº da Sorte (Totoloto)
     if (aposta.numero_da_sorte && jogoLower === 'totoloto') {
         const sorteStr = String(aposta.numero_da_sorte).padStart(2, '0');
         html += `<span class="estrela-santacas">${escapeHTML(sorteStr)}</span>`;
-    }
-    
-    // Código (M1lhão) - usa btn-links.png sprite
-    if (aposta.codigo && jogoLower === 'milhao') {
-        html += `<span class="codigo-milhao">${escapeHTML(aposta.codigo)}</span>`;
     }
     
     html += '</div>';
