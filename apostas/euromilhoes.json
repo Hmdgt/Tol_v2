@@ -1,342 +1,372 @@
 [
-  {
-    "tipo": "Euromilhões",
-    "data_sorteio": "2026-02-27",
-    "data_aposta": "2026-02-27",
-    "data_emissao": "2026-02-27 18:11:22",
-    "referencia_unica": "558-06034782-M1L",
-    "concurso": "017/2026",
-    "valor_total": 2.2,
-    "valido": true,
-    "apostas": [
-      {
-        "indice": 1,
-        "numeros": [
-          "08",
-          "23",
-          "24",
-          "31",
-          "37"
+    {
+        "tipo": "Euromilhões",
+        "data_sorteio": "2026-02-27",
+        "data_aposta": "2026-02-27",
+        "data_emissao": "2026-02-27 18:11:22",
+        "referencia_unica": "558-06034782-M1L",
+        "concurso": "017/2026",
+        "valor_total": 2.2,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "numeros": [
+                    "08",
+                    "23",
+                    "24",
+                    "31",
+                    "37"
+                ],
+                "estrelas": [
+                    "06",
+                    "10"
+                ]
+            }
         ],
-        "estrelas": [
-          "06",
-          "10"
-        ]
-      }
-    ],
-    "imagem_origem": "foto_1772996032042_6442uz.png",
-    "hash_imagem": "0bfee8488c351994537cb8515e0394ba",
-    "data_processamento": "2026-03-12 22:15:50",
-    "confirmado": true,
-    "tipo_ficheiro": "euromilhoes",
-    "_indice": 0,
-    "data_validacao": "2026-03-12T22:17:07.191Z",
-    "validado_por": "humano"
-  },
-  {
-    "tipo": "Euromilhões",
-    "data_sorteio": "2026-02-20",
-    "data_aposta": "2026-02-20",
-    "data_emissao": "2026-02-20 08:37:32",
-    "referencia_unica": "551-05455705-M1L",
-    "concurso": "015/2026",
-    "valor_total": 2.2,
-    "valido": true,
-    "apostas": [
-      {
-        "indice": 1,
-        "numeros": [
-          "04",
-          "09",
-          "30",
-          "33",
-          "37"
+        "imagem_origem": "foto_1772996032042_6442uz.png",
+        "hash_imagem": "0bfee8488c351994537cb8515e0394ba",
+        "data_processamento": "2026-03-12 22:15:50",
+        "confirmado": true,
+        "tipo_ficheiro": "euromilhoes",
+        "_indice": 0,
+        "data_validacao": "2026-03-12T22:17:07.191Z",
+        "validado_por": "humano"
+    },
+    {
+        "tipo": "Euromilhões",
+        "data_sorteio": "2026-02-20",
+        "data_aposta": "2026-02-20",
+        "data_emissao": "2026-02-20 08:37:32",
+        "referencia_unica": "551-05455705-M1L",
+        "concurso": "015/2026",
+        "valor_total": 2.2,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "numeros": [
+                    "04",
+                    "09",
+                    "30",
+                    "33",
+                    "37"
+                ],
+                "estrelas": [
+                    "01",
+                    "05"
+                ]
+            }
         ],
-        "estrelas": [
-          "01",
-          "05"
-        ]
-      }
-    ],
-    "imagem_origem": "foto_1773355534195_b52jpr.png",
-    "hash_imagem": "1e178ba024e37240ac4e3caa6d75f33e",
-    "data_processamento": "2026-03-12 22:46:33",
-    "confirmado": true,
-    "tipo_ficheiro": "euromilhoes",
-    "_indice": 1,
-    "data_validacao": "2026-03-12T22:47:39.717Z",
-    "validado_por": "humano"
-  },
-  {
-    "tipo": "Euromilhões",
-    "data_sorteio": "2026-02-24",
-    "data_aposta": "2026-02-24",
-    "data_emissao": "2026-02-24 08:57:56",
-    "referencia_unica": "555-03672294-M1L",
-    "concurso": "016/2026",
-    "valor_total": 2.2,
-    "valido": true,
-    "apostas": [
-      {
-        "indice": 1,
-        "numeros": [
-          "04",
-          "05",
-          "32",
-          "33",
-          "48"
+        "imagem_origem": "foto_1773355534195_b52jpr.png",
+        "hash_imagem": "1e178ba024e37240ac4e3caa6d75f33e",
+        "data_processamento": "2026-03-12 22:46:33",
+        "confirmado": true,
+        "tipo_ficheiro": "euromilhoes",
+        "_indice": 1,
+        "data_validacao": "2026-03-12T22:47:39.717Z",
+        "validado_por": "humano"
+    },
+    {
+        "tipo": "Euromilhões",
+        "data_sorteio": "2026-02-24",
+        "data_aposta": "2026-02-24",
+        "data_emissao": "2026-02-24 08:57:56",
+        "referencia_unica": "555-03672294-M1L",
+        "concurso": "016/2026",
+        "valor_total": 2.2,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "numeros": [
+                    "04",
+                    "05",
+                    "32",
+                    "33",
+                    "48"
+                ],
+                "estrelas": [
+                    "01",
+                    "04"
+                ]
+            }
         ],
-        "estrelas": [
-          "01",
-          "04"
-        ]
-      }
-    ],
-    "imagem_origem": "foto_1773355843942_geuwjt.png",
-    "hash_imagem": "458ec4d00f6a2e1ffb646cbfe888ad0e",
-    "data_processamento": "2026-03-12 22:52:02",
-    "confirmado": true,
-    "tipo_ficheiro": "euromilhoes",
-    "_indice": 2,
-    "data_validacao": "2026-03-12T22:53:03.027Z",
-    "validado_por": "humano"
-  },
-  {
-    "tipo": "Euromilhões",
-    "data_sorteio": "2026-03-03",
-    "data_aposta": "2026-03-03",
-    "data_emissao": "2026-03-03 18:41:13",
-    "referencia_unica": "562-01647066-M1L",
-    "concurso": "018/2026",
-    "valor_total": 2.2,
-    "valido": true,
-    "apostas": [
-      {
-        "indice": 1,
-        "numeros": [
-          "06",
-          "23",
-          "33",
-          "36",
-          "48"
+        "imagem_origem": "foto_1773355843942_geuwjt.png",
+        "hash_imagem": "458ec4d00f6a2e1ffb646cbfe888ad0e",
+        "data_processamento": "2026-03-12 22:52:02",
+        "confirmado": true,
+        "tipo_ficheiro": "euromilhoes",
+        "_indice": 2,
+        "data_validacao": "2026-03-12T22:53:03.027Z",
+        "validado_por": "humano"
+    },
+    {
+        "tipo": "Euromilhões",
+        "data_sorteio": "2026-03-03",
+        "data_aposta": "2026-03-03",
+        "data_emissao": "2026-03-03 18:41:13",
+        "referencia_unica": "562-01647066-M1L",
+        "concurso": "018/2026",
+        "valor_total": 2.2,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "numeros": [
+                    "06",
+                    "23",
+                    "33",
+                    "36",
+                    "48"
+                ],
+                "estrelas": [
+                    "01",
+                    "04"
+                ]
+            }
         ],
-        "estrelas": [
-          "01",
-          "04"
-        ]
-      }
-    ],
-    "imagem_origem": "foto_1773356123044_5jt0ns.png",
-    "hash_imagem": "e8296348dbd34a213d6a824e54ac0c71",
-    "data_processamento": "2026-03-12 22:56:15",
-    "confirmado": true,
-    "tipo_ficheiro": "euromilhoes",
-    "_indice": 3,
-    "data_validacao": "2026-03-12T22:57:06.110Z",
-    "validado_por": "humano"
-  },
-  {
-    "tipo": "Euromilhões",
-    "data_sorteio": "2026-03-10",
-    "data_aposta": "2026-03-10",
-    "data_emissao": "2026-03-10 18:25:00",
-    "referencia_unica": "569-06929646-M1L",
-    "concurso": "020/2026",
-    "valor_total": 2.2,
-    "valido": true,
-    "apostas": [
-      {
-        "indice": 1,
-        "numeros": [
-          "07",
-          "08",
-          "12",
-          "23",
-          "42"
+        "imagem_origem": "foto_1773356123044_5jt0ns.png",
+        "hash_imagem": "e8296348dbd34a213d6a824e54ac0c71",
+        "data_processamento": "2026-03-12 22:56:15",
+        "confirmado": true,
+        "tipo_ficheiro": "euromilhoes",
+        "_indice": 3,
+        "data_validacao": "2026-03-12T22:57:06.110Z",
+        "validado_por": "humano"
+    },
+    {
+        "tipo": "Euromilhões",
+        "data_sorteio": "2026-03-10",
+        "data_aposta": "2026-03-10",
+        "data_emissao": "2026-03-10 18:25:00",
+        "referencia_unica": "569-06929646-M1L",
+        "concurso": "020/2026",
+        "valor_total": 2.2,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "numeros": [
+                    "07",
+                    "08",
+                    "12",
+                    "23",
+                    "42"
+                ],
+                "estrelas": [
+                    "06",
+                    "12"
+                ]
+            }
         ],
-        "estrelas": [
-          "06",
-          "12"
-        ]
-      }
-    ],
-    "imagem_origem": "foto_1773388664866_y37o2w.png",
-    "hash_imagem": "eff51ae43360a421881a490ec1c1b5f2",
-    "data_processamento": "2026-03-13 07:58:48",
-    "confirmado": true,
-    "tipo_ficheiro": "euromilhoes",
-    "_indice": 4,
-    "data_validacao": "2026-03-13T08:41:51.773Z",
-    "validado_por": "humano"
-  },
-  {
-    "tipo": "Euromilhões",
-    "data_sorteio": "2026-03-13",
-    "data_aposta": "2026-03-13",
-    "data_emissao": "2026-03-13 18:17:29",
-    "referencia_unica": "572-00307515-M1L",
-    "concurso": "021/2026",
-    "valor_total": 2.2,
-    "valido": true,
-    "apostas": [
-      {
-        "indice": 1,
-        "numeros": [
-          "01",
-          "03",
-          "10",
-          "25",
-          "27"
+        "imagem_origem": "foto_1773388664866_y37o2w.png",
+        "hash_imagem": "eff51ae43360a421881a490ec1c1b5f2",
+        "data_processamento": "2026-03-13 07:58:48",
+        "confirmado": true,
+        "tipo_ficheiro": "euromilhoes",
+        "_indice": 4,
+        "data_validacao": "2026-03-13T08:41:51.773Z",
+        "validado_por": "humano"
+    },
+    {
+        "tipo": "Euromilhões",
+        "data_sorteio": "2026-03-13",
+        "data_aposta": "2026-03-13",
+        "data_emissao": "2026-03-13 18:17:29",
+        "referencia_unica": "572-00307515-M1L",
+        "concurso": "021/2026",
+        "valor_total": 2.2,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "numeros": [
+                    "01",
+                    "03",
+                    "10",
+                    "25",
+                    "27"
+                ],
+                "estrelas": [
+                    "06",
+                    "07"
+                ]
+            }
         ],
-        "estrelas": [
-          "06",
-          "07"
-        ]
-      }
-    ],
-    "imagem_origem": "foto_1773426198640_keub9y.png",
-    "hash_imagem": "7c993a2fcc440a9854a9875551b9ab62",
-    "data_processamento": "2026-03-13 18:24:50",
-    "confirmado": true,
-    "tipo_ficheiro": "euromilhoes",
-    "_indice": 5,
-    "data_validacao": "2026-03-13T18:28:33.678Z",
-    "validado_por": "humano"
-  },
-  {
-    "tipo": "Euromilhões",
-    "data_sorteio": "2026-03-17",
-    "data_aposta": "2026-03-14",
-    "data_emissao": "2026-03-14 16:14:38",
-    "referencia_unica": "573-02086393-M1L",
-    "concurso": "022/2026",
-    "valor_total": 2.2,
-    "valido": true,
-    "apostas": [
-      {
-        "indice": 1,
-        "numeros": [
-          "08",
-          "22",
-          "37",
-          "47",
-          "48"
+        "imagem_origem": "foto_1773426198640_keub9y.png",
+        "hash_imagem": "7c993a2fcc440a9854a9875551b9ab62",
+        "data_processamento": "2026-03-13 18:24:50",
+        "confirmado": true,
+        "tipo_ficheiro": "euromilhoes",
+        "_indice": 5,
+        "data_validacao": "2026-03-13T18:28:33.678Z",
+        "validado_por": "humano"
+    },
+    {
+        "tipo": "Euromilhões",
+        "data_sorteio": "2026-03-17",
+        "data_aposta": "2026-03-14",
+        "data_emissao": "2026-03-14 16:14:38",
+        "referencia_unica": "573-02086393-M1L",
+        "concurso": "022/2026",
+        "valor_total": 2.2,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "numeros": [
+                    "08",
+                    "22",
+                    "37",
+                    "47",
+                    "48"
+                ],
+                "estrelas": [
+                    "09",
+                    "10"
+                ]
+            }
         ],
-        "estrelas": [
-          "09",
-          "10"
-        ]
-      }
-    ],
-    "imagem_origem": "foto_1773505553264_qyicig.png",
-    "hash_imagem": "796b1a8417f06bd74623da5178e74f71",
-    "data_processamento": "2026-03-14 16:27:25",
-    "confirmado": true,
-    "tipo_ficheiro": "euromilhoes",
-    "_indice": 6,
-    "data_validacao": "2026-03-14T16:28:32.758Z",
-    "validado_por": "humano"
-  },
-  {
-    "tipo": "Euromilhões",
-    "data_sorteio": "2026-03-17",
-    "data_aposta": "2026-03-17",
-    "data_emissao": "2026-03-17 18:41:42",
-    "referencia_unica": "576-01565603-M1L",
-    "concurso": "022/2026",
-    "valor_total": 2.2,
-    "valido": true,
-    "apostas": [
-      {
-        "indice": 1,
-        "numeros": [
-          "01",
-          "30",
-          "35",
-          "36",
-          "48"
+        "imagem_origem": "foto_1773505553264_qyicig.png",
+        "hash_imagem": "796b1a8417f06bd74623da5178e74f71",
+        "data_processamento": "2026-03-14 16:27:25",
+        "confirmado": true,
+        "tipo_ficheiro": "euromilhoes",
+        "_indice": 6,
+        "data_validacao": "2026-03-14T16:28:32.758Z",
+        "validado_por": "humano"
+    },
+    {
+        "tipo": "Euromilhões",
+        "data_sorteio": "2026-03-17",
+        "data_aposta": "2026-03-17",
+        "data_emissao": "2026-03-17 18:41:42",
+        "referencia_unica": "576-01565603-M1L",
+        "concurso": "022/2026",
+        "valor_total": 2.2,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "numeros": [
+                    "01",
+                    "30",
+                    "35",
+                    "36",
+                    "48"
+                ],
+                "estrelas": [
+                    "02",
+                    "03"
+                ]
+            }
         ],
-        "estrelas": [
-          "02",
-          "03"
-        ]
-      }
-    ],
-    "imagem_origem": "foto_1773776006004_8n0kgt.png",
-    "hash_imagem": "99d345fd1e2015af048095f007bca85b",
-    "data_processamento": "2026-03-17 19:34:30",
-    "confirmado": true,
-    "tipo_ficheiro": "euromilhoes",
-    "_indice": 7,
-    "data_validacao": "2026-03-17T19:35:47.716Z",
-    "validado_por": "humano"
-  },
-  {
-    "tipo": "Euromilhões",
-    "data_sorteio": "2026-03-20",
-    "data_aposta": "2026-03-20",
-    "data_emissao": "2026-03-20 08:37:54",
-    "referencia_unica": "579-02688892-012",
-    "concurso": "023/2026",
-    "valor_total": 2.2,
-    "valido": true,
-    "apostas": [
-      {
-        "indice": 1,
-        "numeros": [
-          "04",
-          "06",
-          "10",
-          "20",
-          "34"
+        "imagem_origem": "foto_1773776006004_8n0kgt.png",
+        "hash_imagem": "99d345fd1e2015af048095f007bca85b",
+        "data_processamento": "2026-03-17 19:34:30",
+        "confirmado": true,
+        "tipo_ficheiro": "euromilhoes",
+        "_indice": 7,
+        "data_validacao": "2026-03-17T19:35:47.716Z",
+        "validado_por": "humano"
+    },
+    {
+        "tipo": "Euromilhões",
+        "data_sorteio": "2026-03-20",
+        "data_aposta": "2026-03-20",
+        "data_emissao": "2026-03-20 08:37:54",
+        "referencia_unica": "579-02688892-012",
+        "concurso": "023/2026",
+        "valor_total": 2.2,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "numeros": [
+                    "04",
+                    "06",
+                    "10",
+                    "20",
+                    "34"
+                ],
+                "estrelas": [
+                    "01",
+                    "12"
+                ]
+            }
         ],
-        "estrelas": [
-          "01",
-          "12"
-        ]
-      }
-    ],
-    "imagem_origem": "foto_1774010946740_nref31.png",
-    "hash_imagem": "dcdb66a136f05fdcffe9c38812f27e14",
-    "data_processamento": "2026-03-20 12:50:15",
-    "confirmado": true,
-    "tipo_ficheiro": "euromilhoes",
-    "_indice": 8,
-    "data_validacao": "2026-03-20T12:52:47.540Z",
-    "validado_por": "humano"
-  },
-  {
-    "tipo": "Euromilhões",
-    "data_sorteio": "2026-03-27",
-    "data_aposta": "2026-03-27",
-    "data_emissao": "2026-03-27 12:53:45",
-    "referencia_unica": "586-00336115-M1L",
-    "concurso": "025/2026",
-    "valor_total": 2.2,
-    "valido": true,
-    "apostas": [
-      {
-        "indice": 1,
-        "numeros": [
-          "03",
-          "09",
-          "20",
-          "34",
-          "42"
+        "imagem_origem": "foto_1774010946740_nref31.png",
+        "hash_imagem": "dcdb66a136f05fdcffe9c38812f27e14",
+        "data_processamento": "2026-03-20 12:50:15",
+        "confirmado": true,
+        "tipo_ficheiro": "euromilhoes",
+        "_indice": 8,
+        "data_validacao": "2026-03-20T12:52:47.540Z",
+        "validado_por": "humano"
+    },
+    {
+        "tipo": "Euromilhões",
+        "data_sorteio": "2026-03-27",
+        "data_aposta": "2026-03-27",
+        "data_emissao": "2026-03-27 12:53:45",
+        "referencia_unica": "586-00336115-M1L",
+        "concurso": "025/2026",
+        "valor_total": 2.2,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "numeros": [
+                    "03",
+                    "09",
+                    "20",
+                    "34",
+                    "42"
+                ],
+                "estrelas": [
+                    "03",
+                    "05"
+                ]
+            }
         ],
-        "estrelas": [
-          "03",
-          "05"
-        ]
-      }
-    ],
-    "imagem_origem": "foto_1774617218703_likrdl.png",
-    "hash_imagem": "7045f34384e541bd89bda1438505aa08",
-    "data_processamento": "2026-03-27 13:14:33",
-    "confirmado": true,
-    "tipo_ficheiro": "euromilhoes",
-    "_indice": 9,
-    "data_validacao": "2026-03-27T13:42:43.184Z",
-    "validado_por": "humano"
-  }
+        "imagem_origem": "foto_1774617218703_likrdl.png",
+        "hash_imagem": "7045f34384e541bd89bda1438505aa08",
+        "data_processamento": "2026-03-27 13:14:33",
+        "confirmado": true,
+        "tipo_ficheiro": "euromilhoes",
+        "_indice": 9,
+        "data_validacao": "2026-03-27T13:42:43.184Z",
+        "validado_por": "humano"
+    },
+    {
+        "tipo": "Euromilhões",
+        "data_sorteio": "2026-03-31",
+        "data_aposta": "2026-03-31",
+        "data_emissao": "2026-03-31 18:14:57",
+        "referencia_unica": "590-03212194-115",
+        "concurso": "026/2026",
+        "valor_total": 2.2,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "numeros": [
+                    "02",
+                    "04",
+                    "08",
+                    "20",
+                    "24"
+                ],
+                "estrelas": [
+                    "06",
+                    "07"
+                ]
+            }
+        ],
+        "imagem_origem": "foto_1774978014972_9l9ra0.png",
+        "hash_imagem": "5193bcd8a182dafa7d557d8cdaff3285",
+        "data_processamento": "2026-03-31 17:29:20",
+        "confirmado": false
+    }
 ]
