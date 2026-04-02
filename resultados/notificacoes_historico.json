@@ -2124,5 +2124,57 @@
       "_id": "euromilhoes_590-03212194-115_1"
     },
     "data_leitura": "2026-04-01T09:36:55.495Z"
+  },
+  {
+    "id": "totoloto_090-05924913-026_1",
+    "jogo": "totoloto",
+    "data": "2026-04-01 21:41:58",
+    "lido": true,
+    "titulo": "🎫 Novo resultado TOTOLOTO",
+    "subtitulo": "Boletim: 090-05924913-026",
+    "resumo": "Não ganhou",
+    "detalhes": {
+      "data_verificacao": "2026-04-01 21:41:58",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "090-05924913-026",
+        "data_sorteio": "2026-04-01",
+        "concurso_sorteio": "026/2026",
+        "imagem_origem": "foto_1774979537549_k8p4q8.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "11",
+          "28",
+          "36",
+          "44",
+          "48"
+        ],
+        "numero_da_sorte": "09"
+      },
+      "sorteio": {
+        "concurso": "026/2026",
+        "data": "01/04/2026",
+        "numeros": [
+          "09",
+          "26",
+          "31",
+          "41",
+          "43"
+        ],
+        "numero_da_sorte": "10"
+      },
+      "acertos": {
+        "numeros": 0,
+        "numero_da_sorte": false,
+        "descricao": "0 número(s) sem Nº da Sorte"
+      },
+      "ganhou": false,
+      "premios": [],
+      "_jogo": "totoloto",
+      "_id": "totoloto_090-05924913-026_1"
+    },
+    "data_leitura": "2026-04-02T07:31:08.534Z"
   }
 ]
