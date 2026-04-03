@@ -24,3 +24,4 @@
 [2026-03-31 22:25:17] [euromilhoes] Concurso 026/2026 já está completo. Nada a atualizar.
 [2026-03-31 23:33:53] [euromilhoes] Concurso 026/2026 já está completo. Nada a atualizar.
 [2026-04-01 11:02:16] [euromilhoes] Concurso 026/2026 já está completo. Nada a atualizar.
+[2026-04-03 21:30:02] [euromilhoes] Resultado do concurso 027/2026 adicionado ao JSON euromilhoes_2026.
