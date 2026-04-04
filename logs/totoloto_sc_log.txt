@@ -30,3 +30,4 @@
 [2026-04-01 22:31:21] [santacasa] Concurso 026/2026 atualizado com novos dados!
 [2026-04-01 23:44:56] [santacasa] Concurso 026/2026 atualizado com novos dados!
 [2026-04-02 10:53:00] [santacasa] Concurso 026/2026 atualizado com novos dados!
+[2026-04-04 21:25:28] [santacasa] Resultado do concurso 027/2026 adicionado ao JSON totoloto_sc_2026.
