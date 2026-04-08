@@ -1,13 +1,7 @@
-Concurso: 027/2026
-Data: 04/04/2026
-Números: 5 17 24 37 42
-Especial: 10
+Concurso: 028/2026
+Data: 08/04/2026
+Números: 20 25 30 33 35
+Especial: 6
 ----------------------------------------
 Prémios:
-1.º Prémio - 5 Números + Nº da Sorte | Vencedores: 0 | Valor: (1)
-2.º Prémio - 5 Números | Vencedores: 3 | Valor: € 7.267,72
-3.º Prémio - 4 Números | Vencedores: 134 | Valor: € 203,38
-4.º Prémio - 3 Números | Vencedores: 5.908 | Valor: € 4,61
-5.º Prémio - 2 Números | Vencedores: 80.219 | Valor: € 2,03
-Nº da Sorte - Nº da Sorte | Vencedores: 73.488 | Valor: Reembolso do valor da aposta de Totoloto
 ----------------------------------------

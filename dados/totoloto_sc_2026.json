@@ -849,6 +849,19 @@
           "valor": "Reembolso do valor da aposta de Totoloto"
         }
       ]
+    },
+    {
+      "concurso": "028/2026",
+      "data": "08/04/2026",
+      "numeros": [
+        20,
+        25,
+        30,
+        33,
+        35
+      ],
+      "especial": 6,
+      "premios": []
     }
   ]
 }
