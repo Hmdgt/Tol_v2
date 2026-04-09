@@ -861,7 +861,44 @@
         35
       ],
       "especial": 6,
-      "premios": []
+      "premios": [
+        {
+          "premio": "1.º Prémio",
+          "descricao": "5 Números + Nº da Sorte",
+          "vencedores": "0",
+          "valor": "(1)"
+        },
+        {
+          "premio": "2.º Prémio",
+          "descricao": "5 Números",
+          "vencedores": "0",
+          "valor": "(2)"
+        },
+        {
+          "premio": "3.º Prémio",
+          "descricao": "4 Números",
+          "vencedores": "119",
+          "valor": "€ 359,63"
+        },
+        {
+          "premio": "4.º Prémio",
+          "descricao": "3 Números",
+          "vencedores": "4.801",
+          "valor": "€ 4,95"
+        },
+        {
+          "premio": "5.º Prémio",
+          "descricao": "2 Números",
+          "vencedores": "65.068",
+          "valor": "€ 2,19"
+        },
+        {
+          "premio": "Nº da Sorte",
+          "descricao": "Nº da Sorte",
+          "vencedores": "77.095",
+          "valor": "Reembolso do valor da aposta de Totoloto"
+        }
+      ]
     }
   ]
 }
