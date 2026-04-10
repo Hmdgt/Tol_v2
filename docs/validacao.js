@@ -7,7 +7,7 @@ const PASTA_APOSTAS = CONFIG.PASTAS.APOSTAS;
 const PASTA_UPLOADS = CONFIG.PASTAS.UPLOADS;
 const PASTA_PREPROCESSADAS = CONFIG.PASTAS.PREPROCESSADAS;
 
-// ---------- FUNÇÕES AUXILIARES (caso não existam globalmente) ----------
+// ---------- FUNÇÕES AUXILIARES ----------
 function normalizarJogo(jogo) {
     if (!jogo) return 'desconhecido';
     let normalizado = String(jogo).toLowerCase()
@@ -155,7 +155,7 @@ async function carregarImagemGitHub(caminho) {
   }
 }
 
-// ---------- GUARDAR VALIDAÇÃO (ATUALIZA JSON E MARCA confirmado = true) ----------
+// ---------- GUARDAR VALIDAÇÃO ----------
 async function guardarValidacao(imagem, jogosAtualizados) {
   console.log("A guardar validação para:", imagem);
 
@@ -258,7 +258,7 @@ window.renderizarListaValidacao = async function() {
   });
 };
 
-// ---------- ABRIR VALIDAÇÃO DE UM BOLETIM ----------
+// ---------- ABRIR VALIDAÇÃO ----------
 window.abrirValidacao = async function(imagem) {
   console.log("A abrir validação:", imagem);
   
@@ -285,12 +285,10 @@ window.abrirValidacao = async function(imagem) {
   }
 };
 
-// ---------- RENDERIZAR FORMULÁRIO DE VALIDAÇÃO (ESTILO CARD) ----------
+// ---------- RENDERIZAR FORMULÁRIO (ESTILO CARD, SEM DUPLICAÇÃO) ----------
 async function renderizarFormValidacao(imagem, jogos) {
   const container = document.getElementById('validacaoContainer');
   if (!container) return;
-  
-  const imagemEscaped = escapeHTML(imagem);
   
   const thumbnailUrl = await carregarImagemGitHub(`thumbnails/${imagem}`);
   const imagemUrl = thumbnailUrl || await carregarImagemGitHub(`uploads/${imagem}`);
@@ -318,7 +316,6 @@ async function renderizarFormValidacao(imagem, jogos) {
     const refEscaped = escapeHTML(jogo.referencia_unica || '');
     const dataSorteioEscaped = escapeHTML(jogo.data_sorteio || '');
     const concursoEscaped = escapeHTML(jogo.concurso || '');
-    const dataFormatada = formatarData(jogo.data_sorteio);
     
     const jogoNormalizado = normalizarJogo(jogo.tipo);
     let logoClass = '';
@@ -336,74 +333,27 @@ async function renderizarFormValidacao(imagem, jogos) {
            data-ficheiro="${ficheiroEscaped}"
            data-original="${originalEncoded}">
         
-        <div class="notification-header">
-          <div class="logo-sprite ${logoClass}">${tipoEscaped}</div>
-          <span class="notification-date">${escapeHTML(dataFormatada)}</span>
-        </div>
+        <!-- Logo do jogo -->
+        <div class="logo-sprite ${logoClass}">${tipoEscaped}</div>
         
-        <div class="notification-info-right">
-          <div class="notification-concurso">CONCURSO ${concursoEscaped}</div>
-          <div class="notification-referencia">REF. ${refEscaped}</div>
-        </div>
+        <!-- Campos de edição compactos -->
+        <div class="form-campos-edicao">
+          <div class="campo-duplo">
+            <div class="campo">
+              <label>Data Sorteio</label>
+              <input type="date" class="campo-data-sorteio" value="${dataSorteioEscaped}">
+            </div>
+            <div class="campo">
+              <label>Concurso</label>
+              <input type="text" class="campo-concurso" value="${concursoEscaped}" placeholder="000/2026">
+            </div>
+          </div>
+          
+          <div class="campo">
+            <label>Referência Única</label>
+            <input type="text" class="campo-ref" value="${refEscaped}" placeholder="Referência">
+          </div>
     `;
-    
-    // Preview dos números (formato visual)
-    if (jogo.tipo !== 'M1lhão') {
-      html += `<div class="numeros-aposta-preview">`;
-      jogo.apostas.forEach((aposta, idxAposta) => {
-        if (idxAposta > 0) html += `<div style="margin-top: 8px;"></div>`;
-        if (aposta.numeros) {
-          aposta.numeros.forEach(num => {
-            const numStr = String(num).padStart(2, '0');
-            html += `<span class="numero-santacas">${escapeHTML(numStr)}</span>`;
-          });
-        }
-        if (aposta.estrelas && aposta.estrelas.length > 0) {
-          html += `<span class="separador-mais">+</span>`;
-          aposta.estrelas.forEach(est => {
-            const estStr = String(est).padStart(2, '0');
-            html += `<span class="estrela-santacas">${escapeHTML(estStr)}</span>`;
-          });
-        }
-        if (aposta.numero_da_sorte) {
-          html += `<span class="separador-mais">+</span>`;
-          html += `<span class="estrela-santacas">${escapeHTML(String(aposta.numero_da_sorte).padStart(2, '0'))}</span>`;
-        }
-        if (aposta.dream && aposta.dream.length > 0) {
-          html += `<span class="separador-mais">+</span>`;
-          html += `<span class="estrela-santacas">${escapeHTML(String(aposta.dream[0]).padStart(2, '0'))}</span>`;
-        } else if (aposta.dream_number !== undefined) {
-          html += `<span class="separador-mais">+</span>`;
-          html += `<span class="estrela-santacas">${escapeHTML(String(aposta.dream_number).padStart(2, '0'))}</span>`;
-        }
-      });
-      html += `</div>`;
-    } else {
-      // M1lhão
-      if (jogo.apostas && jogo.apostas[0]?.codigo) {
-        html += `<div class="numeros-aposta"><span class="codigo-milhao">${escapeHTML(jogo.apostas[0].codigo)}</span></div>`;
-      }
-    }
-    
-    // Campos de edição (compactos)
-    html += `<div class="form-campos-edicao">`;
-    
-    // Campos comuns (data e concurso) - layout lado a lado
-    html += `
-      <div class="campo-duplo">
-        <div class="campo">
-          <label>Data Sorteio</label>
-          <input type="date" class="campo-data-sorteio" value="${dataSorteioEscaped}">
-        </div>
-        <div class="campo">
-          <label>Concurso</label>
-          <input type="text" class="campo-concurso" value="${concursoEscaped}" placeholder="000/2026">
-        </div>
-      </div>
-    `;
-    
-    // Campo de referência (oculto ou visível? Vamos manter oculto pois já aparece no card)
-    html += `<input type="hidden" class="campo-ref" value="${refEscaped}">`;
     
     // Apostas
     if (jogo.apostas && jogo.apostas.length > 0) {
@@ -412,7 +362,7 @@ async function renderizarFormValidacao(imagem, jogos) {
           html += `
             <div class="campo">
               <label>Código</label>
-              <input type="text" class="campo-codigo" value="${escapeHTML(aposta.codigo || '')}" placeholder="Ex: GTP11668" autocomplete="off">
+              <input type="text" class="campo-codigo" value="${escapeHTML(aposta.codigo || '')}" placeholder="Ex: GTP11668">
             </div>
           `;
         } else {
@@ -481,7 +431,10 @@ async function renderizarFormValidacao(imagem, jogos) {
   
   container.innerHTML = html;
 
-  // ========== INICIALIZAR ZOOM/PAN (mantido igual) ==========
+  // ========== ZOOM/PAN (inalterado) ==========
+  // ... (código do zoom/pan mantido exatamente como estava)
+  // (não vou repetir aqui para poupar espaço, mas mantém o teu código atual)
+
   const zoomContainer = document.getElementById('zoomContainer');
   const zoomImg = zoomContainer.querySelector('img');
 
@@ -667,12 +620,11 @@ async function renderizarFormValidacao(imagem, jogos) {
     lastTap = now;
   });
   
-  // Listeners dos botões
   document.getElementById('btnCancelarValidacao').addEventListener('click', window.voltarListaValidacao);
   document.getElementById('btnConfirmarValidacao').addEventListener('click', () => window.confirmarValidacao(imagem));
 }
 
-// ---------- CONFIRMAR VALIDAÇÃO (ajustado para os novos seletores) ----------
+// ---------- CONFIRMAR VALIDAÇÃO (com campo ref) ----------
 let validando = false;
 
 window.confirmarValidacao = async function(imagem) {
@@ -718,13 +670,10 @@ window.confirmarValidacao = async function(imagem) {
           }
         });
       } else {
-        // Para cada aposta, vamos ler os inputs com base no data-aposta
-        const apostasOriginais = original.apostas;
-        for (let idxAposta = 0; idxAposta < apostasOriginais.length; idxAposta++) {
-          const apostaOriginal = apostasOriginais[idxAposta];
+        for (let idxAposta = 0; idxAposta < original.apostas.length; idxAposta++) {
+          const apostaOriginal = original.apostas[idxAposta];
           const novaAposta = { ...apostaOriginal };
           
-          // Números
           const inputsNumero = form.querySelectorAll(`.campo-numero[data-aposta="${idxAposta}"]`);
           if (inputsNumero.length > 0) {
             const numeros = [];
@@ -734,7 +683,6 @@ window.confirmarValidacao = async function(imagem) {
             if (numeros.length) novaAposta.numeros = numeros;
           }
           
-          // Estrelas
           const inputsEstrela = form.querySelectorAll(`.campo-estrela[data-aposta="${idxAposta}"]`);
           if (inputsEstrela.length > 0) {
             const estrelas = [];
@@ -744,13 +692,11 @@ window.confirmarValidacao = async function(imagem) {
             if (estrelas.length) novaAposta.estrelas = estrelas;
           }
           
-          // Nº da Sorte
           const inputSorte = form.querySelector(`.campo-sorte[data-aposta="${idxAposta}"]`);
           if (inputSorte && inputSorte.value) {
             novaAposta.numero_da_sorte = inputSorte.value.padStart(2, '0');
           }
           
-          // Dream Number
           const inputDream = form.querySelector(`.campo-dream[data-aposta="${idxAposta}"]`);
           if (inputDream && inputDream.value) {
             const dreamVal = inputDream.value.padStart(2, '0');
@@ -819,5 +765,4 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// Expor funções
 window.renderizarListaValidacao = renderizarListaValidacao;
