@@ -6,20 +6,36 @@
 const GITHUB_API = `https://api.github.com/repos/${CONFIG.REPO}/contents/${CONFIG.FICHEIROS.NOTIFICACOES}`;
 const GITHUB_HISTORICO_API = `https://api.github.com/repos/${CONFIG.REPO}/contents/${CONFIG.FICHEIROS.HISTORICO}`;
 
+// ---------- FUNÇÃO DE NORMALIZAÇÃO DE JOGOS ----------
+function normalizarJogo(jogo) {
+    if (!jogo) return 'desconhecido';
+    let normalizado = String(jogo).toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // remove acentos
+        .replace(/m1lhão|m1lhao/gi, 'milhao')
+        .trim();
+    
+    // Mapear para as chaves canónicas
+    if (normalizado.includes('eurodream')) return 'eurodreams';
+    if (normalizado.includes('euromilho')) return 'euromilhoes';
+    if (normalizado.includes('totoloto')) return 'totoloto';
+    if (normalizado.includes('milhao')) return 'milhao';
+    return normalizado;
+}
+
 // ---------- FUNÇÃO PARA OBTER LOGO DO JOGO (para notificações) ----------
 function getLogoHTMLNotificacao(jogo) {
-    const jogoLower = (jogo || '').toLowerCase();
+    const jogoNormalizado = normalizarJogo(jogo);
     
-    if (jogoLower === 'euromilhoes') {
+    if (jogoNormalizado === 'euromilhoes') {
         return '<div class="logo-sprite logo-euromilhoes">Euromilhões</div>';
-    } else if (jogoLower === 'totoloto') {
+    } else if (jogoNormalizado === 'totoloto') {
         return '<div class="logo-sprite logo-totoloto">Totoloto</div>';
-    } else if (jogoLower === 'eurodreams') {
+    } else if (jogoNormalizado === 'eurodreams') {
         return '<div class="logo-sprite logo-eurodreams">EuroDreams</div>';
-    } else if (jogoLower === 'milhao' || jogoLower === 'm1lhão') {
+    } else if (jogoNormalizado === 'milhao') {
         return '<div class="logo-sprite logo-milhao">M1lhão</div>';
     } else {
-        return `<span class="logo-placeholder">${escapeHTML(jogo.toUpperCase())}</span>`;
+        return `<span class="logo-placeholder">${escapeHTML(jogoNormalizado.toUpperCase())}</span>`;
     }
 }
 
@@ -99,22 +115,22 @@ function gerarConteudoDetalhes(notificacao) {
     return `<p>Sem detalhes disponíveis</p>`;
   }
   
-  const jogoLower = (jogo || '').toLowerCase();
+  const jogoNormalizado = normalizarJogo(jogo);
   const dataFormatada = formatarData(notificacao.data);
   
   // Extrair acertos do resumo
   let acertoTexto = '';
   if (resumo) {
-    if (jogoLower === 'euromilhoes') {
+    if (jogoNormalizado === 'euromilhoes') {
       const match = resumo.match(/(\d+)\s*números?\s*\+\s*(\d+)\s*estrela?s?/i);
       if (match) acertoTexto = `${match[1]} + ${match[2]} ✅`;
-    } else if (jogoLower === 'totoloto') {
+    } else if (jogoNormalizado === 'totoloto') {
       const match = resumo.match(/(\d+)\s*números?\s*\+\s*(\d+)\s*n[º°]?\s*sorte?/i);
       if (match) acertoTexto = `${match[1]} + ${match[2]} (Nº Sorte) ✅`;
-    } else if (jogoLower === 'eurodreams') {
+    } else if (jogoNormalizado === 'eurodreams') {
       const match = resumo.match(/(\d+)\s*números?\s*\+\s*(\d+)\s*dream/i);
       if (match) acertoTexto = `${match[1]} + ${match[2]} (Dream) ✅`;
-    } else if (jogoLower === 'milhao' || jogoLower === 'm1lhão') {
+    } else if (jogoNormalizado === 'milhao') {
       if (resumo.includes('acertou')) acertoTexto = 'Código premiado! ✅';
     }
   }
@@ -143,7 +159,7 @@ function gerarConteudoDetalhes(notificacao) {
     const aposta = detalhes.aposta;
     
     // M1LHÃO (código - alinhado à esquerda)
-    if ((jogoLower === 'milhao' || jogoLower === 'm1lhão') && aposta.codigo) {
+    if (jogoNormalizado === 'milhao' && aposta.codigo) {
       html += `<div style="margin: 16px 0 8px 0; display: flex; align-items: baseline; gap: 12px;">`;
       html += `<strong style="min-width: 60px;">Aposta</strong>`;
       html += `<div style="font-family: monospace; font-weight: bold;">${escapeHTML(aposta.codigo)}</div>`;
@@ -153,7 +169,7 @@ function gerarConteudoDetalhes(notificacao) {
       }
     } 
     // EUROMILHÕES (números + estrelas - centralizado)
-    else if (jogoLower === 'euromilhoes') {
+    else if (jogoNormalizado === 'euromilhoes') {
       html += `<div style="margin: 16px 0 12px 0;"><strong>Aposta</strong><br>`;
       if (aposta.numeros) html += formatarNumerosSantacas(aposta.numeros);
       if (aposta.estrelas && aposta.estrelas.length > 0) {
@@ -163,7 +179,7 @@ function gerarConteudoDetalhes(notificacao) {
       html += `</div>`;
     }
     // TOTOLOTO (números + número da sorte - centralizado)
-    else if (jogoLower === 'totoloto') {
+    else if (jogoNormalizado === 'totoloto') {
       html += `<div style="margin: 16px 0 12px 0;"><strong>Aposta</strong><br>`;
       if (aposta.numeros) html += formatarNumerosSantacas(aposta.numeros);
       if (aposta.numero_da_sorte) {
@@ -172,7 +188,7 @@ function gerarConteudoDetalhes(notificacao) {
       html += `</div>`;
     }
     // EURODREAMS (6 números + dream - centralizado)
-    else if (jogoLower === 'eurodreams') {
+    else if (jogoNormalizado === 'eurodreams') {
       html += `<div style="margin: 16px 0 12px 0;"><strong>Aposta</strong><br>`;
       if (aposta.numeros) html += formatarNumerosSantacas(aposta.numeros);
       if (aposta.dream && aposta.dream.length > 0) {
@@ -189,7 +205,7 @@ function gerarConteudoDetalhes(notificacao) {
     const sorteio = detalhes.sorteio;
     
     // M1LHÃO (código premiado - alinhado à esquerda, sem prémio nome)
-    if ((jogoLower === 'milhao' || jogoLower === 'm1lhão') && sorteio.codigo_premiado) {
+    if (jogoNormalizado === 'milhao' && sorteio.codigo_premiado) {
       html += `<div style="margin: 8px 0; display: flex; align-items: baseline; gap: 12px;">`;
       html += `<strong style="min-width: 60px;">Sorteio</strong>`;
       html += `<div style="font-family: monospace; font-weight: bold;">${escapeHTML(sorteio.codigo_premiado)}</div>`;
@@ -197,7 +213,7 @@ function gerarConteudoDetalhes(notificacao) {
       // REMOVIDO o prémio nome (1.º Prémio)
     }
     // EUROMILHÕES (números + estrelas - centralizado)
-    else if (jogoLower === 'euromilhoes') {
+    else if (jogoNormalizado === 'euromilhoes') {
       html += `<div style="margin: 12px 0;"><strong>Sorteio</strong><br>`;
       if (sorteio.numeros) html += formatarNumerosSantacas(sorteio.numeros);
       if (sorteio.estrelas && sorteio.estrelas.length > 0) {
@@ -210,7 +226,7 @@ function gerarConteudoDetalhes(notificacao) {
       html += `</div>`;
     }
     // TOTOLOTO (números + número da sorte - centralizado)
-    else if (jogoLower === 'totoloto') {
+    else if (jogoNormalizado === 'totoloto') {
       html += `<div style="margin: 12px 0;"><strong>Sorteio</strong><br>`;
       if (sorteio.numeros) html += formatarNumerosSantacas(sorteio.numeros);
       if (sorteio.numero_da_sorte) {
@@ -219,7 +235,7 @@ function gerarConteudoDetalhes(notificacao) {
       html += `</div>`;
     }
     // EURODREAMS (6 números + dream - centralizado)
-    else if (jogoLower === 'eurodreams') {
+    else if (jogoNormalizado === 'eurodreams') {
       html += `<div style="margin: 12px 0;"><strong>Sorteio</strong><br>`;
       if (sorteio.numeros) html += formatarNumerosSantacas(sorteio.numeros);
       if (sorteio.dream) {
@@ -278,6 +294,7 @@ function gerarConteudoDetalhes(notificacao) {
   
   return html;
 }
+
 // ---------- LER FICHEIRO (com suporte UTF-8) ----------
 async function lerFicheiroGitHub(urlApi) {
   const token = localStorage.getItem("github_token");
@@ -325,16 +342,16 @@ async function listarValidacoesPendentes() {
     const validacoes = [];
     
     for (const [imagem, jogos] of Object.entries(boletins)) {
+      // CORREÇÃO: não sobrescrever o campo 'jogo' com string fixa
       validacoes.push({
         id: `valid_${imagem}`,
         tipo: 'validacao',
-        jogo: jogos[0]?.tipo || 'validação',  // ← ADICIONAR
+        jogo: jogos[0]?.tipo || 'validação',   // usa o tipo real do primeiro jogo
         titulo: `📸 ${jogos.length} boletim(ins) por validar`,
         resumo: jogos.map(j => j.tipo).join(', '),
         data: jogos[0].data_processamento,
         imagem: imagem,
-        jogos: jogos,
-        jogo: 'validação'
+        jogos: jogos
       });
     }
     
