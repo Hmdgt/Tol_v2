@@ -133,7 +133,7 @@ async function carregarImagemGitHub(caminho) {
 
 // ---------- GUARDAR VALIDAÇÃO (ATUALIZA JSON E MARCA confirmado = true) ----------
 async function guardarValidacao(imagem, jogosAtualizados) {
-  console.log("💾 A guardar validação para:", imagem);
+  console.log("A guardar validação para:", imagem);
 
   const tipos = new Set(jogosAtualizados.map(j => j.tipo_ficheiro));
   if (tipos.size > 1) {
@@ -173,7 +173,7 @@ async function guardarValidacao(imagem, jogosAtualizados) {
       caminho,
       content,
       sha,
-      `✅ Validação humana: ${imagem}`
+      `Validação humana: ${imagem}`
     );
 
     if (!sucesso) {
@@ -219,7 +219,7 @@ window.renderizarListaValidacao = async function() {
           <span class="validacao-badge">${total}</span>
         </div>
         <div class="validacao-tipos">${escapeHTML(tipo)}</div>
-        <div class="validacao-preview">📸 Clique para validar</div>
+        <div class="validacao-preview">Clique para validar</div>
       </div>
     `;
   }
@@ -236,7 +236,7 @@ window.renderizarListaValidacao = async function() {
 
 // ---------- ABRIR VALIDAÇÃO DE UM BOLETIM ----------
 window.abrirValidacao = async function(imagem) {
-  console.log("📸 A abrir validação:", imagem);
+  console.log("A abrir validação:", imagem);
   
   window.ViewManager.goTo('validacaoView');
   
@@ -613,7 +613,7 @@ let validando = false;
 
 window.confirmarValidacao = async function(imagem) {
   if (validando) {
-    console.log("⏳ Validação já em curso, clique ignorado");
+    console.log("Validação já em curso, clique ignorado");
     return;
   }
   
@@ -626,7 +626,7 @@ window.confirmarValidacao = async function(imagem) {
   validando = true;
   
   try {
-    console.log("🔍 A validar:", imagem);
+    console.log("A validar:", imagem);
     
     const forms = document.querySelectorAll('.jogo-form');
     const jogosAtualizados = [];
@@ -741,7 +741,7 @@ window.confirmarValidacao = async function(imagem) {
 
 // ---------- VOLTAR À LISTA ----------
 window.voltarListaValidacao = function() {
-  console.log("⬅️ A voltar da validação para a lista");
+  console.log("A voltar da validação para a lista");
   
   window.ViewManager.goTo('notificacoesView');
   
