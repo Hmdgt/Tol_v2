@@ -431,13 +431,14 @@ async function renderizarFormValidacao(imagem, jogos) {
   
   container.innerHTML = html;
 
-  // ========== ZOOM/PAN (inalterado) ==========
-  // ... (código do zoom/pan mantido exatamente como estava)
-  // (não vou repetir aqui para poupar espaço, mas mantém o teu código atual)
-
+  // ========== ZOOM/PAN - VERSÃO FINAL PROFISSIONAL ==========
   const zoomContainer = document.getElementById('zoomContainer');
   const zoomImg = zoomContainer.querySelector('img');
-
+  
+  // Essencial para que os cálculos batam certo
+  zoomImg.style.transformOrigin = '0 0';
+  zoomImg.style.willChange = 'transform';
+  
   let scale = 1.5;
   let translateX = 0;
   let translateY = 0;
@@ -448,38 +449,70 @@ async function renderizarFormValidacao(imagem, jogos) {
   let initialPinchScale = 1;
   let pinchMidpoint = { x: 0, y: 0 };
   let pinchStartTranslate = { x: 0, y: 0 };
-
+  
   const MIN_SCALE = 1;
   const MAX_SCALE = 5;
-
+  
   let containerWidth = 0;
   let containerHeight = 0;
   let imgWidth = 0;
   let imgHeight = 0;
-
+  let rafPending = false;
+  
   function updateTransform() {
-    zoomImg.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+    if (!rafPending) {
+      rafPending = true;
+      requestAnimationFrame(() => {
+        zoomImg.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+        rafPending = false;
+      });
+    }
   }
-
-  function clampScale() {
-    scale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, scale));
-  }
-
+  
+  // Versão definitiva que centraliza imagens pequenas e permite arrasto só quando maior
   function constrainPan() {
     if (imgWidth === 0 || containerWidth === 0) return;
-    
-    const scaledImgWidth = imgWidth * scale;
-    const scaledImgHeight = imgHeight * scale;
-    
-    const minX = Math.min(0, containerWidth - scaledImgWidth);
-    const maxX = Math.max(0, containerWidth - scaledImgWidth);
-    const minY = Math.min(0, containerHeight - scaledImgHeight);
-    const maxY = Math.max(0, containerHeight - scaledImgHeight);
-    
+  
+    const scaledW = imgWidth * scale;
+    const scaledH = imgHeight * scale;
+  
+    let minX, maxX, minY, maxY;
+  
+    // Horizontal
+    if (scaledW <= containerWidth) {
+      minX = maxX = (containerWidth - scaledW) / 2;
+    } else {
+      minX = containerWidth - scaledW;
+      maxX = 0;
+    }
+  
+    // Vertical
+    if (scaledH <= containerHeight) {
+      minY = maxY = (containerHeight - scaledH) / 2;
+    } else {
+      minY = containerHeight - scaledH;
+      maxY = 0;
+    }
+  
     translateX = Math.min(maxX, Math.max(minX, translateX));
     translateY = Math.min(maxY, Math.max(minY, translateY));
   }
-
+  
+  function initZoom() {
+    containerWidth = zoomContainer.clientWidth;
+    containerHeight = zoomContainer.clientHeight;
+    imgWidth = zoomImg.naturalWidth;
+    imgHeight = zoomImg.naturalHeight;
+    
+    scale = 1.5;
+    translateX = 0;
+    translateY = 0;
+    
+    constrainPan();
+    updateTransform();
+  }
+  
+  // ===== EVENTOS =====
   zoomContainer.addEventListener('pointerdown', (e) => {
     if (e.pointerType === 'touch' && e.isPrimary === false) return;
     
@@ -491,7 +524,7 @@ async function renderizarFormValidacao(imagem, jogos) {
     zoomContainer.setPointerCapture(e.pointerId);
     zoomContainer.classList.add('dragging');
   });
-
+  
   zoomContainer.addEventListener('pointermove', (e) => {
     if (!isDragging) return;
     
@@ -504,17 +537,17 @@ async function renderizarFormValidacao(imagem, jogos) {
     constrainPan();
     updateTransform();
   });
-
+  
   zoomContainer.addEventListener('pointerup', () => {
     isDragging = false;
     zoomContainer.classList.remove('dragging');
   });
-
+  
   zoomContainer.addEventListener('pointerleave', () => {
     isDragging = false;
     zoomContainer.classList.remove('dragging');
   });
-
+  
   zoomContainer.addEventListener('touchstart', (e) => {
     if (e.touches.length === 2) {
       e.preventDefault();
@@ -530,7 +563,7 @@ async function renderizarFormValidacao(imagem, jogos) {
       pinchStartTranslate.y = translateY;
     }
   });
-
+  
   zoomContainer.addEventListener('touchmove', (e) => {
     if (e.touches.length === 2) {
       e.preventDefault();
@@ -558,17 +591,17 @@ async function renderizarFormValidacao(imagem, jogos) {
       updateTransform();
     }
   }, { passive: false });
-
+  
   zoomContainer.addEventListener('touchend', (e) => {
     if (e.touches.length < 2) {
       initialPinchDistance = 0;
     }
   });
-
+  
   zoomContainer.addEventListener('touchcancel', () => {
     initialPinchDistance = 0;
   });
-
+  
   zoomContainer.addEventListener('wheel', (e) => {
     e.preventDefault();
     
@@ -590,41 +623,45 @@ async function renderizarFormValidacao(imagem, jogos) {
     constrainPan();
     updateTransform();
   }, { passive: false });
-
-  zoomImg.onload = () => {
-    containerWidth = zoomContainer.clientWidth;
-    containerHeight = zoomContainer.clientHeight;
-    imgWidth = zoomImg.naturalWidth;
-    imgHeight = zoomImg.naturalHeight;
-    
-    scale = 1.5;
-    translateX = 0;
-    translateY = 0;
-    
-    constrainPan();
-    updateTransform();
-  };
-
-  if (zoomImg.complete) {
-    zoomImg.onload();
-  }
-
+  
+  // Double‑tap centrado no toque
   let lastTap = 0;
   zoomContainer.addEventListener('touchend', (e) => {
     const now = Date.now();
     if (e.touches.length === 0 && now - lastTap < 300) {
-      scale = scale === 1.5 ? 1 : 1.5;
+      e.preventDefault();
+      
+      const rect = zoomContainer.getBoundingClientRect();
+      const tapX = e.changedTouches[0].clientX - rect.left;
+      const tapY = e.changedTouches[0].clientY - rect.top;
+      
+      const imgX = (tapX - translateX) / scale;
+      const imgY = (tapY - translateY) / scale;
+      
+      const newScale = scale === 1.5 ? 1 : 1.5;
+      
+      translateX = tapX - imgX * newScale;
+      translateY = tapY - imgY * newScale;
+      scale = newScale;
+      
       constrainPan();
       updateTransform();
     }
     lastTap = now;
   });
   
+  if (zoomImg.complete) {
+    initZoom();
+  } else {
+    zoomImg.onload = initZoom;
+  }
+  
+  // Listeners dos botões de validação
   document.getElementById('btnCancelarValidacao').addEventListener('click', window.voltarListaValidacao);
   document.getElementById('btnConfirmarValidacao').addEventListener('click', () => window.confirmarValidacao(imagem));
 }
 
-// ---------- CONFIRMAR VALIDAÇÃO (com campo ref) ----------
+// ---------- CONFIRMAR VALIDAÇÃO ----------
 let validando = false;
 
 window.confirmarValidacao = async function(imagem) {
