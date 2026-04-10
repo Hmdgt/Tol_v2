@@ -612,5 +612,56 @@
       "descricao": "Não corresponde a qualquer prémio",
       "valor": "€ 0,00"
     }
+  },
+  {
+    "data_verificacao": "2026-04-10 21:34:16",
+    "metodo_validacao": "data + concurso",
+    "boletim": {
+      "referencia": "600-04048682-M1L",
+      "data_sorteio": "2026-04-10",
+      "concurso_sorteio": "029/2026",
+      "imagem_origem": "foto_1775836899147_6xehkg.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "numeros": [
+        "07",
+        "22",
+        "24",
+        "38",
+        "49"
+      ],
+      "estrelas": [
+        "04",
+        "06"
+      ]
+    },
+    "sorteio": {
+      "concurso": "029/2026",
+      "data": "10/04/2026",
+      "chave": "10 13 14 38 41 + 6 9",
+      "numeros": [
+        "10",
+        "13",
+        "14",
+        "38",
+        "41"
+      ],
+      "estrelas": [
+        "06",
+        "09"
+      ]
+    },
+    "acertos": {
+      "numeros": 1,
+      "estrelas": 1,
+      "descricao": "1 número(s) e 1 estrela(s)"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Não corresponde a qualquer prémio",
+      "valor": "€ 0,00"
+    }
   }
 ]
