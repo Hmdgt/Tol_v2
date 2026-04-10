@@ -1181,6 +1181,33 @@
   color: var(--text-secondary);
   font-size: 14px;
 }
+
+.numero-santacas.acerto,
+.estrela-santacas.acerto {
+  background-color: var(--positive) !important;
+  color: white !important;
+  border-color: var(--positive) !important;
+}
+
+[data-theme="light"] .numero-santacas.acerto,
+[data-theme="light"] .estrela-santacas.acerto {
+  background-color: var(--positive) !important;
+  color: white !important;
+}
+
+.numeros-aposta {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.separador-mais {
+  font-weight: bold;
+  margin: 0 2px;
+  color: var(--text-secondary);
+}
   
 </style>
 </head>
