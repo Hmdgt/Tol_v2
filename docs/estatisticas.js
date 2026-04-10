@@ -18,20 +18,36 @@ let modoSelecao = false;           // true quando estamos em modo de seleção
 let itensSelecionados = new Set(); // guarda os ids dos itens selecionados
 let longPressTimer = null;         // timer para detectar long press
 
-// ---------- FUNÇÃO PARA OBTER LOGO DO JOGO ----------
-function getLogoHTML(jogo) {
-    const jogoLower = (jogo || '').toLowerCase();
+// ---------- FUNÇÃO DE NORMALIZAÇÃO DE JOGOS ----------
+function normalizarJogo(jogo) {
+    if (!jogo) return 'desconhecido';
+    let normalizado = String(jogo).toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // remove acentos
+        .replace(/m1lhão|m1lhao/gi, 'milhao')
+        .trim();
     
-    if (jogoLower === 'euromilhoes') {
+    // Mapear para as chaves canónicas
+    if (normalizado.includes('eurodream')) return 'eurodreams';
+    if (normalizado.includes('euromilho')) return 'euromilhoes';
+    if (normalizado.includes('totoloto')) return 'totoloto';
+    if (normalizado.includes('milhao')) return 'milhao';
+    return normalizado;
+}
+
+// ---------- FUNÇÃO PARA OBTER LOGO DO JOGO (com normalização) ----------
+function getLogoHTML(jogo) {
+    const jogoNormalizado = normalizarJogo(jogo);
+    
+    if (jogoNormalizado === 'euromilhoes') {
         return '<div class="logo-sprite logo-euromilhoes">Euromilhões</div>';
-    } else if (jogoLower === 'totoloto') {
+    } else if (jogoNormalizado === 'totoloto') {
         return '<div class="logo-sprite logo-totoloto">Totoloto</div>';
-    } else if (jogoLower === 'eurodreams') {
+    } else if (jogoNormalizado === 'eurodreams') {
         return '<div class="logo-sprite logo-eurodreams">EuroDreams</div>';
-    } else if (jogoLower === 'milhao' || jogoLower === 'm1lhão') {
+    } else if (jogoNormalizado === 'milhao') {
         return '<div class="logo-sprite logo-milhao">M1lhão</div>';
     } else {
-        return `<span class="logo-placeholder">${escapeHTML(jogo.toUpperCase())}</span>`;
+        return `<span class="logo-placeholder">${escapeHTML(jogoNormalizado.toUpperCase())}</span>`;
     }
 }
 
@@ -391,10 +407,10 @@ function gerarListaPremiadosInterativa(dados) {
 
 // ---------- FORMATAR NÚMEROS DA APOSTA (com estilos Santa Casa, numa linha) ----------
 function formatarNumerosAposta(aposta, jogo) {
-    const jogoLower = (jogo || '').toLowerCase();
+    const jogoNormalizado = normalizarJogo(jogo);
 
     // M1LHÃO: código sem círculos, sem sinal "+"
-    if (jogoLower === 'milhao' && aposta.codigo) {
+    if (jogoNormalizado === 'milhao' && aposta.codigo) {
         return `<div class="numeros-aposta" style="display: flex; align-items: center; gap: 6px;">
                     <span class="codigo-milhao">${escapeHTML(aposta.codigo)}</span>
                 </div>`;
@@ -415,7 +431,7 @@ function formatarNumerosAposta(aposta, jogo) {
     if ((aposta.estrelas && aposta.estrelas.length > 0) ||
         (aposta.dream && aposta.dream.length > 0) ||
         aposta.dream_number !== undefined ||
-        (aposta.numero_da_sorte && jogoLower === 'totoloto')) {
+        (aposta.numero_da_sorte && jogoNormalizado === 'totoloto')) {
         temEspeciais = true;
         html += `<span class="separador-mais">+</span>`;
     }
@@ -435,13 +451,13 @@ function formatarNumerosAposta(aposta, jogo) {
     } else if (aposta.dream_number !== undefined) {
         dreamValue = aposta.dream_number;
     }
-    if (dreamValue && (jogoLower === 'eurodreams' || jogoLower === 'eurodream')) {
+    if (dreamValue && jogoNormalizado === 'eurodreams') {
         const dreamStr = String(dreamValue).padStart(2, '0');
         html += `<span class="estrela-santacas">${escapeHTML(dreamStr)}</span>`;
     }
     
     // Nº da Sorte (Totoloto)
-    if (aposta.numero_da_sorte && jogoLower === 'totoloto') {
+    if (aposta.numero_da_sorte && jogoNormalizado === 'totoloto') {
         const sorteStr = String(aposta.numero_da_sorte).padStart(2, '0');
         html += `<span class="estrela-santacas">${escapeHTML(sorteStr)}</span>`;
     }
@@ -686,22 +702,29 @@ async function renderizarEstatisticas() {
             html += `</div>`;
         }
 
-        html += `<div class="jogo-tabs"><button class="jogo-btn ${abaAtiva === 'global' ? 'active' : ''}" data-jogo="global">Global</button>`;
-
-        const jogos = ['totoloto', 'euromilhoes', 'eurodreams', 'milhao'];
+        // ========== DROPDOWN DE JOGOS (SUBSTITUI OS BOTÕES) ==========
+        const jogos = ['global', 'totoloto', 'euromilhoes', 'eurodreams', 'milhao'];
         const nomesJogo = {
+            global: 'Global',
             totoloto: 'Totoloto',
             euromilhoes: 'Euromilhões',
             eurodreams: 'EuroDreams',
             milhao: 'M1lhão'
         };
 
+        html += `<div class="jogo-select-container">`;
+        html += `<select id="jogoSelect" class="jogo-select">`;
+
         for (const jogo of jogos) {
-            const temDados = estatisticasData.mensal?.[jogo] || estatisticasData.anual?.[jogo];
+            const temDados = (jogo === 'global') || 
+                             (estatisticasData.mensal?.[jogo]) || 
+                             (estatisticasData.anual?.[jogo]);
             if (temDados) {
-                html += `<button class="jogo-btn ${abaAtiva === jogo ? 'active' : ''}" data-jogo="${jogo}">${nomesJogo[jogo]}</button>`;
+                const selected = abaAtiva === jogo ? 'selected' : '';
+                html += `<option value="${jogo}" ${selected}>${nomesJogo[jogo]}</option>`;
             }
         }
+        html += `</select>`;
         html += `</div>`;
 
         html += `<div class="estatisticas-conteudo" style="overflow-x: auto;">`;
@@ -785,12 +808,14 @@ async function renderizarEstatisticas() {
             });
         });
 
-        document.querySelectorAll('.jogo-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                abaAtiva = btn.dataset.jogo;
+        // Listener para o dropdown de jogos
+        const jogoSelect = document.getElementById('jogoSelect');
+        if (jogoSelect) {
+            jogoSelect.addEventListener('change', (e) => {
+                abaAtiva = e.target.value;
                 renderizarEstatisticas();
             });
-        });
+        }
 
         document.querySelectorAll('.ano-btn').forEach(btn => {
             btn.addEventListener('click', () => {
