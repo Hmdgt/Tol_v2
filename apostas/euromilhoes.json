@@ -372,5 +372,35 @@
         "_indice": 10,
         "data_validacao": "2026-03-31T17:31:08.112Z",
         "validado_por": "humano"
+    },
+    {
+        "tipo": "Euromilhões",
+        "data_sorteio": "2026-04-10",
+        "data_aposta": "2026-04-10",
+        "data_emissao": "2026-04-10 13:55:31",
+        "referencia_unica": "600-04048682-M1L",
+        "concurso": "029/2026",
+        "valor_total": 2.2,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "numeros": [
+                    "07",
+                    "22",
+                    "24",
+                    "38",
+                    "49"
+                ],
+                "estrelas": [
+                    "04",
+                    "06"
+                ]
+            }
+        ],
+        "imagem_origem": "foto_1775836899147_6xehkg.png",
+        "hash_imagem": "3745dde12c8c5c1397f40340dd6dc103",
+        "data_processamento": "2026-04-10 16:55:41",
+        "confirmado": false
     }
 ]
