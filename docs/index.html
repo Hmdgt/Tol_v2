@@ -1030,6 +1030,39 @@
   .numero-extra-santacas {
     flex-shrink: 0;
   }
+
+  /* ========== DROPDOWN DE SELEÇÃO DE JOGO (ESTATÍSTICAS) ========== */
+.jogo-select-container {
+    margin: 10px 0;
+}
+
+.jogo-select {
+    width: 100%;
+    padding: 12px 16px;
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 16px;
+    cursor: pointer;
+}
+
+[data-theme="light"] .jogo-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23212529' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+}
+
+.jogo-select:focus {
+    outline: none;
+    border-color: var(--accent-green-light);
+}
+
+  
 </style>
 </head>
 <body>
