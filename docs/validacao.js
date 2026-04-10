@@ -431,17 +431,23 @@ async function renderizarFormValidacao(imagem, jogos) {
   
   container.innerHTML = html;
 
-  // ========== ZOOM/PAN - VERSÃO FINAL PROFISSIONAL ==========
+  // ========== ZOOM/PAN - VERSÃO ROBUSTA (SEM REVERSÕES) ==========
   const zoomContainer = document.getElementById('zoomContainer');
   const zoomImg = zoomContainer.querySelector('img');
-  
-  // Essencial para que os cálculos batam certo
+
+  // Configurações de zoom
+  const MIN_SCALE = 1;
+  const MAX_SCALE = 5;        // máximo que o utilizador pode atingir com pinch
+  const DOUBLE_TAP_SCALE = 2.5; // zoom aplicado no duplo toque (ajusta como preferires)
+
   zoomImg.style.transformOrigin = '0 0';
   zoomImg.style.willChange = 'transform';
-  
-  let scale = 1.5;
+
+  let scale = 1.5;            // escala inicial
   let translateX = 0;
   let translateY = 0;
+
+  // Variáveis de controlo de gestos
   let isDragging = false;
   let startDrag = { x: 0, y: 0 };
   let startTranslate = { x: 0, y: 0 };
@@ -449,16 +455,13 @@ async function renderizarFormValidacao(imagem, jogos) {
   let initialPinchScale = 1;
   let pinchMidpoint = { x: 0, y: 0 };
   let pinchStartTranslate = { x: 0, y: 0 };
-  
-  const MIN_SCALE = 1;
-  const MAX_SCALE = 5;
-  
-  let containerWidth = 0;
-  let containerHeight = 0;
-  let imgWidth = 0;
-  let imgHeight = 0;
   let rafPending = false;
-  
+  let lastTap = 0;
+
+  let containerWidth = 0, containerHeight = 0;
+  let imgWidth = 0, imgHeight = 0;
+
+  // Aplica a transformação via requestAnimationFrame
   function updateTransform() {
     if (!rafPending) {
       rafPending = true;
@@ -468,54 +471,48 @@ async function renderizarFormValidacao(imagem, jogos) {
       });
     }
   }
-  
-  // Versão definitiva que centraliza imagens pequenas e permite arrasto só quando maior
+
+  // Limita o pan para que a imagem nunca saia completamente da vista
   function constrainPan() {
     if (imgWidth === 0 || containerWidth === 0) return;
-  
+
     const scaledW = imgWidth * scale;
     const scaledH = imgHeight * scale;
-  
+
     let minX, maxX, minY, maxY;
-  
-    // Horizontal
+
     if (scaledW <= containerWidth) {
       minX = maxX = (containerWidth - scaledW) / 2;
     } else {
       minX = containerWidth - scaledW;
       maxX = 0;
     }
-  
-    // Vertical
+
     if (scaledH <= containerHeight) {
       minY = maxY = (containerHeight - scaledH) / 2;
     } else {
       minY = containerHeight - scaledH;
       maxY = 0;
     }
-  
+
     translateX = Math.min(maxX, Math.max(minX, translateX));
     translateY = Math.min(maxY, Math.max(minY, translateY));
   }
-  
+
+  // Inicialização única
   function initZoom() {
     containerWidth = zoomContainer.clientWidth;
     containerHeight = zoomContainer.clientHeight;
     imgWidth = zoomImg.naturalWidth;
     imgHeight = zoomImg.naturalHeight;
-    
-    scale = 1.5;
-    translateX = 0;
-    translateY = 0;
-    
+
     constrainPan();
     updateTransform();
   }
-  
-  // ===== EVENTOS =====
+
+  // ----- EVENTOS DE ARRASTO (PAN) -----
   zoomContainer.addEventListener('pointerdown', (e) => {
-    if (e.pointerType === 'touch' && e.isPrimary === false) return;
-    
+    if (e.pointerType === 'touch' && !e.isPrimary) return;
     isDragging = true;
     startDrag.x = e.clientX;
     startDrag.y = e.clientY;
@@ -524,132 +521,101 @@ async function renderizarFormValidacao(imagem, jogos) {
     zoomContainer.setPointerCapture(e.pointerId);
     zoomContainer.classList.add('dragging');
   });
-  
+
   zoomContainer.addEventListener('pointermove', (e) => {
     if (!isDragging) return;
-    
     const dx = e.clientX - startDrag.x;
     const dy = e.clientY - startDrag.y;
-    
     translateX = startTranslate.x + dx;
     translateY = startTranslate.y + dy;
-    
     constrainPan();
     updateTransform();
   });
-  
+
   zoomContainer.addEventListener('pointerup', () => {
     isDragging = false;
     zoomContainer.classList.remove('dragging');
   });
-  
+
   zoomContainer.addEventListener('pointerleave', () => {
     isDragging = false;
     zoomContainer.classList.remove('dragging');
   });
-  
+
+  // ----- PINCH-TO-ZOOM -----
   zoomContainer.addEventListener('touchstart', (e) => {
     if (e.touches.length === 2) {
       e.preventDefault();
-      
       const dx = e.touches[0].clientX - e.touches[1].clientX;
       const dy = e.touches[0].clientY - e.touches[1].clientY;
       initialPinchDistance = Math.hypot(dx, dy);
       initialPinchScale = scale;
-      
+
       pinchMidpoint.x = (e.touches[0].clientX + e.touches[1].clientX) / 2;
       pinchMidpoint.y = (e.touches[0].clientY + e.touches[1].clientY) / 2;
       pinchStartTranslate.x = translateX;
       pinchStartTranslate.y = translateY;
     }
   });
-  
+
   zoomContainer.addEventListener('touchmove', (e) => {
     if (e.touches.length === 2) {
       e.preventDefault();
-      
       const dx = e.touches[0].clientX - e.touches[1].clientX;
       const dy = e.touches[0].clientY - e.touches[1].clientY;
       const currentDistance = Math.hypot(dx, dy);
-      
       if (initialPinchDistance === 0) return;
-      
+
       let newScale = initialPinchScale * (currentDistance / initialPinchDistance);
       newScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, newScale));
-      
+
       const midX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
       const midY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
-      
+
       const pX = (pinchMidpoint.x - pinchStartTranslate.x) / initialPinchScale;
       const pY = (pinchMidpoint.y - pinchStartTranslate.y) / initialPinchScale;
-      
+
       translateX = midX - pX * newScale;
       translateY = midY - pY * newScale;
       scale = newScale;
-      
+
       constrainPan();
       updateTransform();
     }
   }, { passive: false });
-  
+
   zoomContainer.addEventListener('touchend', (e) => {
-    if (e.touches.length < 2) {
-      initialPinchDistance = 0;
-    }
+    if (e.touches.length < 2) initialPinchDistance = 0;
   });
-  
-  zoomContainer.addEventListener('touchcancel', () => {
-    initialPinchDistance = 0;
-  });
-  
-  zoomContainer.addEventListener('wheel', (e) => {
-    e.preventDefault();
-    
-    const rect = zoomContainer.getBoundingClientRect();
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-    
-    const imgX = (mouseX - translateX) / scale;
-    const imgY = (mouseY - translateY) / scale;
-    
-    const delta = e.deltaY > 0 ? 0.9 : 1.1;
-    let newScale = scale * delta;
-    newScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, newScale));
-    
-    translateX = mouseX - imgX * newScale;
-    translateY = mouseY - imgY * newScale;
-    scale = newScale;
-    
-    constrainPan();
-    updateTransform();
-  }, { passive: false });
-  
-  // Double‑tap centrado no toque
-  let lastTap = 0;
+  zoomContainer.addEventListener('touchcancel', () => { initialPinchDistance = 0; });
+
+  // ----- DOUBLE-TAP (alterna entre MIN_SCALE e DOUBLE_TAP_SCALE) -----
   zoomContainer.addEventListener('touchend', (e) => {
     const now = Date.now();
     if (e.touches.length === 0 && now - lastTap < 300) {
       e.preventDefault();
-      
       const rect = zoomContainer.getBoundingClientRect();
       const tapX = e.changedTouches[0].clientX - rect.left;
       const tapY = e.changedTouches[0].clientY - rect.top;
-      
+
+      // Ponto da imagem sob o dedo
       const imgX = (tapX - translateX) / scale;
       const imgY = (tapY - translateY) / scale;
-      
-      const newScale = scale === 1.5 ? 1 : 1.5;
-      
+
+      // Alterna entre 1 e o valor definido (DOUBLE_TAP_SCALE)
+      const newScale = (scale === MIN_SCALE) ? DOUBLE_TAP_SCALE : MIN_SCALE;
+
       translateX = tapX - imgX * newScale;
       translateY = tapY - imgY * newScale;
       scale = newScale;
-      
+
       constrainPan();
       updateTransform();
     }
     lastTap = now;
   });
-  
+
+  // Inicialização quando a imagem carrega
   if (zoomImg.complete) {
     initZoom();
   } else {
