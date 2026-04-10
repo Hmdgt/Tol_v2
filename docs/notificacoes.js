@@ -347,7 +347,7 @@ async function listarValidacoesPendentes() {
         id: `valid_${imagem}`,
         tipo: 'validacao',
         jogo: jogos[0]?.tipo || 'validação',   // usa o tipo real do primeiro jogo
-        titulo: `📸 ${jogos.length} boletim(ins) por validar`,
+        titulo: `${jogos.length} boletim(ins) por validar`,
         resumo: jogos.map(j => j.tipo).join(', '),
         data: jogos[0].data_processamento,
         imagem: imagem,
@@ -413,7 +413,7 @@ async function marcarComoLida(idNotificacao) {
       const histBase64 = stringToBase64(histContent);
       
       const bodyHist = {
-        message: `📚 Histórico: ${idNotificacao}`,
+        message: `Histórico: ${idNotificacao}`,
         content: histBase64
       };
       if (fHist.sha) bodyHist.sha = fHist.sha;
@@ -700,10 +700,10 @@ async function verificarEDispararPush() {
       }
       
       if (!window.isAppEmPrimeiroPlano()) {
-        console.log("📱 App fechada, enviando push...");
+        console.log("App fechada, enviando push...");
         await dispararPush(tipo, jogo);
       } else {
-        console.log("👁️ App aberta, apenas badge");
+        console.log("App aberta, apenas badge");
       }
     }
     
