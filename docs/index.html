@@ -1032,36 +1032,48 @@
   }
 
   /* ========== DROPDOWN DE SELEÇÃO DE JOGO (ESTATÍSTICAS) ========== */
+/* ========== DROPDOWN DE SELEÇÃO DE JOGO (ESTILO ABA) ========== */
 .jogo-select-container {
-    margin: 10px 0;
+    margin: 5px 0;
 }
 
 .jogo-select {
-    width: 100%;
-    padding: 12px 16px;
-    background-color: var(--bg-card);
-    color: var(--text-primary);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 500;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 16px center;
-    background-size: 16px;
+    width: auto;
+    min-width: 140px;
+    padding: 8px 28px 8px 12px;
+    background-color: transparent;
+    color: var(--text-secondary);
+    border: none;
+    font-size: 12px;
+    font-weight: normal;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
     cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23aaaaaa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 12px;
+    border-radius: 0;
+    transition: color 0.2s ease;
 }
 
 [data-theme="light"] .jogo-select {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23212529' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236c757d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
 }
 
+.jogo-select:hover,
 .jogo-select:focus {
+    color: var(--text-primary);
     outline: none;
-    border-color: var(--accent-green-light);
 }
 
+.jogo-select option {
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+    font-size: 14px; /* opções um pouco maiores para facilitar toque */
+    padding: 8px;
+}
   
 </style>
 </head>
