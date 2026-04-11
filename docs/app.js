@@ -2,6 +2,32 @@
 // 🚀 APP PRINCIPAL (SPA)
 // ===============================
 
+// ========== RECUPERAÇÃO DE LAYOUT APÓS RESET ==========
+function forceLayoutRecovery() {
+  requestAnimationFrame(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    
+    document.documentElement.style.willChange = 'transform';
+    document.body.style.willChange = 'transform';
+    void document.body.offsetHeight; // força reflow
+    
+    setTimeout(() => {
+      document.documentElement.style.willChange = 'auto';
+      document.body.style.willChange = 'auto';
+    }, 0);
+    
+    if (window.location.search.includes('reset')) {
+      const url = new URL(window.location);
+      url.searchParams.delete('reset');
+      window.history.replaceState(null, '', url.toString());
+    }
+  });
+}
+
+window.addEventListener('load', () => {
+  setTimeout(forceLayoutRecovery, 100);
+});
+
 // ========== ATUALIZAR BARRA DE ESTADO CONFORME TEMA ==========
 function fixThemeColor() {
   const theme = document.documentElement.getAttribute('data-theme') || 'dark';
@@ -15,17 +41,11 @@ document.addEventListener('visibilitychange', () => {
 });
 window.addEventListener('scroll', fixThemeColor, { passive: true });
 
-// ========== FORÇAR COR DA BARRA DE NAVEGAÇÃO NO ANDROID (RESPEITA TEMA) ==========
 function forceNavigationBarColor() {
   if (/Android/.test(navigator.userAgent)) {
     const theme = document.documentElement.getAttribute('data-theme') || 'dark';
     const bgColor = theme === 'light' ? '#ffffff' : '#000000';
     
-    // Remove estilos inline anteriores para não conflituar com o CSS
-    document.documentElement.style.removeProperty('background-color');
-    document.body.style.removeProperty('background-color');
-    
-    // Atualizar meta theme-color (única função necessária)
     let meta = document.querySelector('meta[name="theme-color"]');
     if (!meta) {
       meta = document.createElement('meta');
@@ -38,10 +58,8 @@ function forceNavigationBarColor() {
   }
 }
 
-// Chamar inicialmente e sempre que o tema mudar
 forceNavigationBarColor();
 
-// Ouvir mudanças de tema (disparado pelo theme.js)
 window.addEventListener('themeChanged', () => {
   forceNavigationBarColor();
 });
@@ -66,7 +84,7 @@ document.addEventListener('visibilitychange', () => {
   }
 });
 
-// ========== CAPTURA DE ERROS PARA DEBUG ==========
+// ========== CAPTURA DE ERROS ==========
 window.errorLog = [];
 
 window.addEventListener('error', (event) => {
@@ -108,6 +126,16 @@ function mostrarLogs() {
   } else {
     alert(msg);
   }
+}
+
+function escapeHTML(str) {
+  return str.replace(/[&<>"]/g, function(c) {
+    if (c === '&') return '&amp;';
+    if (c === '<') return '&lt;';
+    if (c === '>') return '&gt;';
+    if (c === '"') return '&quot;';
+    return c;
+  });
 }
 
 // ========== GESTOR DE VIEWS ==========
@@ -192,14 +220,14 @@ window.resetApp = async function () {
     if ("serviceWorker" in navigator) {
       const registrations = await navigator.serviceWorker.getRegistrations();
       await Promise.all(registrations.map(reg => reg.unregister()));
-      // Aguarda um pouco para garantir que o SW foi removido
       await new Promise(resolve => setTimeout(resolve, 300));
     }
     localStorage.clear();
     if (token) localStorage.setItem("github_token", token);
-    sessionStorage.clear();   // limpa também a última view guardada
-    // Força reload sem cache
-    window.location.href = "/Tol_v2/index.html?reset=" + Date.now();
+    sessionStorage.clear();   // <- CRÍTICO
+    
+    // Usar replace para evitar estado intermédio na WebView
+    window.location.replace("/Tol_v2/index.html?reset=" + Date.now());
   } catch (err) {
     console.error("Erro ao fazer reset:", err);
     alert("Erro ao atualizar a aplicação. Tenta novamente.");
@@ -239,7 +267,7 @@ document.body.addEventListener("change", (e) => {
 document.getElementById("saveTokenBtn")?.addEventListener("click", window.saveToken);
 document.getElementById("resetAppBtn")?.addEventListener("click", window.resetApp);
 
-// ---------- POLLING INTELIGENTE ----------
+// ---------- POLLING ----------
 let pollingInterval;
 async function pollBadge() {
   if (typeof window.atualizarBadge === "function") {
@@ -262,7 +290,6 @@ function mostrarBotaoAtualizar() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Força a reavaliação da view ativa (caso o sessionStorage tenha sido limpo)
   const lastView = sessionStorage.getItem('lastView');
   if (lastView && document.getElementById(lastView)) {
     ViewManager.goTo(lastView);
