@@ -23,8 +23,11 @@
 <style>
   /* ========== RESET ========== */
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { 
-    height: 100%; 
+  html, body {
+    height: 100%;
+  }
+
+  html {
     transition: background-color 0.3s ease;
     background-color: var(--bg-primary) !important;
   }
@@ -32,7 +35,8 @@
     margin: 0;
     font-family: sans-serif;
     padding: env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);
-    height: 100dvh;
+    min-height: 100vh;
+    min-height: 100dvh;
     overflow: hidden;
     display: flex;
     flex-direction: column;
