@@ -586,5 +586,45 @@
     },
     "ganhou": false,
     "premios": []
+  },
+  {
+    "data_verificacao": "2026-04-11 21:26:58",
+    "metodo_validacao": "data + concurso",
+    "boletim": {
+      "referencia": "100-00379626-170",
+      "data_sorteio": "2026-04-11",
+      "concurso_sorteio": "029/2026",
+      "imagem_origem": "foto_1775839910813_pcvc58.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "numeros": [
+        "07",
+        "13",
+        "31",
+        "45",
+        "47"
+      ],
+      "numero_da_sorte": "04"
+    },
+    "sorteio": {
+      "concurso": "029/2026",
+      "data": "11/04/2026",
+      "numeros": [
+        "24",
+        "25",
+        "30",
+        "31",
+        "33"
+      ],
+      "numero_da_sorte": "12"
+    },
+    "acertos": {
+      "numeros": 1,
+      "numero_da_sorte": false,
+      "descricao": "1 número(s) sem Nº da Sorte"
+    },
+    "ganhou": false,
+    "premios": []
   }
 ]
