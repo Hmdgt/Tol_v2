@@ -147,13 +147,6 @@ document.querySelectorAll('.navBtn').forEach(btn => {
   });
 });
 
-const lastView = sessionStorage.getItem('lastView');
-if (lastView && document.getElementById(lastView)) {
-  window.ViewManager.goTo(lastView);
-} else {
-  window.ViewManager.goTo('homeView');
-}
-
 // ---------- REGISTO SERVICE WORKER ----------
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", async () => {
