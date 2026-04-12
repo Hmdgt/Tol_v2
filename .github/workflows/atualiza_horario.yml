@@ -1,5 +1,9 @@
 name: Atualiza Horário Verão/Inverno
 
+permissions:
+  contents: write
+  workflows: write
+
 on:
   schedule:
     - cron: "10 1 * * *"   # corre todos os dias às 01:10 UTC
