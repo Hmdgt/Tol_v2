@@ -2,7 +2,7 @@ name: Atualiza Horário Verão/Inverno
 
 permissions:
   contents: write
-  workflows: write
+  workflow: write
 
 on:
   schedule:
