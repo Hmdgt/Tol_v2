@@ -65,11 +65,13 @@ def atualizar_crons_em_arquivo(filepath, usar_verao):
             print(f"Erro ao ler YAML em {filepath}: {e}")
             return
 
-    if "on" not in data or "schedule" not in data["on"]:
+    on_section = data.get("on") or data.get(True)
+
+    if not on_section or "schedule" not in on_section:
         print(f"'{os.path.basename(filepath)}' não tem schedule. Ignorando.")
         return
 
-    schedules = data["on"]["schedule"]
+    schedules = on_section["schedule"]   
 
     for i, cron_dict in enumerate(schedules):
         cron_antigo = cron_dict.get("cron")
