@@ -16,9 +16,9 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
         with:
-          ref: main   # ← ESSENCIAL para evitar detached HEAD
+          ref: main
 
-      - name: Pull com rebase (garante que está atualizado)
+      - name: Pull com rebase
         run: |
           git fetch origin main
           git pull --rebase origin main
@@ -45,7 +45,10 @@ jobs:
 
           if ! git diff --cached --quiet; then
             git commit -m "Atualizar horários (verão/inverno) [skip ci]"
-            git push https://x-access-token:${TOKEN}@github.com/${{ github.repository }} HEAD:main
+
+            # 🔥 SOLUÇÃO PROFISSIONAL
+            git remote set-url origin https://x-access-token:${TOKEN}@github.com/${{ github.repository }}
+            git push origin HEAD:main
           else
             echo "Sem alterações"
           fi
