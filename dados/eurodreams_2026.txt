@@ -1,15 +1,15 @@
-Concurso: 029/2026
-Data: 09/04/2026
-Chave: 3 7 8 19 24 29 + 5
-Ordem de saída: 7 3 8 29 19 24 + 5
-Números: 03 07 08 19 24 29
+Concurso: 030/2026
+Data: 13/04/2026
+Chave: 3 17 19 28 33 40 + 5
+Ordem de saída: 3 19 40 28 17 33 + 5
+Números: 03 17 19 28 33 40
 Dream: 5
 ----------------------------------------
 Prémios:
-1.º Prémio - 6 Números + 1 Nº de Sonho | PT: 1 | EU: 1 | Valor: € 30.000/mês x 30 anos
-2.º Prémio - 6 Números | PT: 0 | EU: 0 | Valor: € 2.000/mês x 5 anos
-3.º Prémio - 5 Números | PT: 25 | EU: 162 | Valor: € 291,83
-4.º Prémio - 4 Números | PT: 885 | EU: 6.246 | Valor: € 21,21
-5.º Prémio - 3 Números | PT: 11.639 | EU: 81.233 | Valor: € 3,42
-6.º Prémio - 2 Números | PT: 61.228 | EU: 429.109 | Valor: € 2,50
+1.º Prémio - 6 Números + 1 Nº de Sonho | PT: 0 | EU: 0 | Valor: € 20.000/mês x 30 anos
+2.º Prémio - 6 Números | PT: 0 | EU: 1 | Valor: € 2.000/mês x 5 anos
+3.º Prémio - 5 Números | PT: 22 | EU: 121 | Valor: € 400,05
+4.º Prémio - 4 Números | PT: 767 | EU: 4.710 | Valor: € 28,81
+5.º Prémio - 3 Números | PT: 11.043 | EU: 64.710 | Valor: € 4,40
+6.º Prémio - 2 Números | PT: 61.849 | EU: 363.739 | Valor: € 2,50
 ----------------------------------------
