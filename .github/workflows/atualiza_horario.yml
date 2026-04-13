@@ -16,7 +16,12 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
         with:
-          ref: main   # ← ESSENCIAL
+          ref: main   # ← ESSENCIAL para evitar detached HEAD
+
+      - name: Pull com rebase (garante que está atualizado)
+        run: |
+          git fetch origin main
+          git pull --rebase origin main
 
       - name: Setup Python
         uses: actions/setup-python@v4
