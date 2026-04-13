@@ -13,15 +13,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repo (sem persistir credenciais)
         uses: actions/checkout@v4
         with:
           ref: main
+          persist-credentials: false
 
-      - name: Pull com rebase
+      - name: Pull com rebase (usando PAT)
+        env:
+          TOKEN: ${{ secrets.PAT_WORKFLOW }}
         run: |
-          git fetch origin main
-          git pull --rebase origin main
+          git fetch https://x-access-token:${TOKEN}@github.com/${{ github.repository }} main
+          git pull --rebase https://x-access-token:${TOKEN}@github.com/${{ github.repository }} main
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -37,13 +40,13 @@ jobs:
       - name: Verificar PAT_WORKFLOW
         run: |
           if [ -z "${{ secrets.PAT_WORKFLOW }}" ]; then
-            echo "❌ PAT_WORKFLOW não definido. O push falhará."
+            echo "❌ PAT_WORKFLOW não definido"
             exit 1
           else
             echo "✅ PAT_WORKFLOW definido"
           fi
 
-      - name: Commit mudanças
+      - name: Commit e push
         env:
           TOKEN: ${{ secrets.PAT_WORKFLOW }}
         run: |
@@ -54,8 +57,6 @@ jobs:
 
           if ! git diff --cached --quiet; then
             git commit -m "Atualizar horários (verão/inverno) [skip ci]"
-
-            # Push direto usando o PAT
             git push https://x-access-token:${TOKEN}@github.com/${{ github.repository }} HEAD:main
           else
             echo "Sem alterações"
