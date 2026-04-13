@@ -40,7 +40,7 @@ jobs:
             echo "❌ PAT_WORKFLOW não definido. O push falhará."
             exit 1
           else
-            echo "✅ PAT_WORKFLOW definido (${#{{ secrets.PAT_WORKFLOW }}} caracteres)"
+            echo "✅ PAT_WORKFLOW definido"
           fi
 
       - name: Commit mudanças
@@ -55,7 +55,7 @@ jobs:
           if ! git diff --cached --quiet; then
             git commit -m "Atualizar horários (verão/inverno) [skip ci]"
 
-            # Push direto usando o PAT (sem depender do remote 'origin')
+            # Push direto usando o PAT
             git push https://x-access-token:${TOKEN}@github.com/${{ github.repository }} HEAD:main
           else
             echo "Sem alterações"
