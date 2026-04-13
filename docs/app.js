@@ -67,9 +67,13 @@ window.addEventListener('themeChanged', () => {
 let appEmPrimeiroPlano = true;
 window.isAppEmPrimeiroPlano = () => appEmPrimeiroPlano;
 
+// ========== GESTÃO DE VISIBILIDADE (melhorada) ==========
 document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'visible') {
+  const isVisible = document.visibilityState === 'visible';
+  
+  if (isVisible) {
     appEmPrimeiroPlano = true;
+    console.log("📱 App passou para PRIMEIRO PLANO");
     
     if ('clearAppBadge' in navigator) {
       navigator.clearAppBadge();
@@ -78,9 +82,22 @@ document.addEventListener('visibilitychange', () => {
     
     forceNavigationBarColor();
     startPolling();
+    
+    // Atualizar badge imediatamente ao voltar
+    if (typeof window.atualizarBadge === "function") {
+      window.atualizarBadge();
+    }
   } else {
     appEmPrimeiroPlano = false;
-    clearInterval(pollingInterval);
+    console.log("📱 App passou para SEGUNDO PLANO (minimizada)");
+    
+    // Não parar o polling completamente no Android?
+    // O setInterval pode continuar, mas o Android pode suspender
+    // Mantemos como está - é o melhor que podemos fazer
+    if (pollingInterval) {
+      clearInterval(pollingInterval);
+      pollingInterval = null;
+    }
   }
 });
 
@@ -95,6 +112,7 @@ window.addEventListener('error', (event) => {
     stack: event.error?.stack
   });
   if (window.errorLog.length > 20) window.errorLog.shift();
+  console.error("❌ Erro capturado:", errorMsg);
 });
 
 window.addEventListener('unhandledrejection', (event) => {
@@ -104,6 +122,7 @@ window.addEventListener('unhandledrejection', (event) => {
     stack: event.reason?.stack
   });
   if (window.errorLog.length > 20) window.errorLog.shift();
+  console.error("❌ Promise rejection capturada:", event.reason);
 });
 
 function mostrarLogs() {
@@ -129,6 +148,7 @@ function mostrarLogs() {
 }
 
 function escapeHTML(str) {
+  if (!str) return '';
   return str.replace(/[&<>"]/g, function(c) {
     if (c === '&') return '&amp;';
     if (c === '<') return '&lt;';
@@ -175,30 +195,34 @@ document.querySelectorAll('.navBtn').forEach(btn => {
   });
 });
 
-// ---------- REGISTO SERVICE WORKER ----------
+// ---------- REGISTO SERVICE WORKER (melhorado) ----------
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", async () => {
     try {
       const reg = await navigator.serviceWorker.register(
         `/Tol_v2/service-worker.js?v=${CONFIG.CACHE_VERSION}`
       );
-      console.log("SW registado", reg);
+      console.log("✅ SW registado com sucesso:", reg);
+      
       reg.addEventListener("updatefound", () => {
         const newWorker = reg.installing;
+        console.log("🔄 Nova versão do SW encontrada");
         newWorker.addEventListener("statechange", () => {
           if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+            console.log("📦 Nova versão pronta a instalar");
             mostrarBotaoAtualizar();
           }
         });
       });
     } catch (err) {
-      console.error("Erro ao registar SW", err);
+      console.error("❌ Erro ao registar SW:", err);
     }
   });
 }
 
 // ---------- FUNÇÕES GLOBAIS ----------
 window.atualizarApp = async function () {
+  console.log("🔄 A atualizar aplicação...");
   const reg = await navigator.serviceWorker.getRegistration();
   if (reg?.waiting) {
     reg.waiting.postMessage({ action: "skipWaiting" });
@@ -211,25 +235,27 @@ window.atualizarApp = async function () {
 };
 
 window.resetApp = async function () {
+  console.log("🔄 A resetar aplicação...");
   try {
     const token = localStorage.getItem("github_token");
     if ("caches" in window) {
       const keys = await caches.keys();
       await Promise.all(keys.map(k => caches.delete(k)));
+      console.log("🗑️ Cache limpo");
     }
     if ("serviceWorker" in navigator) {
       const registrations = await navigator.serviceWorker.getRegistrations();
       await Promise.all(registrations.map(reg => reg.unregister()));
       await new Promise(resolve => setTimeout(resolve, 300));
+      console.log("🗑️ Service Workers desregistados");
     }
     localStorage.clear();
     if (token) localStorage.setItem("github_token", token);
-    sessionStorage.clear();   // <- CRÍTICO
+    sessionStorage.clear();
     
-    // Usar replace para evitar estado intermédio na WebView
     window.location.replace("/Tol_v2/index.html?reset=" + Date.now());
   } catch (err) {
-    console.error("Erro ao fazer reset:", err);
+    console.error("❌ Erro ao fazer reset:", err);
     alert("Erro ao atualizar a aplicação. Tenta novamente.");
   }
 };
@@ -240,6 +266,7 @@ window.saveToken = function () {
   const token = tokenInput.value.trim();
   if (!token) return alert("Introduz um token válido.");
   localStorage.setItem("github_token", token);
+  console.log("✅ Token guardado");
   alert("Token guardado.");
 };
 
@@ -267,29 +294,40 @@ document.body.addEventListener("change", (e) => {
 document.getElementById("saveTokenBtn")?.addEventListener("click", window.saveToken);
 document.getElementById("resetAppBtn")?.addEventListener("click", window.resetApp);
 
-// ---------- POLLING ----------
-let pollingInterval;
+// ---------- POLLING (mantido para quando app está aberta) ----------
+let pollingInterval = null;
+
 async function pollBadge() {
   if (typeof window.atualizarBadge === "function") {
+    console.log("🔄 Polling: a atualizar badge...");
     await window.atualizarBadge();
   }
 }
 
 function startPolling() {
-  if (pollingInterval) clearInterval(pollingInterval);
+  if (pollingInterval) {
+    clearInterval(pollingInterval);
+    pollingInterval = null;
+  }
   pollBadge();
   pollingInterval = setInterval(pollBadge, 60000);
+  console.log("✅ Polling iniciado (60s)");
 }
 
+// Iniciar polling apenas se app estiver visível
 if (document.visibilityState === "visible") {
   startPolling();
 }
 
 function mostrarBotaoAtualizar() {
-  console.log("Nova versão disponível. Atualize a app.");
+  console.log("🔄 Nova versão disponível. Recarrega a app.");
+  // Podes adicionar um toast ou snackbar aqui se quiseres
 }
 
+// ========== INICIALIZAÇÃO ==========
 document.addEventListener('DOMContentLoaded', () => {
+  console.log("🚀 App inicializada");
+  
   const lastView = sessionStorage.getItem('lastView');
   if (lastView && document.getElementById(lastView)) {
     ViewManager.goTo(lastView);
@@ -299,4 +337,9 @@ document.addEventListener('DOMContentLoaded', () => {
   
   const btn = document.getElementById('debugLogsBtn');
   if (btn) btn.addEventListener('click', mostrarLogs);
+  
+  // Garantir que o badge é atualizado ao carregar
+  if (typeof window.atualizarBadge === "function") {
+    setTimeout(() => window.atualizarBadge(), 500);
+  }
 });
