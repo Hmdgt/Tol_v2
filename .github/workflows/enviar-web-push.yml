@@ -16,7 +16,7 @@ on:
         type: string
 
 permissions:
-  contents: read
+  contents: write  # ← ALTERADO: necessário para remover subscription.json expirada
 
 jobs:
   notify:
@@ -36,7 +36,6 @@ jobs:
       - name: Obter Subscription do GitHub
         id: subscription
         run: |
-          # Tenta buscar o ficheiro subscription.json
           HTTP_CODE=$(curl -s -o subscription_response.json -w "%{http_code}" \
             -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
             "https://api.github.com/repos/${{ github.repository }}/contents/subscription.json")
@@ -52,18 +51,20 @@ jobs:
             exit 1
           fi
           
-          # Descodificar conteúdo base64
+          # Guardar SHA para possível remoção
+          SHA=$(jq -r '.sha' subscription_response.json)
+          echo "sha=$SHA" >> $GITHUB_OUTPUT
+          
           jq -r '.content' subscription_response.json | base64 -d > subscription.json
           
-          # Verificar se o ficheiro não está vazio
           if [ ! -s subscription.json ]; then
-            echo "⚠️ subscription.json está vazio ou inválido"
             echo "vazio=true" >> $GITHUB_OUTPUT
           else
             echo "vazio=false" >> $GITHUB_OUTPUT
           fi
 
       - name: Enviar Web Push
+        id: send_push
         if: steps.subscription.outputs.vazio != 'true'
         env:
           VAPID_PUBLIC: ${{ secrets.VAPID_PUBLIC }}
@@ -76,29 +77,25 @@ jobs:
           const fs = require("fs");
           const webpush = require("web-push");
 
-          // Validação dos segredos
           const vapidPublic = process.env.VAPID_PUBLIC;
           const vapidPrivate = process.env.VAPID_PRIVATE;
           const vapidEmail = process.env.VAPID_EMAIL;
 
           if (!vapidPublic || !vapidPrivate || !vapidEmail) {
-            console.error("❌ VAPID_PUBLIC, VAPID_PRIVATE ou VAPID_EMAIL não definidos nos segredos");
+            console.error("❌ VAPID não configurados");
             process.exit(1);
           }
 
-          // Configurar VAPID
           webpush.setVapidDetails(
             `mailto:${vapidEmail}`,
             vapidPublic,
             vapidPrivate
           );
 
-          // Ler subscriptions
           let subscriptions = [];
           try {
             const content = fs.readFileSync("subscription.json", "utf8");
             const data = JSON.parse(content);
-            // Suporta objeto único ou array
             subscriptions = Array.isArray(data) ? data : [data];
           } catch (err) {
             console.error("❌ Erro ao ler subscription.json:", err.message);
@@ -106,7 +103,7 @@ jobs:
           }
 
           if (subscriptions.length === 0) {
-            console.log("⚠️ Nenhuma subscrição encontrada em subscription.json");
+            console.log("⚠️ Nenhuma subscrição encontrada");
             process.exit(0);
           }
 
@@ -128,9 +125,7 @@ jobs:
           }
 
           const payload = JSON.stringify({
-            title,
-            body,
-            tag,
+            title, body, tag,
             icon: "/Tol_v2/icons/icon-192.png",
             badge: "/Tol_v2/icons/icon-192.png",
             url: "/Tol_v2/",
@@ -139,34 +134,43 @@ jobs:
 
           console.log(`📤 A enviar para ${subscriptions.length} subscription(s)...`);
 
-          // Usar Promise.allSettled para capturar todas as respostas
-          const results = await Promise.allSettled(
-            subscriptions.map((sub, idx) => {
-              console.log(`→ Enviando para subscription ${idx + 1}...`);
-              return webpush.sendNotification(sub, payload);
-            })
-          );
-
-          let enviadas = 0;
-          let expiradas = 0;
-          let outrosErros = 0;
-
-          results.forEach((result, idx) => {
-            if (result.status === "fulfilled") {
-              console.log(`✅ Subscription ${idx + 1} enviada com sucesso`);
-              enviadas++;
-            } else {
-              const err = result.reason;
+          let expirada = false;
+          
+          for (let i = 0; i < subscriptions.length; i++) {
+            try {
+              await webpush.sendNotification(subscriptions[i], payload);
+              console.log(`✅ Subscription ${i + 1} enviada`);
+            } catch (err) {
               if (err.statusCode === 410) {
-                console.log(`⚠️ Subscription ${idx + 1} expirada (410)`);
-                expiradas++;
+                console.log(`⚠️ Subscription ${i + 1} expirada (410)`);
+                expirada = true;
               } else {
-                console.log(`❌ Subscription ${idx + 1} erro: ${err.message}`);
-                outrosErros++;
+                console.log(`❌ Subscription ${i + 1} erro: ${err.message}`);
               }
             }
-          });
-
-          console.log(`\n📊 Resumo: ${enviadas} enviadas, ${expiradas} expiradas, ${outrosErros} outros erros`);
-          if (outrosErros > 0) process.exit(1);
+          }
+          
+          // Sinalizar que a subscrição expirou
+          if (expirada) {
+            console.log("📢 Subscrição expirada detectada");
+            fs.writeFileSync("/tmp/subscription_expirada", "true");
+          }
           EOF
+          
+          # Verificar se precisa remover subscription.json
+          if [ -f "/tmp/subscription_expirada" ]; then
+            echo "expirada=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Remover subscription.json (expirada)
+        if: steps.send_push.outputs.expirada == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SHA: ${{ steps.subscription.outputs.sha }}
+        run: |
+          curl -X DELETE \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/${{ github.repository }}/contents/subscription.json?sha=$SHA"
+          
+          echo "🗑️ subscription.json removido (subscrição expirada)"
