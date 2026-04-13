@@ -16,6 +16,14 @@ jobs:
       - name: Checkout do repositório
         uses: actions/checkout@v4
 
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
       - name: Configurar Python
         uses: actions/setup-python@v5
         with:
@@ -28,15 +36,24 @@ jobs:
       - name: Executar OCR com Gemini
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GEMINI_API_KEY_2: ${{ secrets.GEMINI_API_KEY_2 }}  # ← ADICIONA
-          GEMINI_API_KEY_3: ${{ secrets.GEMINI_API_KEY_3 }}  # ← ADICIONA
+          GEMINI_API_KEY_2: ${{ secrets.GEMINI_API_KEY_2 }}
+          GEMINI_API_KEY_3: ${{ secrets.GEMINI_API_KEY_3 }}
         run: python scripts/processar_uploads.py
 
-      - name: Guardar alterações (se existirem)
+      - name: Guardar alterações (OCR)
         run: |
           git config --global user.name "Bot OCR"
           git config --global user.email "bot@github.com"
-          # ADICIONA TUDO: jogos, registos de hash e cota de chaves
+
+          mkdir -p apostas thumbnails
+
           git add apostas/*.json thumbnails/
-          git commit -m "OCR: Atualização de dados e registos de processamento [skip ci]" || echo "Nada novo"
+          git commit -m "OCR: Atualização de dados e registos de processamento [skip ci]" || exit 0
+          git push
+
+      - name: Limpar imagens processadas
+        run: |
+          echo "🧹 A apagar imagens processadas..."
+          git rm -f uploads/*.jpg uploads/*.jpeg uploads/*.png || true
+          git commit -m "Limpeza de uploads processados [skip ci]" || echo "Nada para limpar"
           git push
