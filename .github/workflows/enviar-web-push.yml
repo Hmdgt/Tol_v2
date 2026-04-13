@@ -5,28 +5,70 @@ on:
     inputs:
       tipo:
         required: true
+        description: "resultados ou validacao"
+        type: choice
+        options:
+          - resultados
+          - validacao
       jogo:
         required: true
+        description: "Nome do jogo"
+        type: string
 
 permissions:
   contents: read
-  actions: write   # ← essencial
 
 jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
 
       - name: Instalar dependências
-        run: |
-          npm init -y
-          npm install web-push
+        run: npm install web-push --no-audit --no-fund
 
-      - name: Enviar notificação Web Push
+      - name: Obter Subscription do GitHub
+        id: subscription
+        run: |
+          # Tenta buscar o ficheiro subscription.json
+          HTTP_CODE=$(curl -s -o subscription_response.json -w "%{http_code}" \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/contents/subscription.json")
+          
+          if [ "$HTTP_CODE" -eq 404 ]; then
+            echo "⚠️ Ficheiro subscription.json não encontrado. Nenhuma subscrição ativa."
+            echo "vazio=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          if [ "$HTTP_CODE" -ne 200 ]; then
+            echo "❌ Erro HTTP $HTTP_CODE ao buscar subscription.json"
+            exit 1
+          fi
+          
+          # Descodificar conteúdo base64
+          jq -r '.content' subscription_response.json | base64 -d > subscription.json
+          
+          # Verificar se o ficheiro não está vazio
+          if [ ! -s subscription.json ]; then
+            echo "⚠️ subscription.json está vazio ou inválido"
+            echo "vazio=true" >> $GITHUB_OUTPUT
+          else
+            echo "vazio=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Enviar Web Push
+        if: steps.subscription.outputs.vazio != 'true'
         env:
           VAPID_PUBLIC: ${{ secrets.VAPID_PUBLIC }}
           VAPID_PRIVATE: ${{ secrets.VAPID_PRIVATE }}
+          VAPID_EMAIL: ${{ secrets.VAPID_EMAIL }}
           TIPO: ${{ github.event.inputs.tipo }}
           JOGO: ${{ github.event.inputs.jogo }}
         run: |
@@ -34,41 +76,97 @@ jobs:
           const fs = require("fs");
           const webpush = require("web-push");
 
+          // Validação dos segredos
+          const vapidPublic = process.env.VAPID_PUBLIC;
+          const vapidPrivate = process.env.VAPID_PRIVATE;
+          const vapidEmail = process.env.VAPID_EMAIL;
+
+          if (!vapidPublic || !vapidPrivate || !vapidEmail) {
+            console.error("❌ VAPID_PUBLIC, VAPID_PRIVATE ou VAPID_EMAIL não definidos nos segredos");
+            process.exit(1);
+          }
+
+          // Configurar VAPID
           webpush.setVapidDetails(
-            "mailto:teuemail@example.com",
-            process.env.VAPID_PUBLIC,
-            process.env.VAPID_PRIVATE
+            `mailto:${vapidEmail}`,
+            vapidPublic,
+            vapidPrivate
           );
 
-          if (!fs.existsSync("subscription.json")) {
-            console.log("⚠️ Sem subscription.json");
+          // Ler subscriptions
+          let subscriptions = [];
+          try {
+            const content = fs.readFileSync("subscription.json", "utf8");
+            const data = JSON.parse(content);
+            // Suporta objeto único ou array
+            subscriptions = Array.isArray(data) ? data : [data];
+          } catch (err) {
+            console.error("❌ Erro ao ler subscription.json:", err.message);
+            process.exit(1);
+          }
+
+          if (subscriptions.length === 0) {
+            console.log("⚠️ Nenhuma subscrição encontrada em subscription.json");
             process.exit(0);
           }
 
-          const sub = JSON.parse(fs.readFileSync("subscription.json", "utf8"));
-          
           const tipo = process.env.TIPO;
           const jogo = process.env.JOGO;
-          
-          let title = "", body = "";
-          
+
+          let title = "", body = "", tag = "";
           if (tipo === "resultados") {
-            title = `${jogo} - Novos resultados`;
-            body = "Já saíram os resultados! Consulta na app.";
+            title = `🎰 ${jogo} - Novos resultados!`;
+            body = "Já saíram os resultados. Vê na app!";
+            tag = `resultado-${jogo}`;
+          } else if (tipo === "validacao") {
+            title = `📝 ${jogo} - Validação pendente`;
+            body = "Tens boletins para validar. Verifica na app!";
+            tag = `validacao-${jogo}`;
           } else {
-            title = `${jogo} - Validação pendente`;
-            body = "Tens boletins por validar. Verifica na app.";
+            console.error(`❌ Tipo inválido: ${tipo}`);
+            process.exit(1);
           }
-          
-          const payload = JSON.stringify({ title, body });
-          
-          webpush.sendNotification(sub, payload)
-            .then(() => console.log("✅ Push enviada"))
-            .catch(err => {
-              console.error("❌ Erro:", err);
+
+          const payload = JSON.stringify({
+            title,
+            body,
+            tag,
+            icon: "/Tol_v2/icons/icon-192.png",
+            badge: "/Tol_v2/icons/icon-192.png",
+            url: "/Tol_v2/",
+            timestamp: new Date().toISOString()
+          });
+
+          console.log(`📤 A enviar para ${subscriptions.length} subscription(s)...`);
+
+          // Usar Promise.allSettled para capturar todas as respostas
+          const results = await Promise.allSettled(
+            subscriptions.map((sub, idx) => {
+              console.log(`→ Enviando para subscription ${idx + 1}...`);
+              return webpush.sendNotification(sub, payload);
+            })
+          );
+
+          let enviadas = 0;
+          let expiradas = 0;
+          let outrosErros = 0;
+
+          results.forEach((result, idx) => {
+            if (result.status === "fulfilled") {
+              console.log(`✅ Subscription ${idx + 1} enviada com sucesso`);
+              enviadas++;
+            } else {
+              const err = result.reason;
               if (err.statusCode === 410) {
-                console.log("Subscription expirada, a remover ficheiro...");
-                fs.unlinkSync("subscription.json");
+                console.log(`⚠️ Subscription ${idx + 1} expirada (410)`);
+                expiradas++;
+              } else {
+                console.log(`❌ Subscription ${idx + 1} erro: ${err.message}`);
+                outrosErros++;
               }
-            });
+            }
+          });
+
+          console.log(`\n📊 Resumo: ${enviadas} enviadas, ${expiradas} expiradas, ${outrosErros} outros erros`);
+          if (outrosErros > 0) process.exit(1);
           EOF
