@@ -115,11 +115,11 @@ jobs:
 
           let title = "", body = "", tag = "";
           if (tipo === "resultados") {
-            title = `🎰 ${jogo} - Novos resultados!`;
+            title = `${jogo} - Novos resultados!`;
             body = "Já saíram os resultados. Vê na app!";
             tag = `resultado-${jogo}`;
           } else if (tipo === "validacao") {
-            title = `📝 ${jogo} - Validação pendente`;
+            title = `${jogo} - Validação pendente`;
             body = "Tens boletins para validar. Verifica na app!";
             tag = `validacao-${jogo}`;
           } else {
