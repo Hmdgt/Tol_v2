@@ -34,6 +34,15 @@ jobs:
       - name: Executar script de atualização
         run: python scripts/atualiza_yml.py
 
+      - name: Verificar PAT_WORKFLOW
+        run: |
+          if [ -z "${{ secrets.PAT_WORKFLOW }}" ]; then
+            echo "❌ PAT_WORKFLOW não definido. O push falhará."
+            exit 1
+          else
+            echo "✅ PAT_WORKFLOW definido (${#{{ secrets.PAT_WORKFLOW }}} caracteres)"
+          fi
+
       - name: Commit mudanças
         env:
           TOKEN: ${{ secrets.PAT_WORKFLOW }}
@@ -46,9 +55,8 @@ jobs:
           if ! git diff --cached --quiet; then
             git commit -m "Atualizar horários (verão/inverno) [skip ci]"
 
-            # 🔥 SOLUÇÃO PROFISSIONAL
-            git remote set-url origin https://x-access-token:${TOKEN}@github.com/${{ github.repository }}
-            git push origin HEAD:main
+            # Push direto usando o PAT (sem depender do remote 'origin')
+            git push https://x-access-token:${TOKEN}@github.com/${{ github.repository }} HEAD:main
           else
             echo "Sem alterações"
           fi
