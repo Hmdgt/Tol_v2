@@ -41,6 +41,7 @@ FICHEIRO_REGISTO = "apostas/registo_processamento.json"
 # ===== PASTAS =====
 PASTA_UPLOADS = "uploads/"
 PASTA_DADOS = "apostas/"
+PASTA_PREPROCESSADAS = "preprocessadas/"
 PASTA_THUMBNAILS = "thumbnails/"
 
 # ===== CONTROLO DE TAXA (5 por minuto) =====
@@ -378,7 +379,7 @@ def guardar_jogo(jogo, img_nome, img_hash):
 def processar_com_multiplas_chaves():
     """Processa imagens com fallback entre modelos e tentativas em caso de ocupado"""
     # Criar pastas necessárias
-    for pasta in [PASTA_DADOS, PASTA_UPLOADS, PASTA_THUMBNAILS]:
+    for pasta in [PASTA_DADOS, PASTA_UPLOADS, PASTA_PREPROCESSADAS, PASTA_THUMBNAILS]:
         os.makedirs(pasta, exist_ok=True)
 
     # Carregar registo de imagens processadas
