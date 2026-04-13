@@ -6,15 +6,42 @@
 const GITHUB_API = `https://api.github.com/repos/${CONFIG.REPO}/contents/${CONFIG.FICHEIROS.NOTIFICACOES}`;
 const GITHUB_HISTORICO_API = `https://api.github.com/repos/${CONFIG.REPO}/contents/${CONFIG.FICHEIROS.HISTORICO}`;
 
+// ========== PERSISTÊNCIA DO ESTADO (sessionStorage) ==========
+function obterUltimoEstado() {
+  try {
+    const stored = sessionStorage.getItem('notificacoes_estado');
+    if (stored) {
+      return JSON.parse(stored);
+    }
+  } catch (err) {
+    console.warn("Erro ao carregar estado:", err);
+  }
+  return {
+    ultimoTotal: 0,
+    ultimoEstadoNotificacoes: 0,
+    ultimoEstadoValidacoes: 0,
+    ultimoCheck: new Date().toISOString()
+  };
+}
+
+function guardarUltimoEstado(estado) {
+  try {
+    sessionStorage.setItem('notificacoes_estado', JSON.stringify(estado));
+  } catch (err) {
+    console.warn("Erro ao guardar estado:", err);
+  }
+}
+
+let estadoNotificacoes = obterUltimoEstado();
+
 // ---------- FUNÇÃO DE NORMALIZAÇÃO DE JOGOS ----------
 function normalizarJogo(jogo) {
     if (!jogo) return 'desconhecido';
     let normalizado = String(jogo).toLowerCase()
-        .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // remove acentos
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
         .replace(/m1lhão|m1lhao/gi, 'milhao')
         .trim();
     
-    // Mapear para as chaves canónicas
     if (normalizado.includes('eurodream')) return 'eurodreams';
     if (normalizado.includes('euromilho')) return 'euromilhoes';
     if (normalizado.includes('totoloto')) return 'totoloto';
@@ -22,7 +49,7 @@ function normalizarJogo(jogo) {
     return normalizado;
 }
 
-// ---------- FUNÇÃO PARA OBTER LOGO DO JOGO (para notificações) ----------
+// ---------- FUNÇÃO PARA OBTER LOGO DO JOGO ----------
 function getLogoHTMLNotificacao(jogo) {
     const jogoNormalizado = normalizarJogo(jogo);
     
@@ -50,11 +77,10 @@ function formatarData(dataStr) {
     return dataStr;
 }
 
-// ---------- FUNÇÃO AUXILIAR PARA BLOCO INLINE COM DESTAQUE DE ACERTOS ----------
+// ---------- FUNÇÃO AUXILIAR PARA BLOCO INLINE ----------
 function gerarBlocoInline(aposta, sorteio, acertos, jogoNormalizado) {
     let html = '<div class="numeros-aposta" style="justify-content: flex-start;">';
     
-    // Números principais
     if (aposta.numeros) {
         const numerosAcertados = (sorteio && acertos && acertos.numeros_acertados) ? acertos.numeros_acertados : [];
         aposta.numeros.forEach(num => {
@@ -64,7 +90,6 @@ function gerarBlocoInline(aposta, sorteio, acertos, jogoNormalizado) {
         });
     }
     
-    // Verificar se há elementos especiais para adicionar separador "+"
     const temEspeciais = (aposta.estrelas && aposta.estrelas.length > 0) ||
                          (aposta.dream && aposta.dream.length > 0) ||
                          aposta.dream_number !== undefined ||
@@ -73,7 +98,6 @@ function gerarBlocoInline(aposta, sorteio, acertos, jogoNormalizado) {
         html += `<span class="separador-mais">+</span>`;
     }
     
-    // Estrelas
     if (aposta.estrelas) {
         const estrelasAcertadas = (sorteio && acertos && acertos.estrelas_acertadas) ? acertos.estrelas_acertadas : [];
         aposta.estrelas.forEach(est => {
@@ -83,7 +107,6 @@ function gerarBlocoInline(aposta, sorteio, acertos, jogoNormalizado) {
         });
     }
     
-    // Dream Number (EuroDreams)
     let dreamValue = null;
     if (aposta.dream && Array.isArray(aposta.dream) && aposta.dream.length > 0) {
         dreamValue = aposta.dream[0];
@@ -96,7 +119,6 @@ function gerarBlocoInline(aposta, sorteio, acertos, jogoNormalizado) {
         html += `<span class="estrela-santacas ${acertou ? 'acerto' : ''}">${escapeHTML(dreamStr)}</span>`;
     }
     
-    // Nº da Sorte (Totoloto)
     if (aposta.numero_da_sorte && jogoNormalizado === 'totoloto') {
         const sorteStr = String(aposta.numero_da_sorte).padStart(2, '0');
         const acertou = (acertos && acertos.numero_da_sorte) ? acertos.numero_da_sorte : false;
@@ -107,7 +129,7 @@ function gerarBlocoInline(aposta, sorteio, acertos, jogoNormalizado) {
     return html;
 }
 
-// ---------- FUNÇÃO PARA GERAR CONTEÚDO DO DETALHE (VERSÃO MELHORADA) ----------
+// ---------- FUNÇÃO PARA GERAR CONTEÚDO DO DETALHE ----------
 function gerarConteudoDetalhes(notificacao) {
   const { jogo, titulo, resumo, detalhes } = notificacao;
   
@@ -126,7 +148,6 @@ function gerarConteudoDetalhes(notificacao) {
       </div>
   `;
   
-  // Informação do boletim (ref e concurso)
   if (detalhes.boletim) {
     const boletim = detalhes.boletim;
     html += `
@@ -137,7 +158,6 @@ function gerarConteudoDetalhes(notificacao) {
     `;
   }
   
-  // ========== APOSTA ==========
   if (detalhes.aposta) {
     const aposta = detalhes.aposta;
     html += `<div style="margin: 12px 0;"><strong>Aposta</strong><br>`;
@@ -151,7 +171,6 @@ function gerarConteudoDetalhes(notificacao) {
     html += `</div>`;
   }
   
-  // ========== SORTEIO ==========
   if (detalhes.sorteio) {
     const sorteio = detalhes.sorteio;
     html += `<div style="margin: 12px 0;"><strong>Sorteio</strong><br>`;
@@ -190,7 +209,6 @@ function gerarConteudoDetalhes(notificacao) {
     html += `</div>`;
   }
   
-  // ========== ACERTOS (texto) ==========
   let acertoTexto = '';
   if (detalhes.acertos && detalhes.acertos.descricao) {
     acertoTexto = detalhes.acertos.descricao;
@@ -198,7 +216,6 @@ function gerarConteudoDetalhes(notificacao) {
     acertoTexto = resumo;
   }
   
-  // ========== RODAPÉ: PRÉMIO ==========
   html += `<hr style="margin: 16px 0 8px;">`;
   html += `<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">`;
   
@@ -530,10 +547,13 @@ async function handleNotificationClick(e) {
   }
 }
 
-// ---------- ATUALIZAR BADGE ----------
+// ---------- ATUALIZAR BADGE (VERSÃO MELHORADA) ----------
 window.atualizarBadge = async function() {
   const badge = document.getElementById("notificationBadge");
-  if (!badge) return;
+  if (!badge) {
+    console.warn("⚠️ Badge element not found");
+    return;
+  }
   
   try {
     const notificacoes = await carregarNotificacoes();
@@ -542,23 +562,50 @@ window.atualizarBadge = async function() {
     const validacoes = await listarValidacoesPendentes();
     const totalValidacoes = validacoes.length;
     
-    const total = naoLidas + totalValidacoes;
+    const totalAtual = naoLidas + totalValidacoes;
+    const appVisivel = document.visibilityState === 'visible';
     
-    badge.style.display = total > 0 ? "flex" : "none";
-    badge.textContent = total > 99 ? "99+" : total;
+    console.log(`🔔 Badge: ${totalAtual} (app ${appVisivel ? 'aberta' : 'minimizada'})`);
     
-    await atualizarBadgeIcone(total);
+    badge.style.display = totalAtual > 0 ? "flex" : "none";
+    badge.textContent = totalAtual > 99 ? "99+" : totalAtual;
+    
+    await atualizarBadgeIcone(totalAtual);
+    
+    // Verificar se precisa enviar push (apenas se app minimizada E houver novas notificações)
+    if (!appVisivel && totalAtual > estadoNotificacoes.ultimoTotal) {
+      console.log("📤 App minimizada com novas notificações → disparando push");
+      let tipo = "resultados";
+      let jogo = "Jogo";
+      
+      if (totalValidacoes > estadoNotificacoes.ultimoEstadoValidacoes && validacoes.length > 0) {
+        tipo = "validacao";
+        jogo = validacoes[0].jogo || "validação";
+      } else if (naoLidas > estadoNotificacoes.ultimoEstadoNotificacoes && notificacoes.length > 0) {
+        const novas = notificacoes.filter(n => !n.lido);
+        if (novas.length) {
+          jogo = novas[0].jogo || "Jogo";
+        }
+      }
+      
+      await dispararPush(tipo, jogo);
+    }
+    
+    // Atualizar estado persistente
+    estadoNotificacoes = {
+      ultimoTotal: totalAtual,
+      ultimoEstadoNotificacoes: naoLidas,
+      ultimoEstadoValidacoes: totalValidacoes,
+      ultimoCheck: new Date().toISOString()
+    };
+    guardarUltimoEstado(estadoNotificacoes);
     
   } catch (err) {
-    console.error("Erro ao atualizar badge:", err);
+    console.error("❌ Erro ao atualizar badge:", err);
   }
 };
 
-// ========== NOVAS FUNÇÕES ==========
-
-let ultimoTotal = 0;
-let ultimoEstadoNotificacoes = 0;
-let ultimoEstadoValidacoes = 0;
+// ========== FUNÇÕES DE PUSH ==========
 
 async function atualizarBadgeIcone(total) {
   if ('setAppBadge' in navigator) {
@@ -578,9 +625,11 @@ async function atualizarBadgeIcone(total) {
 async function dispararPush(tipo, jogo) {
   const token = localStorage.getItem("github_token");
   if (!token) {
-    console.warn("Token não configurado");
+    console.warn("⚠️ Token GitHub não configurado");
     return false;
   }
+  
+  console.log(`🚀 Disparando push: ${tipo} - ${jogo}`);
   
   try {
     const response = await fetch(
@@ -599,70 +648,17 @@ async function dispararPush(tipo, jogo) {
     );
     
     if (response.ok) {
-      console.log(`🚀 Push disparada: ${tipo} - ${jogo}`);
+      console.log("✅ Push disparada com sucesso");
       return true;
     } else {
-      console.error("Erro ao disparar push:", await response.text());
+      console.error("❌ Erro HTTP:", response.status, await response.text());
       return false;
     }
   } catch (err) {
-    console.error("Erro de rede:", err);
+    console.error("❌ Erro de rede:", err);
     return false;
   }
 }
-
-async function verificarEDispararPush() {
-  try {
-    const notificacoes = await carregarNotificacoes();
-    const naoLidas = notificacoes.filter(n => !n.lido).length;
-    
-    const validacoes = await listarValidacoesPendentes();
-    const totalValidacoes = validacoes.length;
-    
-    const totalAtual = naoLidas + totalValidacoes;
-    
-    if (totalAtual > ultimoTotal) {
-      let tipo = "resultados";
-      let jogo = "Jogo";
-      
-      if (totalValidacoes > ultimoEstadoValidacoes) {
-        tipo = "validacao";
-        const primeira = Object.values(validacoes)[0];
-        if (primeira && primeira[0]) {
-          jogo = primeira[0].tipo;
-        }
-      } else if (naoLidas > ultimoEstadoNotificacoes) {
-        const novas = notificacoes.filter(n => !n.lido);
-        if (novas.length) {
-          jogo = novas[0].jogo || "Jogo";
-        }
-      }
-      
-      if (!window.isAppEmPrimeiroPlano()) {
-        console.log("App fechada, enviando push...");
-        await dispararPush(tipo, jogo);
-      } else {
-        console.log("App aberta, apenas badge");
-      }
-    }
-    
-    ultimoTotal = totalAtual;
-    ultimoEstadoNotificacoes = naoLidas;
-    ultimoEstadoValidacoes = totalValidacoes;
-    
-  } catch (err) {
-    console.error("Erro ao verificar novidades:", err);
-  }
-}
-
-const originalAtualizarBadge = window.atualizarBadge;
-
-window.atualizarBadge = async function() {
-  if (originalAtualizarBadge) {
-    await originalAtualizarBadge();
-  }
-  await verificarEDispararPush();
-};
 
 // ---------- FECHAR MODAL ----------
 document.addEventListener('DOMContentLoaded', () => {
@@ -681,6 +677,14 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+  
+  // Detectar quando app muda de visibilidade
+  document.addEventListener('visibilitychange', () => {
+    console.log(`📱 App ${document.visibilityState === 'visible' ? 'aberta' : 'minimizada'}`);
+    if (document.visibilityState === 'visible') {
+      window.atualizarBadge();
+    }
+  });
 });
 
 // Expor funções globalmente
@@ -688,6 +692,5 @@ window.renderizarNotificacoes = renderizarNotificacoes;
 window.marcarComoLida = marcarComoLida;
 window.carregarNotificacoes = carregarNotificacoes;
 window.listarValidacoesPendentes = listarValidacoesPendentes;
-window.verificarEDispararPush = verificarEDispararPush;
 window.dispararPush = dispararPush;
 window.atualizarBadgeIcone = atualizarBadgeIcone;
