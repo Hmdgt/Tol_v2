@@ -1,12 +1,12 @@
 name: Atualiza Horário Verão/Inverno
 
-permissions:
-  contents: write
-
 on:
   schedule:
     - cron: "10 1 * * *"   # corre todos os dias às 01:10 UTC
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   atualizar-ymls:
@@ -28,13 +28,17 @@ jobs:
         run: python scripts/atualiza_yml.py
 
       - name: Commit mudanças
+        env:
+          TOKEN: ${{ secrets.PAT_WORKFLOW }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+
           git add .github/workflows/
+
           if ! git diff --cached --quiet; then
-            git commit -m "Atualizar horários (verão/inverno)"
-            git push
+            git commit -m "Atualizar horários (verão/inverno) [skip ci]"
+            git push https://x-access-token:${TOKEN}@github.com/${{ github.repository }} HEAD:${{ github.ref_name }}
           else
             echo "Sem alterações"
           fi
