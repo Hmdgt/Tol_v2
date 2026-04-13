@@ -84,7 +84,6 @@ self.addEventListener("fetch", event => {
   }
 
   // Estratégia para imagens (stale-while-revalidate)
-  // Inclui uploads/ e thumbnails/
   if (url.pathname.includes('/Tol_v2/uploads/') || 
       url.pathname.includes('/Tol_v2/thumbnails/')) {
     
@@ -172,6 +171,7 @@ self.addEventListener("message", event => {
 // 🔔 RECEBER PUSH (Web Push API)
 // ===============================
 self.addEventListener("push", event => {
+  console.log("[SW] Push recebida!");
   let data = {};
   try {
     data = event.data ? event.data.json() : {};
@@ -180,9 +180,11 @@ self.addEventListener("push", event => {
   const title = data.title || "Notificação";
   const options = {
     body: data.body || "",
-    icon: undefined,
-    badge: undefined,
-    data: data
+    icon: data.icon || "/Tol_v2/icons/icon-192.png",
+    badge: data.badge || "/Tol_v2/icons/icon-192.png",
+    data: data,
+    tag: data.tag || "default",
+    renotify: true
   };
 
   event.waitUntil(
@@ -191,7 +193,7 @@ self.addEventListener("push", event => {
 });
 
 // ===============================
-// 🔔 CLIQUE NA NOTIFICAÇÃO (NOVO)
+// 🔔 CLIQUE NA NOTIFICAÇÃO
 // ===============================
 self.addEventListener("notificationclick", event => {
   console.log("[SW] Notificação clicada:", event.notification);
@@ -204,13 +206,11 @@ self.addEventListener("notificationclick", event => {
   event.waitUntil(
     clients.matchAll({ type: "window", includeUncontrolled: true })
       .then(windowClients => {
-        // Se já existe uma janela aberta, foca nela
         for (let client of windowClients) {
-          if (client.url === urlToOpen && "focus" in client) {
+          if (client.url.includes(urlToOpen) && "focus" in client) {
             return client.focus();
           }
         }
-        // Senão, abre uma nova
         if (clients.openWindow) {
           return clients.openWindow(urlToOpen);
         }
