@@ -1,6 +1,8 @@
 import json
 import os
 import glob
+import requests
+import time
 from datetime import datetime
 from typing import Dict, List
 
@@ -8,6 +10,10 @@ from typing import Dict, List
 PASTA_RESULTADOS = "resultados/"
 FICHEIRO_NOTIFICACOES_ATIVAS = os.path.join(PASTA_RESULTADOS, "notificacoes_ativas.json")
 FICHEIRO_NOTIFICACOES_HISTORICO = os.path.join(PASTA_RESULTADOS, "notificacoes_historico.json")
+
+# GitHub (serão preenchidas pelo environment no Actions)
+GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")
+GITHUB_REPOSITORY = os.environ.get("GITHUB_REPOSITORY", "hmdgt/Tol_v2")
 
 def gerar_id_unico(resultado: dict, jogo: str) -> str:
     """
@@ -63,13 +69,10 @@ def gerar_resumo(resultado: dict) -> str:
     acertos = resultado.get('acertos', {})
     premios = resultado.get('premios', [])
     
-    # Se não houver prémios, retorna "Não ganhou" (ou, se preferires, a descrição dos acertos)
+    # Se não houver prémios, retorna "Não ganhou"
     if not premios:
-        # Fallback para a descrição antiga, mas podemos simplificar
         if jogo == 'totoloto':
-            # Para Totoloto sem prémios, mostramos apenas "Não ganhou"
             return "Não ganhou"
-        # Para outros jogos, podemos manter a descrição de acertos (ex: "1 número + 0 estrelas")
         numeros = acertos.get('numeros', 0)
         if 'estrelas' in acertos:
             return f"{numeros} números + {acertos.get('estrelas', 0)} estrelas"
@@ -94,7 +97,6 @@ def gerar_resumo(resultado: dict) -> str:
         numeros = acertos.get('numeros', 0)
         ns = acertos.get('numero_da_sorte', False)
         
-        # Construir descrição dos acertos
         if numeros > 0 and ns:
             desc = f"{numeros} número{'s' if numeros != 1 else ''} + Nº da Sorte"
         elif numeros > 0:
@@ -102,18 +104,67 @@ def gerar_resumo(resultado: dict) -> str:
         elif ns:
             desc = "Nº da Sorte"
         else:
-            desc = "Nenhum acerto"  # não deve acontecer porque temos prémios
+            desc = "Nenhum acerto"
         
         return f"Ganhou: {desc} – Total: {total_str}"
     
-    # Para outros jogos, se houver um único prémio, mostramos o nome e valor
+    # Para outros jogos
     if len(premios) == 1:
         p = premios[0]
         nome = p.get('premio', 'Prémio')
         return f"Ganhou: {nome} – {p.get('valor', total_str)}"
     
-    # Fallback (caso haja múltiplos prémios noutro jogo, o que não deve acontecer)
     return f"Ganhou ({len(premios)} prémios) – Total: {total_str}"
+
+# ===== NOVA FUNÇÃO: Disparar push via GitHub API =====
+def disparar_push_github(tipo: str, jogo: str, max_retries: int = 2) -> bool:
+    """
+    Dispara o workflow de Web Push no GitHub Actions.
+    Tipo: "resultados" ou "validacao"
+    """
+    if not GITHUB_TOKEN:
+        print(f"   ⚠️ GITHUB_TOKEN não configurado. Push não será enviada.")
+        return False
+    
+    url = f"https://api.github.com/repos/{GITHUB_REPOSITORY}/actions/workflows/enviar-web-push.yml/dispatches"
+    
+    headers = {
+        "Authorization": f"Bearer {GITHUB_TOKEN}",
+        "Accept": "application/vnd.github.v3+json"
+    }
+    
+    payload = {
+        "ref": "main",
+        "inputs": {
+            "tipo": tipo,
+            "jogo": jogo
+        }
+    }
+    
+    for attempt in range(max_retries):
+        try:
+            response = requests.post(url, json=payload, headers=headers, timeout=10)
+            
+            if response.status_code == 204:
+                print(f"   ✅ Push disparada: {tipo} - {jogo}")
+                return True
+            elif response.status_code == 404:
+                print(f"   ❌ Workflow não encontrado (404)")
+                return False
+            elif response.status_code == 401:
+                print(f"   ❌ Token inválido (401)")
+                return False
+            else:
+                print(f"   ⚠️ Tentativa {attempt + 1} falhou: HTTP {response.status_code}")
+                if attempt < max_retries - 1:
+                    time.sleep(2)
+        except Exception as e:
+            print(f"   ⚠️ Tentativa {attempt + 1} erro: {e}")
+            if attempt < max_retries - 1:
+                time.sleep(2)
+    
+    print(f"   ❌ Falhou após {max_retries} tentativas")
+    return False
 
 def main():
     print("\n🔔 GERADOR DE NOTIFICAÇÕES")
@@ -160,6 +211,15 @@ def main():
         json.dump(lista_final_ativas, f, indent=2, ensure_ascii=False)
     
     print(f"\n✅ Sucesso: {len(novas_notificacoes)} notificações adicionadas.")
+    
+    # 5. Disparar pushes para cada jogo (NOVO)
+    print("\n📤 A disparar Web Pushes...")
+    jogos_notificados = set()
+    for notif in novas_notificacoes:
+        jogo = notif.get('jogo', 'Jogo')
+        if jogo not in jogos_notificados:
+            disparar_push_github("resultados", jogo)
+            jogos_notificados.add(jogo)
 
 if __name__ == "__main__":
     main()
