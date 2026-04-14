@@ -153,3 +153,19 @@ def atualizar_resultados():
 
 if __name__ == "__main__":
     atualizar_resultados()
+
+    # Criar ficheiro do sorteio mais recente
+    pasta_repo = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    pasta_dados = os.path.join(pasta_repo, "dados")
+    ano = datetime.datetime.now().year
+    json_path = os.path.join(pasta_dados, f"{JOGO}_{ano}.json")
+
+    if os.path.exists(json_path):
+        with open(json_path, "r", encoding="utf-8") as f:
+            dados = json.load(f)
+        lista = dados.get(str(ano), [])
+        if lista:
+            mais_recente = lista[-1]
+            with open(os.path.join(pasta_dados, f"{JOGO}_atual.json"), "w", encoding="utf-8") as f_out:
+                json.dump(mais_recente, f_out, indent=2, ensure_ascii=False)
+            print(f"✅ {JOGO}_atual.json atualizado com o concurso {mais_recente['concurso']}")
