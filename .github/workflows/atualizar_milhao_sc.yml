@@ -1,6 +1,6 @@
 # horario: verao
 name: Atualizar M1lhão automaticamente
-true:
+on:
   schedule:
   - cron: 30 22 * * 5
   - cron: 30 23 * * 5
