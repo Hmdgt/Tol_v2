@@ -1,6 +1,6 @@
 # horario: verao
 name: Atualizar EuroMilhões automaticamente
-true:
+on:
   schedule:
   - cron: 0 22 * * 2
   - cron: 0 23 * * 2
