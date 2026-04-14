@@ -24,7 +24,10 @@ def ajustar_hora_cron(cron_str, usar_verao=True):
     partes = cron_str.split()
     if len(partes) < 2:
         return cron_str
-    hora = int(partes[1])
+    try:
+        hora = int(partes[1])
+    except ValueError:
+        return cron_str
     nova_hora = (hora + 1) % 24 if usar_verao else (hora - 1) % 24
     partes[1] = str(nova_hora)
     return " ".join(partes)
@@ -58,30 +61,48 @@ def atualizar_crons_em_arquivo(filepath, usar_verao):
         print(f"{os.path.basename(filepath)} já está em {modo_atual}. Nenhuma alteração necessária.")
         return
 
+    # 1. Ler YAML (pode converter 'on' -> True)
     with open(filepath, "r", encoding="utf-8") as f:
         try:
-            data = yaml.safe_load(f)   # ← ADICIONADO try/except
+            data = yaml.safe_load(f)
         except yaml.YAMLError as e:
             print(f"Erro ao ler YAML em {filepath}: {e}")
             return
 
-    on_section = data.get("on") or data.get(True)
+    # 2. Corrigir chave 'on' se tiver sido convertida para True
+    if True in data:
+        data["on"] = data.pop(True)
 
+    on_section = data.get("on")
     if not on_section or "schedule" not in on_section:
         print(f"'{os.path.basename(filepath)}' não tem schedule. Ignorando.")
         return
 
-    schedules = on_section["schedule"]   
+    schedules = on_section["schedule"]
 
-    for i, cron_dict in enumerate(schedules):
+    # 3. Garantir que schedules é uma lista (caso raro de vir como dict único)
+    if isinstance(schedules, dict):
+        schedules = [schedules]
+        on_section["schedule"] = schedules
+
+    # 4. Ajustar horas nos cron
+    for cron_dict in schedules:
         cron_antigo = cron_dict.get("cron")
         if cron_antigo:
             cron_novo = ajustar_hora_cron(cron_antigo, usar_verao)
-            schedules[i]["cron"] = cron_novo
+            cron_dict["cron"] = cron_novo
 
+    # 5. Escrever de volta, mantendo estilo simples
     with open(filepath, "w", encoding="utf-8") as f:
-        yaml.dump(data, f, allow_unicode=True)
+        yaml.dump(
+            data,
+            f,
+            allow_unicode=True,
+            default_flow_style=False,
+            sort_keys=False
+        )
 
+    # 6. Atualizar o comentário # horario:
     atualizar_comentario_horario(filepath, modo_atual)
     print(f"{os.path.basename(filepath)} atualizado para {modo_atual}.")
 
