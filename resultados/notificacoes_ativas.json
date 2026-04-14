@@ -1,1 +1,44 @@
-[]
+[
+  {
+    "id": "eurodreams_260410-17-9400999645-449_1",
+    "jogo": "eurodreams",
+    "data": "2026-04-14 09:12:36",
+    "lido": false,
+    "titulo": "🎫 Novo resultado EURODREAMS",
+    "subtitulo": "Boletim: 260410-17-9400999645-449",
+    "resumo": "0 acertos",
+    "detalhes": {
+      "data_verificacao": "2026-04-14 09:12:36",
+      "boletim": {
+        "referencia": "260410-17-9400999645-449",
+        "concurso_sorteio": "030/2026",
+        "data_sorteio": "2026-04-13"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "01",
+          "08",
+          "09",
+          "13",
+          "24",
+          "35"
+        ],
+        "dream": [
+          "05"
+        ]
+      },
+      "acertos": {
+        "numeros": 0,
+        "dream": false
+      },
+      "ganhou": false,
+      "premio": {
+        "premio": "Sem prémio",
+        "valor": "€ 0,00"
+      },
+      "_jogo": "eurodreams",
+      "_id": "eurodreams_260410-17-9400999645-449_1"
+    }
+  }
+]
