@@ -1,6 +1,6 @@
 # horario: verao
 name: Atualizar Totoloto SC automaticamente
-true:
+on:
   schedule:
   - cron: 0 22 * * 3
   - cron: 0 23 * * 3
