@@ -1,6 +1,6 @@
 # horario: verao
 name: Atualizar EuroDreams automaticamente
-true:
+on:
   schedule:
   - cron: 0 22 * * 1
   - cron: 0 23 * * 1
