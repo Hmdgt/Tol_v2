@@ -1,24 +1,29 @@
 # horario: verao
 name: Enviar Prémios Ativos (Sexta-feira)
-true:
+
+on:
   schedule:
-  - cron: 0 17 * * 5
-  workflow_dispatch: null
+    - cron: "0 17 * * 5"
+  workflow_dispatch:
+
 jobs:
   enviar-email:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout do repositório
-      uses: actions/checkout@v4
-    - name: Configurar Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
-    - name: Instalar dependências (nenhuma, usa apenas módulos padrão)
-      run: pip install --upgrade pip
-    - env:
-        EMAIL_DESTINO: ${{ secrets.EMAIL_DESTINO }}
-        EMAIL_REMETENTE: ${{ secrets.EMAIL_REMETENTE }}
-        SENHA_APP: ${{ secrets.SENHA_APP }}
-      name: Executar script de envio
-      run: python scripts/enviar_premiados.py
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependências (nenhuma, usa apenas módulos padrão)
+        run: pip install --upgrade pip
+
+      - name: Executar script de envio
+        env:
+          EMAIL_DESTINO: ${{ secrets.EMAIL_DESTINO }}
+          EMAIL_REMETENTE: ${{ secrets.EMAIL_REMETENTE }}
+          SENHA_APP: ${{ secrets.SENHA_APP }}
+        run: python scripts/enviar_premiados.py
