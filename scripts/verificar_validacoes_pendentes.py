@@ -153,6 +153,7 @@ def enviar_push_validacao(jogo: str, quantidade: int, imagem: str = None) -> boo
         try:
             webpush(subscription_info=sub, data=data,
                     vapid_private_key=VAPID_PRIVATE_KEY, vapid_claims=VAPID_CLAIMS)
+                    ttl=86400)   # 24 horas de janela para entrega
             valid_subs.append(sub)
             sucesso += 1
             print(f"   ✅ Push {i} enviada com sucesso.")
