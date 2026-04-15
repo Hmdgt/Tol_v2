@@ -52,8 +52,8 @@ jobs:
       # 🔔 NOVO STEP: Verificar validações pendentes e enviar push
       - name: Verificar validações pendentes e enviar push
         env:
-          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
-          VAPID_EMAIL: ${{ secrets.VAPID_EMAIL }}
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE }}
+          VAPID_EMAIL: ${{ secrets.EMAIL_REMETENTE }}
         run: python scripts/verificar_validacoes_pendentes.py
 
       - name: Commit do estado de validações
