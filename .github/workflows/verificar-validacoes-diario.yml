@@ -1,0 +1,37 @@
+name: Verificar Validações Pendentes (Diário)
+
+on:
+  schedule:
+    - cron: '0 10 * * *'   # todos os dias às 10:00 UTC
+  workflow_dispatch:
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - run: pip install pywebpush
+
+      - name: Verificar validações e enviar push
+        env:
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+          VAPID_EMAIL: ${{ secrets.VAPID_EMAIL }}
+        run: python scripts/verificar_validacoes_pendentes.py
+
+      - name: Commit do estado
+        run: |
+          git config user.name "Bot Validações"
+          git config user.email "bot@github.com"
+          git add apostas/estado_validacoes.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Atualiza estado de validações (diário)"
+            git push origin main
+          fi
