@@ -187,9 +187,22 @@ self.addEventListener("push", event => {
     renotify: true
   };
 
-  event.waitUntil(
-    self.registration.showNotification(title, options)
-  );
+  // Verificar se existe alguma janela da app visível antes de mostrar a notificação
+  const promiseChain = clients.matchAll({ type: "window", includeUncontrolled: true })
+    .then(windowClients => {
+      const isAppVisible = windowClients.some(client => client.visibilityState === "visible");
+      
+      if (isAppVisible) {
+        console.log("[SW] App visível em primeiro plano – notificação SUPRIMIDA.");
+        // Não mostra a notificação do sistema
+        return;
+      } else {
+        console.log("[SW] App em segundo plano ou fechada – a mostrar notificação.");
+        return self.registration.showNotification(title, options);
+      }
+    });
+
+  event.waitUntil(promiseChain);
 });
 
 // ===============================
