@@ -572,24 +572,8 @@ window.atualizarBadge = async function() {
     
     await atualizarBadgeIcone(totalAtual);
     
-    // Verificar se precisa enviar push (apenas se app minimizada E houver novas notificações)
-    if (!appVisivel && totalAtual > estadoNotificacoes.ultimoTotal) {
-      console.log("📤 App minimizada com novas notificações → disparando push");
-      let tipo = "resultados";
-      let jogo = "Jogo";
-      
-      if (totalValidacoes > estadoNotificacoes.ultimoEstadoValidacoes && validacoes.length > 0) {
-        tipo = "validacao";
-        jogo = validacoes[0].jogo || "validação";
-      } else if (naoLidas > estadoNotificacoes.ultimoEstadoNotificacoes && notificacoes.length > 0) {
-        const novas = notificacoes.filter(n => !n.lido);
-        if (novas.length) {
-          jogo = novas[0].jogo || "Jogo";
-        }
-      }
-      
-      await dispararPush(tipo, jogo);
-    }
+    // NOTA: A lógica de envio de push foi removida do frontend.
+    // Agora o backend (gerar_notificacoes.py) envia as pushes diretamente quando gera notificações.
     
     // Atualizar estado persistente
     estadoNotificacoes = {
@@ -605,8 +589,7 @@ window.atualizarBadge = async function() {
   }
 };
 
-// ========== FUNÇÕES DE PUSH ==========
-
+// ========== FUNÇÃO AUXILIAR: BADGE DO ÍCONE ==========
 async function atualizarBadgeIcone(total) {
   if ('setAppBadge' in navigator) {
     try {
@@ -619,44 +602,6 @@ async function atualizarBadgeIcone(total) {
     } catch (err) {
       console.error("Erro ao atualizar badge do ícone:", err);
     }
-  }
-}
-
-async function dispararPush(tipo, jogo) {
-  const token = localStorage.getItem("github_token");
-  if (!token) {
-    console.warn("⚠️ Token GitHub não configurado");
-    return false;
-  }
-  
-  console.log(`🚀 Disparando push: ${tipo} - ${jogo}`);
-  
-  try {
-    const response = await fetch(
-      `https://api.github.com/repos/${CONFIG.REPO}/actions/workflows/enviar-web-push.yml/dispatches`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          ref: "main",
-          inputs: { tipo, jogo }
-        })
-      }
-    );
-    
-    if (response.ok) {
-      console.log("✅ Push disparada com sucesso");
-      return true;
-    } else {
-      console.error("❌ Erro HTTP:", response.status, await response.text());
-      return false;
-    }
-  } catch (err) {
-    console.error("❌ Erro de rede:", err);
-    return false;
   }
 }
 
@@ -692,5 +637,6 @@ window.renderizarNotificacoes = renderizarNotificacoes;
 window.marcarComoLida = marcarComoLida;
 window.carregarNotificacoes = carregarNotificacoes;
 window.listarValidacoesPendentes = listarValidacoesPendentes;
-window.dispararPush = dispararPush;
 window.atualizarBadgeIcone = atualizarBadgeIcone;
+
+// NOTA: A função dispararPush foi removida. O backend agora trata do envio de push.
