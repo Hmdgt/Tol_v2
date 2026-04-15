@@ -184,7 +184,8 @@ self.addEventListener("push", event => {
     badge: data.badge || "/Tol_v2/icons/icon-192.png",
     data: data,
     tag: data.tag || "default",
-    renotify: true
+    renotify: true,
+    requireInteraction: true
   };
 
   // Verificar se existe alguma janela da app visível antes de mostrar a notificação
