@@ -31,7 +31,7 @@ jobs:
 
       - name: Instalar dependências
         run: |
-          pip install google-genai Pillow opencv-python-headless
+          pip install google-genai Pillow opencv-python-headless pywebpush
 
       - name: Executar OCR com Gemini
         env:
@@ -44,12 +44,25 @@ jobs:
         run: |
           git config --global user.name "Bot OCR"
           git config --global user.email "bot@github.com"
-
           mkdir -p apostas thumbnails
-
           git add apostas/*.json thumbnails/
           git commit -m "OCR: Atualização de dados e registos de processamento [skip ci]" || exit 0
           git push
+
+      # 🔔 NOVO STEP: Verificar validações pendentes e enviar push
+      - name: Verificar validações pendentes e enviar push
+        env:
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+          VAPID_EMAIL: ${{ secrets.VAPID_EMAIL }}
+        run: python scripts/verificar_validacoes_pendentes.py
+
+      - name: Commit do estado de validações
+        run: |
+          git add apostas/estado_validacoes.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Atualiza estado de validações pós-OCR [skip ci]"
+            git push
+          fi
 
       - name: Limpar imagens processadas
         run: |
