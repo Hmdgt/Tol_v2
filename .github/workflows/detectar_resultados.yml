@@ -5,8 +5,6 @@ on:
     paths:
       - 'resultados/*_recentes.json'
   workflow_dispatch:
-
-  # Corre automaticamente quando QUALQUER verificador terminar
   workflow_run:
     workflows:
       - "Verificar Totoloto"
@@ -16,8 +14,6 @@ on:
     types:
       - completed
 
-# FUNDAMENTAL: Como este workflow é disparado por muitos outros, 
-# a fila de espera (concurrency) é obrigatória aqui.
 concurrency:
   group: notifications-gate
   cancel-in-progress: false
@@ -44,42 +40,40 @@ jobs:
       - name: Instalar dependências
         run: pip install Pillow requests pywebpush
 
+      # 1. Verificar validações pendentes (pode enviar push se houver novas)
+      - name: Verificar validações pendentes
+        env:
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+          VAPID_EMAIL: ${{ secrets.VAPID_EMAIL }}
+        run: python scripts/verificar_validacoes_pendentes.py
+
+      # 2. Gerar notificações de resultados (envia push para resultados novos)
       - name: Gerar notificações ativas
         env:
           VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
           VAPID_EMAIL: ${{ secrets.VAPID_EMAIL }}
         run: python scripts/gerar_notificacoes.py
 
-      - name: Guardar notificações
+      # 3. Commit de tudo (notificações + estado de validações)
+      - name: Guardar alterações
         run: |
-          # 1. Configurar Identidade
           git config --global user.name "Bot Notificações"
           git config --global user.email "bot@github.com"
           git config --global pull.rebase true
 
-          # 2. Stash para proteger os novos ficheiros de notificações
           git stash
-
-          # 3. Pull com retentativas (essencial aqui devido ao volume de triggers)
           n=0
-          until [ "$n" -ge 5 ]
-          do
+          until [ "$n" -ge 5 ]; do
              git pull origin main && break
              n=$((n+1))
-             echo "A aguardar que outros verificadores libertem o repositório... ($n/5)"
              sleep 20
           done
+          git stash pop || echo "Sem stash"
 
-          # 4. Recuperar notificações geradas
-          git stash pop || echo "Sem novas notificações para aplicar"
-
-          # 5. Adicionar ficheiros (o wildcard captura todos os json de notificações)
           git add resultados/notificacoes_*.json
+          git add apostas/estado_validacoes.json
 
-          # 6. Commit e Push
           if ! git diff --cached --quiet; then
-            git commit -m "Atualização de notificações $(date +'%Y-%m-%d %H:%M')"
+            git commit -m "Notificações e estado de validações $(date +'%Y-%m-%d %H:%M')"
             git push origin main
-          else
-            echo "Nenhuma notificação nova gerada."
           fi
