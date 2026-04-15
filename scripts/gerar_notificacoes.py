@@ -1,10 +1,12 @@
 import json
 import os
 import glob
-import requests
 import time
 from datetime import datetime
 from typing import Dict, List
+
+# Nova dependência para envio direto de Web Push
+from pywebpush import webpush, WebPushException
 
 # ===== CONFIGURAÇÃO =====
 PASTA_RESULTADOS = "resultados/"
@@ -15,6 +17,15 @@ FICHEIRO_NOTIFICACOES_HISTORICO = os.path.join(PASTA_RESULTADOS, "notificacoes_h
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")
 GITHUB_REPOSITORY = os.environ.get("GITHUB_REPOSITORY", "hmdgt/Tol_v2")
 
+# Configuração VAPID para Web Push (via environment)
+VAPID_PRIVATE_KEY = os.environ.get("VAPID_PRIVATE_KEY", "")
+VAPID_EMAIL = os.environ.get("VAPID_EMAIL", "mailto:exemplo@dominio.com")
+VAPID_CLAIMS = {"sub": VAPID_EMAIL}
+
+# Caminho para o ficheiro que contém as subscriptions
+SUBSCRIPTION_FILE = "subscription.json"
+
+
 def gerar_id_unico(resultado: dict, jogo: str) -> str:
     """
     Gera ID único persistente. 
@@ -23,6 +34,7 @@ def gerar_id_unico(resultado: dict, jogo: str) -> str:
     referencia = resultado.get('boletim', {}).get('referencia', 'sem_ref')
     indice = resultado.get('aposta', {}).get('indice', 1)
     return f"{jogo}_{referencia}_{indice}"
+
 
 def carregar_resultados_recentes() -> List[Dict]:
     """Carrega todos os ficheiros *_recentes.json"""
@@ -50,6 +62,7 @@ def carregar_resultados_recentes() -> List[Dict]:
     
     return todos_resultados
 
+
 def carregar_json(caminho: str) -> List[Dict]:
     """Função genérica para carregar ficheiros JSON"""
     if os.path.exists(caminho):
@@ -59,6 +72,7 @@ def carregar_json(caminho: str) -> List[Dict]:
         except:
             return []
     return []
+
 
 def gerar_resumo(resultado: dict) -> str:
     """
@@ -116,55 +130,88 @@ def gerar_resumo(resultado: dict) -> str:
     
     return f"Ganhou ({len(premios)} prémios) – Total: {total_str}"
 
-# ===== NOVA FUNÇÃO: Disparar push via GitHub API =====
-def disparar_push_github(tipo: str, jogo: str, max_retries: int = 2) -> bool:
+
+# ===== NOVA FUNÇÃO: Enviar Web Push diretamente =====
+def enviar_web_push_direto(tipo: str, jogo: str) -> bool:
     """
-    Dispara o workflow de Web Push no GitHub Actions.
+    Envia uma notificação Web Push diretamente para todas as subscriptions ativas.
     Tipo: "resultados" ou "validacao"
+    Retorna True se pelo menos um envio foi bem sucedido.
     """
-    if not GITHUB_TOKEN:
-        print(f"   ⚠️ GITHUB_TOKEN não configurado. Push não será enviada.")
+    if not VAPID_PRIVATE_KEY:
+        print("   ⚠️ VAPID_PRIVATE_KEY não configurada. Push não será enviada.")
         return False
-    
-    url = f"https://api.github.com/repos/{GITHUB_REPOSITORY}/actions/workflows/enviar-web-push.yml/dispatches"
-    
-    headers = {
-        "Authorization": f"Bearer {GITHUB_TOKEN}",
-        "Accept": "application/vnd.github.v3+json"
-    }
-    
+
+    if not os.path.exists(SUBSCRIPTION_FILE):
+        print(f"   ⚠️ Ficheiro {SUBSCRIPTION_FILE} não encontrado. Push não enviada.")
+        return False
+
+    try:
+        with open(SUBSCRIPTION_FILE, "r", encoding="utf-8") as f:
+            subscriptions = json.load(f)
+    except Exception as e:
+        print(f"   ❌ Erro ao ler {SUBSCRIPTION_FILE}: {e}")
+        return False
+
+    if not subscriptions:
+        print("   ℹ️ Nenhuma subscription ativa.")
+        return False
+
+    # Garantir que temos uma lista de subscriptions
+    if isinstance(subscriptions, dict):
+        subscriptions = [subscriptions]
+
+    # Construir payload (estrutura compatível com o Service Worker)
     payload = {
-        "ref": "main",
-        "inputs": {
-            "tipo": tipo,
-            "jogo": jogo
-        }
+        "title": f"{jogo} - {'Novos resultados!' if tipo == 'resultados' else 'Validação pendente'}",
+        "body": "Já saíram os resultados. Vê na app!" if tipo == 'resultados' else "Tens boletins para validar. Verifica na app!",
+        "tag": f"{tipo}-{jogo}",
+        "icon": "/Tol_v2/icons/icon-192.png",
+        "badge": "/Tol_v2/icons/icon-192.png",
+        "url": "/Tol_v2/",
+        "timestamp": datetime.now().isoformat()
     }
-    
-    for attempt in range(max_retries):
+    data = json.dumps(payload)
+
+    sucesso_total = 0
+    subscriptions_validas = []
+
+    for sub in subscriptions:
         try:
-            response = requests.post(url, json=payload, headers=headers, timeout=10)
-            
-            if response.status_code == 204:
-                print(f"   ✅ Push disparada: {tipo} - {jogo}")
-                return True
-            elif response.status_code == 404:
-                print(f"   ❌ Workflow não encontrado (404)")
-                return False
-            elif response.status_code == 401:
-                print(f"   ❌ Token inválido (401)")
-                return False
+            webpush(
+                subscription_info=sub,
+                data=data,
+                vapid_private_key=VAPID_PRIVATE_KEY,
+                vapid_claims=VAPID_CLAIMS
+            )
+            subscriptions_validas.append(sub)
+            sucesso_total += 1
+        except WebPushException as ex:
+            if ex.response and ex.response.status_code == 410:
+                print(f"   🗑️ Subscription expirada (410) – será removida.")
+                # Não a adicionamos à lista de válidas
+            elif ex.response and ex.response.status_code in (429, 503):
+                print(f"   ⏳ Erro temporário ({ex.response.status_code}). A manter subscription.")
+                subscriptions_validas.append(sub)
             else:
-                print(f"   ⚠️ Tentativa {attempt + 1} falhou: HTTP {response.status_code}")
-                if attempt < max_retries - 1:
-                    time.sleep(2)
+                print(f"   ⚠️ Erro no envio: {ex}")
+                subscriptions_validas.append(sub)  # Mantemos na dúvida
         except Exception as e:
-            print(f"   ⚠️ Tentativa {attempt + 1} erro: {e}")
-            if attempt < max_retries - 1:
-                time.sleep(2)
-    
-    print(f"   ❌ Falhou após {max_retries} tentativas")
-    return False
+            print(f"   ❌ Erro inesperado: {e}")
+            subscriptions_validas.append(sub)
+
+    # Atualizar ficheiro se houve remoções
+    if len(subscriptions_validas) != len(subscriptions):
+        try:
+            with open(SUBSCRIPTION_FILE, "w", encoding="utf-8") as f:
+                json.dump(subscriptions_validas, f, indent=2)
+            print(f"   ♻️ {SUBSCRIPTION_FILE} atualizado (removidas {len(subscriptions) - len(subscriptions_validas)} expiradas).")
+        except Exception as e:
+            print(f"   ⚠️ Erro ao escrever {SUBSCRIPTION_FILE}: {e}")
+
+    print(f"   ✅ Push enviada com sucesso para {sucesso_total} dispositivo(s).")
+    return sucesso_total > 0
+
 
 def main():
     print("\n🔔 GERADOR DE NOTIFICAÇÕES")
@@ -212,14 +259,15 @@ def main():
     
     print(f"\n✅ Sucesso: {len(novas_notificacoes)} notificações adicionadas.")
     
-    # 5. Disparar pushes para cada jogo (NOVO)
-    print("\n📤 A disparar Web Pushes...")
+    # 5. Enviar Web Pushes diretamente para cada jogo
+    print("\n📤 A enviar Web Pushes diretamente...")
     jogos_notificados = set()
     for notif in novas_notificacoes:
         jogo = notif.get('jogo', 'Jogo')
         if jogo not in jogos_notificados:
-            disparar_push_github("resultados", jogo)
+            enviar_web_push_direto("resultados", jogo)
             jogos_notificados.add(jogo)
+
 
 if __name__ == "__main__":
     main()
