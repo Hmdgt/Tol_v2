@@ -42,9 +42,12 @@ jobs:
           python-version: '3.11'
 
       - name: Instalar dependências
-        run: pip install Pillow requests
+        run: pip install Pillow requests pywebpush
 
       - name: Gerar notificações ativas
+        env:
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+          VAPID_EMAIL: ${{ secrets.VAPID_EMAIL }}
         run: python scripts/gerar_notificacoes.py
 
       - name: Guardar notificações
