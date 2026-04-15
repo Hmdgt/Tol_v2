@@ -2397,5 +2397,57 @@
       "_id": "eurodreams_260410-17-9400999645-449_1"
     },
     "data_leitura": "2026-04-14T09:20:38.502Z"
+  },
+  {
+    "id": "totoloto_105-00037162-000_1",
+    "jogo": "totoloto",
+    "data": "2026-04-15 23:09:38",
+    "lido": true,
+    "titulo": "🎫 Novo resultado TOTOLOTO",
+    "subtitulo": "Boletim: 105-00037162-000",
+    "resumo": "Não ganhou",
+    "detalhes": {
+      "data_verificacao": "2026-04-15 23:09:38",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "105-00037162-000",
+        "data_sorteio": "2026-04-15",
+        "concurso_sorteio": "030/2026",
+        "imagem_origem": "foto_1776276769103_1oez5i.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "05",
+          "12",
+          "14",
+          "47",
+          "49"
+        ],
+        "numero_da_sorte": "08"
+      },
+      "sorteio": {
+        "concurso": "030/2026",
+        "data": "15/04/2026",
+        "numeros": [
+          "01",
+          "14",
+          "19",
+          "33",
+          "48"
+        ],
+        "numero_da_sorte": "01"
+      },
+      "acertos": {
+        "numeros": 1,
+        "numero_da_sorte": false,
+        "descricao": "1 número(s) sem Nº da Sorte"
+      },
+      "ganhou": false,
+      "premios": [],
+      "_jogo": "totoloto",
+      "_id": "totoloto_105-00037162-000_1"
+    },
+    "data_leitura": "2026-04-15T23:22:53.106Z"
   }
 ]
