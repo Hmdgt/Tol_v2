@@ -16,7 +16,11 @@ on:
         type: string
 
 permissions:
-  contents: write  # ← ALTERADO: necessário para remover subscription.json expirada
+  contents: write
+
+concurrency:
+  group: web-push-subscriptions
+  cancel-in-progress: false
 
 jobs:
   notify:
@@ -41,17 +45,16 @@ jobs:
             "https://api.github.com/repos/${{ github.repository }}/contents/subscription.json")
           
           if [ "$HTTP_CODE" -eq 404 ]; then
-            echo "⚠️ Ficheiro subscription.json não encontrado. Nenhuma subscrição ativa."
+            echo "⚠️ Ficheiro subscription.json não encontrado."
             echo "vazio=true" >> $GITHUB_OUTPUT
             exit 0
           fi
           
           if [ "$HTTP_CODE" -ne 200 ]; then
-            echo "❌ Erro HTTP $HTTP_CODE ao buscar subscription.json"
+            echo "❌ Erro HTTP $HTTP_CODE"
             exit 1
           fi
           
-          # Guardar SHA para possível remoção
           SHA=$(jq -r '.sha' subscription_response.json)
           echo "sha=$SHA" >> $GITHUB_OUTPUT
           
@@ -77,100 +80,99 @@ jobs:
           const fs = require("fs");
           const webpush = require("web-push");
 
-          const vapidPublic = process.env.VAPID_PUBLIC;
-          const vapidPrivate = process.env.VAPID_PRIVATE;
-          const vapidEmail = process.env.VAPID_EMAIL;
+          (async () => {
+            webpush.setVapidDetails(
+              `mailto:${process.env.VAPID_EMAIL}`,
+              process.env.VAPID_PUBLIC,
+              process.env.VAPID_PRIVATE
+            );
 
-          if (!vapidPublic || !vapidPrivate || !vapidEmail) {
-            console.error("❌ VAPID não configurados");
-            process.exit(1);
-          }
-
-          webpush.setVapidDetails(
-            `mailto:${vapidEmail}`,
-            vapidPublic,
-            vapidPrivate
-          );
-
-          let subscriptions = [];
-          try {
-            const content = fs.readFileSync("subscription.json", "utf8");
-            const data = JSON.parse(content);
-            subscriptions = Array.isArray(data) ? data : [data];
-          } catch (err) {
-            console.error("❌ Erro ao ler subscription.json:", err.message);
-            process.exit(1);
-          }
-
-          if (subscriptions.length === 0) {
-            console.log("⚠️ Nenhuma subscrição encontrada");
-            process.exit(0);
-          }
-
-          const tipo = process.env.TIPO;
-          const jogo = process.env.JOGO;
-
-          let title = "", body = "", tag = "";
-          if (tipo === "resultados") {
-            title = `${jogo} - Novos resultados!`;
-            body = "Já saíram os resultados. Vê na app!";
-            tag = `resultado-${jogo}`;
-          } else if (tipo === "validacao") {
-            title = `${jogo} - Validação pendente`;
-            body = "Tens boletins para validar. Verifica na app!";
-            tag = `validacao-${jogo}`;
-          } else {
-            console.error(`❌ Tipo inválido: ${tipo}`);
-            process.exit(1);
-          }
-
-          const payload = JSON.stringify({
-            title, body, tag,
-            icon: "/Tol_v2/icons/icon-192.png",
-            badge: "/Tol_v2/icons/icon-192.png",
-            url: "/Tol_v2/",
-            timestamp: new Date().toISOString()
-          });
-
-          console.log(`📤 A enviar para ${subscriptions.length} subscription(s)...`);
-
-          let expirada = false;
-          
-          for (let i = 0; i < subscriptions.length; i++) {
+            let subscriptions = [];
             try {
-              await webpush.sendNotification(subscriptions[i], payload);
-              console.log(`✅ Subscription ${i + 1} enviada`);
+              const data = JSON.parse(fs.readFileSync("subscription.json", "utf8"));
+              subscriptions = Array.isArray(data) ? data : [data];
             } catch (err) {
-              if (err.statusCode === 410) {
-                console.log(`⚠️ Subscription ${i + 1} expirada (410)`);
-                expirada = true;
-              } else {
-                console.log(`❌ Subscription ${i + 1} erro: ${err.message}`);
+              console.error("❌ Erro ao ler subscription.json");
+              process.exit(1);
+            }
+
+            const tipo = process.env.TIPO;
+            const jogo = process.env.JOGO;
+
+            const payload = JSON.stringify({
+              title: tipo === "resultados"
+                ? `${jogo} - Novos resultados!`
+                : `${jogo} - Validação pendente`,
+              body: tipo === "resultados"
+                ? "Já saíram os resultados. Vê na app!"
+                : "Tens boletins para validar. Verifica na app!",
+              tag: `${tipo}-${jogo}`,
+              icon: "/Tol_v2/icons/icon-192.png",
+              badge: "/Tol_v2/icons/icon-192.png",
+              url: "/Tol_v2/",
+              timestamp: new Date().toISOString()
+            });
+
+            let validSubscriptions = [];
+            let houveRemocao = false;
+
+            for (let i = 0; i < subscriptions.length; i++) {
+              try {
+                await webpush.sendNotification(subscriptions[i], payload);
+                console.log(`✅ ${i+1}`);
+                validSubscriptions.push(subscriptions[i]);
+              } catch (err) {
+                if (err.statusCode === 410) {
+                  console.log(`🗑️ Expirada ${i+1}`);
+                  houveRemocao = true;
+                } else if ([429, 503].includes(err.statusCode)) {
+                  console.log(`🔄 Retry ${i+1}`);
+                  await new Promise(r => setTimeout(r, 5000));
+                  try {
+                    await webpush.sendNotification(subscriptions[i], payload);
+                    validSubscriptions.push(subscriptions[i]);
+                  } catch {
+                    houveRemocao = true;
+                  }
+                } else {
+                  console.log(`❌ Erro ${i+1}`);
+                  validSubscriptions.push(subscriptions[i]);
+                }
               }
             }
-          }
-          
-          // Sinalizar que a subscrição expirou
-          if (expirada) {
-            console.log("📢 Subscrição expirada detectada");
-            fs.writeFileSync("/tmp/subscription_expirada", "true");
-          }
+
+            if (houveRemocao) {
+              fs.writeFileSync("subscription_updated.json", JSON.stringify(validSubscriptions, null, 2));
+              fs.writeFileSync("/tmp/update_needed", "true");
+            }
+          })();
           EOF
-          
-          # Verificar se precisa remover subscription.json
-          if [ -f "/tmp/subscription_expirada" ]; then
-            echo "expirada=true" >> $GITHUB_OUTPUT
+
+          if [ -f "/tmp/update_needed" ]; then
+            echo "update=true" >> $GITHUB_OUTPUT
           fi
 
-      - name: Remover subscription.json (expirada)
-        if: steps.send_push.outputs.expirada == 'true'
+      - name: Atualizar subscription.json (remover expiradas)
+        if: steps.send_push.outputs.update == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SHA: ${{ steps.subscription.outputs.sha }}
         run: |
-          curl -X DELETE \
+          if [ -z "$SHA" ]; then
+            echo "❌ SHA vazio"
+            exit 1
+          fi
+
+          CONTENT=$(base64 -w 0 subscription_updated.json)
+
+          curl -X PUT \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
             -H "Accept: application/vnd.github.v3+json" \
-            "https://api.github.com/repos/${{ github.repository }}/contents/subscription.json?sha=$SHA"
-          
-          echo "🗑️ subscription.json removido (subscrição expirada)"
+            https://api.github.com/repos/${{ github.repository }}/contents/subscription.json \
+            -d "{
+              \"message\": \"Cleanup: remover subscriptions expiradas\",
+              \"content\": \"$CONTENT\",
+              \"sha\": \"$SHA\"
+            }"
+
+          echo "♻️ subscription.json atualizado"
