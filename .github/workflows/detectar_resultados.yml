@@ -43,15 +43,15 @@ jobs:
       # 1. Verificar validações pendentes (pode enviar push se houver novas)
       - name: Verificar validações pendentes
         env:
-          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
-          VAPID_EMAIL: ${{ secrets.VAPID_EMAIL }}
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE }}
+          VAPID_EMAIL: ${{ secrets.EMAIL_REMETENTE }}
         run: python scripts/verificar_validacoes_pendentes.py
 
       # 2. Gerar notificações de resultados (envia push para resultados novos)
       - name: Gerar notificações ativas
         env:
-          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
-          VAPID_EMAIL: ${{ secrets.VAPID_EMAIL }}
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE }}
+          VAPID_EMAIL: ${{ secrets.EMAIL_REMETENTE }}
         run: python scripts/gerar_notificacoes.py
 
       # 3. Commit de tudo (notificações + estado de validações)
