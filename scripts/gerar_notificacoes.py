@@ -18,7 +18,7 @@ GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")
 GITHUB_REPOSITORY = os.environ.get("GITHUB_REPOSITORY", "hmdgt/Tol_v2")
 
 # Configuração VAPID para Web Push (via environment)
-VAPID_PRIVATE_KEY = os.environ.get("VAPID_PRIVATE", "")
+VAPID_PRIVATE_KEY = os.environ.get("VAPID_PRIVATE_KEY", "")
 VAPID_EMAIL = os.environ.get("EMAIL_REMETENTE", "mailto:bot@exemplo.com")
 VAPID_CLAIMS = {"sub": VAPID_EMAIL}
 
