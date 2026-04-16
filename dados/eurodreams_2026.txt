@@ -1,15 +1,15 @@
-Concurso: 030/2026
-Data: 13/04/2026
-Chave: 3 17 19 28 33 40 + 5
-Ordem de saída: 3 19 40 28 17 33 + 5
-Números: 03 17 19 28 33 40
-Dream: 5
+Concurso: 031/2026
+Data: 16/04/2026
+Chave: 23 24 28 29 31 40 + 3
+Ordem de saída: 31 24 23 40 29 28 + 3
+Números: 23 24 28 29 31 40
+Dream: 3
 ----------------------------------------
 Prémios:
 1.º Prémio - 6 Números + 1 Nº de Sonho | PT: 0 | EU: 0 | Valor: € 20.000/mês x 30 anos
-2.º Prémio - 6 Números | PT: 0 | EU: 1 | Valor: € 2.000/mês x 5 anos
-3.º Prémio - 5 Números | PT: 22 | EU: 121 | Valor: € 400,05
-4.º Prémio - 4 Números | PT: 767 | EU: 4.710 | Valor: € 28,81
-5.º Prémio - 3 Números | PT: 11.043 | EU: 64.710 | Valor: € 4,40
-6.º Prémio - 2 Números | PT: 61.849 | EU: 363.739 | Valor: € 2,50
+2.º Prémio - 6 Números | PT: 0 | EU: 0 | Valor: € 2.000/mês x 5 anos
+3.º Prémio - 5 Números | PT: 8 | EU: 75 | Valor: € 728,51
+4.º Prémio - 4 Números | PT: 576 | EU: 3.521 | Valor: € 43,50
+5.º Prémio - 3 Números | PT: 9.081 | EU: 57.131 | Valor: € 5,62
+6.º Prémio - 2 Números | PT: 57.087 | EU: 365.629 | Valor: € 2,50
 ----------------------------------------
