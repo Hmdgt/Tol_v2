@@ -322,7 +322,7 @@
     width: var(--bubble-size);
     height: var(--bubble-size);
     font-size: calc(var(--bubble-size) * var(--bubble-font-scale));
-    font-weight: bold;
+    font-weight: 500;                       /* 👈 antes bold, agora mais leve */
     line-height: 1;
     flex-shrink: 0;
     margin: 0 2px;
@@ -350,17 +350,18 @@
   .estrela-santacas {
     background-color: transparent !important;
     border: none !important;
-    background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+    background-size: 65%;                   /* 👈 antes contain, agora reduzida para dar espaço aos números */
   }
 
   [data-theme="light"] .estrela-santacas {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23898989' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolygon points='12 2 15 9 22 9 17 14 18.5 21 12 17.5 5.5 21 7 14 2 9 9 9 12 2'/%3E%3C/svg%3E");
+    /* 👇 stroke-width='1.5' (igual à borda do círculo) */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23898989' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolygon points='12 2 15 9 22 9 17 14 18.5 21 12 17.5 5.5 21 7 14 2 9 9 9 12 2'/%3E%3C/svg%3E");
   }
 
   [data-theme="dark"] .estrela-santacas {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23aaaaaa' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolygon points='12 2 15 9 22 9 17 14 18.5 21 12 17.5 5.5 21 7 14 2 9 9 9 12 2'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23aaaaaa' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolygon points='12 2 15 9 22 9 17 14 18.5 21 12 17.5 5.5 21 7 14 2 9 9 9 12 2'/%3E%3C/svg%3E");
   }
 
   /* ========== NÚMERO EXTRA (M1LHÃO) ========== */
@@ -382,8 +383,8 @@
   .estrela-santacas.acerto {
     background-color: transparent !important;
     border: none !important;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234caf4c' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolygon points='12 2 15 9 22 9 17 14 18.5 21 12 17.5 5.5 21 7 14 2 9 9 9 12 2'/%3E%3C/svg%3E") !important;
-    background-size: contain;
+    background-size: 65%;                   /* mantém o tamanho reduzido */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234caf4c' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolygon points='12 2 15 9 22 9 17 14 18.5 21 12 17.5 5.5 21 7 14 2 9 9 9 12 2'/%3E%3C/svg%3E") !important;
     background-repeat: no-repeat;
     background-position: center;
   }
@@ -722,13 +723,8 @@
   /* ========== AJUSTES DE TIPOGRAFIA ========== */
   .notification-title { color: var(--text-secondary); font-size: 14px; text-align: right; margin-top: 2px; }
   .codigo-milhao { color: var(--text-secondary); font-size: 14px; }
-  .numero-santacas.acerto, .estrela-santacas.acerto {
-    background-color: var(--positive) !important; color: white !important; border-color: var(--positive) !important;
-  }
-  [data-theme="light"] .numero-santacas.acerto,
-  [data-theme="light"] .estrela-santacas.acerto {
-    background-color: var(--positive) !important; color: white !important;
-  }
+  
+  /* Removidas regras .acerto antigas conflituosas, agora geridas pelo novo bloco */
   .numeros-aposta { display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 6px; }
   .separador-mais { font-weight: bold; margin: 0 2px; color: var(--text-secondary); }
 </style>
