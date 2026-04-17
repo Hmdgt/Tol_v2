@@ -182,7 +182,7 @@ def enviar_web_push_direto(tipo: str, jogo: str) -> bool:
                 subscription_info=sub,
                 data=data,
                 vapid_private_key=VAPID_PRIVATE_KEY,
-                vapid_claims=VAPID_CLAIMS
+                vapid_claims=VAPID_CLAIMS,
                 ttl=86400  # Dá 24h para o Android acordar e receber a mensagem
             )
             subscriptions_validas.append(sub)
