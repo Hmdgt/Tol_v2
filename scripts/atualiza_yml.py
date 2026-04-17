@@ -5,6 +5,7 @@ from datetime import datetime, timezone, timedelta
 WORKFLOWS_DIR = os.path.join(os.path.dirname(__file__), "..", ".github", "workflows")
 
 def ultimo_domingo(ano, mes):
+    """Retorna o último domingo do mês/ano como datetime UTC."""
     if mes == 12:
         d = datetime(ano + 1, 1, 1, tzinfo=timezone.utc) - timedelta(days=1)
     else:
@@ -14,6 +15,11 @@ def ultimo_domingo(ano, mes):
     return d
 
 def detectar_modo():
+    """
+    Detecta se estamos no horário de verão (UTC+1) ou inverno (UTC+0).
+    A mudança ocorre no último domingo de março às 01:00 UTC (início verão)
+    e no último domingo de outubro às 01:00 UTC (fim verão).
+    """
     agora = datetime.now(timezone.utc)
     ano = agora.year
     inicio_verao = ultimo_domingo(ano, 3).replace(hour=1, minute=0)
@@ -21,6 +27,11 @@ def detectar_modo():
     return inicio_verao <= agora < fim_verao
 
 def ajustar_hora_cron(cron_str, usar_verao=True):
+    """
+    Ajusta a hora de uma string cron para refletir a mudança de horário.
+    - usar_verao=True  → transição de inverno para verão: subtrai 1 hora
+    - usar_verao=False → transição de verão para inverno: soma 1 hora
+    """
     partes = cron_str.split()
     if len(partes) < 2:
         return cron_str
@@ -28,11 +39,18 @@ def ajustar_hora_cron(cron_str, usar_verao=True):
         hora = int(partes[1])
     except ValueError:
         return cron_str
-    nova_hora = (hora + 1) % 24 if usar_verao else (hora - 1) % 24
+
+    # ✅ CORREÇÃO APLICADA AQUI
+    if usar_verao:
+        nova_hora = (hora - 1) % 24   # Inverno → Verão: UTC = PT - 1
+    else:
+        nova_hora = (hora + 1) % 24   # Verão → Inverno: UTC = PT + 0
+
     partes[1] = str(nova_hora)
     return " ".join(partes)
 
 def obter_horario_registado(filepath):
+    """Lê a linha de comentário '# horario:' do ficheiro."""
     with open(filepath, "r", encoding="utf-8") as f:
         for linha in f:
             if linha.strip().startswith("# horario:"):
@@ -40,6 +58,7 @@ def obter_horario_registado(filepath):
     return None
 
 def atualizar_comentario_horario(filepath, modo_atual):
+    """Atualiza ou insere o comentário '# horario: ...' no topo do ficheiro."""
     with open(filepath, "r", encoding="utf-8") as f:
         linhas = f.readlines()
     encontrou = False
@@ -54,6 +73,7 @@ def atualizar_comentario_horario(filepath, modo_atual):
         f.writelines(linhas)
 
 def atualizar_crons_em_arquivo(filepath, usar_verao):
+    """Processa um ficheiro YAML de workflow: ajusta os crons e atualiza o comentário."""
     horario_registado = obter_horario_registado(filepath)
     modo_atual = "verao" if usar_verao else "inverno"
 
@@ -102,7 +122,15 @@ def atualizar_crons_em_arquivo(filepath, usar_verao):
             sort_keys=False
         )
 
-    # 6. Atualizar o comentário # horario:
+    # 6. Validar YAML após escrita (segurança extra)
+    with open(filepath, "r", encoding="utf-8") as f:
+        try:
+            yaml.safe_load(f)
+        except yaml.YAMLError as e:
+            print(f"❌ ERRO CRÍTICO: YAML inválido após escrita em {filepath}: {e}")
+            return
+
+    # 7. Atualizar o comentário # horario:
     atualizar_comentario_horario(filepath, modo_atual)
     print(f"{os.path.basename(filepath)} atualizado para {modo_atual}.")
 
