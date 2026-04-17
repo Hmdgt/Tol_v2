@@ -1,50 +1,34 @@
+# horario: verao
 name: Atualizar Totoloto SC automaticamente
-
-# horario: inverno
-
-on:
-  schedule:
-    # Quarta-feira
-    - cron: "0 21 * * 3"
-    - cron: "0 22 * * 3"
-    - cron: "0 23 * * 3"
-    - cron: "0 10 * * 4"   # backup quinta
-
-    # Sábado
-    - cron: "0 21 * * 6"
-    - cron: "0 22 * * 6"
-    - cron: "0 23 * * 6"
-    - cron: "0 10 * * 0"   # backup domingo
-
-  workflow_dispatch:
-
 jobs:
   scrape:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+    - uses: actions/checkout@v4
+    - name: Instalar Chrome
+      uses: browser-actions/setup-chrome@v1
+    - name: Instalar dependências Python
+      run: 'pip install selenium chromedriver-autoinstaller
 
-      - name: Instalar Chrome
-        uses: browser-actions/setup-chrome@v1
-
-      - name: Instalar dependências Python
-        run: |
-          pip install selenium chromedriver-autoinstaller
-
-      - name: Rodar script de scraping
-        run: python scripts/atualizar_totoloto_sc.py
-
-      - name: Commit e push das alterações
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add dados/
-          git add logs/totoloto_sc_log.txt
-          if ! git diff --cached --quiet; then
-            git commit -m "Atualização automática Totoloto SC"
-            git push
-          else
-            echo "Nenhuma alteração, nada para commitar."
-          fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        '
+    - name: Rodar script de scraping
+      run: python scripts/atualizar_totoloto_sc.py
+    - name: Commit e push das alterações
+      run: "git config user.name \"github-actions[bot]\"\ngit config user.email \"\
+        github-actions[bot]@users.noreply.github.com\"\ngit add dados/\ngit add logs/totoloto_sc_log.txt\n\
+        if ! git diff --cached --quiet; then\n  git commit -m \"Atualização automática\
+        \ Totoloto SC\"\n  git push\nelse\n  echo \"Nenhuma alteração, nada para commitar.\"\
+        \nfi\n"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+'on':
+  schedule:
+  - cron: 0 22 * * 3
+  - cron: 0 23 * * 3
+  - cron: 0 0 * * 3
+  - cron: 0 11 * * 4
+  - cron: 0 22 * * 6
+  - cron: 0 23 * * 6
+  - cron: 0 0 * * 6
+  - cron: 0 11 * * 0
+  workflow_dispatch: null
