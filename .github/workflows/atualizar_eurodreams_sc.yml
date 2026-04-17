@@ -1,37 +1,49 @@
 # horario: verao
 name: Atualizar EuroDreams automaticamente
+
+on:
+  schedule:
+    # Segunda-feira (21h, 22h, 23h PT → 20h, 21h, 22h UTC)
+    - cron: "0 20 * * 1"
+    - cron: "0 21 * * 1"
+    - cron: "0 22 * * 1"
+    - cron: "0 9 * * 2"    # backup terça 10h PT → 9h UTC
+
+    # Quinta-feira (21h, 22h, 23h PT → 20h, 21h, 22h UTC)
+    - cron: "0 20 * * 4"
+    - cron: "0 21 * * 4"
+    - cron: "0 22 * * 4"
+    - cron: "0 9 * * 5"    # backup sexta 10h PT → 9h UTC
+
+  workflow_dispatch:
+
 jobs:
   scrape:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Instalar Chrome
-      uses: browser-actions/setup-chrome@v1
-    - name: Instalar dependências Python
-      run: 'pip install selenium chromedriver-autoinstaller
+      - uses: actions/checkout@v4
 
-        '
-    - name: Rodar script de scraping
-      run: python scripts/atualizar_eurodreams_sc.py
-    - name: Commit e push das alterações
-      run: "git config user.name \"github-actions[bot]\"\ngit config user.email \"\
-        github-actions[bot]@users.noreply.github.com\"\ngit add dados/\ngit add logs/\n\
-        if ! git diff --cached --quiet; then\n  git commit -m \"Atualização automática\
-        \ EuroDreams\"\n  git push\nelse\n  echo \"Nenhuma alteração, nada para commitar.\"\
-        \nfi\n"
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-'on':
-  schedule:
-    # Segunda-feira
-    - cron: "0 20 * * 1"
-    - cron: "0 21 * * 1"
-    - cron: "0 22 * * 1"
-    - cron: "0 9 * * 2"    # backup terça
+      - name: Instalar Chrome
+        uses: browser-actions/setup-chrome@v1
 
-    # Quinta-feira
-    - cron: "0 20 * * 4"
-    - cron: "0 21 * * 4"
-    - cron: "0 22 * * 4"
-    - cron: "0 9 * * 5"    # backup sexta
-  workflow_dispatch: null
+      - name: Instalar dependências Python
+        run: |
+          pip install selenium chromedriver-autoinstaller
+
+      - name: Rodar script de scraping
+        run: python scripts/atualizar_eurodreams_sc.py
+
+      - name: Commit e push das alterações
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add dados/
+          git add logs/
+          if ! git diff --cached --quiet; then
+            git commit -m "Atualização automática EuroDreams"
+            git push
+          else
+            echo "Nenhuma alteração, nada para commitar."
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
