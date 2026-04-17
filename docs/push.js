@@ -61,24 +61,38 @@ async function guardarSubscription(subscription) {
     return;
   }
 
-  // Verificar se já existe subscription.json
   let sha = null;
+  let subs = [];
+
   try {
     const res = await fetch(SUBSCRIPTION_FILE, {
       headers: { Authorization: `Bearer ${token}` }
     });
+
     if (res.ok) {
       const data = await res.json();
+      const existing = JSON.parse(atob(data.content));
+      subs = Array.isArray(existing) ? existing : [existing];
       sha = data.sha;
     }
-  } catch (_) {}
+  } catch (e) {
+    console.warn("⚠️ Não foi possível ler subscriptions existentes");
+  }
 
-  const content = btoa(JSON.stringify(subscription, null, 2));
+  const exists = subs.some(s => s.endpoint === subscription.endpoint);
+  if (!exists) {
+    subs.push(subscription);
+  }
+
+  const content = btoa(
+    unescape(encodeURIComponent(JSON.stringify(subs, null, 2)))
+  );
 
   const body = {
     message: "Atualizar subscription Web Push",
     content,
-    sha
+    sha,
+    branch: CONFIG.BRANCH || "main"
   };
 
   const resp = await fetch(SUBSCRIPTION_FILE, {
@@ -91,8 +105,15 @@ async function guardarSubscription(subscription) {
   });
 
   if (!resp.ok) {
-    console.error("❌ Erro ao guardar subscription:", await resp.text());
-    alert("Erro ao guardar subscription no GitHub.");
+    let err;
+    try {
+      err = await resp.json();
+    } catch {
+      err = await resp.text();
+    }
+
+    console.error("❌ Erro ao guardar subscription:", err);
+    alert("Erro ao guardar subscription.");
   }
 }
 
