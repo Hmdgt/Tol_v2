@@ -1,172 +1,202 @@
 [
-  {
-    "tipo": "Eurodreams",
-    "data_sorteio": "2026-02-19",
-    "data_aposta": "2026-02-17",
-    "data_emissao": "2026-02-17 17:02:32",
-    "referencia_unica": "260217-17-2156263608-098",
-    "concurso": "015/2026",
-    "valor_total": 2.5,
-    "valido": true,
-    "apostas": [
-      {
-        "indice": 1,
-        "numeros": [
-          "01",
-          "09",
-          "14",
-          "17",
-          "22",
-          "26"
+    {
+        "tipo": "Eurodreams",
+        "data_sorteio": "2026-02-19",
+        "data_aposta": "2026-02-17",
+        "data_emissao": "2026-02-17 17:02:32",
+        "referencia_unica": "260217-17-2156263608-098",
+        "concurso": "015/2026",
+        "valor_total": 2.5,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "numeros": [
+                    "01",
+                    "09",
+                    "14",
+                    "17",
+                    "22",
+                    "26"
+                ],
+                "dream": [
+                    "04"
+                ]
+            }
         ],
-        "dream": [
-          "04"
-        ]
-      }
-    ],
-    "imagem_origem": "foto_1773404484603_3imn03.png",
-    "hash_imagem": "3249645fe9a23959251bf1629e33ed8f",
-    "data_processamento": "2026-03-13 12:22:22",
-    "confirmado": true,
-    "tipo_ficheiro": "eurodreams",
-    "_indice": 0,
-    "data_validacao": "2026-03-13T12:35:42.325Z",
-    "validado_por": "humano"
-  },
-  {
-    "tipo": "Eurodreams",
-    "data_sorteio": "2026-03-02",
-    "data_aposta": "2026-02-27",
-    "data_emissao": "2026-02-27 18:11:28",
-    "referencia_unica": "260227-17-7324481145-011",
-    "concurso": "018/2026",
-    "valor_total": 2.5,
-    "valido": true,
-    "apostas": [
-      {
-        "indice": 1,
-        "numeros": [
-          "08",
-          "09",
-          "18",
-          "25",
-          "33",
-          "39"
+        "imagem_origem": "foto_1773404484603_3imn03.png",
+        "hash_imagem": "3249645fe9a23959251bf1629e33ed8f",
+        "data_processamento": "2026-03-13 12:22:22",
+        "confirmado": true,
+        "tipo_ficheiro": "eurodreams",
+        "_indice": 0,
+        "data_validacao": "2026-03-13T12:35:42.325Z",
+        "validado_por": "humano"
+    },
+    {
+        "tipo": "Eurodreams",
+        "data_sorteio": "2026-03-02",
+        "data_aposta": "2026-02-27",
+        "data_emissao": "2026-02-27 18:11:28",
+        "referencia_unica": "260227-17-7324481145-011",
+        "concurso": "018/2026",
+        "valor_total": 2.5,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "numeros": [
+                    "08",
+                    "09",
+                    "18",
+                    "25",
+                    "33",
+                    "39"
+                ],
+                "dream": [
+                    "03"
+                ]
+            }
         ],
-        "dream": [
-          "03"
-        ]
-      }
-    ],
-    "imagem_origem": "foto_1773408684581_ejgvot.png",
-    "hash_imagem": "1c999194f65be2ca6ba4b8658fab3b34",
-    "data_processamento": "2026-03-13 13:32:19",
-    "confirmado": true,
-    "tipo_ficheiro": "eurodreams",
-    "_indice": 1,
-    "data_validacao": "2026-03-13T13:34:16.577Z",
-    "validado_por": "humano"
-  },
-  {
-    "tipo": "Eurodreams",
-    "data_sorteio": "2026-03-23",
-    "data_aposta": "2026-03-20",
-    "data_emissao": "2026-03-20 08:38:00",
-    "referencia_unica": "260320-17-2808127123-297",
-    "concurso": "024/2026",
-    "valor_total": 2.5,
-    "valido": true,
-    "apostas": [
-      {
-        "indice": 1,
-        "numeros": [
-          "02",
-          "09",
-          "18",
-          "20",
-          "25",
-          "29"
+        "imagem_origem": "foto_1773408684581_ejgvot.png",
+        "hash_imagem": "1c999194f65be2ca6ba4b8658fab3b34",
+        "data_processamento": "2026-03-13 13:32:19",
+        "confirmado": true,
+        "tipo_ficheiro": "eurodreams",
+        "_indice": 1,
+        "data_validacao": "2026-03-13T13:34:16.577Z",
+        "validado_por": "humano"
+    },
+    {
+        "tipo": "Eurodreams",
+        "data_sorteio": "2026-03-23",
+        "data_aposta": "2026-03-20",
+        "data_emissao": "2026-03-20 08:38:00",
+        "referencia_unica": "260320-17-2808127123-297",
+        "concurso": "024/2026",
+        "valor_total": 2.5,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "numeros": [
+                    "02",
+                    "09",
+                    "18",
+                    "20",
+                    "25",
+                    "29"
+                ],
+                "dream": [
+                    "02"
+                ]
+            }
         ],
-        "dream": [
-          "02"
-        ]
-      }
-    ],
-    "imagem_origem": "foto_1774010327512_euf7jb.png",
-    "hash_imagem": "5ae77a4170178c7b425f83212f6a0f80",
-    "data_processamento": "2026-03-20 12:40:45",
-    "confirmado": true,
-    "tipo_ficheiro": "eurodreams",
-    "_indice": 2,
-    "data_validacao": "2026-03-20T12:42:36.634Z",
-    "validado_por": "humano"
-  },
-  {
-    "tipo": "Eurodreams",
-    "data_sorteio": "2026-03-30",
-    "data_aposta": "2026-03-27",
-    "data_emissao": "2026-03-27 12:53:51",
-    "referencia_unica": "260327-17-1668370231-876",
-    "concurso": "026/2026",
-    "valor_total": 2.5,
-    "valido": true,
-    "apostas": [
-      {
-        "indice": 1,
-        "numeros": [
-          "08",
-          "10",
-          "12",
-          "22",
-          "32",
-          "38"
+        "imagem_origem": "foto_1774010327512_euf7jb.png",
+        "hash_imagem": "5ae77a4170178c7b425f83212f6a0f80",
+        "data_processamento": "2026-03-20 12:40:45",
+        "confirmado": true,
+        "tipo_ficheiro": "eurodreams",
+        "_indice": 2,
+        "data_validacao": "2026-03-20T12:42:36.634Z",
+        "validado_por": "humano"
+    },
+    {
+        "tipo": "Eurodreams",
+        "data_sorteio": "2026-03-30",
+        "data_aposta": "2026-03-27",
+        "data_emissao": "2026-03-27 12:53:51",
+        "referencia_unica": "260327-17-1668370231-876",
+        "concurso": "026/2026",
+        "valor_total": 2.5,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "numeros": [
+                    "08",
+                    "10",
+                    "12",
+                    "22",
+                    "32",
+                    "38"
+                ],
+                "dream": [
+                    "03"
+                ]
+            }
         ],
-        "dream": [
-          "03"
-        ]
-      }
-    ],
-    "imagem_origem": "foto_1774688840123_dthvg6.png",
-    "hash_imagem": "9862472de9f8856ce996bcff5e3f7413",
-    "data_processamento": "2026-03-28 09:10:13",
-    "confirmado": true,
-    "tipo_ficheiro": "eurodreams",
-    "_indice": 3,
-    "data_validacao": "2026-03-28T10:20:59.595Z",
-    "validado_por": "humano"
-  },
-  {
-    "tipo": "Eurodreams",
-    "data_sorteio": "2026-04-13",
-    "data_aposta": "2026-04-10",
-    "data_emissao": "2026-04-10 13:55:38",
-    "referencia_unica": "260410-17-9400999645-449",
-    "concurso": "030/2026",
-    "valor_total": 2.5,
-    "valido": true,
-    "apostas": [
-      {
-        "indice": 1,
-        "numeros": [
-          "01",
-          "08",
-          "09",
-          "13",
-          "24",
-          "35"
+        "imagem_origem": "foto_1774688840123_dthvg6.png",
+        "hash_imagem": "9862472de9f8856ce996bcff5e3f7413",
+        "data_processamento": "2026-03-28 09:10:13",
+        "confirmado": true,
+        "tipo_ficheiro": "eurodreams",
+        "_indice": 3,
+        "data_validacao": "2026-03-28T10:20:59.595Z",
+        "validado_por": "humano"
+    },
+    {
+        "tipo": "Eurodreams",
+        "data_sorteio": "2026-04-13",
+        "data_aposta": "2026-04-10",
+        "data_emissao": "2026-04-10 13:55:38",
+        "referencia_unica": "260410-17-9400999645-449",
+        "concurso": "030/2026",
+        "valor_total": 2.5,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "numeros": [
+                    "01",
+                    "08",
+                    "09",
+                    "13",
+                    "24",
+                    "35"
+                ],
+                "dream": [
+                    "05"
+                ]
+            }
         ],
-        "dream": [
-          "05"
-        ]
-      }
-    ],
-    "imagem_origem": "foto_1775841218461_1g1us5.png",
-    "hash_imagem": "df7b85bf708f39b0063903dc2bdeef5a",
-    "data_processamento": "2026-04-10 17:17:08",
-    "confirmado": true,
-    "tipo_ficheiro": "eurodreams",
-    "_indice": 4,
-    "data_validacao": "2026-04-10T17:28:54.739Z",
-    "validado_por": "humano"
-  }
+        "imagem_origem": "foto_1775841218461_1g1us5.png",
+        "hash_imagem": "df7b85bf708f39b0063903dc2bdeef5a",
+        "data_processamento": "2026-04-10 17:17:08",
+        "confirmado": true,
+        "tipo_ficheiro": "eurodreams",
+        "_indice": 4,
+        "data_validacao": "2026-04-10T17:28:54.739Z",
+        "validado_por": "humano"
+    },
+    {
+        "tipo": "Eurodreams",
+        "data_sorteio": "2026-04-20",
+        "data_aposta": "2026-04-17",
+        "data_emissao": "2026-04-17 12:16:42",
+        "referencia_unica": "260417-17-0323776000-834",
+        "concurso": "032/2026",
+        "valor_total": 2.5,
+        "valido": true,
+        "apostas": [
+            {
+                "indice": 1,
+                "numeros": [
+                    "01",
+                    "11",
+                    "12",
+                    "14",
+                    "15",
+                    "29"
+                ],
+                "dream": [
+                    "03"
+                ]
+            }
+        ],
+        "imagem_origem": "foto_1776427752802_zhmxso.png",
+        "hash_imagem": "570fbdef66394e8b98064c51fa4b5ba8",
+        "data_processamento": "2026-04-17 12:10:16",
+        "confirmado": false
+    }
 ]
