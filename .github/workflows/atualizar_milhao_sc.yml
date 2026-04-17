@@ -1,30 +1,45 @@
 # horario: verao
 name: Atualizar M1lhão automaticamente
+
+on:
+  schedule:
+    # Todas as sextas-feiras (21h, 22h, 23h PT → 20h, 21h, 22h UTC)
+    - cron: "0 20 * * 5"
+    - cron: "0 21 * * 5"
+    - cron: "0 22 * * 5"
+
+    # Backup no sábado às 10:00 PT → 9:00 UTC
+    - cron: "0 9 * * 6"
+
+  workflow_dispatch:
+
 jobs:
   scrape:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Instalar Chrome
-      uses: browser-actions/setup-chrome@v1
-    - name: Instalar dependências Python
-      run: 'pip install selenium chromedriver-autoinstaller
+      - uses: actions/checkout@v4
 
-        '
-    - name: Rodar script de scraping
-      run: python scripts/atualizar_milhao_sc.py
-    - name: Commit e push das alterações
-      run: "git config user.name \"github-actions[bot]\"\ngit config user.email \"\
-        github-actions[bot]@users.noreply.github.com\"\ngit add dados/\ngit add logs/\n\
-        if ! git diff --cached --quiet; then\n  git commit -m \"Atualização automática\
-        \ M1lhão\"\n  git push\nelse\n  echo \"Nenhuma alteração, nada para commitar.\"\
-        \nfi\n"
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-'on':
-  schedule:
-  - cron: 0 22 * * 5
-  - cron: 0 23 * * 5
-  - cron: 0 0 * * 5
-  - cron: 0 11 * * 6
-  workflow_dispatch: null
+      - name: Instalar Chrome
+        uses: browser-actions/setup-chrome@v1
+
+      - name: Instalar dependências Python
+        run: |
+          pip install selenium chromedriver-autoinstaller
+
+      - name: Rodar script de scraping
+        run: python scripts/atualizar_milhao_sc.py
+
+      - name: Commit e push das alterações
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add dados/
+          git add logs/
+          if ! git diff --cached --quiet; then
+            git commit -m "Atualização automática M1lhão"
+            git push
+          else
+            echo "Nenhuma alteração, nada para commitar."
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
