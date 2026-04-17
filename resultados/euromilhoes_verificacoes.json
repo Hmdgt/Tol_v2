@@ -663,5 +663,107 @@
       "descricao": "Não corresponde a qualquer prémio",
       "valor": "€ 0,00"
     }
+  },
+  {
+    "data_verificacao": "2026-04-17 22:09:49",
+    "metodo_validacao": "apenas data",
+    "boletim": {
+      "referencia": "605-05538487-M1L",
+      "data_sorteio": "2026-04-17",
+      "concurso_sorteio": "031",
+      "imagem_origem": "foto_1776279256610_xs5n66.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "numeros": [
+        "08",
+        "21",
+        "35",
+        "47",
+        "49"
+      ],
+      "estrelas": [
+        "05",
+        "08"
+      ]
+    },
+    "sorteio": {
+      "concurso": "031/2026",
+      "data": "17/04/2026",
+      "chave": "22 23 28 41 47 + 6 8",
+      "numeros": [
+        "22",
+        "23",
+        "28",
+        "41",
+        "47"
+      ],
+      "estrelas": [
+        "06",
+        "08"
+      ]
+    },
+    "acertos": {
+      "numeros": 1,
+      "estrelas": 1,
+      "descricao": "1 número(s) e 1 estrela(s)"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Não corresponde a qualquer prémio",
+      "valor": "€ 0,00"
+    }
+  },
+  {
+    "data_verificacao": "2026-04-17 22:09:49",
+    "metodo_validacao": "data + concurso",
+    "boletim": {
+      "referencia": "607-06256036-M1L",
+      "data_sorteio": "2026-04-17",
+      "concurso_sorteio": "031/2026",
+      "imagem_origem": "foto_1776432577351_j9zfp3.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "numeros": [
+        "17",
+        "31",
+        "34",
+        "39",
+        "48"
+      ],
+      "estrelas": [
+        "03",
+        "10"
+      ]
+    },
+    "sorteio": {
+      "concurso": "031/2026",
+      "data": "17/04/2026",
+      "chave": "22 23 28 41 47 + 6 8",
+      "numeros": [
+        "22",
+        "23",
+        "28",
+        "41",
+        "47"
+      ],
+      "estrelas": [
+        "06",
+        "08"
+      ]
+    },
+    "acertos": {
+      "numeros": 0,
+      "estrelas": 0,
+      "descricao": "0 número(s) e 0 estrela(s)"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "0 acertos",
+      "valor": "€ 0,00"
+    }
   }
 ]
