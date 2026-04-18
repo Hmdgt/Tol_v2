@@ -4,29 +4,29 @@ import glob
 from datetime import datetime
 from typing import List, Tuple
 
-# ===== CONFIGURAÇÃO =====
+# ===== CONFIGURACAO =====
 FICHEIRO_APOSTAS = "apostas/eurodreams.json"
 PASTA_DADOS = "dados/"
 FICHEIRO_SORTEIOS_PADRAO = "eurodreams_*.json"
 FICHEIRO_RESULTADOS = "resultados/eurodreams_verificacoes.json"
 
-# ===== TABELA DE PRÉMIOS EURODREAMS =====
+# ===== TABELA DE PREMIOS EURODREAMS =====
 PREMIOS_EURODREAMS = {
-    (6, True):  "1.º Prémio",
-    (6, False): "2.º Prémio",
-    (5, False): "3.º Prémio",
-    (4, False): "4.º Prémio",
-    (3, False): "5.º Prémio",
-    (2, False): "6.º Prémio",
+    (6, True):  "1. Premio",
+    (6, False): "2. Premio",
+    (5, False): "3. Premio",
+    (4, False): "4. Premio",
+    (2, False): "6. Premio",
+    (3, False): "5. Premio",   # Corrigida ordem para coerencia
 }
 
 # ============================================================
-# UTILITÁRIOS
+# UTILITARIOS
 # ============================================================
 
 def carregar_json(ficheiro: str):
     if not os.path.exists(ficheiro):
-        print(f"⚠️ Ficheiro não encontrado: {ficheiro}")
+        print(f"Aviso: Ficheiro nao encontrado: {ficheiro}")
         return []
     with open(ficheiro, "r", encoding="utf-8") as f:
         return json.load(f)
@@ -69,21 +69,21 @@ def normalizar_data_para_busca(data_iso: str) -> str:
 
 def extrair_numeros_sorteio(sorteio: dict) -> Tuple[List[str], str]:
     numeros = [str(n).zfill(2) for n in sorteio.get("numeros", [])]
-    dream = str(sorteio.get("dream", "")).zfill(1)
+    dream = str(sorteio.get("dream", "")).zfill(2)  # Garantir 2 digitos
     return numeros, dream
 
 def calcular_acertos(aposta_numeros, aposta_dream, sorteio_numeros, sorteio_dream):
     acertos = len(set(aposta_numeros) & set(sorteio_numeros))
-    acertou_dream = aposta_dream == sorteio_dream
+    acertou_dream = (aposta_dream == sorteio_dream)
     return acertos, acertou_dream
 
 # ============================================================
-# LÓGICA DE PRÉMIOS (OFICIAL)
+# LOGICA DE PREMIOS (OFICIAL)
 # ============================================================
 
 def encontrar_premio(sorteio: dict, acertos_n: int, acertou_dream: bool):
     if acertos_n == 6:
-        nome = "1.º Prémio" if acertou_dream else "2.º Prémio"
+        nome = "1. Premio" if acertou_dream else "2. Premio"
     else:
         nome = PREMIOS_EURODREAMS.get((acertos_n, False))
 
@@ -97,7 +97,7 @@ def encontrar_premio(sorteio: dict, acertos_n: int, acertou_dream: bool):
     return None
 
 # ============================================================
-# VERIFICAÇÃO
+# VERIFICACAO
 # ============================================================
 
 def verificar_boletins(apostas, sorteios):
@@ -110,21 +110,21 @@ def verificar_boletins(apostas, sorteios):
 
         sorteio = sorteios.get(chave)
         if not sorteio:
-            print(f"⚠️ Sorteio não encontrado: {data}")
+            print(f"Aviso: Sorteio nao encontrado para data {data}")
             continue
 
         numeros_sorteio, dream_sorteio = extrair_numeros_sorteio(sorteio)
 
         for aposta in boletim.get("apostas", []):
             numeros_aposta = aposta.get("numeros", [])
-            dream_aposta = aposta.get("dream", "")
+            dream_aposta = str(aposta.get("dream", "")).zfill(2)
 
             acertos_n, acertou_dream = calcular_acertos(
                 numeros_aposta, dream_aposta,
                 numeros_sorteio, dream_sorteio
             )
 
-            # 👇 NOVO: calcular listas exatas dos acertos
+            # Listas exatas para o frontend destacar acertos
             numeros_acertados = sorted(list(set(numeros_aposta) & set(numeros_sorteio)))
             dream_acertado = dream_aposta if acertou_dream else None
 
@@ -145,21 +145,22 @@ def verificar_boletins(apostas, sorteios):
                 "acertos": {
                     "numeros": acertos_n,
                     "dream": acertou_dream,
-                    "numeros_acertados": numeros_acertados,   # 👈 NOVO
-                    "dream_acertado": dream_acertado          # 👈 NOVO
+                    "numeros_acertados": numeros_acertados,
+                    "dream_acertado": dream_acertado
                 },
                 "ganhou": bool(premio),
                 "premio": premio if premio else {
-                    "premio": "Sem prémio",
-                    "valor": "€ 0,00"
+                    "premio": "Sem premio",
+                    "valor": "EUR 0,00"
                 }
             }
 
             resultados.append(resultado)
 
     return resultados
+
 # ============================================================
-# GUARDAR RESULTADOS (SEM DUPLICAÇÃO) + FICHEIRO RECENTE
+# GUARDAR RESULTADOS (SEM DUPLICACAO) + FICHEIRO RECENTE
 # ============================================================
 
 def guardar_resultados(resultados):
@@ -197,20 +198,19 @@ def guardar_resultados(resultados):
     with open(FICHEIRO_RESULTADOS, "w", encoding="utf-8") as f:
         json.dump(historico, f, indent=2, ensure_ascii=False)
 
-    print(f"\n📁 Histórico guardado em: {FICHEIRO_RESULTADOS}")
-    print(f"📊 Novas verificações no histórico: {novos}")
-    print(f"📊 Total no histórico: {len(historico)}")
+    print(f"\nHistorico guardado em: {FICHEIRO_RESULTADOS}")
+    print(f"Novas verificacoes no historico: {novos}")
+    print(f"Total no historico: {len(historico)}")
 
-    # ===== GUARDAR RESULTADOS RECENTES (PARA NOTIFICAÇÕES) =====
     if resultados:
         caminho_recentes = os.path.join("resultados", "eurodreams_recentes.json")
         with open(caminho_recentes, "w", encoding="utf-8") as f:
             json.dump(resultados, f, indent=2, ensure_ascii=False)
-        print(f"📁 Resultados recentes guardados em: {caminho_recentes}")
-        print(f"📊 Total de resultados recentes: {len(resultados)}")
+        print(f"Resultados recentes guardados em: {caminho_recentes}")
+        print(f"Total de resultados recentes: {len(resultados)}")
 
 # ============================================================
-# RELATÓRIO
+# RELATORIO
 # ============================================================
 
 def gerar_relatorio(resultados):
@@ -218,28 +218,28 @@ def gerar_relatorio(resultados):
     ganhos = sum(1 for r in resultados if r["ganhou"])
 
     print("\n" + "="*60)
-    print("📊 RELATÓRIO FINAL - EURODREAMS")
+    print("RELATORIO FINAL - EURODREAMS")
     print("="*60)
     print(f"Total apostas verificadas: {total}")
     print(f"Apostas premiadas: {ganhos}")
-    print(f"Sem prémio: {total - ganhos}")
+    print(f"Sem premio: {total - ganhos}")
 
 # ============================================================
 # MAIN
 # ============================================================
 
 def main():
-    print("\n🔍 VERIFICADOR EURODREAMS")
+    print("\nVERIFICADOR EURODREAMS")
     print("="*60)
 
     apostas = carregar_json(FICHEIRO_APOSTAS)
     if not apostas:
-        print("❌ Sem apostas")
+        print("ERRO: Sem apostas")
         return
 
     sorteios = carregar_sorteios()
     if not sorteios:
-        print("❌ Sem sorteios")
+        print("ERRO: Sem sorteios")
         return
 
     resultados = verificar_boletins(apostas, sorteios)
@@ -248,7 +248,7 @@ def main():
         guardar_resultados(resultados)
         gerar_relatorio(resultados)
     else:
-        print("❌ Nenhum resultado gerado")
+        print("Nenhum resultado gerado")
 
 if __name__ == "__main__":
     main()
