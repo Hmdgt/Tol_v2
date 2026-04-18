@@ -124,6 +124,10 @@ def verificar_boletins(apostas, sorteios):
                 numeros_sorteio, dream_sorteio
             )
 
+            # 👇 NOVO: calcular listas exatas dos acertos
+            numeros_acertados = sorted(list(set(numeros_aposta) & set(numeros_sorteio)))
+            dream_acertado = dream_aposta if acertou_dream else None
+
             premio = encontrar_premio(sorteio, acertos_n, acertou_dream)
 
             resultado = {
@@ -140,7 +144,9 @@ def verificar_boletins(apostas, sorteios):
                 },
                 "acertos": {
                     "numeros": acertos_n,
-                    "dream": acertou_dream
+                    "dream": acertou_dream,
+                    "numeros_acertados": numeros_acertados,   # 👈 NOVO
+                    "dream_acertado": dream_acertado          # 👈 NOVO
                 },
                 "ganhou": bool(premio),
                 "premio": premio if premio else {
@@ -151,15 +157,7 @@ def verificar_boletins(apostas, sorteios):
 
             resultados.append(resultado)
 
-            print(f"\n🎫 {boletim.get('referencia_unica')} | Índice {aposta.get('indice')}")
-            print(f"   Acertos: {acertos_n} números {'+ Dream' if acertou_dream else ''}")
-            if premio:
-                print(f"   🏆 {premio.get('premio')} - {premio.get('valor')}")
-            else:
-                print("   ❌ Sem prémio")
-
     return resultados
-
 # ============================================================
 # GUARDAR RESULTADOS (SEM DUPLICAÇÃO) + FICHEIRO RECENTE
 # ============================================================
