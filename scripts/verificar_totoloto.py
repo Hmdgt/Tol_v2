@@ -5,27 +5,27 @@ import re
 from datetime import datetime
 from typing import List, Tuple
 
-# ===== CONFIGURAÇÃO =====
+# ===== CONFIGURACAO =====
 FICHEIRO_APOSTAS = "apostas/totoloto.json"
 PASTA_DADOS = "dados/"
 FICHEIRO_SORTEIOS_PADRAO = "totoloto_sc_*.json"
 FICHEIRO_RESULTADOS = "resultados/totoloto_verificacoes.json"
 
-# ===== TABELA DE PRÉMIOS =====
+# ===== TABELA DE PREMIOS =====
 PREMIOS_NUMEROS_TOTOLOTO = {
-    5: "2.º Prémio",
-    4: "3.º Prémio",
-    3: "4.º Prémio",
-    2: "5.º Prémio",
+    5: "2. Premio",
+    4: "3. Premio",
+    3: "4. Premio",
+    2: "5. Premio",
 }
 
 # ============================================================
-# UTILITÁRIOS
+# UTILITARIOS
 # ============================================================
 
 def carregar_json(ficheiro: str):
     if not os.path.exists(ficheiro):
-        print(f"⚠️ Ficheiro não encontrado: {ficheiro}")
+        print(f"Aviso: Ficheiro nao encontrado: {ficheiro}")
         return []
     with open(ficheiro, "r", encoding="utf-8") as f:
         return json.load(f)
@@ -81,7 +81,6 @@ def encontrar_premios(sorteio: dict, acertos_n: int, acertou_especial: bool) -> 
     premios_ganhos = []
 
     def procurar(padrao: str):
-        # Normaliza o padrão: remove pontuação e converte para minúsculas
         padrao_clean = re.sub(r'[^\w\s]', '', padrao).lower()
         for p in sorteio.get("premios", []):
             nome = p.get("premio", "")
@@ -90,46 +89,37 @@ def encontrar_premios(sorteio: dict, acertos_n: int, acertou_especial: bool) -> 
                 return p
         return None
 
-    # 5 números
     if acertos_n == 5:
         if acertou_especial:
-            p = procurar("1")          # 1.º Prémio
+            p = procurar("1")
         else:
-            p = procurar("2")          # 2.º Prémio
+            p = procurar("2")
         if p:
             premios_ganhos.append(p)
-
-    # 4 números
     elif acertos_n == 4:
-        p = procurar("3")               # 3.º Prémio
+        p = procurar("3")
         if p:
             premios_ganhos.append(p)
         if acertou_especial:
             p_sorte = procurar("sorte")
             if p_sorte:
                 premios_ganhos.append(p_sorte)
-
-    # 3 números
     elif acertos_n == 3:
-        p = procurar("4")               # 4.º Prémio
+        p = procurar("4")
         if p:
             premios_ganhos.append(p)
         if acertou_especial:
             p_sorte = procurar("sorte")
             if p_sorte:
                 premios_ganhos.append(p_sorte)
-
-    # 2 números
     elif acertos_n == 2:
-        p = procurar("5")               # 5.º Prémio
+        p = procurar("5")
         if p:
             premios_ganhos.append(p)
         if acertou_especial:
             p_sorte = procurar("sorte")
             if p_sorte:
                 premios_ganhos.append(p_sorte)
-
-    # 1 ou 0 números → só nº da sorte
     elif acertos_n <= 1 and acertou_especial:
         p_sorte = procurar("sorte")
         if p_sorte:
@@ -138,7 +128,7 @@ def encontrar_premios(sorteio: dict, acertos_n: int, acertou_especial: bool) -> 
     return premios_ganhos
 
 # ============================================================
-# VERIFICAÇÃO
+# VERIFICACAO
 # ============================================================
 
 def verificar_boletins(apostas: list, todos_sorteios: dict) -> list:
@@ -177,7 +167,13 @@ def verificar_boletins(apostas: list, todos_sorteios: dict) -> list:
                 numeros_aposta, especial_aposta,
                 numeros_sorteio, especial_sorteio
             )
+
+            # Listas exatas para o frontend destacar acertos
+            numeros_acertados = sorted(list(set(numeros_aposta) & set(numeros_sorteio)))
+            especial_acertado = especial_aposta if acertou_especial else None
+
             premios_ganhos = encontrar_premios(sorteio_encontrado, acertos_n, acertou_especial)
+
             resultado = {
                 "data_verificacao": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 "metodo_validacao": metodo_encontrado,
@@ -201,26 +197,30 @@ def verificar_boletins(apostas: list, todos_sorteios: dict) -> list:
                 "acertos": {
                     "numeros": acertos_n,
                     "numero_da_sorte": acertou_especial,
-                    "descricao": f"{acertos_n} número(s) {'com' if acertou_especial else 'sem'} Nº da Sorte"
+                    "descricao": f"{acertos_n} numero(s) {'com' if acertou_especial else 'sem'} Nº da Sorte",
+                    "numeros_acertados": numeros_acertados,
+                    "numero_da_sorte_acertado": especial_acertado
                 }
             }
+
             if premios_ganhos:
                 resultado["ganhou"] = True
                 resultado["premios"] = premios_ganhos
             else:
                 resultado["ganhou"] = False
                 resultado["premios"] = []
+
             resultados.append(resultado)
     return resultados
 
 # ============================================================
-# GUARDAR RESULTADOS (HISTÓRICO + RECENTES)
+# GUARDAR RESULTADOS (HISTORICO + RECENTES)
 # ============================================================
 
 def guardar_resultados(resultados: list):
     os.makedirs("resultados", exist_ok=True)
 
-    # Histórico completo (incremental)
+    # Historico completo (incremental)
     if os.path.exists(FICHEIRO_RESULTADOS):
         with open(FICHEIRO_RESULTADOS, "r", encoding="utf-8") as f:
             historico = json.load(f)
@@ -246,35 +246,35 @@ def guardar_resultados(resultados: list):
     with open(FICHEIRO_RESULTADOS, "w", encoding="utf-8") as f:
         json.dump(historico, f, indent=2, ensure_ascii=False)
 
-    print(f"\n📁 Histórico guardado ({novos} novos, total {len(historico)})")
+    print(f"\nHistorico guardado ({novos} novos, total {len(historico)})")
 
-    # Ficheiro de resultados recentes (substituído a cada execução)
+    # Ficheiro de resultados recentes (substituido a cada execucao)
     nome_base = os.path.basename(FICHEIRO_RESULTADOS)
     nome_recentes = nome_base.replace('_verificacoes', '_recentes')
     caminho_recentes = os.path.join("resultados", nome_recentes)
     with open(caminho_recentes, "w", encoding="utf-8") as f:
         json.dump(resultados, f, indent=2, ensure_ascii=False)
-    print(f"📁 Resultados recentes guardados em: {caminho_recentes}")
+    print(f"Resultados recentes guardados em: {caminho_recentes}")
 
 # ============================================================
 # MAIN
 # ============================================================
 
 def main():
-    print("\n🔍 VERIFICADOR DE BOLETINS TOTOLOTO")
+    print("\nVERIFICADOR DE BOLETINS TOTOLOTO")
     apostas = carregar_json(FICHEIRO_APOSTAS)
     if not apostas:
-        print("❌ Nenhuma aposta encontrada")
+        print("ERRO: Nenhuma aposta encontrada")
         return
     todos_sorteios = carregar_todos_sorteios()
     if not todos_sorteios:
-        print("❌ Nenhum sorteio encontrado")
+        print("ERRO: Nenhum sorteio encontrado")
         return
     resultados = verificar_boletins(apostas, todos_sorteios)
     if resultados:
         guardar_resultados(resultados)
     else:
-        print("\n❌ Nenhum resultado para verificar")
+        print("\nNenhum resultado para verificar")
 
 if __name__ == "__main__":
     main()
