@@ -5,32 +5,32 @@ import re
 from datetime import datetime
 from typing import Dict, List, Tuple, Optional
 
-# ===== CONFIGURAÇÃO =====
+# ===== CONFIGURACAO =====
 FICHEIRO_APOSTAS = "apostas/euromilhoes.json"
 PASTA_DADOS = "dados/"
 FICHEIRO_RESULTADOS = "resultados/euromilhoes_verificacoes.json"
 
-# ===== TABELA DE PRÉMIOS EUROMILHÕES =====
+# ===== TABELA DE PREMIOS EUROMILHOES =====
 PREMIOS_EUROMILHOES = {
-    (5, 2): "1.º Prémio",
-    (5, 1): "2.º Prémio", 
-    (5, 0): "3.º Prémio",
-    (4, 2): "4.º Prémio",
-    (4, 1): "5.º Prémio",
-    (3, 2): "6.º Prémio",
-    (4, 0): "7.º Prémio",
-    (2, 2): "8.º Prémio",
-    (3, 1): "9.º Prémio",
-    (3, 0): "10.º Prémio",
-    (1, 2): "11.º Prémio",
-    (2, 1): "12.º Prémio",
-    (2, 0): "13.º Prémio"
+    (5, 2): "1. Premio",
+    (5, 1): "2. Premio",
+    (5, 0): "3. Premio",
+    (4, 2): "4. Premio",
+    (4, 1): "5. Premio",
+    (3, 2): "6. Premio",
+    (4, 0): "7. Premio",
+    (2, 2): "8. Premio",
+    (3, 1): "9. Premio",
+    (3, 0): "10. Premio",
+    (1, 2): "11. Premio",
+    (2, 1): "12. Premio",
+    (2, 0): "13. Premio"
 }
 
 def carregar_todos_sorteios() -> dict:
     """
     Carrega todos os ficheiros de sorteios (euromilhoes_ANO.json)
-    IGNORA euromilhoes_atual.json porque é apenas o último sorteio
+    Ignora euromilhoes_atual.json porque e apenas o ultimo sorteio
     """
     todos_sorteios = {}
     
@@ -38,19 +38,19 @@ def carregar_todos_sorteios() -> dict:
     ficheiros = glob.glob(padrao)
     
     if not ficheiros:
-        print(f"⚠️ Nenhum ficheiro de sorteios encontrado em {PASTA_DADOS}")
+        print(f"Aviso: Nenhum ficheiro de sorteios encontrado em {PASTA_DADOS}")
         return {}
     
     for ficheiro in ficheiros:
         nome = os.path.basename(ficheiro)
         
         if nome == "euromilhoes_atual.json":
-            print(f"   ⏭️ Ignorando {nome} (apenas último sorteio)")
+            print(f"   Ignorando {nome} (apenas ultimo sorteio)")
             continue
         
         match = re.search(r'euromilhoes_(\d{4})\.json', nome)
         if not match:
-            print(f"   ⏭️ Ignorando {nome} (formato não reconhecido)")
+            print(f"   Ignorando {nome} (formato nao reconhecido)")
             continue
         
         ano = match.group(1)
@@ -60,7 +60,6 @@ def carregar_todos_sorteios() -> dict:
                 dados = json.load(f)
             
             if ano in dados and isinstance(dados[ano], list):
-                # Criar índice para pesquisa rápida por DATA + CONCURSO
                 sorteios_indexados = {}
                 for sorteio in dados[ano]:
                     chave = f"{sorteio.get('data')}|{sorteio.get('concurso')}"
@@ -70,26 +69,26 @@ def carregar_todos_sorteios() -> dict:
                     "lista": dados[ano],
                     "index": sorteios_indexados
                 }
-                print(f"   📅 Carregados {len(dados[ano])} sorteios de {ano}")
+                print(f"   Carregados {len(dados[ano])} sorteios de {ano}")
             else:
-                print(f"⚠️ Formato inválido em {ficheiro}")
+                print(f"Aviso: Formato invalido em {ficheiro}")
                 
         except Exception as e:
-            print(f"❌ Erro ao carregar {ficheiro}: {e}")
+            print(f"Erro ao carregar {ficheiro}: {e}")
     
     return todos_sorteios
 
 def carregar_json(ficheiro: str):
     """Carrega um ficheiro JSON de apostas"""
     if not os.path.exists(ficheiro):
-        print(f"⚠️ Ficheiro não encontrado: {ficheiro}")
+        print(f"Aviso: Ficheiro nao encontrado: {ficheiro}")
         return []
     
     with open(ficheiro, "r", encoding="utf-8") as f:
         return json.load(f)
 
 def converter_data(data_str: str) -> str:
-    """Converte data para formato comparável (YYYY-MM-DD)"""
+    """Converte data para formato comparavel (YYYY-MM-DD)"""
     if len(data_str) == 10 and data_str[4] == '-':
         return data_str
     
@@ -111,14 +110,14 @@ def normalizar_data_para_busca(data_aposta: str) -> str:
 
 def extrair_concurso_referencia(referencia: str) -> Optional[str]:
     """
-    Tenta extrair número de concurso da referência única do boletim
-    Ex: "551-05455705-M1L" → None (não tem concurso)
-    Mas alguns boletins podem ter o número do concurso
+    Tenta extrair numero de concurso da referencia unica do boletim
+    Ex: "551-05455705-M1L" -> None (nao tem concurso)
+    Mas alguns boletins podem ter o numero do concurso
     """
     return None
 
 def extrair_chave_sorteio(chave_str: str) -> Tuple[List[str], List[str]]:
-    """Extrai números e estrelas da string da chave"""
+    """Extrai numeros e estrelas da string da chave"""
     partes = chave_str.split('+')
     numeros = partes[0].strip().split()
     estrelas = partes[1].strip().split() if len(partes) > 1 else []
@@ -128,15 +127,15 @@ def extrair_chave_sorteio(chave_str: str) -> Tuple[List[str], List[str]]:
     
     return numeros, estrelas
 
-def calcular_acertos(aposta_numeros: List[str], aposta_estrelas: List[str], 
+def calcular_acertos(aposta_numeros: List[str], aposta_estrelas: List[str],
                      sorteio_numeros: List[str], sorteio_estrelas: List[str]) -> Tuple[int, int]:
-    """Calcula quantos números e estrelas acertou"""
+    """Calcula quantos numeros e estrelas acertou"""
     acertos_numeros = len(set(aposta_numeros) & set(sorteio_numeros))
     acertos_estrelas = len(set(aposta_estrelas) & set(sorteio_estrelas))
     return acertos_numeros, acertos_estrelas
 
 def encontrar_premio(sorteio: dict, acertos_n: int, acertos_e: int) -> Optional[dict]:
-    """Encontra o prémio correspondente na lista de prémios do sorteio"""
+    """Encontra o premio correspondente na lista de premios do sorteio"""
     chave_premio = (acertos_n, acertos_e)
     nome_premio = PREMIOS_EUROMILHOES.get(chave_premio)
     
@@ -151,46 +150,38 @@ def encontrar_premio(sorteio: dict, acertos_n: int, acertos_e: int) -> Optional[
 
 def verificar_boletins(apostas: list, todos_sorteios: dict) -> list:
     """
-    Verifica todos os boletins contra os sorteios usando DUPLA VALIDAÇÃO:
+    Verifica todos os boletins contra os sorteios usando DUPLA VALIDACAO:
     1. Data do sorteio
-    2. Número do concurso (se disponível no boletim)
+    2. Numero do concurso (se disponivel no boletim)
     """
     resultados = []
     
     for aposta in apostas:
         data_aposta = aposta.get("data_sorteio")
         
-        # Extrair ano da data
         try:
             ano_aposta = data_aposta.split('-')[0]
         except:
-            print(f"⚠️ Data inválida: {data_aposta}")
+            print(f"Aviso: Data invalida: {data_aposta}")
             continue
         
-        # Obter dados do ano correspondente
         dados_ano = todos_sorteios.get(ano_aposta)
         if not dados_ano:
-            print(f"⚠️ Nenhum sorteio encontrado para o ano {ano_aposta}")
+            print(f"Aviso: Nenhum sorteio encontrado para o ano {ano_aposta}")
             continue
         
-        # Preparar data no formato do sorteio (DD/MM/YYYY)
         data_sorteio_formatada = normalizar_data_para_busca(data_aposta)
-        
-        # Tentar obter concurso da aposta (se existir no futuro)
         concurso_aposta = aposta.get("concurso")
         
-        # ESTRATÉGIA DE BUSCA: Prioridade por DATA + CONCURSO
         sorteio_encontrado = None
         metodo_encontrado = ""
         
-        # 1. Tentar por DATA + CONCURSO (se tivermos concurso)
         if concurso_aposta:
             chave_exata = f"{data_sorteio_formatada}|{concurso_aposta}"
             sorteio_encontrado = dados_ano["index"].get(chave_exata)
             if sorteio_encontrado:
                 metodo_encontrado = "data + concurso"
         
-        # 2. Se não encontrou, tentar só por DATA (fallback)
         if not sorteio_encontrado:
             for sorteio in dados_ano["lista"]:
                 if sorteio.get("data") == data_sorteio_formatada:
@@ -199,27 +190,25 @@ def verificar_boletins(apostas: list, todos_sorteios: dict) -> list:
                     break
         
         if not sorteio_encontrado:
-            print(f"⚠️ Sorteio não encontrado para data {data_aposta}")
+            print(f"Aviso: Sorteio nao encontrado para data {data_aposta}")
             continue
         
-        # Extrair chave do sorteio
         numeros_sorteio, estrelas_sorteio = extrair_chave_sorteio(sorteio_encontrado.get("chave", ""))
         
-        # Verificar cada aposta (índice)
         for aposta_ind in aposta.get("apostas", []):
             numeros_aposta = aposta_ind.get("numeros", [])
             estrelas_aposta = aposta_ind.get("estrelas", [])
             
-            # Calcular acertos
             acertos_n, acertos_e = calcular_acertos(
                 numeros_aposta, estrelas_aposta,
                 numeros_sorteio, estrelas_sorteio
             )
             
-            # Encontrar prémio
+            numeros_acertados = sorted(list(set(numeros_aposta) & set(numeros_sorteio)))
+            estrelas_acertadas = sorted(list(set(estrelas_aposta) & set(estrelas_sorteio)))
+            
             premio = encontrar_premio(sorteio_encontrado, acertos_n, acertos_e)
             
-            # Criar resultado
             resultado = {
                 "data_verificacao": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 "metodo_validacao": metodo_encontrado,
@@ -244,11 +233,12 @@ def verificar_boletins(apostas: list, todos_sorteios: dict) -> list:
                 "acertos": {
                     "numeros": acertos_n,
                     "estrelas": acertos_e,
-                    "descricao": f"{acertos_n} número(s) e {acertos_e} estrela(s)"
+                    "descricao": f"{acertos_n} numero(s) e {acertos_e} estrela(s)",
+                    "numeros_acertados": numeros_acertados,
+                    "estrelas_acertadas": estrelas_acertadas
                 }
             }
             
-            # Adicionar informação de prémio se houver
             if premio:
                 resultado["premio"] = {
                     "categoria": premio.get("premio"),
@@ -262,20 +252,18 @@ def verificar_boletins(apostas: list, todos_sorteios: dict) -> list:
                 resultado["ganhou"] = False
                 if acertos_n > 0 or acertos_e > 0:
                     resultado["premio"] = {
-                        "categoria": "Sem prémio",
-                        "descricao": "Não corresponde a qualquer prémio",
-                        "valor": "€ 0,00"
+                        "categoria": "Sem premio",
+                        "descricao": "Nao corresponde a qualquer premio",
+                        "valor": "EUR 0,00"
                     }
                 else:
                     resultado["premio"] = {
-                        "categoria": "Sem prémio",
+                        "categoria": "Sem premio",
                         "descricao": "0 acertos",
-                        "valor": "€ 0,00"
+                        "valor": "EUR 0,00"
                     }
             
             resultados.append(resultado)
-            
-            # Mostrar resultado imediato
             mostrar_resultado_simples(resultado, metodo_encontrado)
     
     return resultados
@@ -283,39 +271,37 @@ def verificar_boletins(apostas: list, todos_sorteios: dict) -> list:
 def mostrar_resultado_simples(resultado: dict, metodo: str):
     """Mostra resultado formatado no terminal"""
     print("\n" + "="*70)
-    print(f"📅 Sorteio: {resultado['sorteio']['concurso']} - {resultado['sorteio']['data']}")
-    print(f"🎫 Boletim: {resultado['boletim']['referencia']} (índice {resultado['aposta']['indice']})")
-    print(f"   Validação por: {metodo.upper()}")
+    print(f"Sorteio: {resultado['sorteio']['concurso']} - {resultado['sorteio']['data']}")
+    print(f"Boletim: {resultado['boletim']['referencia']} (indice {resultado['aposta']['indice']})")
+    print(f"   Validacao por: {metodo.upper()}")
     print(f"   Aposta:   {' '.join(resultado['aposta']['numeros'])} + {' '.join(resultado['aposta']['estrelas'])}")
     print(f"   Sorteio:  {' '.join(resultado['sorteio']['numeros'])} + {' '.join(resultado['sorteio']['estrelas'])}")
-    print(f"   Acertos:  {resultado['acertos']['numeros']} números, {resultado['acertos']['estrelas']} estrelas")
+    print(f"   Acertos:  {resultado['acertos']['numeros']} numeros, {resultado['acertos']['estrelas']} estrelas")
     
     if resultado.get('ganhou'):
-        print(f"   🏆 GANHOU: {resultado['premio']['categoria']}")
-        print(f"   💰 Prémio: {resultado['premio']['valor']}")
+        print(f"   GANHOU: {resultado['premio']['categoria']}")
+        print(f"   Premio: {resultado['premio']['valor']}")
     else:
         if resultado['acertos']['numeros'] > 0 or resultado['acertos']['estrelas'] > 0:
-            print(f"   ❌ Não ganhou prémio (combinação não premiada)")
+            print(f"   Nao ganhou premio (combinacao nao premiada)")
         else:
-            print(f"   ❌ Nenhum acerto")
+            print(f"   Nenhum acerto")
     print("="*70)
 
 def guardar_resultados(resultados: list):
     """
     Guarda resultados em dois formatos:
-    1. INCREMENTAL: histórico completo (nunca apaga)
-    2. SUBSTITUÍDO: apenas os resultados desta execução
+    1. INCREMENTAL: historico completo (nunca apaga)
+    2. SUBSTITUIDO: apenas os resultados desta execucao
     """
     os.makedirs("resultados", exist_ok=True)
     
-    # ===== 1. FICHEIRO INCREMENTAL (histórico) =====
     if os.path.exists(FICHEIRO_RESULTADOS):
         with open(FICHEIRO_RESULTADOS, "r", encoding="utf-8") as f:
             historico = json.load(f)
     else:
         historico = []
     
-    # Adicionar apenas os NOVOS ao histórico
     novos_adicionados = 0
     for novo in resultados:
         existe = False
@@ -329,44 +315,40 @@ def guardar_resultados(resultados: list):
             historico.append(novo)
             novos_adicionados += 1
     
-    # Guardar histórico completo (INCREMENTAL)
     with open(FICHEIRO_RESULTADOS, "w", encoding="utf-8") as f:
         json.dump(historico, f, indent=2, ensure_ascii=False)
     
-    print(f"\n📁 Histórico guardado em: {FICHEIRO_RESULTADOS}")
-    print(f"📊 Novas verificações no histórico: {novos_adicionados}")
-    print(f"📊 Total no histórico: {len(historico)}")
+    print(f"\nHistorico guardado em: {FICHEIRO_RESULTADOS}")
+    print(f"Novas verificacoes no historico: {novos_adicionados}")
+    print(f"Total no historico: {len(historico)}")
     
-    # ===== 2. FICHEIRO DE RESULTADOS RECENTES (SUBSTITUÍDO) =====
     if resultados:
-        # Nome do ficheiro de resultados recentes
         nome_base = os.path.basename(FICHEIRO_RESULTADOS)
         nome_recentes = nome_base.replace('_verificacoes', '_recentes')
         caminho_recentes = os.path.join("resultados", nome_recentes)
         
-        # Guardar APENAS os resultados desta execução (SUBSTITUI)
         with open(caminho_recentes, "w", encoding="utf-8") as f:
             json.dump(resultados, f, indent=2, ensure_ascii=False)
         
-        print(f"📁 Resultados recentes guardados em: {caminho_recentes}")
-        print(f"📊 Total de resultados recentes: {len(resultados)}")
+        print(f"Resultados recentes guardados em: {caminho_recentes}")
+        print(f"Total de resultados recentes: {len(resultados)}")
 
 def gerar_relatorio(resultados: list):
-    """Gera relatório sumário"""
+    """Gera relatorio sumario"""
     if not resultados:
         return
     
     total = len(resultados)
     ganhadores = sum(1 for r in resultados if r.get('ganhou'))
     
-    print("\n" + "📊"*35)
-    print("📈 RELATÓRIO FINAL")
-    print("📊"*35)
+    print("\n" + "="*70)
+    print("RELATORIO FINAL")
+    print("="*70)
     print(f"Total de apostas verificadas: {total}")
     print(f"Apostas premiadas: {ganhadores}")
     
     if ganhadores > 0:
-        print("\n🏆 PRÉMIOS OBTIDOS:")
+        print("\nPREMIOS OBTIDOS:")
         premios_contagem = {}
         for r in resultados:
             if r.get('ganhou'):
@@ -377,40 +359,37 @@ def gerar_relatorio(resultados: list):
             print(f"   {cat}: {count}")
 
 def main():
-    """Função principal"""
-    print("\n🔍 VERIFICADOR DE BOLETINS EUROMILHÕES (DUPLA VALIDAÇÃO)")
+    """Funcao principal"""
+    print("\nVERIFICADOR DE BOLETINS EUROMILHOES (DUPLA VALIDACAO)")
     print("="*70)
-    print(f"📁 Apostas: {FICHEIRO_APOSTAS}")
-    print(f"📁 Pasta de dados: {PASTA_DADOS}")
-    print(f"📁 Resultados: {FICHEIRO_RESULTADOS}")
+    print(f"Apostas: {FICHEIRO_APOSTAS}")
+    print(f"Pasta de dados: {PASTA_DADOS}")
+    print(f"Resultados: {FICHEIRO_RESULTADOS}")
     print("="*70)
     
-    # Carregar apostas
     apostas = carregar_json(FICHEIRO_APOSTAS)
     if not apostas:
-        print("❌ Nenhuma aposta encontrada")
+        print("ERRO: Nenhuma aposta encontrada")
         return
     
-    # Carregar todos os sorteios de todos os anos
-    print("\n📚 A carregar sorteios...")
+    print("\nA carregar sorteios...")
     todos_sorteios = carregar_todos_sorteios()
     
     if not todos_sorteios:
-        print("❌ Nenhum sorteio encontrado")
+        print("ERRO: Nenhum sorteio encontrado")
         return
     
     total_sorteios = sum(len(d["lista"]) for d in todos_sorteios.values())
-    print(f"\n📚 Apostas carregadas: {len(apostas)}")
-    print(f"📚 Sorteios carregados: {total_sorteios} (de {len(todos_sorteios)} anos)")
+    print(f"\nApostas carregadas: {len(apostas)}")
+    print(f"Sorteios carregados: {total_sorteios} (de {len(todos_sorteios)} anos)")
     
-    # Verificar boletins
     resultados = verificar_boletins(apostas, todos_sorteios)
     
     if resultados:
         guardar_resultados(resultados)
         gerar_relatorio(resultados)
     else:
-        print("\n❌ Nenhum resultado para verificar")
+        print("\nNenhum resultado para verificar")
 
 if __name__ == "__main__":
     main()
