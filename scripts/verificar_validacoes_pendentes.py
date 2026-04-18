@@ -140,7 +140,7 @@ def enviar_push_validacao(jogo: str, quantidade: int, imagem: str = None) -> boo
         "body": f"Tens {quantidade} boletim(ns) por validar!",
         "tag": f"validacao-{jogo}-{imagem}" if imagem else f"validacao-{jogo}",
         "icon": "/Tol_v2/icons/icon-192.png",
-        "badge": "/Tol_v2/icons/icon-192.png",
+        "badge": "/Tol_v2/icons/android-badge.png",
         "url": "/Tol_v2/",
         "timestamp": datetime.now().isoformat()
     }
