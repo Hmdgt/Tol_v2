@@ -2575,5 +2575,57 @@
       "_id": "euromilhoes_607-06256036-M1L_1"
     },
     "data_leitura": "2026-04-18T12:07:24.509Z"
+  },
+  {
+    "id": "totoloto_107-07991301-248_1",
+    "jogo": "totoloto",
+    "data": "2026-04-18 20:25:20",
+    "lido": true,
+    "titulo": "🎫 Novo resultado TOTOLOTO",
+    "subtitulo": "Boletim: 107-07991301-248",
+    "resumo": "Não ganhou",
+    "detalhes": {
+      "data_verificacao": "2026-04-18 20:25:20",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "107-07991301-248",
+        "data_sorteio": "2026-04-18",
+        "concurso_sorteio": "031/2026",
+        "imagem_origem": "foto_1776513232771_bm88gs.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "08",
+          "10",
+          "11",
+          "15",
+          "25"
+        ],
+        "numero_da_sorte": "02"
+      },
+      "sorteio": {
+        "concurso": "031/2026",
+        "data": "18/04/2026",
+        "numeros": [
+          "02",
+          "05",
+          "21",
+          "27",
+          "45"
+        ],
+        "numero_da_sorte": "13"
+      },
+      "acertos": {
+        "numeros": 0,
+        "numero_da_sorte": false,
+        "descricao": "0 número(s) sem Nº da Sorte"
+      },
+      "ganhou": false,
+      "premios": [],
+      "_jogo": "totoloto",
+      "_id": "totoloto_107-07991301-248_1"
+    },
+    "data_leitura": "2026-04-18T21:02:00.233Z"
   }
 ]
