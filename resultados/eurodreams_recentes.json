@@ -1,6 +1,6 @@
 [
   {
-    "data_verificacao": "2026-04-18 12:08:20",
+    "data_verificacao": "2026-04-18 14:19:06",
     "boletim": {
       "referencia": "260217-17-2156263608-098",
       "concurso_sorteio": "015/2026",
@@ -22,7 +22,9 @@
     },
     "acertos": {
       "numeros": 0,
-      "dream": false
+      "dream": false,
+      "numeros_acertados": [],
+      "dream_acertado": null
     },
     "ganhou": false,
     "premio": {
@@ -31,7 +33,7 @@
     }
   },
   {
-    "data_verificacao": "2026-04-18 12:08:20",
+    "data_verificacao": "2026-04-18 14:19:06",
     "boletim": {
       "referencia": "260227-17-7324481145-011",
       "concurso_sorteio": "018/2026",
@@ -53,7 +55,12 @@
     },
     "acertos": {
       "numeros": 2,
-      "dream": false
+      "dream": false,
+      "numeros_acertados": [
+        "08",
+        "18"
+      ],
+      "dream_acertado": null
     },
     "ganhou": true,
     "premio": {
@@ -65,7 +72,7 @@
     }
   },
   {
-    "data_verificacao": "2026-04-18 12:08:20",
+    "data_verificacao": "2026-04-18 14:19:06",
     "boletim": {
       "referencia": "260320-17-2808127123-297",
       "concurso_sorteio": "024/2026",
@@ -87,7 +94,9 @@
     },
     "acertos": {
       "numeros": 0,
-      "dream": false
+      "dream": false,
+      "numeros_acertados": [],
+      "dream_acertado": null
     },
     "ganhou": false,
     "premio": {
@@ -96,7 +105,7 @@
     }
   },
   {
-    "data_verificacao": "2026-04-18 12:08:20",
+    "data_verificacao": "2026-04-18 14:19:06",
     "boletim": {
       "referencia": "260327-17-1668370231-876",
       "concurso_sorteio": "026/2026",
@@ -118,7 +127,9 @@
     },
     "acertos": {
       "numeros": 0,
-      "dream": false
+      "dream": false,
+      "numeros_acertados": [],
+      "dream_acertado": null
     },
     "ganhou": false,
     "premio": {
@@ -127,7 +138,7 @@
     }
   },
   {
-    "data_verificacao": "2026-04-18 12:08:20",
+    "data_verificacao": "2026-04-18 14:19:06",
     "boletim": {
       "referencia": "260410-17-9400999645-449",
       "concurso_sorteio": "030/2026",
@@ -149,7 +160,9 @@
     },
     "acertos": {
       "numeros": 0,
-      "dream": false
+      "dream": false,
+      "numeros_acertados": [],
+      "dream_acertado": null
     },
     "ganhou": false,
     "premio": {
