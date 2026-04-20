@@ -2627,5 +2627,50 @@
       "_id": "totoloto_107-07991301-248_1"
     },
     "data_leitura": "2026-04-18T21:02:00.233Z"
+  },
+  {
+    "id": "eurodreams_260417-17-0323776000-834_1",
+    "jogo": "eurodreams",
+    "data": "2026-04-20 20:41:41",
+    "lido": true,
+    "titulo": "🎫 Novo resultado EURODREAMS",
+    "subtitulo": "Boletim: 260417-17-0323776000-834",
+    "resumo": "1 acertos",
+    "detalhes": {
+      "data_verificacao": "2026-04-20 20:41:41",
+      "boletim": {
+        "referencia": "260417-17-0323776000-834",
+        "concurso_sorteio": "032/2026",
+        "data_sorteio": "2026-04-20"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "01",
+          "11",
+          "12",
+          "14",
+          "15",
+          "29"
+        ],
+        "dream": "['03']"
+      },
+      "acertos": {
+        "numeros": 1,
+        "dream": false,
+        "numeros_acertados": [
+          "15"
+        ],
+        "dream_acertado": null
+      },
+      "ganhou": false,
+      "premio": {
+        "premio": "Sem premio",
+        "valor": "EUR 0,00"
+      },
+      "_jogo": "eurodreams",
+      "_id": "eurodreams_260417-17-0323776000-834_1"
+    },
+    "data_leitura": "2026-04-20T21:50:25.143Z"
   }
 ]
