@@ -1,6 +1,6 @@
 [
   {
-    "data_verificacao": "2026-04-18 14:19:06",
+    "data_verificacao": "2026-04-20 20:41:41",
     "boletim": {
       "referencia": "260217-17-2156263608-098",
       "concurso_sorteio": "015/2026",
@@ -16,9 +16,7 @@
         "22",
         "26"
       ],
-      "dream": [
-        "04"
-      ]
+      "dream": "['04']"
     },
     "acertos": {
       "numeros": 0,
@@ -28,12 +26,12 @@
     },
     "ganhou": false,
     "premio": {
-      "premio": "Sem prémio",
-      "valor": "€ 0,00"
+      "premio": "Sem premio",
+      "valor": "EUR 0,00"
     }
   },
   {
-    "data_verificacao": "2026-04-18 14:19:06",
+    "data_verificacao": "2026-04-20 20:41:41",
     "boletim": {
       "referencia": "260227-17-7324481145-011",
       "concurso_sorteio": "018/2026",
@@ -49,9 +47,7 @@
         "33",
         "39"
       ],
-      "dream": [
-        "03"
-      ]
+      "dream": "['03']"
     },
     "acertos": {
       "numeros": 2,
@@ -62,17 +58,14 @@
       ],
       "dream_acertado": null
     },
-    "ganhou": true,
+    "ganhou": false,
     "premio": {
-      "premio": "6.º Prémio",
-      "descricao": "2 Números",
-      "vencedores_pt": "59.621",
-      "vencedores_eu": "390.096",
-      "valor": "€ 2,50"
+      "premio": "Sem premio",
+      "valor": "EUR 0,00"
     }
   },
   {
-    "data_verificacao": "2026-04-18 14:19:06",
+    "data_verificacao": "2026-04-20 20:41:41",
     "boletim": {
       "referencia": "260320-17-2808127123-297",
       "concurso_sorteio": "024/2026",
@@ -88,9 +81,7 @@
         "25",
         "29"
       ],
-      "dream": [
-        "02"
-      ]
+      "dream": "['02']"
     },
     "acertos": {
       "numeros": 0,
@@ -100,12 +91,12 @@
     },
     "ganhou": false,
     "premio": {
-      "premio": "Sem prémio",
-      "valor": "€ 0,00"
+      "premio": "Sem premio",
+      "valor": "EUR 0,00"
     }
   },
   {
-    "data_verificacao": "2026-04-18 14:19:06",
+    "data_verificacao": "2026-04-20 20:41:41",
     "boletim": {
       "referencia": "260327-17-1668370231-876",
       "concurso_sorteio": "026/2026",
@@ -121,9 +112,7 @@
         "32",
         "38"
       ],
-      "dream": [
-        "03"
-      ]
+      "dream": "['03']"
     },
     "acertos": {
       "numeros": 0,
@@ -133,12 +122,12 @@
     },
     "ganhou": false,
     "premio": {
-      "premio": "Sem prémio",
-      "valor": "€ 0,00"
+      "premio": "Sem premio",
+      "valor": "EUR 0,00"
     }
   },
   {
-    "data_verificacao": "2026-04-18 14:19:06",
+    "data_verificacao": "2026-04-20 20:41:41",
     "boletim": {
       "referencia": "260410-17-9400999645-449",
       "concurso_sorteio": "030/2026",
@@ -154,9 +143,7 @@
         "24",
         "35"
       ],
-      "dream": [
-        "05"
-      ]
+      "dream": "['05']"
     },
     "acertos": {
       "numeros": 0,
@@ -166,8 +153,41 @@
     },
     "ganhou": false,
     "premio": {
-      "premio": "Sem prémio",
-      "valor": "€ 0,00"
+      "premio": "Sem premio",
+      "valor": "EUR 0,00"
+    }
+  },
+  {
+    "data_verificacao": "2026-04-20 20:41:41",
+    "boletim": {
+      "referencia": "260417-17-0323776000-834",
+      "concurso_sorteio": "032/2026",
+      "data_sorteio": "2026-04-20"
+    },
+    "aposta": {
+      "indice": 1,
+      "numeros": [
+        "01",
+        "11",
+        "12",
+        "14",
+        "15",
+        "29"
+      ],
+      "dream": "['03']"
+    },
+    "acertos": {
+      "numeros": 1,
+      "dream": false,
+      "numeros_acertados": [
+        "15"
+      ],
+      "dream_acertado": null
+    },
+    "ganhou": false,
+    "premio": {
+      "premio": "Sem premio",
+      "valor": "EUR 0,00"
     }
   }
 ]

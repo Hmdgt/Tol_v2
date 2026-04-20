@@ -156,5 +156,38 @@
       "premio": "Sem prémio",
       "valor": "€ 0,00"
     }
+  },
+  {
+    "data_verificacao": "2026-04-20 20:41:41",
+    "boletim": {
+      "referencia": "260417-17-0323776000-834",
+      "concurso_sorteio": "032/2026",
+      "data_sorteio": "2026-04-20"
+    },
+    "aposta": {
+      "indice": 1,
+      "numeros": [
+        "01",
+        "11",
+        "12",
+        "14",
+        "15",
+        "29"
+      ],
+      "dream": "['03']"
+    },
+    "acertos": {
+      "numeros": 1,
+      "dream": false,
+      "numeros_acertados": [
+        "15"
+      ],
+      "dream_acertado": null
+    },
+    "ganhou": false,
+    "premio": {
+      "premio": "Sem premio",
+      "valor": "EUR 0,00"
+    }
   }
 ]
