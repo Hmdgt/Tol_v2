@@ -46,3 +46,4 @@
 [2026-04-21 20:44:46] [euromilhoes] Resultado do concurso 032/2026 adicionado ao JSON euromilhoes_2026.
 [2026-04-21 21:38:02] [euromilhoes] Concurso 032/2026 já está completo. Nada a atualizar.
 [2026-04-21 22:32:12] [euromilhoes] Concurso 032/2026 já está completo. Nada a atualizar.
+[2026-04-22 10:21:17] [euromilhoes] Concurso 032/2026 já está completo. Nada a atualizar.
