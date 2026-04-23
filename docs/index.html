@@ -348,23 +348,49 @@
     border-color: #555555;
   }
 
-  /* ========== ESTRELAS (SVG PURO) ========== */
-  .estrela-santacas {
-    background-color: transparent !important;
-    border: none !important;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 120%;                   /* 👈 antes contain, agora reduzida para dar espaço aos números */
-  }
+/* ========== ESTRELAS (AGORA CÍRCULOS IDÊNTICOS AOS NÚMEROS) ========== */
+.estrela-santacas {
+  /* Remove qualquer SVG de fundo */
+  background-image: none !important;
+  background-color: transparent !important;
 
-  [data-theme="light"] .estrela-santacas {
-    /* 👇 stroke-width='1.5' (igual à borda do círculo) */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23898989' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolygon points='12 2 15 9 22 9 17 14 18.5 21 12 17.5 5.5 21 7 14 2 9 9 9 12 2'/%3E%3C/svg%3E");
-  }
+  /* Herda todas as propriedades visuais dos números */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--bubble-size);
+  height: var(--bubble-size);
+  font-size: calc(var(--bubble-size) * var(--bubble-font-scale));
+  font-weight: 500;
+  line-height: 1;
+  flex-shrink: 0;
+  margin: 0 2px;
+  transition: all 0.2s ease;
 
-  [data-theme="dark"] .estrela-santacas {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23aaaaaa' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolygon points='12 2 15 9 22 9 17 14 18.5 21 12 17.5 5.5 21 7 14 2 9 9 9 12 2'/%3E%3C/svg%3E");
-  }
+  /* Estilo circular */
+  border-radius: 50%;
+  border: 1.5px solid;
+}
+
+/* Tema claro – igual aos números */
+[data-theme="light"] .estrela-santacas {
+  color: var(--santacas-cinza-numeros);   /* #898989 */
+  border-color: #cccccc;
+}
+
+/* Tema escuro – igual aos números */
+[data-theme="dark"] .estrela-santacas {
+  color: var(--text-secondary);           /* #aaaaaa */
+  border-color: #555555;
+}
+
+/* Estado "acerto" – igual ao .numero-santacas.acerto */
+.estrela-santacas.acerto {
+  background-color: transparent !important;
+  background-image: none !important;
+  border-color: var(--positive) !important;
+  color: var(--positive) !important;
+}
 
   /* ========== NÚMERO EXTRA (M1LHÃO) ========== */
   .numero-extra-santacas {
@@ -380,15 +406,6 @@
     background: transparent !important;
     border-color: var(--positive) !important;
     color: var(--positive) !important;
-  }
-
-  .estrela-santacas.acerto {
-    background-color: transparent !important;
-    border: none !important;
-    background-size: 65%;                   /* mantém o tamanho reduzido */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234caf4c' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolygon points='12 2 15 9 22 9 17 14 18.5 21 12 17.5 5.5 21 7 14 2 9 9 9 12 2'/%3E%3C/svg%3E") !important;
-    background-repeat: no-repeat;
-    background-position: center;
   }
 
   /* ========== CONTAINER ========== */
