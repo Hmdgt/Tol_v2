@@ -72,6 +72,14 @@ def extrair_numeros_sorteio(sorteio: dict) -> Tuple[List[str], str]:
     dream = str(sorteio.get("dream", "")).zfill(2)  # Garantir 2 digitos
     return numeros, dream
 
+def extrair_dream_aposta(aposta: dict) -> str:
+    """Extrai o numero dream da aposta, tratando tanto listas como strings."""
+    dream_raw = aposta.get("dream", "")
+    if isinstance(dream_raw, list):
+        return str(dream_raw[0]).zfill(2) if dream_raw else ""
+    else:
+        return str(dream_raw).zfill(2)
+
 def calcular_acertos(aposta_numeros, aposta_dream, sorteio_numeros, sorteio_dream):
     acertos = len(set(aposta_numeros) & set(sorteio_numeros))
     acertou_dream = (aposta_dream == sorteio_dream)
@@ -117,7 +125,7 @@ def verificar_boletins(apostas, sorteios):
 
         for aposta in boletim.get("apostas", []):
             numeros_aposta = aposta.get("numeros", [])
-            dream_aposta = str(aposta.get("dream", "")).zfill(2)
+            dream_aposta = extrair_dream_aposta(aposta)
 
             acertos_n, acertou_dream = calcular_acertos(
                 numeros_aposta, dream_aposta,
@@ -140,7 +148,13 @@ def verificar_boletins(apostas, sorteios):
                 "aposta": {
                     "indice": aposta.get("indice"),
                     "numeros": numeros_aposta,
-                    "dream": dream_aposta
+                    "dream": [dream_aposta]              # ← array com um elemento
+                },
+                "sorteio": {                            # ← campo obrigatório
+                    "concurso": sorteio.get("concurso"),
+                    "data": sorteio.get("data"),
+                    "numeros": numeros_sorteio,
+                    "dream": dream_sorteio
                 },
                 "acertos": {
                     "numeros": acertos_n,
