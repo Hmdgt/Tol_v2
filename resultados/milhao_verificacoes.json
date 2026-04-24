@@ -376,5 +376,167 @@
       "descricao": "Código não premiado",
       "valor": "€ 0,00"
     }
+  },
+  {
+    "data_verificacao": "2026-04-24 20:41:44",
+    "boletim": {
+      "referencia": "590-03212194-EUR",
+      "data_sorteio": "2026-04-24",
+      "imagem_origem": "foto_1774978857844_cdbe5d.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "codigo": "JGJ24112",
+      "codigo_original": "JGJ24112"
+    },
+    "sorteio": {
+      "concurso": "004/2026",
+      "data": "24/04/2026",
+      "codigo_premiado": "JHG04555",
+      "codigo_original": "JHG 04555",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Código não premiado",
+      "valor": "€ 0,00"
+    }
+  },
+  {
+    "data_verificacao": "2026-04-24 20:41:44",
+    "boletim": {
+      "referencia": "600-05031723-EUR",
+      "data_sorteio": "2026-04-24",
+      "imagem_origem": "foto_1775842333010_bdmmyp.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "codigo": "JNT12190",
+      "codigo_original": "JNT12190"
+    },
+    "sorteio": {
+      "concurso": "004/2026",
+      "data": "24/04/2026",
+      "codigo_premiado": "JHG04555",
+      "codigo_original": "JHG 04555",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Código não premiado",
+      "valor": "€ 0,00"
+    }
+  },
+  {
+    "data_verificacao": "2026-04-24 20:41:44",
+    "boletim": {
+      "referencia": "605-02458294-EUR",
+      "data_sorteio": "2026-04-24",
+      "imagem_origem": "foto_1776289067888_sdlw98.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "codigo": "JSH18824",
+      "codigo_original": "JSH18824"
+    },
+    "sorteio": {
+      "concurso": "004/2026",
+      "data": "24/04/2026",
+      "codigo_premiado": "JHG04555",
+      "codigo_original": "JHG 04555",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Código não premiado",
+      "valor": "€ 0,00"
+    }
+  },
+  {
+    "data_verificacao": "2026-04-24 20:41:44",
+    "boletim": {
+      "referencia": "607-03044773-EUR",
+      "data_sorteio": "2026-04-24",
+      "imagem_origem": "foto_1776521059199_d93uw4.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "codigo": "JTS27855",
+      "codigo_original": "JTS27855"
+    },
+    "sorteio": {
+      "concurso": "004/2026",
+      "data": "24/04/2026",
+      "codigo_premiado": "JHG04555",
+      "codigo_original": "JHG 04555",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Código não premiado",
+      "valor": "€ 0,00"
+    }
+  },
+  {
+    "data_verificacao": "2026-04-24 20:41:44",
+    "boletim": {
+      "referencia": "611-07277190-EUR",
+      "data_sorteio": "2026-04-24",
+      "imagem_origem": "foto_1776809833723_xhhwbv.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "codigo": "JZJ05404",
+      "codigo_original": "JZJ05404"
+    },
+    "sorteio": {
+      "concurso": "004/2026",
+      "data": "24/04/2026",
+      "codigo_premiado": "JHG04555",
+      "codigo_original": "JHG 04555",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Código não premiado",
+      "valor": "€ 0,00"
+    }
+  },
+  {
+    "data_verificacao": "2026-04-24 20:41:44",
+    "boletim": {
+      "referencia": "614-00322981-EUR",
+      "data_sorteio": "2026-04-24",
+      "imagem_origem": "foto_1777054348746_k2y016.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "codigo": "KCQ05039",
+      "codigo_original": "KCQ05039"
+    },
+    "sorteio": {
+      "concurso": "004/2026",
+      "data": "24/04/2026",
+      "codigo_premiado": "JHG04555",
+      "codigo_original": "JHG 04555",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Código não premiado",
+      "valor": "€ 0,00"
+    }
   }
 ]
