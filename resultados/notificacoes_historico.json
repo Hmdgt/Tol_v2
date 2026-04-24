@@ -2906,5 +2906,44 @@
       "_id": "euromilhoes_614-07728548-M1L_1"
     },
     "data_leitura": "2026-04-24T21:11:52.473Z"
+  },
+  {
+    "id": "milhao_590-03212194-EUR_1",
+    "jogo": "milhao",
+    "data": "2026-04-24 20:41:44",
+    "lido": true,
+    "titulo": "🎫 Novo resultado MILHAO",
+    "subtitulo": "Boletim: 590-03212194-EUR",
+    "resumo": "0 acertos",
+    "detalhes": {
+      "data_verificacao": "2026-04-24 20:41:44",
+      "boletim": {
+        "referencia": "590-03212194-EUR",
+        "data_sorteio": "2026-04-24",
+        "imagem_origem": "foto_1774978857844_cdbe5d.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "codigo": "JGJ24112",
+        "codigo_original": "JGJ24112"
+      },
+      "sorteio": {
+        "concurso": "004/2026",
+        "data": "24/04/2026",
+        "codigo_premiado": "JHG04555",
+        "codigo_original": "JHG 04555",
+        "premio_nome": "1.º Prémio",
+        "vencedores": "1"
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem prémio",
+        "descricao": "Código não premiado",
+        "valor": "€ 0,00"
+      },
+      "_jogo": "milhao",
+      "_id": "milhao_590-03212194-EUR_1"
+    },
+    "data_leitura": "2026-04-24T21:13:55.095Z"
   }
 ]
