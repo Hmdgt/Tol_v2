@@ -1,13 +1,13 @@
 {
-  "concurso": "003/2026",
-  "data": "27/03/2026",
-  "codigo": "HHM 05795",
+  "concurso": "004/2026",
+  "data": "24/04/2026",
+  "codigo": "JHG 04555",
   "premio_nome": "1.º Prémio",
   "vencedores": "1",
   "estatisticas": [
     {
       "nome": "Receita ilíquida apostas",
-      "valor": "€ 5.249.046,90"
+      "valor": "€ 4.635.385,20"
     },
     {
       "nome": "Montante para prémios",
@@ -15,11 +15,11 @@
     },
     {
       "nome": "Nº de Registos",
-      "valor": "9.850.637"
+      "valor": "8.725.798"
     },
     {
       "nome": "Nº de Códigos atribuídos",
-      "valor": "17.496.823"
+      "valor": "15.451.284"
     }
   ]
 }
