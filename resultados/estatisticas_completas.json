@@ -182,6 +182,22 @@
         "mediana_premios": 0.0,
         "media_acertos_numeros": 0.0,
         "media_acertos_especial": 0.0
+      },
+      "2026-04": {
+        "total_apostas": 6,
+        "total_gasto": 1.8,
+        "total_recebido": 0.0,
+        "ganhadoras": 0,
+        "acertos_numeros": 0,
+        "acertos_especial": 0,
+        "maior_premio": 0.0,
+        "data_maior_premio": null,
+        "saldo": -1.8,
+        "percentagem_ganhadoras": 0.0,
+        "media_premios": 0,
+        "mediana_premios": 0.0,
+        "media_acertos_numeros": 0.0,
+        "media_acertos_especial": 0.0
       }
     }
   },
@@ -239,15 +255,15 @@
     },
     "milhao": {
       "2026": {
-        "total_apostas": 14,
-        "total_gasto": 4.2,
+        "total_apostas": 20,
+        "total_gasto": 6.0,
         "total_recebido": 0.0,
         "ganhadoras": 0,
         "acertos_numeros": 0,
         "acertos_especial": 0,
         "maior_premio": 0.0,
         "data_maior_premio": null,
-        "saldo": -4.2,
+        "saldo": -6.0,
         "percentagem_ganhadoras": 0.0,
         "media_premios": 0,
         "media_acertos_numeros": 0.0,
@@ -278,28 +294,28 @@
         "percentagem_ganhadoras": 7.14
       },
       "2026-04": {
-        "total_apostas": 13,
-        "total_gasto": 23.5,
+        "total_apostas": 19,
+        "total_gasto": 25.3,
         "total_recebido": 0.0,
         "ganhadoras": 0,
         "maior_premio": 0.0,
         "data_maior_premio": null,
-        "saldo": -23.5,
+        "saldo": -25.3,
         "percentagem_ganhadoras": 0.0
       }
     },
     "anual": {
       "2026": {
-        "total_apostas": 56,
-        "total_gasto": 74.89999999999999,
+        "total_apostas": 62,
+        "total_gasto": 76.69999999999999,
         "total_recebido": 13.65,
         "ganhadoras": 6,
         "maior_premio": 7.15,
         "data_maior_premio": "2026-02-27",
-        "saldo": -61.25,
-        "percentagem_ganhadoras": 10.71
+        "saldo": -63.05,
+        "percentagem_ganhadoras": 9.68
       }
     }
   },
-  "ultima_atualizacao": "2026-04-24T20:40:08.772440"
+  "ultima_atualizacao": "2026-04-24T20:42:27.664254"
 }
