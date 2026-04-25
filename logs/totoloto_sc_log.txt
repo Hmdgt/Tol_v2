@@ -54,3 +54,4 @@
 [2026-04-22 21:40:48] [santacasa] Resultado do concurso 032/2026 adicionado ao JSON totoloto_sc_2026.
 [2026-04-22 22:39:54] [santacasa] Concurso 032/2026 atualizado com novos dados!
 [2026-04-23 10:25:51] [santacasa] Concurso 032/2026 atualizado com novos dados!
+[2026-04-25 20:27:43] [santacasa] Concurso 032/2026 já está completo. Nada a atualizar.
