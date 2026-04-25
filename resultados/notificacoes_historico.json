@@ -2984,5 +2984,44 @@
       "_id": "milhao_614-00322981-EUR_1"
     },
     "data_leitura": "2026-04-25T08:59:42.860Z"
+  },
+  {
+    "id": "milhao_600-05031723-EUR_1",
+    "jogo": "milhao",
+    "data": "2026-04-24 20:41:44",
+    "lido": true,
+    "titulo": "🎫 Novo resultado MILHAO",
+    "subtitulo": "Boletim: 600-05031723-EUR",
+    "resumo": "0 acertos",
+    "detalhes": {
+      "data_verificacao": "2026-04-24 20:41:44",
+      "boletim": {
+        "referencia": "600-05031723-EUR",
+        "data_sorteio": "2026-04-24",
+        "imagem_origem": "foto_1775842333010_bdmmyp.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "codigo": "JNT12190",
+        "codigo_original": "JNT12190"
+      },
+      "sorteio": {
+        "concurso": "004/2026",
+        "data": "24/04/2026",
+        "codigo_premiado": "JHG04555",
+        "codigo_original": "JHG 04555",
+        "premio_nome": "1.º Prémio",
+        "vencedores": "1"
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem prémio",
+        "descricao": "Código não premiado",
+        "valor": "€ 0,00"
+      },
+      "_jogo": "milhao",
+      "_id": "milhao_600-05031723-EUR_1"
+    },
+    "data_leitura": "2026-04-25T09:00:12.805Z"
   }
 ]
