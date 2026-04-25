@@ -1,43 +1,5 @@
 [
   {
-    "id": "milhao_605-02458294-EUR_1",
-    "jogo": "milhao",
-    "data": "2026-04-24 20:41:44",
-    "lido": false,
-    "titulo": "🎫 Novo resultado MILHAO",
-    "subtitulo": "Boletim: 605-02458294-EUR",
-    "resumo": "0 acertos",
-    "detalhes": {
-      "data_verificacao": "2026-04-24 20:41:44",
-      "boletim": {
-        "referencia": "605-02458294-EUR",
-        "data_sorteio": "2026-04-24",
-        "imagem_origem": "foto_1776289067888_sdlw98.png"
-      },
-      "aposta": {
-        "indice": 1,
-        "codigo": "JSH18824",
-        "codigo_original": "JSH18824"
-      },
-      "sorteio": {
-        "concurso": "004/2026",
-        "data": "24/04/2026",
-        "codigo_premiado": "JHG04555",
-        "codigo_original": "JHG 04555",
-        "premio_nome": "1.º Prémio",
-        "vencedores": "1"
-      },
-      "ganhou": false,
-      "premio": {
-        "categoria": "Sem prémio",
-        "descricao": "Código não premiado",
-        "valor": "€ 0,00"
-      },
-      "_jogo": "milhao",
-      "_id": "milhao_605-02458294-EUR_1"
-    }
-  },
-  {
     "id": "milhao_607-03044773-EUR_1",
     "jogo": "milhao",
     "data": "2026-04-24 20:41:44",
