@@ -1,15 +1,15 @@
-Concurso: 033/2026
-Data: 23/04/2026
-Chave: 3 7 19 22 23 29 + 2
-Ordem de saída: 29 7 23 3 19 22 + 2
-Números: 03 07 19 22 23 29
-Dream: 2
+Concurso: 034/2026
+Data: 27/04/2026
+Chave: 1 4 14 21 29 34 + 1
+Ordem de saída: 29 34 21 1 4 14 + 1
+Números: 01 04 14 21 29 34
+Dream: 1
 ----------------------------------------
 Prémios:
 1.º Prémio - 6 Números + 1 Nº de Sonho | PT: 0 | EU: 0 | Valor: € 20.000/mês x 30 anos
-2.º Prémio - 6 Números | PT: 0 | EU: 3 | Valor: € 2.000/mês x 5 anos
-3.º Prémio - 5 Números | PT: 28 | EU: 160 | Valor: € 268,08
-4.º Prémio - 4 Números | PT: 1.046 | EU: 6.254 | Valor: € 19,22
-5.º Prémio - 3 Números | PT: 12.069 | EU: 77.001 | Valor: € 3,27
-6.º Prémio - 2 Números | PT: 61.904 | EU: 399.482 | Valor: € 2,50
+2.º Prémio - 6 Números | PT: 0 | EU: 0 | Valor: € 2.000/mês x 5 anos
+3.º Prémio - 5 Números | PT: 16 | EU: 98 | Valor: € 552,59
+4.º Prémio - 4 Números | PT: 618 | EU: 3.761 | Valor: € 40,36
+5.º Prémio - 3 Números | PT: 8.774 | EU: 54.252 | Valor: € 5,87
+6.º Prémio - 2 Números | PT: 51.992 | EU: 327.717 | Valor: € 2,50
 ----------------------------------------
