@@ -4,4 +4,10 @@ Números: 8 13 16 37 49
 Especial: 4
 ----------------------------------------
 Prémios:
+1.º Prémio - 5 Números + Nº da Sorte | Vencedores: 0 | Valor: (1)
+2.º Prémio - 5 Números | Vencedores: 1 | Valor: € 19.220,59
+3.º Prémio - 4 Números | Vencedores: 113 | Valor: € 212,61
+4.º Prémio - 3 Números | Vencedores: 4.627 | Valor: € 5,19
+5.º Prémio - 2 Números | Vencedores: 67.901 | Valor: € 2,12
+Nº da Sorte - Nº da Sorte | Vencedores: 70.461 | Valor: Reembolso do valor da aposta de Totoloto
 ----------------------------------------
