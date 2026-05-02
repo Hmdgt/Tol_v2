@@ -400,17 +400,37 @@ window.renderizarDetalheNotificacao = async function(idNotificacao) {
   const container = document.getElementById('detalheContainer');
   if (!container) return;
   
-  const notificacoes = await carregarNotificacoes();
-  const notificacao = notificacoes.find(n => n.id === idNotificacao);
+  container.innerHTML = '<div class="loading"><ion-icon name="sync-outline"></ion-icon></div>';
   
+  // 1. Procura primeiro nas notificações ativas (comportamento original)
+  const notificacoes = await carregarNotificacoes();
+  let notificacao = notificacoes.find(n => n.id === idNotificacao);
+  
+  // 2. Se não encontrou, procura no histórico (novo, para a vista "Apostas")
+  if (!notificacao) {
+    try {
+      const { content: historico } = await carregarFicheiroGitHub(CONFIG.FICHEIROS.HISTORICO);
+      if (historico && Array.isArray(historico)) {
+        notificacao = historico.find(item => item.id === idNotificacao);
+      }
+    } catch (err) {
+      console.error("Erro ao procurar no histórico:", err);
+    }
+  }
+  
+  // 3. Se mesmo assim não encontrou, mostra erro
   if (!notificacao) {
     container.innerHTML = '<p>Notificação não encontrada</p>';
     return;
   }
   
+  // 4. Renderiza o detalhe (exatamente como antes)
   container.innerHTML = gerarConteudoDetalhes(notificacao);
   
-  marcarComoLida(idNotificacao);
+  // 5. Só arquiva se ainda estava nas ativas (evita tentar arquivar duas vezes)
+  if (notificacoes.some(n => n.id === idNotificacao)) {
+    marcarComoLida(idNotificacao);
+  }
 };
 
 // ---------- VOLTAR PARA A LISTA ----------
