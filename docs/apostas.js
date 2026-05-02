@@ -21,10 +21,14 @@ async function obterApostasPendentes(jogoFiltro) {
 
 // ---------- LEITURA DO HISTÓRICO DE VERIFICAÇÕES ----------
 async function obterHistoricoVerificacoes(jogoFiltro, apenasPremiados = false) {
-  const { content } = await lerFicheiroGitHub(CONFIG.FICHEIROS.HISTORICO);
+  const { content } = await carregarFicheiroGitHub(CONFIG.FICHEIROS.HISTORICO);
   let itens = content || [];
-  if (jogoFiltro !== 'global') itens = itens.filter(item => item.jogo === jogoFiltro);
-  if (apenasPremiados) itens = itens.filter(item => item.detalhes?.ganhou && !item.arquivado);
+  if (jogoFiltro !== 'global') {
+    itens = itens.filter(item => item.jogo === jogoFiltro);
+  }
+  if (apenasPremiados) {
+    itens = itens.filter(item => item.detalhes?.ganhou && !item.arquivado);
+  }
   itens.sort((a, b) => new Date(b.data) - new Date(a.data));
   return itens;
 }
