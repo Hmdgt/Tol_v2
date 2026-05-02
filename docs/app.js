@@ -91,9 +91,6 @@ document.addEventListener('visibilitychange', () => {
     appEmPrimeiroPlano = false;
     console.log("📱 App passou para SEGUNDO PLANO (minimizada)");
     
-    // Não parar o polling completamente no Android?
-    // O setInterval pode continuar, mas o Android pode suspender
-    // Mantemos como está - é o melhor que podemos fazer
     if (pollingInterval) {
       clearInterval(pollingInterval);
       pollingInterval = null;
@@ -171,6 +168,9 @@ window.ViewManager = {
 
     if (viewId === 'notificacoesView' && typeof window.renderizarNotificacoes === 'function') {
       window.renderizarNotificacoes();
+    }
+    if (viewId === 'apostasView' && typeof window.carregarApostasView === 'function') {
+      window.carregarApostasView();
     }
     if (viewId === 'validacaoView' && typeof window.renderizarListaValidacao === 'function') {
       window.renderizarListaValidacao();
@@ -321,7 +321,6 @@ if (document.visibilityState === "visible") {
 
 function mostrarBotaoAtualizar() {
   console.log("🔄 Nova versão disponível. Recarrega a app.");
-  // Podes adicionar um toast ou snackbar aqui se quiseres
 }
 
 // ========== INICIALIZAÇÃO ==========
@@ -338,7 +337,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const btn = document.getElementById('debugLogsBtn');
   if (btn) btn.addEventListener('click', mostrarLogs);
   
-  // Garantir que o badge é atualizado ao carregar
   if (typeof window.atualizarBadge === "function") {
     setTimeout(() => window.atualizarBadge(), 500);
   }
