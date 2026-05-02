@@ -104,28 +104,55 @@ async function carregarHistorico() {
 async function carregarSorteios(jogo, ano) {
     const token = localStorage.getItem("github_token");
     const headers = token ? { Authorization: `Bearer ${token}` } : {};
-    // Mapeia os jogos para os nomes dos ficheiros
-    const ficheiroMap = {
-        totoloto: 'totoloto_sc.json',
-        euromilhoes: 'euromilhoes_.json',
-        eurodreams: 'eurodreams_.json',
-        milhao: 'milhao_*.json'
+
+    // Mapear jogo -> prefixo do ficheiro (sem extensão)
+    const mapa = {
+        totoloto: 'totoloto_sc',
+        euromilhoes: 'euromilhoes',
+        eurodreams: 'eurodreams',
+        milhao: 'milhao'
     };
-    const nomeFicheiro = ficheiroMap[jogo];
-    if (!nomeFicheiro) return [];
-    const caminho = `dados/${nomeFicheiro}`;
+    const prefixo = mapa[jogo];
+    if (!prefixo) return [];
+
+    // Tentar primeiro o ficheiro específico do ano: ex: totoloto_sc_2026.json
+    const caminho = `dados/${prefixo}_${ano}.json`;
     try {
-        const res = await fetch(`https://api.github.com/repos/${CONFIG.REPO}/contents/${caminho}?t=${Date.now()}`, { headers });
-        if (!res.ok) return [];
-        const data = await res.json();
-        const conteudo = JSON.parse(base64ToString(data.content));
-        // A estrutura esperada: { "2026": [ sorteios ] }
-        if (!conteudo[ano] || !Array.isArray(conteudo[ano])) return [];
-        return conteudo[ano];
-    } catch (err) {
-        console.error("Erro ao carregar sorteios:", err);
-        return [];
+        const url = `https://api.github.com/repos/${CONFIG.REPO}/contents/${caminho}?t=${Date.now()}`;
+        const res = await fetch(url, { headers });
+        if (res.ok) {
+            const data = await res.json();
+            const conteudo = JSON.parse(base64ToString(data.content));
+            // A estrutura esperada é { "2026": [ ... ] }
+            if (conteudo && conteudo[ano] && Array.isArray(conteudo[ano])) {
+                return conteudo[ano];
+            }
+            // Fallback: se for um array diretamente
+            if (Array.isArray(conteudo)) return conteudo;
+        }
+    } catch (e) {
+        console.warn(`Erro ao carregar ${caminho}`, e);
     }
+
+    // Se não encontrou, podemos tentar o ficheiro "atual" para esse jogo (ex: totoloto_sc_atual.json)
+    const caminhoAtual = `dados/${prefixo}_atual.json`;
+    try {
+        const url = `https://api.github.com/repos/${CONFIG.REPO}/contents/${caminhoAtual}?t=${Date.now()}`;
+        const res = await fetch(url, { headers });
+        if (res.ok) {
+            const data = await res.json();
+            const conteudo = JSON.parse(base64ToString(data.content));
+            if (conteudo && conteudo[ano] && Array.isArray(conteudo[ano])) {
+                return conteudo[ano];
+            }
+            if (Array.isArray(conteudo)) return conteudo;
+        }
+    } catch (e) {
+        console.warn(`Erro ao carregar ${caminhoAtual}`, e);
+    }
+
+    console.warn(`Nenhum ficheiro de sorteios encontrado para ${jogo} ${ano}`);
+    return [];
 }
 
 // ---------- FILTRAR POR ANO ----------
