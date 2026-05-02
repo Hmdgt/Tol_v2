@@ -244,21 +244,71 @@ async function renderizarSorteios(container, jogo, ano) {
     let html = '<div style="display: flex; flex-direction: column; gap: 12px;">';
     for (const s of sorteios) {
         let chaveHTML = '';
-        if (s.numeros) {
-            chaveHTML += s.numeros.map(n => `<span class="numero-santacas">${String(n).padStart(2,'0')}</span>`).join('');
+
+        // Tratamento por tipo de jogo
+        switch (jogo) {
+            case 'totoloto':
+                // Números + Nº da Sorte
+                if (s.numeros && Array.isArray(s.numeros)) {
+                    chaveHTML += s.numeros.map(n => `<span class="numero-santacas">${String(n).padStart(2,'0')}</span>`).join('');
+                    if (s.especial !== undefined) {
+                        chaveHTML += '<span class="separador-mais">+</span>';
+                        chaveHTML += `<span class="estrela-santacas">${String(s.especial).padStart(2,'0')}</span>`;
+                    }
+                }
+                break;
+
+            case 'euromilhoes':
+                // Chave no formato "N N N N N + E E"
+                if (s.chave) {
+                    const partes = s.chave.split('+').map(p => p.trim());
+                    if (partes.length >= 2) {
+                        const numeros = partes[0].split(/\s+/).filter(n => n);
+                        const estrelas = partes[1].split(/\s+/).filter(e => e);
+                        chaveHTML += numeros.map(n => `<span class="numero-santacas">${String(n).padStart(2,'0')}</span>`).join('');
+                        chaveHTML += '<span class="separador-mais">+</span>';
+                        chaveHTML += estrelas.map(e => `<span class="estrela-santacas">${String(e).padStart(2,'0')}</span>`).join('');
+                    } else {
+                        chaveHTML = `<span>${escapeHTML(s.chave)}</span>`;
+                    }
+                }
+                break;
+
+            case 'eurodreams':
+                // Números (6) + Dream
+                if (s.numeros && Array.isArray(s.numeros)) {
+                    chaveHTML += s.numeros.map(n => `<span class="numero-santacas">${String(n).padStart(2,'0')}</span>`).join('');
+                    if (s.dream !== undefined) {
+                        chaveHTML += '<span class="separador-mais">+</span>';
+                        chaveHTML += `<span class="estrela-santacas">${String(s.dream).padStart(2,'0')}</span>`;
+                    }
+                }
+                break;
+
+            case 'milhao':
+                // Código M1lhão
+                if (s.codigo) {
+                    chaveHTML = `<span class="codigo-milhao">${escapeHTML(s.codigo)}</span>`;
+                }
+                break;
+
+            default:
+                // Fallback genérico
+                chaveHTML = '<span>Sem dados</span>';
         }
-        if (s.estrelas) {
-            chaveHTML += '<span class="separador-mais">+</span>';
-            chaveHTML += s.estrelas.map(e => `<span class="estrela-santacas">${String(e).padStart(2,'0')}</span>`).join('');
-        } else if (s.numero_da_sorte) {
-            chaveHTML += '<span class="separador-mais">+</span>';
-            chaveHTML += `<span class="estrela-santacas">${String(s.numero_da_sorte).padStart(2,'0')}</span>`;
-        } else if (s.dream) {
-            chaveHTML += '<span class="separador-mais">+</span>';
-            chaveHTML += `<span class="estrela-santacas">${String(s.dream).padStart(2,'0')}</span>`;
+
+        // Se não conseguiu gerar chaveHTML, mostra aviso
+        if (!chaveHTML) {
+            chaveHTML = '<span>Sem dados</span>';
         }
-        if (!chaveHTML && s.codigo_premiado) {
-            chaveHTML = `<span class="codigo-milhao">${escapeHTML(s.codigo_premiado)}</span>`;
+
+        // Valor do primeiro prémio (se existir) para destaque
+        let premioDestaque = '';
+        if (s.premios && s.premios.length > 0 && s.premios[0].valor) {
+            premioDestaque = `<div class="notification-resumo">${escapeHTML(s.premios[0].valor)}</div>`;
+        } else if (s.premio_nome && s.vencedores) {
+            // Para M1lhão
+            premioDestaque = `<div class="notification-resumo">${escapeHTML(s.premio_nome)} · ${s.vencedores} vencedor(es)</div>`;
         }
 
         html += `
@@ -267,8 +317,8 @@ async function renderizarSorteios(container, jogo, ano) {
                     <span class="jogo-nome">${escapeHTML(s.concurso || s.data)}</span>
                     <span class="notification-date">${escapeHTML(formatarData(s.data))}</span>
                 </div>
-                <div class="numeros-aposta" style="justify-content: flex-start;">${chaveHTML ? chaveHTML : '<span>Sem dados</span>'}</div>
-                ${s.premios && s.premios[0] ? `<div class="notification-resumo">${escapeHTML(s.premios[0].valor || '')}</div>` : ''}
+                <div class="numeros-aposta" style="justify-content: flex-start;">${chaveHTML}</div>
+                ${premioDestaque}
             </div>
         `;
     }
