@@ -3196,5 +3196,72 @@
       "_id": "totoloto_114-03992832-187_1"
     },
     "data_leitura": "2026-04-25T21:30:40.819Z"
+  },
+  {
+    "id": "euromilhoes_619-05868265-M1L_1",
+    "jogo": "euromilhoes",
+    "data": "2026-05-01 20:43:15",
+    "lido": true,
+    "titulo": "🎫 Novo resultado EUROMILHOES",
+    "subtitulo": "Boletim: 619-05868265-M1L",
+    "resumo": "0 números + 1 estrelas",
+    "detalhes": {
+      "data_verificacao": "2026-05-01 20:43:15",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "619-05868265-M1L",
+        "data_sorteio": "2026-05-01",
+        "concurso_sorteio": "035/2026",
+        "imagem_origem": "foto_1777628286692_hpwact.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "01",
+          "04",
+          "14",
+          "16",
+          "18"
+        ],
+        "estrelas": [
+          "09",
+          "11"
+        ]
+      },
+      "sorteio": {
+        "concurso": "035/2026",
+        "data": "01/05/2026",
+        "chave": "3 9 42 46 47 + 1 11",
+        "numeros": [
+          "03",
+          "09",
+          "42",
+          "46",
+          "47"
+        ],
+        "estrelas": [
+          "01",
+          "11"
+        ]
+      },
+      "acertos": {
+        "numeros": 0,
+        "estrelas": 1,
+        "descricao": "0 numero(s) e 1 estrela(s)",
+        "numeros_acertados": [],
+        "estrelas_acertadas": [
+          "11"
+        ]
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem premio",
+        "descricao": "Nao corresponde a qualquer premio",
+        "valor": "EUR 0,00"
+      },
+      "_jogo": "euromilhoes",
+      "_id": "euromilhoes_619-05868265-M1L_1"
+    },
+    "data_leitura": "2026-05-02T00:30:11.685Z"
   }
 ]
