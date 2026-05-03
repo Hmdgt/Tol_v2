@@ -153,6 +153,12 @@ async function renderizarHistorico(container) {
 window.carregarApostasView = async function() {
   const container = document.getElementById('apostasList');
   if (!container) return;
+
+  // 🔧 Atualiza o destaque da aba ativa
+  document.querySelectorAll('#apostasTabs .periodo-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.tab === apostaAbaAtual);
+  });
+
   container.innerHTML = '<div class="loading"><ion-icon name="sync-outline"></ion-icon></div>';
 
   switch (apostaAbaAtual) {
