@@ -37,7 +37,7 @@ async function obterHistoricoVerificacoes(jogoFiltro, apenasPremiados = false) {
 async function renderizarPendentes(container) {
   const pendentes = await obterApostasPendentes(apostaJogoAtual);
   if (!pendentes.length) {
-    container.innerHTML = '<div class="no-notifications">✅ Nenhum boletim pendente</div>';
+    container.innerHTML = '<div class="no-notifications">Nenhum boletim pendente</div>';
     return;
   }
 
@@ -75,7 +75,7 @@ async function renderizarPendentes(container) {
 async function renderizarPremiados(container) {
   const premiados = await obterHistoricoVerificacoes(apostaJogoAtual, true);
   if (!premiados.length) {
-    container.innerHTML = '<div class="no-notifications">🏆 Nenhum prémio por confirmar</div>';
+    container.innerHTML = '<div class="no-notifications">Nenhum prémio por confirmar</div>';
     return;
   }
 
@@ -119,7 +119,7 @@ async function renderizarPremiados(container) {
 async function renderizarHistorico(container) {
   const historico = await obterHistoricoVerificacoes(apostaJogoAtual, false);
   if (!historico.length) {
-    container.innerHTML = '<div class="no-notifications">📭 Nenhum histórico disponível</div>';
+    container.innerHTML = '<div class="no-notifications">Nenhum histórico disponível</div>';
     return;
   }
 
