@@ -347,6 +347,20 @@
   .codigo-milhao { color: var(--text-secondary); font-size: 14px; }
   .numeros-aposta { display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 6px; }
   .separador-mais { font-weight: bold; margin: 0 2px; color: var(--text-secondary); }
+  /* ========== FIX: abas fixas + lista com scroll ========== */
+#apostasTabs {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background-color: var(--bg-primary);
+}
+
+#apostasList {
+  max-height: calc(100vh - 200px);  /* ajusta a altura para caber entre o topo e o menu inferior */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-top: 12px;
+}
 </style>
 </head>
 <body>
@@ -381,7 +395,7 @@
       <button class="periodo-btn" data-tab="premiados">Premiados</button>
       <button class="periodo-btn" data-tab="historico">Histórico</button>
     </div>
-    <div id="apostasList" style="margin-top: 12px;"></div>
+    <div id="apostasList"></div>
   </div>
 
   <div id="detalheNotificacaoView" class="view">
