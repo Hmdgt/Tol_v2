@@ -347,18 +347,16 @@
   .codigo-milhao { color: var(--text-secondary); font-size: 14px; }
   .numeros-aposta { display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 6px; }
   .separador-mais { font-weight: bold; margin: 0 2px; color: var(--text-secondary); }
-  /* ========== CORREÇÃO DEFINITIVA: ABAS FIXAS + SCROLL NA LISTA ========== */
-#apostasView {
-  display: flex;
+  /* ========== CORREÇÃO DEFINITIVA: SCROLL APENAS NA LISTA (ATIVO) ========== */
+#apostasView.active {
+  display: flex !important;
   flex-direction: column;
-  overflow: hidden; /* evita scroll duplo na view */
+  overflow: hidden;
 }
 
-#apostasTabs {
-  position: sticky;
-  top: 0;
-  z-index: 5;
-  background-color: var(--bg-primary);
+#apostasView > h2,
+#apostasView > .jogo-select-container,
+#apostasView > #apostasTabs {
   flex-shrink: 0;
 }
 
@@ -366,7 +364,7 @@
   flex: 1 1 0%;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  min-height: 0; /* essencial para o overflow funcionar dentro de flex */
+  min-height: 0;
   margin-top: 12px;
 }
 </style>
