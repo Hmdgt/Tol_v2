@@ -303,22 +303,13 @@ async function renderizarSorteios(container, jogo, ano) {
         }
 
         // Valor do primeiro prémio (se existir) para destaque
-        let premioDestaque = '';
-        if (s.premios && s.premios.length > 0 && s.premios[0].valor) {
-            premioDestaque = `<div class="notification-resumo">${escapeHTML(s.premios[0].valor)}</div>`;
-        } else if (s.premio_nome && s.vencedores) {
-            // Para M1lhão
-            premioDestaque = `<div class="notification-resumo">${escapeHTML(s.premio_nome)} · ${s.vencedores} vencedor(es)</div>`;
-        }
-
-        html += `
+                html += `
             <div class="notification-card" style="cursor: default;">
                 <div class="notification-header">
                     <span class="jogo-nome">${escapeHTML(s.concurso || s.data)}</span>
                     <span class="notification-date">${escapeHTML(formatarData(s.data))}</span>
                 </div>
                 <div class="numeros-aposta" style="justify-content: flex-start;">${chaveHTML}</div>
-                ${premioDestaque}
             </div>
         `;
     }
