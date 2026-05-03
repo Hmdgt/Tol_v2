@@ -135,7 +135,7 @@ async function renderizarHistorico(container) {
           <span class="notification-date">${escapeHTML(formatarData(item.data))}</span>
         </div>
         <div class="numeros-aposta" style="justify-content: flex-start;">${bloco}</div>
-        <div class="notification-resumo ${det.ganhou ? '' : 'sem-premio'}">${escapeHTML(item.resumo)}</div>
+        <div class="notification-resumo">${escapeHTML(item.resumo)}</div>
       </div>
     `;
   }).join('');
