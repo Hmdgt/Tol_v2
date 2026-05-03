@@ -347,16 +347,29 @@
   .codigo-milhao { color: var(--text-secondary); font-size: 14px; }
   .numeros-aposta { display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 6px; }
   .separador-mais { font-weight: bold; margin: 0 2px; color: var(--text-secondary); }
-  /* ========== CORREÇÃO DEFINITIVA: SCROLL APENAS NA LISTA (ATIVO) ========== */
+/* ========== APOSTAS: LINHA ÚNICA + SCROLL ========== */
 #apostasView.active {
   display: flex !important;
   flex-direction: column;
   overflow: hidden;
 }
 
-#apostasView > h2,
-#apostasView > .jogo-select-container,
-#apostasView > #apostasTabs {
+.apostas-header-linha {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-shrink: 0;
+  padding: 0;          /* ajusta se necessário */
+}
+
+#apostasTabs {
+  flex-shrink: 0;
+  margin: 0;
+}
+
+#apostasView .jogo-select-container {
+  margin: 0;
   flex-shrink: 0;
 }
 
@@ -367,7 +380,8 @@
   min-height: 0;
   margin-top: 12px;
 }
-  /* Data à direita nos cartões do Histórico (Minhas Apostas) */
+
+/* Data à direita nos cartões do Histórico (Minhas Apostas) */
 #apostasList .notification-date {
   margin-left: auto;
 }
@@ -381,7 +395,7 @@
 .jogo-nome {
   font-weight: bold;
   text-transform: uppercase;
-  color: var(--text-primary);   /* mantém cor do texto principal */
+  color: var(--text-primary);
 }
 </style>
 </head>
@@ -402,7 +416,13 @@
 
   <!-- NOVA VIEW: MINHAS APOSTAS -->
   <div id="apostasView" class="view">
-    <h2></h2>
+  <h2></h2>
+  <div class="apostas-header-linha">
+    <div class="periodo-tabs" id="apostasTabs">
+      <button class="periodo-btn active" data-tab="pendentes">Pendentes</button>
+      <button class="periodo-btn" data-tab="premiados">Premiados</button>
+      <button class="periodo-btn" data-tab="historico">Histórico</button>
+    </div>
     <div class="jogo-select-container">
       <select id="apostasJogoSelect" class="jogo-select">
         <option value="global">Todos os jogos</option>
@@ -412,14 +432,9 @@
         <option value="milhao">M1lhão</option>
       </select>
     </div>
-    <div class="periodo-tabs" id="apostasTabs">
-      <button class="periodo-btn active" data-tab="pendentes">Pendentes</button>
-      <button class="periodo-btn" data-tab="premiados">Premiados</button>
-      <button class="periodo-btn" data-tab="historico">Histórico</button>
-    </div>
-    <div id="apostasList"></div>
   </div>
-
+  <div id="apostasList"></div>
+</div>
   <div id="detalheNotificacaoView" class="view">
     <div id="detalheContainer"></div>
   </div>
