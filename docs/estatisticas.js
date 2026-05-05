@@ -241,6 +241,8 @@ async function renderizarSorteios(container, jogo, ano) {
         return numB - numA;
     });
 
+    const logoHTML = getLogoHTML(jogo); // Logo do jogo selecionado
+
     let html = '<div style="display: flex; flex-direction: column; gap: 12px;">';
     for (const s of sorteios) {
         let chaveHTML = '';
@@ -248,7 +250,6 @@ async function renderizarSorteios(container, jogo, ano) {
         // Tratamento por tipo de jogo
         switch (jogo) {
             case 'totoloto':
-                // Números + Nº da Sorte
                 if (s.numeros && Array.isArray(s.numeros)) {
                     chaveHTML += s.numeros.map(n => `<span class="numero-santacas">${String(n).padStart(2,'0')}</span>`).join('');
                     if (s.especial !== undefined) {
@@ -259,7 +260,6 @@ async function renderizarSorteios(container, jogo, ano) {
                 break;
 
             case 'euromilhoes':
-                // Chave no formato "N N N N N + E E"
                 if (s.chave) {
                     const partes = s.chave.split('+').map(p => p.trim());
                     if (partes.length >= 2) {
@@ -275,7 +275,6 @@ async function renderizarSorteios(container, jogo, ano) {
                 break;
 
             case 'eurodreams':
-                // Números (6) + Dream
                 if (s.numeros && Array.isArray(s.numeros)) {
                     chaveHTML += s.numeros.map(n => `<span class="numero-santacas">${String(n).padStart(2,'0')}</span>`).join('');
                     if (s.dream !== undefined) {
@@ -286,26 +285,23 @@ async function renderizarSorteios(container, jogo, ano) {
                 break;
 
             case 'milhao':
-                // Código M1lhão
                 if (s.codigo) {
                     chaveHTML = `<span class="codigo-milhao">${escapeHTML(s.codigo)}</span>`;
                 }
                 break;
 
             default:
-                // Fallback genérico
                 chaveHTML = '<span>Sem dados</span>';
         }
 
-        // Se não conseguiu gerar chaveHTML, mostra aviso
         if (!chaveHTML) {
             chaveHTML = '<span>Sem dados</span>';
         }
 
-        // Valor do primeiro prémio (se existir) para destaque
-                html += `
+        html += `
             <div class="notification-card" style="cursor: default;">
                 <div class="notification-header">
+                    ${logoHTML}
                     <span class="jogo-nome">${escapeHTML(s.concurso || s.data)}</span>
                     <span class="notification-date">${escapeHTML(formatarData(s.data))}</span>
                 </div>
@@ -349,7 +345,17 @@ async function renderizarEstatisticas() {
   `;
 
   if (modoAtivo === 'resumo') {
-    // Dropdown de período (mensal/anual) e ano
+    // Linha 2: dropdown + periodo-tabs (+ anos, se houver)
+    html += `<div class="estatisticas-linha">`;
+
+    html += `<div class="jogo-select-container"><select id="jogoSelect" class="jogo-select">
+        <option value="global" ${abaAtiva === 'global' ? 'selected' : ''}>Global</option>
+        <option value="totoloto" ${abaAtiva === 'totoloto' ? 'selected' : ''}>Totoloto</option>
+        <option value="euromilhoes" ${abaAtiva === 'euromilhoes' ? 'selected' : ''}>Euromilhões</option>
+        <option value="eurodreams" ${abaAtiva === 'eurodreams' ? 'selected' : ''}>EuroDreams</option>
+        <option value="milhao" ${abaAtiva === 'milhao' ? 'selected' : ''}>M1lhão</option>
+      </select></div>`;
+
     html += `<div class="periodo-tabs">
         <button class="periodo-btn ${periodoAtivo === 'mensal' ? 'active' : ''}" data-periodo="mensal">Mensal</button>
         <button class="periodo-btn ${periodoAtivo === 'anual' ? 'active' : ''}" data-periodo="anual">Anual</button>
@@ -361,14 +367,7 @@ async function renderizarEstatisticas() {
       html += `</div>`;
     }
 
-    // Dropdown de jogos
-    html += `<div class="jogo-select-container"><select id="jogoSelect" class="jogo-select">
-        <option value="global" ${abaAtiva === 'global' ? 'selected' : ''}>Global</option>
-        <option value="totoloto" ${abaAtiva === 'totoloto' ? 'selected' : ''}>Totoloto</option>
-        <option value="euromilhoes" ${abaAtiva === 'euromilhoes' ? 'selected' : ''}>Euromilhões</option>
-        <option value="eurodreams" ${abaAtiva === 'eurodreams' ? 'selected' : ''}>EuroDreams</option>
-        <option value="milhao" ${abaAtiva === 'milhao' ? 'selected' : ''}>M1lhão</option>
-      </select></div>`;
+    html += `</div>`; // fecha .estatisticas-linha
 
     html += `<div class="estatisticas-conteudo" style="overflow-x: auto;">`;
     
@@ -397,11 +396,10 @@ async function renderizarEstatisticas() {
     }
     html += `</div>`;
   } else if (modoAtivo === 'sorteios') {
-    // Para sorteios: dropdown de jogo e ano
-    // Usar os anos disponíveis nos dados (poderíamos obter da API, mas vamos usar os anos das estatísticas se existirem, senão 2025,2026)
     let anosSorteios = anos.length ? anos : ['2025','2026'];
     if (anoSelecionado === 'todos') anoSelecionado = anosSorteios[anosSorteios.length-1] || '2026';
     
+    html += `<div class="estatisticas-linha">`;
     html += `<div class="jogo-select-container"><select id="jogoSorteioSelect" class="jogo-select">
         <option value="totoloto" ${abaAtiva === 'totoloto' ? 'selected' : ''}>Totoloto</option>
         <option value="euromilhoes" ${abaAtiva === 'euromilhoes' ? 'selected' : ''}>Euromilhões</option>
@@ -411,6 +409,7 @@ async function renderizarEstatisticas() {
     html += `<div class="ano-tabs"><button class="ano-btn ${anoSelecionado === 'todos' ? 'active' : ''}" data-ano="todos">Todos</button>`;
     anosSorteios.forEach(ano => { html += `<button class="ano-btn ${anoSelecionado === ano ? 'active' : ''}" data-ano="${ano}">${ano}</button>`; });
     html += `</div>`;
+    html += `</div>`; // fecha .estatisticas-linha
     html += `<div id="sorteiosContainer"></div>`;
   }
 
@@ -420,7 +419,6 @@ async function renderizarEstatisticas() {
   document.querySelectorAll('.modo-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       modoAtivo = btn.dataset.modo;
-      // Reset do ano/jogo quando muda de modo (opcional)
       if (modoAtivo === 'sorteios') {
         abaAtiva = 'totoloto';
         anoSelecionado = '2026';
@@ -448,7 +446,6 @@ async function renderizarEstatisticas() {
     document.querySelectorAll('.ano-btn').forEach(btn => {
       btn.addEventListener('click', () => { anoSelecionado = btn.dataset.ano; renderizarEstatisticas(); });
     });
-    // Renderizar a lista de sorteios
     const sorteioContainer = document.getElementById('sorteiosContainer');
     if (sorteioContainer) {
       renderizarSorteios(sorteioContainer, abaAtiva, anoSelecionado);
