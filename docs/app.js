@@ -323,6 +323,74 @@ function mostrarBotaoAtualizar() {
   console.log("🔄 Nova versão disponível. Recarrega a app.");
 }
 
+// ========== GESTÃO DO BOTÃO "VOLTAR" NATIVO (ANDROID / PWA) ==========
+let ultimoBackPress = 0;
+const TEMPO_DUPLO_CLICK = 2000;
+
+function handleBackPress() {
+  const modal = document.getElementById('modalDetalhes');
+  const modalVisivel = modal && window.getComputedStyle(modal).display !== 'none';
+  const activeView = document.querySelector('.view.active')?.id;
+
+  // 1. Fechar modal se estiver aberto
+  if (modalVisivel) {
+    modal.style.display = 'none';
+    return;
+  }
+
+  // 2. Navegação interna: detalhe → origem
+  if (activeView === 'detalheNotificacaoView') {
+    const destino = window.detalheOrigem || 'apostasView';
+    window.ViewManager.goTo(destino);
+    if (destino === 'apostasView' && typeof window.carregarApostasView === 'function') {
+      window.carregarApostasView();
+    } else if (destino === 'notificacoesView' && typeof window.renderizarNotificacoes === 'function') {
+      window.renderizarNotificacoes();
+    }
+    return;
+  }
+
+  // 3. Validação → voltar à lista
+  if (activeView === 'validacaoView') {
+    if (typeof window.voltarListaValidacao === 'function') {
+      window.voltarListaValidacao();
+    }
+    return;
+  }
+
+  // 4. Qualquer outra view → voltar para a home
+  if (activeView !== 'homeView') {
+    window.ViewManager.goTo('homeView');
+    return;
+  }
+
+  // 5. Já está na HOME: double back to exit
+  const agora = Date.now();
+  if (agora - ultimoBackPress < TEMPO_DUPLO_CLICK) {
+    // Segunda pressão → fecha a app
+    try {
+      window.close();
+    } catch (e) {
+      // Fallback silencioso
+    }
+  } else {
+    ultimoBackPress = agora;
+    if (typeof ToastManager !== 'undefined') {
+      ToastManager.mostrar("Pressione novamente para sair", "info", 2000);
+    }
+  }
+}
+
+// Inicializa o histórico APENAS UMA VEZ (no load)
+window.addEventListener('load', () => {
+  history.pushState({ app: true }, '', location.href);
+});
+
+// Listener do botão voltar do sistema
+window.addEventListener('popstate', (event) => {
+  handleBackPress();
+});
+
 // ========== INICIALIZAÇÃO ==========
 document.addEventListener('DOMContentLoaded', () => {
   console.log("🚀 App inicializada");
