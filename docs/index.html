@@ -453,6 +453,20 @@
   display: block;
   margin-bottom: 4px;
 }
+  /* Fixar controlos e dar scroll apenas à lista de Sorteios */
+#estatisticasView.active {
+  display: flex !important;
+  flex-direction: column;
+  overflow: hidden;           /* impede scroll na view inteira */
+}
+
+#sorteiosContainer {
+  flex: 1 1 0%;              /* ocupa o espaço restante */
+  overflow-y: auto;           /* só este contentor faz scroll */
+  -webkit-overflow-scrolling: touch;
+  min-height: 0;
+  margin-top: 12px;
+}
 </style>
 </head>
 <body>
