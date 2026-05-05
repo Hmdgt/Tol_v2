@@ -453,16 +453,31 @@
   display: block;
   margin-bottom: 4px;
 }
-  /* Fixar controlos e dar scroll apenas à lista de Sorteios */
+  /* Estatísticas ativas: sem scroll na view */
 #estatisticasView.active {
   display: flex !important;
   flex-direction: column;
-  overflow: hidden;           /* impede scroll na view inteira */
+  overflow: hidden;
 }
 
+/* Container principal das estatísticas: agora é flexível */
+#estatisticasContainer {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0%;
+  min-height: 0;
+}
+
+/* O cabeçalho e as linhas de controlo permanecem fixos */
+.estatisticas-header,
+.estatisticas-linha {
+  flex-shrink: 0;
+}
+
+/* A lista de sorteios expande para ocupar o espaço restante e faz scroll */
 #sorteiosContainer {
-  flex: 1 1 0%;              /* ocupa o espaço restante */
-  overflow-y: auto;           /* só este contentor faz scroll */
+  flex: 1 1 0%;
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   min-height: 0;
   margin-top: 12px;
