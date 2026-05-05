@@ -38,6 +38,10 @@ async function uploadToGitHub(file) {
       if (response.ok) {
         ToastManager.mostrar("✅ Imagem enviada com sucesso!", "sucesso");
         console.log("✔️ Upload concluído:", filename);
+        // Regista a atividade
+        if (typeof window.registarAtividade === 'function') {
+          window.registarAtividade('upload', `Ficheiro ${filename} enviado com sucesso.`, 'sucesso');
+        }
       } else {
         let err;
 
@@ -57,16 +61,28 @@ async function uploadToGitHub(file) {
           `❌ Upload falhou (${response.status})`,
           "erro"
         );
+        // Regista a atividade
+        if (typeof window.registarAtividade === 'function') {
+          window.registarAtividade('upload', `Falha ao enviar ${filename}: status ${response.status}`, 'erro');
+        }
       }
 
     } catch (e) {
       console.error("❌ Erro de rede:", e);
       ToastManager.mostrar("❌ Erro de rede.", "erro");
+      // Regista a atividade
+      if (typeof window.registarAtividade === 'function') {
+        window.registarAtividade('upload', `Erro de rede ao enviar ${filename}.`, 'erro');
+      }
     }
   };
 
   reader.onerror = () => {
     ToastManager.mostrar("❌ Erro ao ler ficheiro.", "erro");
+    // Regista a atividade
+    if (typeof window.registarAtividade === 'function') {
+      window.registarAtividade('upload', 'Erro ao ler ficheiro para upload.', 'erro');
+    }
   };
 }
 
