@@ -5,6 +5,60 @@
 let apostaJogoAtual = 'global';
 let apostaAbaAtual = 'pendentes';
 
+// ---------- FUNÇÃO AUXILIAR (MOVIDA PARA AQUI) ----------
+function formatarNumerosAposta(aposta, jogo) {
+    const jogoNormalizado = normalizarJogo(jogo);
+
+    // M1LHÃO: código sem círculos
+    if (jogoNormalizado === 'milhao' && aposta.codigo) {
+        return `<div class="numeros-aposta" style="display: flex; align-items: center; gap: 6px;">
+                    <span class="codigo-milhao">${escapeHTML(aposta.codigo)}</span>
+                </div>`;
+    }
+
+    let html = '<div class="numeros-aposta">';
+    
+    // Números principais
+    if (aposta.numeros && aposta.numeros.length > 0) {
+        aposta.numeros.forEach(num => {
+            html += `<span class="numero-santacas">${escapeHTML(String(num).padStart(2, '0'))}</span>`;
+        });
+    }
+    
+    // Verifica se há elementos especiais para adicionar o sinal "+"
+    let temEspeciais = false;
+    if ((aposta.estrelas && aposta.estrelas.length > 0) ||
+        (aposta.dream && aposta.dream.length > 0) ||
+        aposta.dream_number !== undefined ||
+        (aposta.numero_da_sorte && jogoNormalizado === 'totoloto')) {
+        temEspeciais = true;
+        html += `<span class="separador-mais">+</span>`;
+    }
+    
+    // Estrelas (Euromilhões)
+    if (aposta.estrelas && aposta.estrelas.length > 0) {
+        aposta.estrelas.forEach(est => {
+            html += `<span class="estrela-santacas">${escapeHTML(String(est).padStart(2, '0'))}</span>`;
+        });
+    }
+    
+    // Dream Number (EuroDreams)
+    if (aposta.dream_number !== undefined && jogoNormalizado === 'eurodreams') {
+        html += `<span class="estrela-santacas">${escapeHTML(String(aposta.dream_number).padStart(2, '0'))}</span>`;
+    } else if (aposta.dream && Array.isArray(aposta.dream) && aposta.dream.length > 0 && jogoNormalizado === 'eurodreams') {
+        html += `<span class="estrela-santacas">${escapeHTML(String(aposta.dream[0]).padStart(2, '0'))}</span>`;
+    }
+    
+    // Nº da Sorte (Totoloto)
+    if (aposta.numero_da_sorte && jogoNormalizado === 'totoloto') {
+        html += `<span class="estrela-santacas">${escapeHTML(String(aposta.numero_da_sorte).padStart(2, '0'))}</span>`;
+    }
+    
+    html += '</div>';
+    return html;
+}
+
+
 // ---------- LEITURA DE PENDENTES (comportamento original) ----------
 async function obterApostasPendentes(jogoFiltro) {
   // 1. Carregar todas as apostas de todos os tipos de jogo
