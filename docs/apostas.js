@@ -162,7 +162,7 @@ async function renderizarPremiados(container) {
           ${logoHTML}
           <span class="notification-date">${escapeHTML(formatarData(item.data))}</span>
         </div>
-        <div class="numeros-aposta">${bloco}</div>
+        <div class="numeros-aposta" style="justify-content: flex-start;">${bloco}</div>
         <button class="btn-santacas btn-arquivar" data-id="${escapeHTML(item.id)}" style="margin-top:8px; width:100%;">Confirmar leitura</button>
       </div>
     `;
@@ -182,6 +182,7 @@ async function renderizarPremiados(container) {
     card.addEventListener('click', () => {
       const id = card.dataset.id;
       if (typeof window.renderizarDetalheNotificacao === 'function') {
+        window.detalheOrigem = 'apostasView';   // ← define a origem
         window.renderizarDetalheNotificacao(id);
         window.ViewManager.goTo('detalheNotificacaoView');
       }
@@ -206,7 +207,7 @@ async function renderizarHistorico(container) {
           ${logoHTML}
           <span class="notification-date">${escapeHTML(formatarData(item.data))}</span>
         </div>
-        <div class="numeros-aposta">${bloco}</div>
+        <div class="numeros-aposta" style="justify-content: flex-start;">${bloco}</div>
       </div>
     `;
   }).join('');
@@ -215,6 +216,7 @@ async function renderizarHistorico(container) {
     card.addEventListener('click', () => {
       const id = card.dataset.id;
       if (typeof window.renderizarDetalheNotificacao === 'function') {
+        window.detalheOrigem = 'apostasView';   // ← define a origem
         window.renderizarDetalheNotificacao(id);
         window.ViewManager.goTo('detalheNotificacaoView');
       }
