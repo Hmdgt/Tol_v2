@@ -157,5 +157,51 @@ const ToastManager = {
   }
 };
 
+// Registo de atividade da aplicação
+window.appLog = [];
+
+// Função para adicionar uma entrada no log (chamada de qualquer módulo)
+window.registarAtividade = function(tipo, mensagem, estado = 'info') {
+  const entrada = {
+    timestamp: new Date().toLocaleString(),
+    tipo: tipo,        // 'upload', 'validacao', 'erro', 'sistema'
+    mensagem: mensagem,
+    estado: estado     // 'sucesso', 'erro', 'info'
+  };
+  window.appLog.unshift(entrada);
+  // Mantém apenas as últimas 50 entradas
+  if (window.appLog.length > 50) {
+    window.appLog.pop();
+  }
+};
+
+// Modifica a função mostrarLogs para exibir este novo registo
+function mostrarLogs() {
+  const logs = window.appLog || [];
+  if (logs.length === 0) {
+    alert("Nenhuma atividade registada.");
+    return;
+  }
+
+  let html = '<div style="font-family: monospace; font-size: 13px; color: var(--text-primary);">';
+  logs.forEach(log => {
+    const icon = log.estado === 'erro' ? '❌' : (log.estado === 'sucesso' ? '✅' : 'ℹ️');
+    html += `<div style="margin-bottom: 6px; border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">
+      <strong>${log.timestamp}</strong> [${log.tipo.toUpperCase()}] ${icon}<br>
+      ${log.mensagem}
+    </div>`;
+  });
+  html += '</div>';
+
+  const modal = document.getElementById('modalDetalhes');
+  const modalBody = document.getElementById('modalBody');
+  if (modal && modalBody) {
+    modalBody.innerHTML = html;
+    modal.style.display = 'flex';
+  } else {
+    alert("Modal não disponível. Verifica a consola.");
+  }
+}
+
 // Exportar para uso global (opcional, mas útil)
 window.ToastManager = ToastManager;
