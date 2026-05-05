@@ -34,6 +34,9 @@ function guardarUltimoEstado(estado) {
 
 let estadoNotificacoes = obterUltimoEstado();
 
+// ---------- VARIÁVEL GLOBAL PARA ORIGEM DO DETALHE ----------
+window.detalheOrigem = 'notificacoesView'; // valor padrão
+
 // ---------- FUNÇÃO DE NORMALIZAÇÃO DE JOGOS ----------
 function normalizarJogo(jogo) {
     if (!jogo) return 'desconhecido';
@@ -247,7 +250,17 @@ function gerarConteudoDetalhes(notificacao) {
   }
   
   html += `</div>`;
-  html += `</div>`;
+
+  // BOTÃO VOLTAR (centrado no fundo, estilo validação)
+  html += `
+    <div class="botoes-validacao" style="justify-content: center; margin-top: 16px;">
+      <button class="btn-cancelar" id="btnVoltarDetalhe" type="button">
+        <ion-icon name="arrow-back-outline"></ion-icon> Voltar
+      </button>
+    </div>
+  `;
+  
+  html += `</div>`; // fecha notification-card
   
   return html;
 }
@@ -426,8 +439,22 @@ window.renderizarDetalheNotificacao = async function(idNotificacao) {
   
   // 4. Renderiza o detalhe (exatamente como antes)
   container.innerHTML = gerarConteudoDetalhes(notificacao);
+
+  // 5. EVENTO DO BOTÃO VOLTAR
+  const btnVoltar = document.getElementById('btnVoltarDetalhe');
+  if (btnVoltar) {
+    btnVoltar.addEventListener('click', () => {
+      const destino = window.detalheOrigem || 'notificacoesView';
+      if (destino === 'apostasView' && typeof window.carregarApostasView === 'function') {
+        window.carregarApostasView(); // mantém o estado (jogo e aba)
+      } else if (destino === 'notificacoesView' && typeof window.renderizarNotificacoes === 'function') {
+        window.renderizarNotificacoes();
+      }
+      window.ViewManager.goTo(destino);
+    });
+  }
   
-  // 5. Só arquiva se ainda estava nas ativas (evita tentar arquivar duas vezes)
+  // 6. Só arquiva se ainda estava nas ativas (evita tentar arquivar duas vezes)
   if (notificacoes.some(n => n.id === idNotificacao)) {
     marcarComoLida(idNotificacao);
   }
@@ -535,6 +562,7 @@ async function handleNotificationClick(e) {
   
   try {
     if (tipo === 'notificacao') {
+      window.detalheOrigem = 'notificacoesView';  // origem: notificações
       if (window.ViewManager) {
         window.ViewManager.goTo('detalheNotificacaoView');
       } else {
