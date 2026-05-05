@@ -347,7 +347,7 @@
   .codigo-milhao { color: var(--text-secondary); font-size: 14px; }
   .numeros-aposta { display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 6px; }
   .separador-mais { font-weight: bold; margin: 0 2px; color: var(--text-secondary); }
-  /* ========== REGRAS BASE PARA .numeros-aposta ========== */
+/* ========== REGRAS BASE PARA .numeros-aposta ========== */
 .numeros-aposta {
   display: flex;
   flex-direction: row;
