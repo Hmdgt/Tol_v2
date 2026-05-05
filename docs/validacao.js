@@ -731,12 +731,24 @@ window.confirmarValidacao = async function(imagem) {
     if (sucesso) {
       ToastManager.mostrar("✅ Boletim validado com sucesso!", "sucesso");
       window.voltarListaValidacao();
+      // Regista a atividade
+      if (typeof window.registarAtividade === 'function') {
+        window.registarAtividade('validacao', `Boletim ${imagem} validado com sucesso.`, 'sucesso');
+      }
     } else {
       ToastManager.mostrar("❌ Erro ao guardar validação. Tenta novamente.", "erro");
+      // Regista a atividade
+      if (typeof window.registarAtividade === 'function') {
+        window.registarAtividade('validacao', `Erro ao guardar validação para ${imagem}.`, 'erro');
+      }
     }
   } catch (err) {
     console.error('Erro na validação:', err);
     ToastManager.mostrar("❌ Erro inesperado. Tenta novamente.", "erro");
+    // Regista a atividade
+    if (typeof window.registarAtividade === 'function') {
+      window.registarAtividade('validacao', `Erro inesperado na validação de ${imagem}: ${err.message}`, 'erro');
+    }
   } finally {
     validando = false;
     if (btn) {
