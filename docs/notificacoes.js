@@ -79,7 +79,7 @@ function formatarData(dataStr) {
 
 // ---------- FUNÇÃO AUXILIAR PARA BLOCO INLINE ----------
 function gerarBlocoInline(aposta, sorteio, acertos, jogoNormalizado) {
-    let html = '<div class="numeros-aposta" style="justify-content: flex-start;">';
+    let html = '<div class="numeros-aposta">';
     
     if (aposta.numeros) {
         const numerosAcertados = (sorteio && acertos && acertos.numeros_acertados) ? acertos.numeros_acertados : [];
@@ -178,7 +178,7 @@ function gerarConteudoDetalhes(notificacao) {
     if (jogoNormalizado === 'milhao' && sorteio.codigo_premiado) {
       html += `<div class="numeros-aposta"><span class="codigo-milhao">${escapeHTML(sorteio.codigo_premiado)}</span></div>`;
     } else {
-      let sorteioHtml = '<div class="numeros-aposta" style="justify-content: flex-start;">';
+      let sorteioHtml = '<div class="numeros-aposta">';
       
       if (sorteio.numeros) {
         sorteio.numeros.forEach(num => {
