@@ -160,7 +160,7 @@ function gerarConteudoDetalhes(notificacao) {
   
   if (detalhes.aposta) {
     const aposta = detalhes.aposta;
-    html += `<div style="margin: 12px 0;"><strong>Aposta</strong><br>`;
+    html += `<div class="bloco-jogo"><span class="titulo-bloco">Aposta</span>`;
     
     if (jogoNormalizado === 'milhao' && aposta.codigo) {
       html += `<div class="numeros-aposta"><span class="codigo-milhao">${escapeHTML(aposta.codigo)}</span></div>`;
@@ -173,7 +173,7 @@ function gerarConteudoDetalhes(notificacao) {
   
   if (detalhes.sorteio) {
     const sorteio = detalhes.sorteio;
-    html += `<div style="margin: 12px 0;"><strong>Sorteio</strong><br>`;
+    html += `<div class="bloco-jogo"><span class="titulo-bloco">Sorteio</span>`;
     
     if (jogoNormalizado === 'milhao' && sorteio.codigo_premiado) {
       html += `<div class="numeros-aposta"><span class="codigo-milhao">${escapeHTML(sorteio.codigo_premiado)}</span></div>`;
