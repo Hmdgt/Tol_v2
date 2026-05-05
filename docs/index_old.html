@@ -347,6 +347,27 @@
   .codigo-milhao { color: var(--text-secondary); font-size: 14px; }
   .numeros-aposta { display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 6px; }
   .separador-mais { font-weight: bold; margin: 0 2px; color: var(--text-secondary); }
+/* ========== REGRAS BASE PARA .numeros-aposta ========== */
+.numeros-aposta {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  overflow-x: visible;
+}
+
+/* ========== MINHAS APOSTAS (qualquer aba) ========== */
+#apostasList .numeros-aposta {
+  gap: 5px;
+}
+
+/* ========== SORTEIOS (ESTATÍSTICAS) ========== */
+#sorteiosContainer .numeros-aposta {
+  gap: 5px;
+}
+
 /* ========== APOSTAS: LINHA ÚNICA + SCROLL ========== */
 #apostasView.active {
   display: flex !important;
@@ -356,8 +377,8 @@
 
 .apostas-header-linha {
   display: flex;
-  flex-direction: column;      /* empilha as abas em cima e o dropdown em baixo */
-  align-items: center;         /* centraliza ambos horizontalmente */
+  flex-direction: column;
+  align-items: center;
   gap: 8px;
   flex-shrink: 0;
   padding: 0;
@@ -365,16 +386,11 @@
 
 #apostasTabs {
   display: flex;
-  justify-content: center;     /* centraliza os botões das abas */
+  justify-content: center;
   flex-wrap: nowrap;
   gap: 8px;
   margin: 0;
   flex-shrink: 0;
-}
-
-#apostasView .jogo-select-container {
-  flex-shrink: 0;
-  margin: 0;
 }
 
 #apostasView .jogo-select-container {
@@ -405,6 +421,28 @@
   font-weight: bold;
   text-transform: uppercase;
   color: var(--text-primary);
+}
+.estatisticas-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.estatisticas-header .modo-tabs,
+.estatisticas-header .estatisticas-linha {
+  align-self: center;          /* centraliza apenas estas linhas */
+}
+
+.estatisticas-linha {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.modo-tabs {
+  justify-content: center;
 }
 </style>
 </head>
