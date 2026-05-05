@@ -305,7 +305,7 @@ async function renderizarSorteios(container, jogo, ano) {
                     <span class="jogo-nome">${escapeHTML(s.concurso || s.data)}</span>
                     <span class="notification-date">${escapeHTML(formatarData(s.data))}</span>
                 </div>
-                <div class="numeros-aposta" style="justify-content: flex-start;">${chaveHTML}</div>
+                <div class="numeros-aposta">${chaveHTML}</div>
             </div>
         `;
     }
