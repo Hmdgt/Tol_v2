@@ -356,17 +356,20 @@
 
 .apostas-header-linha {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;      /* empilha as abas em cima e o dropdown em baixo */
+  align-items: center;         /* centraliza ambos horizontalmente */
   gap: 8px;
   flex-shrink: 0;
-  padding: 0;          /* ajusta se necessário */
+  padding: 0;
 }
 
 #apostasTabs {
-  flex-shrink: 1;
-  min-width: 0;
+  display: flex;
+  justify-content: center;     /* centraliza os botões das abas */
+  flex-wrap: nowrap;
+  gap: 8px;
   margin: 0;
+  flex-shrink: 0;
 }
 
 #apostasView .jogo-select-container {
