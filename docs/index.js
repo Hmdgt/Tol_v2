@@ -1,1 +1,523 @@
-a
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<title>Apostas</title>
+<link rel="icon" type="image/x-icon" href="/Tol_v2/assets/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/Tol_v2/assets/favicon-32x32.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+<!-- 🔥 ANTI-FLASH DE TEMA (executa antes do CSS) -->
+<script>
+  (function() {
+    const saved = localStorage.getItem('theme');
+    const theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', theme);
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', theme === 'light' ? '#ffffff' : '#000000');
+  })();
+</script>
+
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000">
+
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+<link rel="manifest" href="/Tol_v2/manifest.json">
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body { height: 100%; margin: 0; padding: 0; }
+
+  html {
+    transition: background-color 0.3s ease;
+    background-color: var(--bg-primary) !important;
+  }
+
+  body {
+    display: flex; flex-direction: column; min-height: 100dvh; font-family: sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    background-color: var(--bg-primary) !important; color: var(--text-primary);
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  :root, [data-theme="dark"] {
+    --bg-primary: #000000; --bg-secondary: #111111; --bg-card: #111111; --bg-card-hover: #222222;
+    --bg-table-header: #1a1a1a; --bg-table-row-hover: #1a1a1a; --text-primary: #ffffff;
+    --text-secondary: #aaaaaa; --text-muted: #888888; --border-color: #333333; --border-light: #222222;
+    --accent-green: #2a5a2a; --accent-green-light: #4caf4c; --accent-gold: #ffd700; --accent-red: #ff4444;
+    --positive: #4caf4c; --negative: #ff4444; --badge-premiado-bg: #ffd700; --badge-premiado-text: #000000;
+    --badge-pendente-bg: #ffaa00; --badge-pendente-text: #000000; --badge-nova-bg: #ff4444;
+    --badge-nova-text: #ffffff; --button-primary-bg: #2a5a2a; --button-primary-hover: #3a6a3a;
+    --button-secondary-bg: #222222; --button-secondary-hover: #333333; --button-cancel-bg: #333333;
+    --button-cancel-hover: #444444; --shadow: 0 2px 4px rgba(0,0,0,0.3); --shadow-card: 0 1px 3px rgba(0,0,0,0.3);
+    --input-bg: #222222; --input-border: #444444; --input-text: #ffffff; --link-color: #ffd700;
+    --toast-bg: #2a5a2a; --toast-error-bg: #8b2c2c; --toast-info-bg: #2a4a6a;
+    --santacas-verde: #7fc241; --santacas-cinza-texto: #585858; --santacas-cinza-numeros: #898989;
+  }
+
+  [data-theme="light"] {
+    --bg-primary: #f5f5f5; --bg-secondary: #e9ecef; --bg-card: #ffffff; --bg-card-hover: #f8f9fa;
+    --bg-table-header: #f0f0f0; --bg-table-row-hover: #f8f9fa; --text-primary: #212529;
+    --text-secondary: #6c757d; --text-muted: #6c757d; --border-color: #e0e0e0; --border-light: #e9ecef;
+    --accent-green: #007b3e; --accent-green-light: #7fc241; --accent-gold: #ffd700; --accent-red: #dc3545;
+    --positive: #28a745; --negative: #dc3545; --badge-premiado-bg: #ffd700; --badge-premiado-text: #000000;
+    --badge-pendente-bg: #ffaa00; --badge-pendente-text: #000000; --badge-nova-bg: #ff4444;
+    --badge-nova-text: #ffffff; --button-primary-bg: #007b3e; --button-primary-hover: #005f2e;
+    --button-secondary-bg: #e9ecef; --button-secondary-hover: #dee2e6; --button-cancel-bg: #e9ecef;
+    --button-cancel-hover: #dee2e6; --shadow: 0 1px 3px rgba(0,0,0,0.1); --shadow-card: 0 1px 2px rgba(0,0,0,0.05);
+    --input-bg: #ffffff; --input-border: #ced4da; --input-text: #212529; --link-color: #007b3e;
+    --toast-bg: #007b3e; --toast-error-bg: #dc3545; --toast-info-bg: #17a2b8;
+    --santacas-verde: #7fc241; --santacas-cinza-texto: #585858; --santacas-cinza-numeros: #898989;
+  }
+
+  .view, #bottomNav, .modal-content, .jogo-form, .notification-card,
+  .validacao-card, .estatisticas-tabela, .zoom-container {
+    background-color: var(--bg-card); color: var(--text-primary);
+  }
+
+  #bottomNav { background-color: var(--bg-secondary); border-top-color: var(--border-color); }
+  .zoom-container { background-color: var(--bg-secondary); }
+  .loading, .error, .no-notifications, .no-data { color: var(--text-secondary); }
+  #estatisticasContainer, #notificationsList, #validacaoContainer, #detalheContainer, #apostasList { background-color: transparent; }
+
+  #pendentesContainer .estatisticas-tabela,
+  #pendentesContainer .resultado-pendente,
+  #pendentesContainer .pendente-row { background: transparent; }
+
+  .view {
+    display: none; flex: 1 1 0%; min-height: 0; overflow-y: auto;
+    -webkit-overflow-scrolling: touch; overscroll-behavior: none; padding: 20px;
+    background-color: var(--bg-primary);
+  }
+  .view.active { display: flex; flex-direction: column; }
+  h2 { text-align: center; font-weight: 300; margin-bottom: 20px; color: var(--text-primary); }
+  #homeView.active { justify-content: center; }
+
+  #bottomNav {
+    flex-shrink: 0; position: relative; margin-top: auto; display: flex; justify-content: space-around;
+    padding: 8px; padding-bottom: max(8px, env(safe-area-inset-bottom)); border-top: 1px solid var(--border-color); z-index: 10;
+  }
+  .navBtn { color: var(--text-primary); font-size: 24px; cursor: pointer; opacity: 0.3; transition: 0.2s; position: relative; }
+  .navBtn.active { opacity: 1; }
+  .notification-badge {
+    position: absolute; top: -5px; right: -5px; background: var(--badge-nova-bg); color: white;
+    font-size: 11px; font-weight: bold; min-width: 18px; height: 18px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg-secondary);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+
+  #cameraButton, #galleryButton {
+    display: flex; justify-content: center; align-items: center; border-radius: 50%;
+    background: var(--bg-card); border: 3px solid var(--border-color); cursor: pointer; transition: 0.1s;
+    margin: 20px auto;
+  }
+  #cameraButton { width: 150px; height: 150px; }
+  #cameraButton ion-icon { font-size: 80px; color: var(--text-primary); opacity: 0.9; }
+  #galleryButton { width: 120px; height: 120px; }
+  #galleryButton ion-icon { font-size: 60px; color: var(--text-primary); opacity: 0.9; }
+  #cameraButton:active, #galleryButton:active { transform: scale(0.92); border-color: var(--text-secondary); }
+
+  input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--input-text); font-size: 16px; margin-bottom: 12px; }
+  button { padding: 14px; background: var(--button-secondary-bg); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 8px; font-size: 16px; cursor: pointer; transition: 0.2s; margin-bottom: 12px; }
+  button:active { opacity: 0.8; }
+
+  #notificationsList, .premiados-lista, .pendentes-lista, #apostasList { display: flex; flex-direction: column; gap: 15px; min-height: min-content; }
+
+  .notification-card {
+    background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 0;
+    padding: 16px; cursor: pointer; position: relative; transition: transform 0.15s ease, background 0.2s ease;
+    -webkit-tap-highlight-color: transparent; user-select: none; touch-action: manipulation; box-shadow: none;
+  }
+  .notification-card:active { transform: scale(0.98); background: var(--bg-card-hover); }
+  .notification-card.selecionado { border-color: var(--accent-green-light) !important; background: var(--bg-card-hover) !important; }
+  .notification-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .jogo-icon { font-size: 20px; }
+  .jogo-nome { font-weight: bold; text-transform: uppercase; }
+  .unread-badge { color: black; font-size: 10px; padding: 2px 8px; border-radius: 12px; font-weight: bold; margin-left: auto; animation: pulse 2s infinite; }
+  .notification-date { color: var(--text-secondary); font-size: 12px; white-space: nowrap; }
+  .notification-title { font-size: 16px; font-weight: 500; margin: 8px 0 4px; }
+  .notification-resumo { font-size: 18px; font-weight: bold; text-align: center; padding: 8px; background: var(--bg-secondary); border-radius: 8px; margin-top: 4px; color: var(--accent-green-light); }
+  .no-notifications { text-align: center; opacity: 0.6; margin-top: 40px; color: var(--text-secondary); }
+  .loading, .error { text-align: center; padding: 40px 20px; opacity: 0.7; color: var(--text-secondary); }
+  .error { color: var(--negative); }
+
+  .logo-sprite { background: url('assets/logo-jogos-sprite.png') no-repeat; display: inline-block; text-indent: -9999px; height: 29px; }
+  .logo-euromilhoes { background-position: left top; width: 102px; }
+  .logo-totoloto { background-position: left -33px; width: 89px; }
+  .logo-eurodreams { background-position: left -362px; width: 112px; }
+  .logo-milhao { background-position: left -284px; width: 89px; }
+
+  :root { --bubble-size: 25px; --bubble-font-scale: 0.45; }
+  .numero-santacas, .estrela-santacas, .numero-extra-santacas {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: var(--bubble-size); height: var(--bubble-size);
+    font-size: calc(var(--bubble-size) * var(--bubble-font-scale)); font-weight: 500;
+    line-height: 1; flex-shrink: 0; margin: 0 2px; transition: all 0.2s ease;
+  }
+  .numero-santacas { background: transparent; border-radius: 50%; border: 1.5px solid; }
+  [data-theme="light"] .numero-santacas { color: var(--santacas-cinza-numeros); border-color: #cccccc; }
+  [data-theme="dark"] .numero-santacas { color: var(--text-secondary); border-color: #555555; }
+  .estrela-santacas { background-image: none !important; background-color: transparent !important; border-radius: 50%; border: 1.5px solid; }
+  [data-theme="light"] .estrela-santacas { color: var(--santacas-cinza-numeros); border-color: #cccccc; }
+  [data-theme="dark"] .estrela-santacas { color: var(--text-secondary); border-color: #555555; }
+  .estrela-santacas.acerto { background-color: transparent !important; background-image: none !important; border-color: var(--positive) !important; color: var(--positive) !important; }
+  .numero-extra-santacas { background: transparent !important; border-radius: 50%; border: 1.5px solid var(--accent-gold); color: var(--accent-gold) !important; }
+  .numero-santacas.acerto, .numero-extra-santacas.acerto { background: transparent !important; border-color: var(--positive) !important; color: var(--positive) !important; }
+  .numeros-aposta { gap: 3px; }
+
+  .btn-santacas { background: var(--button-primary-bg); color: white; padding: 4px 12px; font-size: 10px; text-transform: uppercase; font-weight: bold; border-radius: 3px; cursor: pointer; border: none; }
+  .btn-santacas:hover { background: var(--button-primary-hover); }
+
+  @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+  .loading ion-icon { font-size: 32px; color: var(--text-secondary); animation: spin 1s linear infinite; }
+
+  .detalhe-header { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+  .btn-voltar { background: var(--button-secondary-bg); border: 1px solid var(--border-color); color: var(--text-primary); padding: 8px 12px; border-radius: 8px; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+
+  .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
+  .modal-content { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px; width: 100%; max-width: 500px; max-height: 80vh; display: flex; flex-direction: column; animation: modalFadeIn 0.3s; }
+  @keyframes modalFadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid var(--border-color); }
+  .modal-header h3 { margin: 0; font-weight: 300; color: var(--text-primary); }
+  .modal-close { background: none; border: none; color: var(--text-primary); font-size: 28px; cursor: pointer; padding: 0; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
+  .modal-body { padding: 20px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+
+  .detalhes-jogo { display: flex; flex-direction: column; gap: 16px; }
+  .detalhes-jogo h4 { font-size: 20px; margin: 0 0 10px 0; color: var(--accent-gold); }
+  .detalhes-resultado { font-size: 18px; font-weight: bold; color: var(--positive); text-align: center; padding: 12px; background: var(--bg-secondary); border-radius: 10px; margin-bottom: 10px; }
+  .detalhes-secao { background: var(--bg-secondary); border-radius: 12px; padding: 15px; border: 1px solid var(--border-color); }
+  .detalhes-secao h5 { margin: 0 0 10px 0; color: var(--text-secondary); font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+  .detalhes-secao p { margin: 5px 0; line-height: 1.5; color: var(--text-primary); }
+  .detalhes-secao.premio { background: var(--bg-secondary); border-color: var(--accent-gold); }
+  .detalhes-secao.premio h5 { color: var(--accent-gold); }
+  .valor-premio { font-size: 24px; font-weight: bold; color: var(--accent-gold); text-align: center; margin-top: 10px; }
+  .valor-total { font-size: 18px; color: var(--positive); text-align: center; margin-top: 5px; }
+  .sem-premio { background: var(--bg-secondary); opacity: 0.8; }
+
+  #cameraInput, #galleryInput { display: none; }
+
+  .validacao-header { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+  .validacao-header h3 { margin: 0; flex: 1; color: var(--text-primary); }
+  .imagem-nome { font-size: 14px; color: var(--text-secondary); background: var(--bg-secondary); padding: 4px 8px; border-radius: 6px; word-break: break-all; max-width: 200px; }
+  .validacao-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 768px) { .validacao-grid { grid-template-columns: 1fr; } }
+  .imagem-coluna { display: flex; flex-direction: column; gap: 20px; }
+  .zoom-container { width: 100%; height: 300px; overflow: hidden; position: relative; touch-action: none; border-radius: 12px; border: 1px solid var(--border-color); cursor: grab; }
+  .zoom-container.dragging { cursor: grabbing; }
+  .zoom-container img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; transform-origin: 0 0; will-change: transform; pointer-events: none; }
+  .zoom-img { transform: translate3d(0,0,0); backface-visibility: hidden; }
+  .formularios-coluna { display: flex; flex-direction: column; gap: 20px; }
+  .jogo-form { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; }
+  .jogo-form h3 { margin: 0 0 15px 0; color: var(--accent-gold); font-size: 18px; }
+  .form-campos { display: flex; flex-direction: column; gap: 15px; }
+  .campo { display: flex; flex-direction: column; gap: 5px; }
+  .campo label { font-size: 14px; color: var(--text-secondary); }
+  .campo input, .campo select { background: var(--input-bg); border: 1px solid var(--input-border); color: var(--input-text); padding: 8px 12px; border-radius: 6px; font-size: 16px; }
+  .campo-duplo { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .numeros-grid-6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; }
+  .numeros-grid, .estrelas-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
+  .estrelas-grid { grid-template-columns: repeat(2, 1fr); }
+  .numeros-grid input, .estrelas-grid input { text-align: center; padding: 8px 4px; }
+  hr { border: none; border-top: 1px solid var(--border-color); margin: 20px 0; }
+  .botoes-validacao { display: flex; gap: 10px; margin-top: 20px; }
+  .btn-cancelar { background: var(--button-cancel-bg); border: 1px solid var(--border-color); flex: 1; color: var(--text-primary); }
+  .btn-validar { background: var(--button-primary-bg); border: 1px solid var(--accent-green-light); flex: 2; display: flex; align-items: center; justify-content: center; gap: 8px; color: white; }
+  .btn-validar ion-icon { font-size: 20px; }
+  .validacao-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; margin-bottom: 12px; cursor: pointer; transition: 0.2s; }
+  .validacao-card:active { background: var(--bg-card-hover); transform: scale(0.98); }
+  .validacao-card-header { display: flex; align-items: center; gap: 10px; }
+  .validacao-imagem { font-size: 14px; color: var(--text-secondary); word-break: break-all; flex: 1; }
+  .validacao-badge { background: var(--badge-pendente-bg); color: var(--badge-pendente-text); font-size: 12px; font-weight: bold; padding: 2px 8px; border-radius: 12px; }
+  .validacao-tipos { font-size: 14px; color: var(--text-secondary); margin: 8px 0; }
+  .validacao-preview { font-size: 13px; color: var(--positive); }
+
+  .custom-toast { font-family: sans-serif; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.1); }
+  .custom-toast ion-icon { flex-shrink: 0; }
+
+  .selecao-barra { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 0; padding: 12px 16px; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; box-sizing: border-box; }
+  .selecao-barra span { color: var(--accent-green-light); font-size: 12px; font-weight: normal; letter-spacing: 0.5px; }
+  .selecao-barra .btn-cancelar, .selecao-barra .btn-validar { background: transparent; border: none; color: var(--text-primary); padding: 6px 12px; font-size: 12px; font-weight: normal; cursor: pointer; transition: all 0.2s ease; margin: 0; text-transform: none; display: inline-flex; align-items: center; gap: 6px; }
+  .selecao-barra .btn-cancelar:hover, .selecao-barra .btn-validar:hover { opacity: 0.7; }
+  .selecao-barra .btn-validar { color: var(--accent-green-light); }
+  .selecao-barra .btn-cancelar { color: var(--text-secondary); }
+  .selecao-barra .btn-cancelar:hover { color: var(--accent-red); }
+
+  .periodo-btn, .modo-btn, .ano-btn, .btn-cancelar, .btn-validar, .btn-voltar,
+  #saveTokenBtn, #resetAppBtn, #debugLogsBtn {
+    background: transparent; border: none; color: var(--text-secondary); padding: 8px 16px;
+    font-size: 12px; font-weight: normal; text-transform: uppercase; cursor: pointer;
+    transition: all 0.2s ease; margin: 0; border-radius: 0; letter-spacing: 0.5px;
+  }
+  .periodo-btn.active, .modo-btn.active, .ano-btn.active { color: var(--accent-green-light); }
+  .periodo-btn:hover, .modo-btn:hover, .ano-btn:hover,
+  .btn-cancelar:hover, .btn-validar:hover, .btn-voltar:hover,
+  #saveTokenBtn:hover, #resetAppBtn:hover, #debugLogsBtn:hover { color: var(--text-primary); opacity: 0.8; }
+  .btn-voltar { display: inline-flex; align-items: center; gap: 4px; }
+  #saveTokenBtn, #resetAppBtn, #debugLogsBtn { width: 100%; text-align: center; margin-bottom: 12px; }
+
+  button[onclick="ativarPush()"] { background: var(--button-primary-bg); border: 1px solid var(--accent-green-light); color: white; padding: 14px; border-radius: 0; text-transform: uppercase; }
+  button[onclick="ativarPush()"]:hover { background: var(--button-primary-hover); }
+
+  .jogo-btn { border: none; padding: 0; height: 29px; cursor: pointer; background-color: transparent; transition: opacity 0.2s ease; }
+  .jogo-btn.active { opacity: 1; }
+  .jogo-btn:not(.active) { opacity: 0.5; }
+  .jogo-btn:hover { opacity: 0.8; }
+  .jogo-btn[data-jogo="global"] { background: transparent; color: var(--text-secondary); font-size: 12px; text-transform: uppercase; padding: 8px 16px; height: auto; width: auto; }
+  .jogo-btn[data-jogo="euromilhoes"] { background-image: url('assets/logo-jogos-sprite.png'); background-repeat: no-repeat; background-position: left top; width: 102px; text-indent: -9999px; }
+  .jogo-btn[data-jogo="totoloto"] { background-image: url('assets/logo-jogos-sprite.png'); background-repeat: no-repeat; background-position: left -33px; width: 89px; text-indent: -9999px; }
+  .jogo-btn[data-jogo="eurodreams"] { background-image: url('assets/logo-jogos-sprite.png'); background-repeat: no-repeat; background-position: left -362px; width: 112px; text-indent: -9999px; }
+  .jogo-btn[data-jogo="milhao"] { background-image: url('assets/logo-jogos-sprite.png'); background-repeat: no-repeat; background-position: left -284px; width: 104px; text-indent: -9999px; }
+
+  .estatisticas-header { display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; }
+  .periodo-tabs, .jogo-tabs, .modo-tabs, .ano-tabs { display: flex; flex-wrap: nowrap; gap: 8px; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; scrollbar-width: thin; padding-bottom: 4px; }
+  .periodo-tabs::-webkit-scrollbar, .jogo-tabs::-webkit-scrollbar, .modo-tabs::-webkit-scrollbar, .ano-tabs::-webkit-scrollbar { height: 3px; }
+  .periodo-tabs::-webkit-scrollbar-track, .jogo-tabs::-webkit-scrollbar-track, .modo-tabs::-webkit-scrollbar-track, .ano-tabs::-webkit-scrollbar-track { background: var(--border-color); border-radius: 3px; }
+  .periodo-tabs::-webkit-scrollbar-thumb, .jogo-tabs::-webkit-scrollbar-thumb, .modo-tabs::-webkit-scrollbar-thumb, .ano-tabs::-webkit-scrollbar-thumb { background: var(--accent-green-light); border-radius: 3px; }
+
+  .periodo-btn, .modo-btn, .ano-btn { white-space: nowrap; flex-shrink: 0; }
+  .jogo-tabs { gap: 12px; align-items: center; }
+  .jogo-btn { flex-shrink: 0; }
+
+  .estatisticas-tabela { width: 100%; border-collapse: collapse; font-size: 14px; background: var(--bg-card); border-radius: 12px; overflow: hidden; }
+  .estatisticas-tabela th { background: var(--bg-table-header); color: var(--text-secondary); font-weight: normal; padding: 12px 8px; text-align: center; border-bottom: 2px solid var(--border-color); }
+  .estatisticas-tabela td { padding: 10px 8px; text-align: center; border-bottom: 1px solid var(--border-light); color: var(--text-primary); }
+  .estatisticas-tabela td.positivo { color: var(--positive); font-weight: bold; }
+  .estatisticas-tabela td.negativo { color: var(--negative); font-weight: bold; }
+  .estatisticas-tabela tbody tr:hover { background: var(--bg-table-row-hover); }
+  .no-data { text-align: center; padding: 40px; opacity: 0.6; color: var(--text-secondary); }
+
+  .notification-date-label { color: var(--text-secondary); font-size: 12px; margin-left: auto; }
+  .notification-info-right { text-align: right; margin: 8px 0 4px; }
+  .notification-concurso, .notification-referencia { font-size: 12px; color: var(--text-secondary); line-height: 1.4; }
+  .notification-resumo-pendente { text-align: center; padding: 7px; border-radius: 8px; margin-top: 8px; }
+  .notification-resumo-pendente .numero-santacas, .notification-resumo-pendente .estrela-santacas, .notification-resumo-pendente .numero-extra-santacas { margin: 0 4px; }
+  .notification-resumo-pendente .spacer { font-size: 14px; font-weight: bold; color: var(--text-secondary); }
+  .codigo-milhao { display: inline-block; padding: 6px 12px; font-size: 12px; font-weight: bold; text-transform: uppercase; border-radius: 0; white-space: nowrap; margin-top: 4px; }
+  body.modal-open { overflow: hidden; position: fixed; width: 100%; height: 100%; }
+  .theme-toggle { background: var(--button-secondary-bg); border: 1px solid var(--border-color); color: var(--text-primary); padding: 8px 16px; border-radius: 20px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; margin-bottom: 12px; }
+  .theme-toggle:hover { background: var(--button-secondary-hover); }
+  .theme-toggle ion-icon { font-size: 18px; }
+
+  .numeros-aposta { display: flex; flex-direction: row; flex-wrap: nowrap; align-items: center; justify-content: center; gap: 3px; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; padding-bottom: 4px; }
+  .numeros-aposta .separador-mais { font-weight: bold; font-size: 14px; color: var(--text-secondary); margin: 0 2px; flex-shrink: 0; }
+  .numero-santacas, .estrela-santacas, .numero-extra-santacas { flex-shrink: 0; }
+
+  .jogo-select-container { margin: 5px 0; }
+  .jogo-select {
+    width: auto; min-width: 140px; padding: 8px 28px 8px 12px; background-color: transparent;
+    color: var(--text-secondary); border: none; font-size: 12px; font-weight: normal;
+    text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23aaaaaa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 8px center; background-size: 12px;
+    border-radius: 0; transition: color 0.2s ease;
+  }
+  [data-theme="light"] .jogo-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236c757d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  }
+  .jogo-select:hover, .jogo-select:focus { color: var(--text-primary); outline: none; }
+  .jogo-select option { background-color: var(--bg-card); color: var(--text-primary); font-size: 14px; padding: 8px; }
+
+  .jogo-form.notification-card { padding: 16px; margin-bottom: 0; }
+  .jogo-form .notification-header { margin-bottom: 4px; }
+  .jogo-form .notification-info-right { margin-top: 0; margin-bottom: 12px; }
+  .numeros-aposta-preview { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 4px; margin: 12px 0; }
+  .numeros-aposta-preview .separador-mais { font-weight: bold; font-size: 14px; color: var(--text-secondary); margin: 0 2px; }
+  .form-campos-edicao { margin-top: 16px; display: flex; flex-direction: column; gap: 12px; }
+  .form-campos-edicao .campo { margin-bottom: 0; }
+  .form-campos-edicao .campo-duplo { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .form-campos-edicao label { font-size: 12px; color: var(--text-secondary); margin-bottom: 2px; }
+  .form-campos-edicao input { padding: 8px 10px; font-size: 14px; margin-bottom: 0; }
+  .jogo-form .numeros-grid, .jogo-form .estrelas-grid, .jogo-form .numeros-grid-6 { gap: 6px; margin-top: 4px; }
+  .jogo-form .numeros-grid input, .jogo-form .estrelas-grid input, .jogo-form .numeros-grid-6 input { padding: 6px 4px; font-size: 14px; }
+  .validacao-header h2 { flex: unset; text-align: center; width: 100%; }
+  .validacao-header { margin-bottom: 16px; }
+  .formularios-coluna { max-height: calc(100vh - 200px); overflow-y: auto; padding-right: 4px; }
+
+  .notification-title { color: var(--text-secondary); font-size: 14px; text-align: right; margin-top: 2px; }
+  .codigo-milhao { color: var(--text-secondary); font-size: 14px; }
+  .numeros-aposta { display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 6px; }
+  .separador-mais { font-weight: bold; margin: 0 2px; color: var(--text-secondary); }
+  /* ========== REGRAS BASE PARA .numeros-aposta ========== */
+.numeros-aposta {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  overflow-x: visible;
+}
+
+/* ========== MINHAS APOSTAS (qualquer aba) ========== */
+#apostasList .numeros-aposta {
+  gap: 5px;
+}
+
+/* ========== SORTEIOS (ESTATÍSTICAS) ========== */
+#sorteiosContainer .numeros-aposta {
+  gap: 5px;
+}
+
+/* ========== APOSTAS: LINHA ÚNICA + SCROLL ========== */
+#apostasView.active {
+  display: flex !important;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.apostas-header-linha {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  padding: 0;
+}
+
+#apostasTabs {
+  display: flex;
+  justify-content: center;
+  flex-wrap: nowrap;
+  gap: 8px;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+#apostasView .jogo-select-container {
+  flex-shrink: 0;
+  margin: 0;
+}
+
+#apostasList {
+  flex: 1 1 0%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  min-height: 0;
+  margin-top: 12px;
+}
+
+/* Data à direita nos cartões do Histórico (Minhas Apostas) */
+#apostasList .notification-date {
+  margin-left: auto;
+}
+
+/* Data à direita nos cartões dos Sorteios (Estatísticas) */
+#sorteiosContainer .notification-date {
+  margin-left: auto;
+}
+
+/* Garantir que o nome do concurso segue o estilo dos outros cartões */
+.jogo-nome {
+  font-weight: bold;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+</style>
+</head>
+<body>
+
+  <input type="file" accept="image/*" capture="environment" id="cameraInput">
+  <input type="file" accept="image/*" id="galleryInput">
+
+  <div id="homeView" class="view active">
+    <div id="cameraButton"><ion-icon name="camera-outline"></ion-icon></div>
+    <div id="galleryButton"><ion-icon name="image-outline"></ion-icon></div>
+  </div>
+
+  <div id="notificacoesView" class="view">
+    <h2></h2>
+    <div id="notificationsList"></div>
+  </div>
+
+  <!-- NOVA VIEW: MINHAS APOSTAS -->
+  <div id="apostasView" class="view">
+  <h2></h2>
+  <div class="apostas-header-linha">
+    <div class="periodo-tabs" id="apostasTabs">
+      <button class="periodo-btn active" data-tab="pendentes">Pendentes</button>
+      <button class="periodo-btn" data-tab="premiados">Premiados</button>
+      <button class="periodo-btn" data-tab="historico">Histórico</button>
+    </div>
+    <div class="jogo-select-container">
+      <select id="apostasJogoSelect" class="jogo-select">
+        <option value="global">Todos os jogos</option>
+        <option value="euromilhoes">Euromilhões</option>
+        <option value="totoloto">Totoloto</option>
+        <option value="eurodreams">EuroDreams</option>
+        <option value="milhao">M1lhão</option>
+      </select>
+    </div>
+  </div>
+  <div id="apostasList"></div>
+</div>
+  <div id="detalheNotificacaoView" class="view">
+    <div id="detalheContainer"></div>
+  </div>
+
+  <div id="validacaoView" class="view">
+    <div id="validacaoContainer"></div>
+  </div>
+
+  <div id="estatisticasView" class="view">
+    <div id="estatisticasContainer"></div>
+    <!-- As abas Resumo e Sorteios são geridas pelo estatisticas.js -->
+  </div>
+
+  <div id="configView" class="view">
+    <h2>Configurações</h2>
+    <button id="themeToggleBtn" class="theme-toggle">
+      <ion-icon id="themeIcon" name="sunny-outline"></ion-icon>
+      <span id="themeText">Light Mode</span>
+    </button>
+    <input type="password" id="token" placeholder="Introduz o token...">
+    <button id="saveTokenBtn">Guardar Token</button>
+    <button id="resetAppBtn">Atualizar App</button>
+    <button id="debugLogsBtn" style="margin-top: 20px;">Ver Erros</button>
+    <button onclick="ativarPush()" style="margin-top:20px; background: var(--button-primary-bg); border:1px solid var(--accent-green-light); color: white;">
+      Ativar notificações
+    </button>
+  </div>
+
+  <div id="bottomNav">
+    <div class="navBtn active" data-view="homeView"><ion-icon name="camera-outline"></ion-icon></div>
+    <div class="navBtn" data-view="notificacoesView">
+      <ion-icon name="notifications-outline"></ion-icon>
+      <span id="notificationBadge" class="notification-badge" style="display:none">0</span>
+    </div>
+    <div class="navBtn" data-view="apostasView"><ion-icon name="ticket-outline"></ion-icon></div>
+    <div class="navBtn" data-view="estatisticasView"><ion-icon name="list-outline"></ion-icon></div>
+    <div class="navBtn" data-view="configView"><ion-icon name="settings-outline"></ion-icon></div>
+  </div>
+
+  <div id="modalDetalhes" class="modal" style="display:none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Detalhes da Aposta</h3>
+        <button class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <script src="config.js" defer></script>
+  <script src="utils.js" defer></script>
+  <script src="notificacoes.js" defer></script>
+  <script src="validacao.js" defer></script>
+  <script src="apostas.js" defer></script>
+  <script src="estatisticas.js" defer></script>
+  <script src="upload.js" defer></script>
+  <script src="push.js" defer></script>
+  <script src="app.js" defer></script>
+  <script src="theme.js" defer></script>
+</body>
+</html>
