@@ -5,18 +5,31 @@
 let apostaJogoAtual = 'global';
 let apostaAbaAtual = 'pendentes';
 
-// ---------- LEITURA DE PENDENTES ----------
+// ---------- LEITURA DE PENDENTES (comportamento original) ----------
 async function obterApostasPendentes(jogoFiltro) {
+  // 1. Carregar todas as apostas de todos os tipos de jogo
+  const todasApostas = [];
   const tipos = CONFIG.TIPOS_JOGO.filter(t => jogoFiltro === 'global' || t === jogoFiltro);
-  const pendentes = [];
   for (const tipo of tipos) {
     const { content } = await carregarFicheiroGitHub(`${CONFIG.PASTAS.APOSTAS}${tipo}.json`);
     if (content && Array.isArray(content)) {
-      const naoConfirmados = content.filter(j => !j.confirmado);
-      pendentes.push(...naoConfirmados.map(j => ({ ...j, _tipo_arquivo: tipo })));
+      todasApostas.push(...content.map(j => ({ ...j, _tipo_arquivo: tipo })));
     }
   }
-  return pendentes;
+
+  // 2. Carregar histórico de verificações para saber que boletins já foram verificados
+  const { content: historico } = await carregarFicheiroGitHub(CONFIG.FICHEIROS.HISTORICO);
+  const refsVerificadas = new Set();
+  (historico || []).forEach(item => {
+    const ref = item.detalhes?.boletim?.referencia || item.id || item.referencia_unica;
+    if (ref) refsVerificadas.add(ref);
+  });
+
+  // 3. Pendentes = apostas que NÃO estão no histórico (inclui validados mas ainda sem sorteio)
+  return todasApostas.filter(aposta => {
+    const ref = aposta.referencia_unica || aposta.id;
+    return !refsVerificadas.has(ref);
+  });
 }
 
 // ---------- LEITURA DO HISTÓRICO DE VERIFICAÇÕES ----------
@@ -37,45 +50,51 @@ async function obterHistoricoVerificacoes(jogoFiltro, apenasPremiados = false) {
 async function renderizarPendentes(container) {
   const pendentes = await obterApostasPendentes(apostaJogoAtual);
   if (!pendentes.length) {
-    container.innerHTML = '<div class="no-notifications">Nenhum boletim pendente</div>';
+    container.innerHTML = '<div class="no-notifications">✅ Nenhum boletim pendente</div>';
     return;
   }
 
-  const agrupado = {};
-  pendentes.forEach(p => {
-    const img = p.imagem_origem;
-    if (!agrupado[img]) agrupado[img] = { imagem: img, tipo: p._tipo_arquivo, boletins: [] };
-    agrupado[img].boletins.push(p);
-  });
+  // Ordenar por data do sorteio (a mesma ordenação que existia nas estatísticas)
+  pendentes.sort((a, b) => new Date(a.data_sorteio) - new Date(b.data_sorteio));
 
-  container.innerHTML = Object.values(agrupado).map(grupo => {
-    const logoHTML = getLogoHTMLNotificacao(grupo.tipo);
-    const ref = grupo.boletins[0].referencia_unica || grupo.imagem;
+  container.innerHTML = pendentes.map(aposta => {
+    const jogo = aposta.tipo || aposta._tipo_arquivo || 'desconhecido';
+    const dataSorteio = aposta.data_sorteio;
+    const concurso = aposta.concurso || '-';
+    const referencia = aposta.referencia_unica || '-';
+    const logoHTML = getLogoHTMLNotificacao(jogo);
+
+    // Formatar números da aposta (usa a função do notificacoes.js)
+    let numerosHTML = '';
+    if (aposta.apostas && Array.isArray(aposta.apostas)) {
+      numerosHTML = aposta.apostas.map(ap => formatarNumerosAposta(ap, jogo)).join('<div style="margin: 8px 0;"></div>');
+    } else {
+      numerosHTML = formatarNumerosAposta(aposta, jogo);
+    }
+
     return `
-      <div class="notification-card validacao-card" data-imagem="${escapeHTML(grupo.imagem)}">
-        <div class="validacao-card-header">
+      <div class="notification-card" style="cursor: default;">
+        <div class="notification-header">
           ${logoHTML}
-          <span class="validacao-imagem">${escapeHTML(ref)}</span>
-          <span class="validacao-badge">${grupo.boletins.length}</span>
+          <span class="notification-date-label">DATA:</span>
+          <span class="notification-date">${escapeHTML(formatarData(dataSorteio))}</span>
         </div>
-        <div class="validacao-tipos">${escapeHTML(grupo.tipo)}</div>
-        <div class="validacao-preview">Clique para validar</div>
+        <div class="notification-info-right">
+          <div class="notification-concurso">CONCURSO ${escapeHTML(concurso)}</div>
+          <div class="notification-referencia">REF. ${escapeHTML(referencia)}</div>
+        </div>
+        <div class="notification-resumo-pendente">
+          ${numerosHTML}
+        </div>
       </div>
     `;
   }).join('');
-
-  container.querySelectorAll('.validacao-card').forEach(card => {
-    card.addEventListener('click', () => {
-      const img = card.dataset.imagem;
-      if (typeof window.abrirValidacao === 'function') window.abrirValidacao(img);
-    });
-  });
 }
 
 async function renderizarPremiados(container) {
   const premiados = await obterHistoricoVerificacoes(apostaJogoAtual, true);
   if (!premiados.length) {
-    container.innerHTML = '<div class="no-notifications">Nenhum prémio por confirmar</div>';
+    container.innerHTML = '<div class="no-notifications">🏆 Nenhum prémio por confirmar</div>';
     return;
   }
 
@@ -119,7 +138,7 @@ async function renderizarPremiados(container) {
 async function renderizarHistorico(container) {
   const historico = await obterHistoricoVerificacoes(apostaJogoAtual, false);
   if (!historico.length) {
-    container.innerHTML = '<div class="no-notifications">Nenhum histórico disponível</div>';
+    container.innerHTML = '<div class="no-notifications">📭 Nenhum histórico disponível</div>';
     return;
   }
 
@@ -154,7 +173,7 @@ window.carregarApostasView = async function() {
   const container = document.getElementById('apostasList');
   if (!container) return;
 
-  // 🔧 Atualiza o destaque da aba ativa
+  // Atualiza o destaque da aba ativa
   document.querySelectorAll('#apostasTabs .periodo-btn').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.tab === apostaAbaAtual);
   });
