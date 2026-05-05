@@ -259,7 +259,7 @@
     transition: all 0.2s ease; margin: 0; border-radius: 0; letter-spacing: 0.5px;
   }
   .periodo-btn.active, .modo-btn.active, .ano-btn.active { color: var(--accent-green-light); }
-  .periodo-btn:hover, .modo-btn:hover, .ano-btn:hover,
+  .periodo-btn:not(.active):hover, .modo-btn:not(.active):hover, .ano-btn:not(.active):hover { color: var(--text-primary); opacity: 0.8; }
   .btn-cancelar:hover, .btn-validar:hover, .btn-voltar:hover,
   #saveTokenBtn:hover, #resetAppBtn:hover, #debugLogsBtn:hover { color: var(--text-primary); opacity: 0.8; }
   .btn-voltar { display: inline-flex; align-items: center; gap: 4px; }
