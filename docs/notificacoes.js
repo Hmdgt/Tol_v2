@@ -82,6 +82,13 @@ function formatarData(dataStr) {
 
 // ---------- FUNÇÃO AUXILIAR PARA BLOCO INLINE ----------
 function gerarBlocoInline(aposta, sorteio, acertos, jogoNormalizado) {
+    // Tratamento especial para M1lhão (código sem círculos)
+    if (jogoNormalizado === 'milhao' && aposta.codigo) {
+        return `<div class="numeros-aposta">
+                    <span class="codigo-milhao">${escapeHTML(aposta.codigo)}</span>
+                </div>`;
+    }
+
     let html = '<div class="numeros-aposta">';
     
     if (aposta.numeros) {
