@@ -1,1 +1,55 @@
-[]
+[
+  {
+    "id": "totoloto_125-06322197-078_1",
+    "jogo": "totoloto",
+    "data": "2026-05-06 21:05:59",
+    "lido": false,
+    "titulo": "🎫 Novo resultado TOTOLOTO",
+    "subtitulo": "Boletim: 125-06322197-078",
+    "resumo": "Não ganhou",
+    "detalhes": {
+      "data_verificacao": "2026-05-06 21:05:59",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "125-06322197-078",
+        "data_sorteio": "2026-05-06",
+        "concurso_sorteio": "036/2026",
+        "imagem_origem": "foto_1778000288373_4rqds2.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "14",
+          "21",
+          "29",
+          "36",
+          "38"
+        ],
+        "numero_da_sorte": "02"
+      },
+      "sorteio": {
+        "concurso": "036/2026",
+        "data": "06/05/2026",
+        "numeros": [
+          "02",
+          "10",
+          "37",
+          "39",
+          "43"
+        ],
+        "numero_da_sorte": "01"
+      },
+      "acertos": {
+        "numeros": 0,
+        "numero_da_sorte": false,
+        "descricao": "0 numero(s) sem Nº da Sorte",
+        "numeros_acertados": [],
+        "numero_da_sorte_acertado": null
+      },
+      "ganhou": false,
+      "premios": [],
+      "_jogo": "totoloto",
+      "_id": "totoloto_125-06322197-078_1"
+    }
+  }
+]
