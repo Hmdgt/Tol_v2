@@ -3510,5 +3510,70 @@
       "_id": "eurodreams_260505-17-8139358307-285_1"
     },
     "data_leitura": "2026-05-07T22:14:26.700Z"
+  },
+  {
+    "id": "euromilhoes_632-05460770-235_1",
+    "jogo": "euromilhoes",
+    "data": "2026-05-12 21:15:17",
+    "lido": true,
+    "titulo": "🎫 Novo resultado EUROMILHOES",
+    "subtitulo": "Boletim: 632-05460770-235",
+    "resumo": "0 números + 0 estrelas",
+    "detalhes": {
+      "data_verificacao": "2026-05-12 21:15:17",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "632-05460770-235",
+        "data_sorteio": "2026-05-12",
+        "concurso_sorteio": "038/2026",
+        "imagem_origem": "foto_1778591055012_ah9xci.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "17",
+          "34",
+          "37",
+          "46",
+          "50"
+        ],
+        "estrelas": [
+          "04",
+          "10"
+        ]
+      },
+      "sorteio": {
+        "concurso": "038/2026",
+        "data": "12/05/2026",
+        "chave": "4 26 32 35 36 + 5 7",
+        "numeros": [
+          "04",
+          "26",
+          "32",
+          "35",
+          "36"
+        ],
+        "estrelas": [
+          "05",
+          "07"
+        ]
+      },
+      "acertos": {
+        "numeros": 0,
+        "estrelas": 0,
+        "descricao": "0 numero(s) e 0 estrela(s)",
+        "numeros_acertados": [],
+        "estrelas_acertadas": []
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem premio",
+        "descricao": "0 acertos",
+        "valor": "EUR 0,00"
+      },
+      "_jogo": "euromilhoes",
+      "_id": "euromilhoes_632-05460770-235_1"
+    },
+    "data_leitura": "2026-05-12T23:24:04.075Z"
   }
 ]
