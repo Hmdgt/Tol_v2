@@ -74,3 +74,4 @@
 [2026-05-09 21:34:11] [santacasa] Resultado do concurso 037/2026 adicionado ao JSON totoloto_sc_2026.
 [2026-05-09 22:31:25] [santacasa] Concurso 037/2026 atualizado com novos dados!
 [2026-05-10 10:09:04] [santacasa] Concurso 037/2026 atualizado com novos dados!
+[2026-05-13 21:20:53] [santacasa] Resultado do concurso 038/2026 adicionado ao JSON totoloto_sc_2026.
