@@ -70,3 +70,4 @@
 [2026-05-12 21:14:50] [euromilhoes] Resultado do concurso 038/2026 adicionado ao JSON euromilhoes_2026.
 [2026-05-12 22:05:35] [euromilhoes] Concurso 038/2026 já está completo. Nada a atualizar.
 [2026-05-12 22:52:46] [euromilhoes] Concurso 038/2026 já está completo. Nada a atualizar.
+[2026-05-13 11:32:39] [euromilhoes] Concurso 038/2026 já está completo. Nada a atualizar.
