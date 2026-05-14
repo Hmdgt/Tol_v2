@@ -1,15 +1,15 @@
-Concurso: 038/2026
-Data: 11/05/2026
-Chave: 1 4 6 22 30 38 + 5
-Ordem de saída: 38 1 30 22 6 4 + 5
-Números: 01 04 06 22 30 38
-Dream: 5
+Concurso: 039/2026
+Data: 14/05/2026
+Chave: 3 7 9 21 24 27 + 4
+Ordem de saída: 21 7 9 24 27 3 + 4
+Números: 03 07 09 21 24 27
+Dream: 4
 ----------------------------------------
 Prémios:
 1.º Prémio - 6 Números + 1 Nº de Sonho | PT: 0 | EU: 0 | Valor: € 20.000/mês x 30 anos
 2.º Prémio - 6 Números | PT: 0 | EU: 0 | Valor: € 2.000/mês x 5 anos
-3.º Prémio - 5 Números | PT: 17 | EU: 95 | Valor: € 555,97
-4.º Prémio - 4 Números | PT: 640 | EU: 3.818 | Valor: € 38,78
-5.º Prémio - 3 Números | PT: 9.614 | EU: 56.465 | Valor: € 5,50
-6.º Prémio - 2 Números | PT: 55.769 | EU: 330.075 | Valor: € 2,50
+3.º Prémio - 5 Números | PT: 26 | EU: 185 | Valor: € 224,29
+4.º Prémio - 4 Números | PT: 1.129 | EU: 6.648 | Valor: € 17,49
+5.º Prémio - 3 Números | PT: 13.132 | EU: 79.080 | Valor: € 3,08
+6.º Prémio - 2 Números | PT: 63.818 | EU: 390.136 | Valor: € 2,50
 ----------------------------------------
