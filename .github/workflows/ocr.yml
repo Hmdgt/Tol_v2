@@ -1,0 +1,104 @@
+name: Processamento OCR - Santa Casa
+
+on:
+  push:
+    paths:
+      - 'uploads/**'
+  workflow_dispatch:
+
+concurrency:
+  group: repo-write
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  ocr:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependências
+        run: |
+          pip install google-genai Pillow opencv-python-headless pywebpush
+
+      - name: Executar OCR com Gemini
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_API_KEY_2: ${{ secrets.GEMINI_API_KEY_2 }}
+          GEMINI_API_KEY_3: ${{ secrets.GEMINI_API_KEY_3 }}
+        run: python scripts/processar_uploads.py
+
+      - name: Mover imagens processadas
+        run: |
+          mes=$(date +%Y-%m)
+          mkdir -p uploads/processadas/$mes
+          for img in uploads/*.png uploads/*.jpg uploads/*.jpeg; do
+            [ -f "$img" ] && mv "$img" uploads/processadas/$mes/ || true
+          done
+
+      - name: Sincronizar e commitar
+        run: |
+          git config user.name "Bot OCR"
+          git config user.email "bot@github.com"
+          git config pull.rebase false
+          git pull origin main --rebase
+
+      - name: Guardar alterações (OCR)
+        run: |
+          mkdir -p apostas thumbnails
+          git add apostas/*.json thumbnails/ uploads/processadas/
+          git commit -m "OCR: Atualização de dados e registos de processamento" || exit 0
+
+      - name: Push (com retry)
+        run: |
+          n=0
+          until git push origin main; do
+            n=$((n+1))
+            if [ "$n" -ge 5 ]; then
+              echo "❌ Push falhou após 5 tentativas"
+              exit 1
+            fi
+            sleep 20
+          done
+
+      - name: Verificar validações pendentes e enviar push
+        env:
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE }}
+          VAPID_EMAIL: ${{ secrets.EMAIL_REMETENTE }}
+        run: python scripts/verificar_validacoes_pendentes.py
+
+      - name: Commit do estado de validações
+        run: |
+          git add apostas/estado_validacoes.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Atualiza estado de validações pós-OCR"
+            n=0
+            until git push origin main; do
+              n=$((n+1))
+              if [ "$n" -ge 5 ]; then
+                echo "❌ Push falhou após 5 tentativas"
+                exit 1
+              fi
+              sleep 20
+            done
+          fi
