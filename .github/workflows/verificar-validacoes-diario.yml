@@ -1,27 +1,48 @@
 # horario: verao
 name: Verificar Validações Pendentes (Diário)
+
+on:
+  schedule:
+    - cron: '0 11 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: repo-write
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
 jobs:
   verificar:
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
-    - run: pip install pywebpush
-    - name: Verificar validações e enviar push
-      env:
-        VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE }}
-        VAPID_EMAIL: ${{ secrets.EMAIL_REMETENTE }}
-      run: python scripts/verificar_validacoes_pendentes.py
-    - name: Commit do estado
-      run: "git config user.name \"Bot Validações\"\ngit config user.email \"bot@github.com\"\
-        \ngit add apostas/estado_validacoes.json\nif ! git diff --cached --quiet;\
-        \ then\n  git commit -m \"Atualiza estado de validações (diário)\"\n  git\
-        \ push origin main\nfi\n"
-'on':
-  schedule:
-  - cron: 0 11 * * *
-  workflow_dispatch: null
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install pywebpush
+      - name: Verificar validações e enviar push
+        env:
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE }}
+          VAPID_EMAIL: ${{ secrets.EMAIL_REMETENTE }}
+        run: python scripts/verificar_validacoes_pendentes.py
+      - name: Commit do estado
+        run: |
+          git config user.name "Bot Validações"
+          git config user.email "bot@github.com"
+          git config pull.rebase false
+          git pull origin main --rebase
+          git add apostas/estado_validacoes.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Atualiza estado de validações (diário)"
+            n=0
+            until git push origin main; do
+              n=$((n+1))
+              if [ "$n" -ge 5 ]; then exit 1; fi
+              sleep 15
+            done
+          fi
