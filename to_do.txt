@@ -1,219 +1,64 @@
-🔍 Relatório de Arquitetura e Plano de Reestruturação
-1. Estado atual do pipeline
-1.1 Workflows existentes e suas funções
-Workflow	Gatilho	Ação principal
-atualizar_*_sc.yml (4×)	Cron + manual	Faz scraping do sorteio oficial via Selenium e commita os ficheiros dados/*_*.json e dados/*_atual.json
-verificar_*.yml (4×)	Push nos dados/ ou apostas/, workflow_run do scraper correspondente	Executa o script de verificação (verificar_*.py) e commita resultados/*_verificacoes.json e resultados/*_recentes.json
-ocr.yml	Push nos uploads/	Faz OCR com Gemini, guarda apostas, thumbnails, limpa imagens processadas, verifica validações pendentes
-detectar_resultados.yml	Push nos resultados/*_recentes.json, workflow_run dos 4 verificadores	Gera notificações (gerar_notificacoes.py), verifica validações pendentes, envia push, commita notificacoes_*.json
-atualizar_estatisticas.yml	workflow_run do detectar_resultados	Gera estatísticas e commita estatisticas_completas.json
-enviar_premiados.yml	Cron semanal	Envia e-mail com prémios não arquivados
-verificar-validacoes-diario.yml	Cron diário	Verifica validações pendentes e envia push
-atualiza_horario.yml	Cron domingo/segunda	Ajusta as crons para horário de verão/inverno
-1.2 Fluxo real após upload de uma foto
-text
-📸 Upload da foto
-    │
-    ▼
-OCR (processar_uploads.py)      ← push no uploads/
-    │
-    ├─ extrai apostas → commita apostas/*.json
-    ├─ gera thumbnails → commita thumbnails/
-    ├─ limpa imagens → commita remoção das imagens
-    └─ verifica validações pendentes → envia push
-    │
-    ▼
-4× Verificar * (um por jogo)    ← push nas apostas ou workflow_run
-    │
-    ├─ corre o verificador → commita resultados/*_recentes.json
-    └─ e resultados/*_verificacoes.json
-    │
-    ▼
-Detetar Novos Resultados        ← push nos recentes OU workflow_run dos verificadores
-    │
-    ├─ verifica validações pendentes
-    ├─ gera notificações → commita notificacoes_ativas.json
-    └─ envia push
-    │
-    ▼
-Atualizar Estatísticas          ← workflow_run do Detetar
-    │
-    └─ gera estatísticas → commita estatisticas_completas.json
-Cada commit dispara um Pages build (porque tens o GitHub Pages ativo).
+TODO List – Reestruturação do Pipeline
+🔨 1. Criar o novo workflow unificado
+Criar .github/workflows/verificar_tudo.yml com o conteúdo final ajustado:
 
-2. Problemas estruturais identificados
-🔴 Problema 1: Concorrência de commits (race condition)
-Onde dói:
-Quatro verificadores correm em paralelo após um commit nas apostas. Cada um faz git stash, git pull, git stash pop, git add, git commit, git push. Se dois terminam ao mesmo tempo, um push é rejeitado (rejected, fetch first) e os resultados desse verificador perdem-se.
+on: apenas com push (paths dados/*.json, apostas/*.json) + workflow_dispatch.
 
-Evidência real (do teu log de ontem):
+Removido completamente workflow_run.
 
-text
-! [rejected] main -> main (fetch first)
-Error: Process completed with exit code 1.
-O OCR processou 4 imagens, conseguiu extrair 1 aposta, mas o push falhou. A aposta ficou "pendurada" e a imagem não foi limpa.
-
-🔴 Problema 2: Imagens órfãs por push falhado
-Quando o push do OCR falha:
-
-A aposta extraída não chega ao repositório.
-
-A imagem não é removida da pasta uploads/.
-
-Na próxima execução, a imagem é processada novamente → gera duplicado.
-
-🟡 Problema 3: Cadeia de disparos excessiva
-Um único upload dispara:
-
-OCR (1 workflow)
-
-4 verificadores (4 workflows em paralelo)
-
-Detetar Novos Resultados (1 workflow, mas disparado 4 vezes porque cada verificador aciona um workflow_run)
-
-Atualizar Estatísticas (disparado múltiplas vezes)
-
-Pages build (disparado a cada commit)
-
-Resultado: dezenas de execuções para uma única foto, consumindo minutos de Actions e gerando conflitos.
-
-🟡 Problema 4: Disparos múltiplos do Detetar Novos Resultados
-O detectar_resultados.yml tem este gatilho:
+Sintaxe correta de paths (com ! para exclusões):
 
 yaml
-workflow_run:
-    workflows:
-      - "Verificar Totoloto"
-      - "Verificar M1lhão"
-      - "Verificar Euromilhões"
-      - "Verificar EuroDreams"
-    types:
-      - completed
-Quando os 4 verificadores correm, o Detetar é disparado 4 vezes seguidas. Cada execução lê os mesmos ficheiros, gera as mesmas notificações e tenta fazer push. Além de desperdício, pode gerar conflitos de merge (como o que viste no notificacoes_ativas.json).
+push:
+  paths:
+    - 'dados/*.json'
+    - 'apostas/*.json'
+    - '!resultados/**'
+    - '!notificacoes_*.json'
+    - '!estatisticas_completas.json'
+concurrency: group: repo-write, cancel-in-progress: false
 
-🟡 Problema 5: Estatísticas calculadas múltiplas vezes
-O workflow de estatísticas é disparado por workflow_run do Detetar. Como o Detetar corre várias vezes, as estatísticas também correm várias vezes — e cada uma faz um commit se houver alterações.
+defaults.run.shell: bash
 
-🟢 Problema 6: Verificadores dependentes de workflow_run do scraper
-Se o scraper falhar (site em baixo, timeout, etc.), os verificadores não correm automaticamente porque o workflow_run só dispara em caso de sucesso (conclusion == 'success'). Isto é bom para evitar verificações contra sorteios incompletos, mas significa que se o scraper falhar consistentemente, os resultados nunca são verificados até alguém executar manualmente.
+Passos de verificação com continue-on-error: true (Totoloto, Euromilhões, EuroDreams, M1lhão).
 
-3. Plano de reestruturação
-🎯 Objetivos
-Eliminar race conditions → um único commit por "ciclo de verificação".
+Após verificações, correr gerar_notificacoes.py e gerar_estatisticas_completas.py.
 
-Garantir entrega das apostas → OCR resiliente, sem perda de dados.
+Bloco de commit robusto:
 
-Reduzir execuções → de ~15-20 para 3-4 por upload.
+git pull origin main --rebase antes de gerar qualquer coisa.
 
-Simplificar a manutenção → menos ficheiros YAML, fluxo linear.
+git stash -u para preservar ficheiros untracked.
 
-📋 Passo 1: Unificar os 4 verificadores num só workflow
-Ficheiro a criar: .github/workflows/verificar_tudo.yml
+git stash pop com verificação de conflito (exit 1 se houver conflito real).
 
-O que faz:
+git add resultados/ notificacoes_ativas.json notificacoes_historico.json estatisticas_completas.json
 
-Uma única job que executa todos os scripts de verificação sequencialmente.
+git commit e git push (só o push com retry).
 
-Faz um único commit com todos os resultados.
+✏️ 2. Modificar workflows existentes
+ocr.yml:
 
-No final, chama os scripts de notificações e estatísticas (eliminando a necessidade do detectar_resultados.yml e atualizar_estatisticas.yml separados).
+Adicionar concurrency: group: repo-write, cancel-in-progress: false.
 
-YAML proposto:
+Substituir o passo de limpeza de imagens por mover para uploads/processadas/YYYY-MM/.
 
-yaml
-name: Verificar Tudo
+Remover [skip ci] da mensagem de commit.
 
-on:
-  push:
-    paths:
-      - 'dados/*.json'
-      - 'apostas/*.json'
-  workflow_dispatch:
-  workflow_run:
-    workflows:
-      - "Atualizar Totoloto SC automaticamente"
-      - "Atualizar EuroMilhões automaticamente"
-      - "Atualizar EuroDreams automaticamente"
-      - "Atualizar M1lhão automaticamente"
-    types:
-      - completed
+Aplicar o mesmo padrão robusto de commit (pull antes, retry só no push).
 
-concurrency:
-  group: git-push
-  cancel-in-progress: false
+atualizar_totoloto_sc.yml, atualizar_euromilhoes_sc.yml, atualizar_eurodreams_sc.yml, atualizar_milhao_sc.yml:
 
-jobs:
-  verificar:
-    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    permissions:
-      contents: write
+Adicionar concurrency: group: repo-write, cancel-in-progress: false.
 
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+(Opcional) Ajustar o commit para o mesmo padrão seguro.
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
+verificar-validacoes-diario.yml:
 
-      - name: Instalar dependências
-        run: pip install Pillow pywebpush
+Adicionar concurrency: group: repo-write, cancel-in-progress: false.
 
-      # Executar todos os verificadores
-      - name: Verificar Totoloto
-        run: python scripts/verificar_totoloto.py
-
-      - name: Verificar Euromilhões
-        run: python scripts/verificar_euromilhoes.py
-
-      - name: Verificar EuroDreams
-        run: python scripts/verificar_eurodreams.py
-
-      - name: Verificar M1lhão
-        run: python scripts/verificar_milhao.py
-
-      # Gerar notificações
-      - name: Gerar notificações
-        env:
-          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE }}
-          VAPID_EMAIL: ${{ secrets.EMAIL_REMETENTE }}
-        run: python scripts/gerar_notificacoes.py
-
-      # Gerar estatísticas
-      - name: Gerar estatísticas
-        run: python scripts/gerar_estatisticas_completas.py
-
-      # Commit único
-      - name: Commit resultados
-        run: |
-          git config user.name "Bot Verificador"
-          git config user.email "bot@github.com"
-          
-          git stash
-          n=0
-          until [ "$n" -ge 5 ]; do
-             git pull origin main --rebase && break
-             n=$((n+1))
-             sleep 15
-          done
-          git stash pop || echo "Sem stash"
-          
-          git add resultados/
-          if ! git diff --cached --quiet; then
-            git commit -m "Verificação + notificações + estatísticas $(date +'%Y-%m-%d %H:%M')"
-            n=0
-            until [ "$n" -ge 5 ]; do
-               git pull origin main --rebase && git push origin main && break
-               n=$((n+1))
-               sleep 15
-            done
-          else
-            echo "Sem alterações"
-          fi
-Após criar este workflow, podes desativar (ou apagar):
+🗑️ 3. Remover workflows obsoletos
+Após confirmar que o novo verificar_tudo.yml funciona corretamente, desativar/apagar os seguintes ficheiros:
 
 verificar_totoloto.yml
 
@@ -229,319 +74,31 @@ atualizar_estatisticas.yml
 
 gera_estatisticas.yml
 
-Benefício: De ~10 workflows por ciclo para 1 workflow que faz tudo.
+(O workflow reset.yml pode ser mantido para emergências.)
 
-📋 Passo 2: Tornar o push do OCR à prova de falhas
-Alterar o ficheiro: .github/workflows/ocr.yml
+⚙️ 4. Ajustes de configuração do repositório
+Verificar se as permissões dos workflows estão como Read and write (Settings → Actions → General → Workflow permissions).
 
-O que muda:
+Confirmar que o token usado (secrets.GITHUB_TOKEN) tem permissão contents: write em cada workflow que faz push.
 
-Adicionar concurrency: git-push para não colidir com o Verificar Tudo.
+✅ 5. Testes e validação
+Fazer um upload real de uma foto e acompanhar o pipeline:
 
-Após processar cada imagem, movê-la para uma subpasta processadas/ dentro de uploads/, em vez de depender do push para a limpar.
+OCR deve correr, mover a imagem e commitar.
 
-Adicionar retry no push final.
+Verificar Tudo deve disparar automaticamente e gerar resultados/notificações/estatísticas num só commit.
 
-Trecho a alterar (final do ficheiro):
+Não podem ocorrer execuções duplicadas nem conflitos de push.
 
-yaml
-concurrency:
-  group: git-push
-  cancel-in-progress: false
+Verificar que as notificações e estatísticas aparecem corretamente na SPA.
 
-# ... (resto do workflow igual)
+Deixar o sistema funcionar por 1-2 dias com os workflows antigos desativados (não apagados) para garantia.
 
-      # 🔄 NOVO: Mover imagens processadas em vez de apagar
-      - name: Mover imagens processadas
-        run: |
-          mkdir -p uploads/processadas
-          for img in uploads/*.png uploads/*.jpg uploads/*.jpeg; do
-            [ -f "$img" ] && mv "$img" uploads/processadas/ || true
-          done
-
-      - name: Commit e push (com retry)
-        run: |
-          git config user.name "Bot OCR"
-          git config user.email "bot@github.com"
-          mkdir -p apostas thumbnails
-          git add apostas/*.json thumbnails/ uploads/processadas/
-          
-          if ! git diff --cached --quiet; then
-            git commit -m "OCR: dados, thumbnails e imagens processadas [skip ci]"
-            n=0
-            until [ "$n" -ge 5 ]; do
-               git pull origin main --rebase && git push origin main && break
-               n=$((n+1))
-               sleep 20
-            done
-          fi
-Benefício: Mesmo que o push falhe, as imagens já estão em processadas/ e não serão re-processadas.
-
-📋 Passo 3: Adicionar concurrency a TODOS os workflows que fazem commit
-Workflows a alterar:
-
-atualizar_totoloto_sc.yml
-
-atualizar_euromilhoes_sc.yml
-
-atualizar_eurodreams_sc.yml
-
-atualizar_milhao_sc.yml
-
-ocr.yml (já incluído acima)
-
-verificar_tudo.yml (já incluído acima)
-
-verificar-validacoes-diario.yml
-
-Adicionar em cada um:
-
-yaml
-concurrency:
-  group: git-push
-  cancel-in-progress: false
-Isto garante que nunca dois workflows fazem push ao mesmo tempo — eles esperam em fila.
-
-📋 Passo 4: Ajustar o gatilho de "Verificar Tudo"
-Atualmente, os verificadores disparam com push nos apostas/*.json. Isto significa que o próprio commit do OCR (que guarda as apostas) já dispara o Verificar Tudo. Mas o sorteio pode ainda não estar disponível. Isto é aceitável: o verificador simplesmente não encontrará o sorteio e não gerará resultados.
-
-Após a unificação, o fluxo fica:
-
-text
-📸 Upload
-    │
-    ▼
-OCR (única job, commit único)
-    │
-    ▼
-Verificar Tudo (única job, commit único)
-    │
-    └─ inclui notificações e estatísticas
-Número de workflows por upload: 2 (OCR + Verificar Tudo).
-Número de Pages builds: 2 (uma por commit).
-
-📋 Passo 5: Remover ficheiros obsoletos
-Após validar que o novo fluxo funciona, remove ou desativa:
-
-Ficheiro	Motivo
-verificar_totoloto.yml	Substituído pelo verificar_tudo.yml
-verificar_euromilhoes.yml	Substituído pelo verificar_tudo.yml
-verificar_eurodreams.yml	Substituído pelo verificar_tudo.yml
-verificar_milhao.yml	Substituído pelo verificar_tudo.yml
-detectar_resultados.yml	Lógica integrada no verificar_tudo.yml
-atualizar_estatisticas.yml	Lógica integrada no verificar_tudo.yml
-gera_estatisticas.yml	Lógica integrada no verificar_tudo.yml
-reset.yml	Pode manter para emergências
-Total: de 15 workflows para 7 (4 scrapers + OCR + Verificar Tudo + Verificar Validações).
-
-4. Resumo do plano de execução
-Passo	Ação	Impacto
-1	Criar verificar_tudo.yml unificado	Elimina 6 workflows, reduz execuções em 80%
-2	Adicionar concurrency: git-push a todos os workflows	Elimina race conditions nos pushes
-3	OCR: mover imagens para processadas/ + retry no push	Elimina imagens órfãs e duplicados
-4	Testar com um upload real	Validar o novo fluxo
-5	Remover ficheiros YAML obsoletos	Simplificar manutenção
-
-🔧 Plano ajustado (com base no feedback)
-As alterações são poucas mas importantes:
-
-Usar concurrency apenas em workflows que fazem push, com o grupo repo-write (não git-push) e cancel-in-progress: false.
-
-Não usar [skip ci] no OCR – assim o commit do OCR dispara o Verificar Tudo automaticamente.
-
-Usar git stash -u para incluir ficheiros novos (untracked) e evitar conflitos silenciosos.
-
-Adicionar paths-ignore no Verificar Tudo para que os commits de resultados não voltem a dispará‑lo.
-
-Tornar os passos de verificação tolerantes a falhas (continue-on-error: true) para que todos corram mesmo se um jogo falhar.
-
-Organizar a pasta uploads/processadas por data para evitar crescimento infinito.
-
-📁 YAML final do verificar_tudo.yml
-yaml
-name: Verificar Tudo
-
-on:
-  push:
-    paths:
-      - 'dados/*.json'
-      - 'apostas/*.json'
-    paths-ignore:
-      - 'resultados/**'
-      - 'notificacoes_*.json'
-      - 'estatisticas_completas.json'
-  workflow_dispatch:
-  workflow_run:
-    workflows:
-      - "Atualizar Totoloto SC automaticamente"
-      - "Atualizar EuroMilhões automaticamente"
-      - "Atualizar EuroDreams automaticamente"
-      - "Atualizar M1lhão automaticamente"
-    types:
-      - completed
-
-concurrency:
-  group: repo-write
-  cancel-in-progress: false
-
-jobs:
-  verificar:
-    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    permissions:
-      contents: write
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Instalar dependências
-        run: pip install Pillow pywebpush
-
-      - name: Verificar Totoloto
-        continue-on-error: true
-        run: python scripts/verificar_totoloto.py
-
-      - name: Verificar Euromilhões
-        continue-on-error: true
-        run: python scripts/verificar_euromilhoes.py
-
-      - name: Verificar EuroDreams
-        continue-on-error: true
-        run: python scripts/verificar_eurodreams.py
-
-      - name: Verificar M1lhão
-        continue-on-error: true
-        run: python scripts/verificar_milhao.py
-
-      - name: Gerar notificações
-        env:
-          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE }}
-          VAPID_EMAIL: ${{ secrets.EMAIL_REMETENTE }}
-        run: python scripts/gerar_notificacoes.py
-
-      - name: Gerar estatísticas
-        run: python scripts/gerar_estatisticas_completas.py
-
-      - name: Commit resultados
-        run: |
-          git config user.name "Bot Verificador"
-          git config user.email "bot@github.com"
-
-          # Inclui ficheiros novos no stash (-u)
-          git stash -u
-
-          n=0
-          until [ "$n" -ge 5 ]; do
-             git pull origin main --rebase && break
-             n=$((n+1))
-             sleep 15
-          done
-
-          git stash pop || echo "Sem alterações locais para restaurar"
-
-          git add resultados/ notificacoes_*.json estatisticas_completas.json
-
-          if ! git diff --cached --quiet; then
-            git commit -m "Verificação + notificações + estatísticas $(date +'%Y-%m-%d %H:%M')"
-            n=0
-            until [ "$n" -ge 5 ]; do
-               git pull origin main --rebase && git push origin main && break
-               n=$((n+1))
-               sleep 15
-            done
-          else
-            echo "Sem alterações nos resultados."
-          fi
-📁 Ajuste no ocr.yml
-1. concurrency
-yaml
-concurrency:
-  group: repo-write
-  cancel-in-progress: false
-2. Mover imagens processadas com organização por data (evita crescimento infinito)
-yaml
-- name: Mover imagens processadas
-  run: |
-    mes=$(date +%Y-%m)
-    mkdir -p uploads/processadas/$mes
-    for img in uploads/*.png uploads/*.jpg uploads/*.jpeg; do
-      [ -f "$img" ] && mv "$img" uploads/processadas/$mes/ || true
-    done
-3. Commit sem [skip ci] (para disparar o Verificar Tudo)
-yaml
-- name: Commit e push (com retry)
-  run: |
-    git config user.name "Bot OCR"
-    git config user.email "bot@github.com"
-    mkdir -p apostas thumbnails
-    git add apostas/*.json thumbnails/ uploads/processadas/
-    if ! git diff --cached --quiet; then
-      git commit -m "OCR: dados, thumbnails e imagens processadas"
-      n=0
-      until [ "$n" -ge 5 ]; do
-         git pull origin main --rebase && git push origin main && break
-         n=$((n+1))
-         sleep 20
-      done
-    fi
-📁 concurrency nos scrapers
-Adicionar a cada scraper YAML:
-
-yaml
-concurrency:
-  group: repo-write
-  cancel-in-progress: false
-📁 verificar-validacoes-diario.yml
-Também adicionar:
-
-yaml
-concurrency:
-  group: repo-write
-  cancel-in-progress: false
-🧹 Limpeza final
-Após confirmar que o novo Verificar Tudo funciona bem, desativar (ou apagar) os workflows que ele substitui:
-
-verificar_totoloto.yml
-
-verificar_euromilhoes.yml
-
-verificar_eurodreams.yml
-
-verificar_milhao.yml
-
-detectar_resultados.yml
-
-atualizar_estatisticas.yml
-
-gera_estatisticas.yml
-
-🔄 Fluxo final
-text
-📸 Upload
-    │
-    ▼
-OCR (commit)  ────────────────┐
-    │                         │
-    ▼                         │  (push em apostas/*.json)
-Verificar Tudo (commit) ◄─────┘
-    │
-    ├─ 4 verificações (totoloto, euromilhões, eurodreams, milhão)
-    ├─ geração de notificações
-    └─ geração de estatísticas
-         │
-         ▼
-   Único commit com tudo
-         │
-         ▼
-   Pages build
-Número de execuções por upload: 2 (OCR + Verificar Tudo).
-Número de Pages builds: 2 (uma por commit).
-Conflitos de Git: resolvidos pela fila repo-write.
-Imagens órfãs: resolvidas pela movimentação imediata para processadas/.
+📊 Resumo do impacto
+Métrica	Antes	Depois
+Workflows ativos	15	8
+Execuções por upload	~20	2
+Pages builds por upload	múltiplos	2
+Conflitos Git	frequentes	zero
+Imagens órfãs	sim	não
+Manutenção	complexa	linear
