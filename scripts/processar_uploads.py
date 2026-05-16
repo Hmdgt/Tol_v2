@@ -340,6 +340,30 @@ def limpar_nome_jogo(nome):
     }
     return mapping.get(nome, nome.lower().strip().replace(" ", "_"))
 
+def aposta_duplicada(jogo_novo, historico):
+    """Verifica se já existe um boletim com a mesma data de sorteio
+    e as mesmas apostas (números, estrelas, dream, código)."""
+    data_nova = jogo_novo.get("data_sorteio")
+    apostas_novas = jogo_novo.get("apostas", [])
+
+    for item in historico:
+        if item.get("data_sorteio") != data_nova:
+            continue
+        apostas_existentes = item.get("apostas", [])
+        if len(apostas_novas) != len(apostas_existentes):
+            continue
+        iguais = True
+        for ap_nova, ap_exist in zip(apostas_novas, apostas_existentes):
+            if (sorted(ap_nova.get("numeros", [])) != sorted(ap_exist.get("numeros", [])) or
+                sorted(ap_nova.get("estrelas", [])) != sorted(ap_exist.get("estrelas", [])) or
+                sorted(ap_nova.get("dream", [])) != sorted(ap_exist.get("dream", [])) or
+                ap_nova.get("codigo") != ap_exist.get("codigo")):
+                iguais = False
+                break
+        if iguais:
+            return True
+    return False
+
 def guardar_jogo(jogo, img_nome, img_hash):
     """Guarda um jogo no ficheiro correspondente ao tipo"""
     if not jogo.get("tipo"):
@@ -359,6 +383,11 @@ def guardar_jogo(jogo, img_nome, img_hash):
     ref = jogo.get("referencia_unica")
     if ref and any(item.get("referencia_unica") == ref for item in historico):
         print(f"   ⚠️ Referência {ref} já registada")
+        return False
+
+    # Verificar duplicados por conteúdo (segunda camada)
+    if aposta_duplicada(jogo, historico):
+        print(f"   ⚠️ Aposta duplicada (mesma data e chave). Ignorada.")
         return False
 
     # Adicionar metadados
