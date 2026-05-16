@@ -17,6 +17,14 @@ on:
 
   workflow_dispatch:
 
+concurrency:
+  group: repo-write
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
 jobs:
   scrape:
     runs-on: ubuntu-latest
@@ -37,11 +45,18 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config pull.rebase false
+          git pull origin main --rebase
           git add dados/
           git add logs/
           if ! git diff --cached --quiet; then
             git commit -m "Atualização automática EuroMilhões"
-            git push
+            n=0
+            until git push origin main; do
+              n=$((n+1))
+              if [ "$n" -ge 5 ]; then exit 1; fi
+              sleep 15
+            done
           else
             echo "Nenhuma alteração, nada para commitar."
           fi
