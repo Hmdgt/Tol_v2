@@ -27,6 +27,32 @@ PREMIOS_EUROMILHOES = {
     (2, 0): "13. Prémio"
 }
 
+# ============================================================
+# NOVAS FUNÇÕES DE NORMALIZAÇÃO
+# ============================================================
+
+def normalizar(texto):
+    """Remove acentos, ordinais e pontuação para comparações exatas."""
+    texto = texto.lower()
+    texto = re.sub(r'[ºª]', '', texto)           # remove ordinais
+    texto = re.sub(r'[^a-z0-9 ]', '', texto)     # remove pontuação
+    texto = re.sub(r'\s+', ' ', texto).strip()   # normaliza espaços
+    return texto
+
+def encontrar_premio_por_nome(lista_premios, nome_esperado):
+    """Procura um prémio na lista ignorando diferenças de acentos/ordinais."""
+    if not nome_esperado:
+        return None
+    esperado_norm = normalizar(nome_esperado)
+    for p in lista_premios:
+        if normalizar(p.get("premio", "")) == esperado_norm:
+            return p
+    return None
+
+# ============================================================
+# FUNÇÕES ORIGINAIS (mantidas intactas exceto a modificação abaixo)
+# ============================================================
+
 def carregar_todos_sorteios() -> dict:
     """
     Carrega todos os ficheiros de sorteios (euromilhoes_ANO.json)
@@ -135,18 +161,15 @@ def calcular_acertos(aposta_numeros: List[str], aposta_estrelas: List[str],
     return acertos_numeros, acertos_estrelas
 
 def encontrar_premio(sorteio: dict, acertos_n: int, acertos_e: int) -> Optional[dict]:
-    """Encontra o premio correspondente na lista de premios do sorteio"""
+    """Encontra o premio correspondente na lista de premios do sorteio (com procura normalizada)"""
     chave_premio = (acertos_n, acertos_e)
     nome_premio = PREMIOS_EUROMILHOES.get(chave_premio)
     
     if not nome_premio:
         return None
     
-    for premio in sorteio.get("premios", []):
-        if premio.get("premio") == nome_premio:
-            return premio
-    
-    return None
+    # 👇 Alteração principal: usa a procura normalizada em vez da comparação exata
+    return encontrar_premio_por_nome(sorteio.get("premios", []), nome_premio)
 
 def verificar_boletins(apostas: list, todos_sorteios: dict) -> list:
     """
