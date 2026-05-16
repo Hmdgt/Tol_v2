@@ -1,6 +1,6 @@
 [
   {
-    "data_verificacao": "2026-05-16 12:09:47",
+    "data_verificacao": "2026-05-16 16:53:33",
     "boletim": {
       "referencia": "260217-17-2156263608-098",
       "concurso_sorteio": "015/2026",
@@ -46,7 +46,7 @@
     }
   },
   {
-    "data_verificacao": "2026-05-16 12:09:47",
+    "data_verificacao": "2026-05-16 16:53:33",
     "boletim": {
       "referencia": "260227-17-7324481145-011",
       "concurso_sorteio": "018/2026",
@@ -88,14 +88,17 @@
       ],
       "dream_acertado": "03"
     },
-    "ganhou": false,
+    "ganhou": true,
     "premio": {
-      "premio": "Sem premio",
-      "valor": "EUR 0,00"
+      "premio": "6.º Prémio",
+      "descricao": "2 Números",
+      "vencedores_pt": "59.621",
+      "vencedores_eu": "390.096",
+      "valor": "€ 2,50"
     }
   },
   {
-    "data_verificacao": "2026-05-16 12:09:47",
+    "data_verificacao": "2026-05-16 16:53:33",
     "boletim": {
       "referencia": "260320-17-2808127123-297",
       "concurso_sorteio": "024/2026",
@@ -141,7 +144,7 @@
     }
   },
   {
-    "data_verificacao": "2026-05-16 12:09:47",
+    "data_verificacao": "2026-05-16 16:53:33",
     "boletim": {
       "referencia": "260327-17-1668370231-876",
       "concurso_sorteio": "026/2026",
@@ -187,7 +190,7 @@
     }
   },
   {
-    "data_verificacao": "2026-05-16 12:09:47",
+    "data_verificacao": "2026-05-16 16:53:33",
     "boletim": {
       "referencia": "260410-17-9400999645-449",
       "concurso_sorteio": "030/2026",
@@ -233,7 +236,7 @@
     }
   },
   {
-    "data_verificacao": "2026-05-16 12:09:47",
+    "data_verificacao": "2026-05-16 16:53:33",
     "boletim": {
       "referencia": "260417-17-0323776000-834",
       "concurso_sorteio": "032/2026",
@@ -281,7 +284,7 @@
     }
   },
   {
-    "data_verificacao": "2026-05-16 12:09:47",
+    "data_verificacao": "2026-05-16 16:53:33",
     "boletim": {
       "referencia": "260421-17-9068100122-308",
       "concurso_sorteio": "033/2026",
@@ -329,7 +332,7 @@
     }
   },
   {
-    "data_verificacao": "2026-05-16 12:09:47",
+    "data_verificacao": "2026-05-16 16:53:33",
     "boletim": {
       "referencia": "260505-17-8139358307-285",
       "concurso_sorteio": "037/2026",
@@ -371,10 +374,13 @@
       ],
       "dream_acertado": null
     },
-    "ganhou": false,
+    "ganhou": true,
     "premio": {
-      "premio": "Sem premio",
-      "valor": "EUR 0,00"
+      "premio": "6.º Prémio",
+      "descricao": "2 Números",
+      "vencedores_pt": "56.214",
+      "vencedores_eu": "380.154",
+      "valor": "€ 2,50"
     }
   }
 ]
