@@ -687,7 +687,11 @@
     "imagem_origem": "foto_1778882242608_tyg0vl.png",
     "hash_imagem": "4fcdf6b9ace093098d12bc67b0f4c6d7",
     "data_processamento": "2026-05-16 11:59:48",
-    "confirmado": false
+    "confirmado": true,
+    "tipo_ficheiro": "euromilhoes",
+    "_indice": 19,
+    "data_validacao": "2026-05-16T12:09:31.024Z",
+    "validado_por": "humano"
   },
   {
     "tipo": "Euromilhões",
