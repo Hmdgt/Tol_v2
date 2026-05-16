@@ -1,6 +1,7 @@
 import json
 import os
 import glob
+import re
 from datetime import datetime
 from typing import List, Tuple
 
@@ -85,24 +86,39 @@ def calcular_acertos(aposta_numeros, aposta_dream, sorteio_numeros, sorteio_drea
     acertou_dream = (aposta_dream == sorteio_dream)
     return acertos, acertou_dream
 
+def normalizar(texto):
+    """Remove acentos, ordinais e pontuação para comparações exatas."""
+    texto = texto.lower()
+    texto = re.sub(r'[ºª]', '', texto)           # remove ordinais
+    texto = re.sub(r'[^a-z0-9 ]', '', texto)     # remove pontuação
+    texto = re.sub(r'\s+', ' ', texto).strip()   # normaliza espaços
+    return texto
+
+def encontrar_premio_por_nome(lista_premios, nome_esperado):
+    """Procura um prémio na lista ignorando diferenças de acentos/ordinais."""
+    if not nome_esperado:
+        return None
+    esperado_norm = normalizar(nome_esperado)
+    for p in lista_premios:
+        if normalizar(p.get("premio", "")) == esperado_norm:
+            return p
+    return None
+
 # ============================================================
 # LOGICA DE PREMIOS (OFICIAL)
 # ============================================================
 
 def encontrar_premio(sorteio: dict, acertos_n: int, acertou_dream: bool):
     if acertos_n == 6:
-        nome = "1. Premio" if acertou_dream else "2. Premio"
+        nome = "1. Prémio" if acertou_dream else "2. Prémio"
     else:
         nome = PREMIOS_EURODREAMS.get((acertos_n, False))
 
     if not nome:
         return None
 
-    for p in sorteio.get("premios", []):
-        if p.get("premio") == nome:
-            return p
-
-    return None
+    # 👇 Usa a procura normalizada em vez da comparação exata
+    return encontrar_premio_por_nome(sorteio.get("premios", []), nome)
 
 # ============================================================
 # VERIFICACAO
