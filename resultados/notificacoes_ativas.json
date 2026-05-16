@@ -2,13 +2,21 @@
   {
     "id": "euromilhoes_635-07212409-033_1",
     "jogo": "euromilhoes",
+<<<<<<< Updated upstream
     "data": "2026-05-16 12:09:07",
+=======
+    "data": "2026-05-16 12:09:49",
+>>>>>>> Stashed changes
     "lido": false,
     "titulo": "🎫 Novo resultado EUROMILHOES",
     "subtitulo": "Boletim: 635-07212409-033",
     "resumo": "0 números + 1 estrelas",
     "detalhes": {
+<<<<<<< Updated upstream
       "data_verificacao": "2026-05-16 12:09:07",
+=======
+      "data_verificacao": "2026-05-16 12:09:49",
+>>>>>>> Stashed changes
       "metodo_validacao": "data + concurso",
       "boletim": {
         "referencia": "635-07212409-033",
@@ -68,13 +76,21 @@
   {
     "id": "euromilhoes_635-02035064-M1L_1",
     "jogo": "euromilhoes",
+<<<<<<< Updated upstream
     "data": "2026-05-16 12:09:07",
+=======
+    "data": "2026-05-16 12:09:49",
+>>>>>>> Stashed changes
     "lido": false,
     "titulo": "🎫 Novo resultado EUROMILHOES",
     "subtitulo": "Boletim: 635-02035064-M1L",
     "resumo": "0 números + 1 estrelas",
     "detalhes": {
+<<<<<<< Updated upstream
       "data_verificacao": "2026-05-16 12:09:07",
+=======
+      "data_verificacao": "2026-05-16 12:09:49",
+>>>>>>> Stashed changes
       "metodo_validacao": "data + concurso",
       "boletim": {
         "referencia": "635-02035064-M1L",
