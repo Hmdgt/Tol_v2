@@ -12,19 +12,19 @@ FICHEIRO_RESULTADOS = "resultados/euromilhoes_verificacoes.json"
 
 # ===== TABELA DE PREMIOS EUROMILHOES =====
 PREMIOS_EUROMILHOES = {
-    (5, 2): "1. Premio",
-    (5, 1): "2. Premio",
-    (5, 0): "3. Premio",
-    (4, 2): "4. Premio",
-    (4, 1): "5. Premio",
-    (3, 2): "6. Premio",
-    (4, 0): "7. Premio",
-    (2, 2): "8. Premio",
-    (3, 1): "9. Premio",
-    (3, 0): "10. Premio",
-    (1, 2): "11. Premio",
-    (2, 1): "12. Premio",
-    (2, 0): "13. Premio"
+    (5, 2): "1. Prémio",
+    (5, 1): "2. Prémio",
+    (5, 0): "3. Prémio",
+    (4, 2): "4. Prémio",
+    (4, 1): "5. Prémio",
+    (3, 2): "6. Prémio",
+    (4, 0): "7. Prémio",
+    (2, 2): "8. Prémio",
+    (3, 1): "9. Prémio",
+    (3, 0): "10. Prémio",
+    (1, 2): "11. Prémio",
+    (2, 1): "12. Prémio",
+    (2, 0): "13. Prémio"
 }
 
 def carregar_todos_sorteios() -> dict:
