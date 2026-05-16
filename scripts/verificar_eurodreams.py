@@ -12,12 +12,12 @@ FICHEIRO_RESULTADOS = "resultados/eurodreams_verificacoes.json"
 
 # ===== TABELA DE PREMIOS EURODREAMS =====
 PREMIOS_EURODREAMS = {
-    (6, True):  "1. Premio",
-    (6, False): "2. Premio",
-    (5, False): "3. Premio",
-    (4, False): "4. Premio",
-    (2, False): "6. Premio",
-    (3, False): "5. Premio",   # Corrigida ordem para coerencia
+    (6, True):  "1. Prémio",
+    (6, False): "2. Prémio",
+    (5, False): "3. Prémio",
+    (4, False): "4. Prémio",
+    (2, False): "6. Prémio",
+    (3, False): "5. Prémio",   # Corrigida ordem para coerencia
 }
 
 # ============================================================
