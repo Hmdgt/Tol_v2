@@ -64,5 +64,71 @@
       "_jogo": "euromilhoes",
       "_id": "euromilhoes_635-07212409-033_1"
     }
+  },
+  {
+    "id": "euromilhoes_635-02035064-M1L_1",
+    "jogo": "euromilhoes",
+    "data": "2026-05-16 12:09:49",
+    "lido": false,
+    "titulo": "🎫 Novo resultado EUROMILHOES",
+    "subtitulo": "Boletim: 635-02035064-M1L",
+    "resumo": "0 números + 1 estrelas",
+    "detalhes": {
+      "data_verificacao": "2026-05-16 12:09:49",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "635-02035064-M1L",
+        "data_sorteio": "2026-05-15",
+        "concurso_sorteio": "039/2026",
+        "imagem_origem": "foto_1778932700303_lbot4p.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "12",
+          "24",
+          "31",
+          "35",
+          "37"
+        ],
+        "estrelas": [
+          "07",
+          "09"
+        ]
+      },
+      "sorteio": {
+        "concurso": "039/2026",
+        "data": "15/05/2026",
+        "chave": "3 10 38 41 43 + 2 9",
+        "numeros": [
+          "03",
+          "10",
+          "38",
+          "41",
+          "43"
+        ],
+        "estrelas": [
+          "02",
+          "09"
+        ]
+      },
+      "acertos": {
+        "numeros": 0,
+        "estrelas": 1,
+        "descricao": "0 numero(s) e 1 estrela(s)",
+        "numeros_acertados": [],
+        "estrelas_acertadas": [
+          "09"
+        ]
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem premio",
+        "descricao": "Nao corresponde a qualquer premio",
+        "valor": "EUR 0,00"
+      },
+      "_jogo": "euromilhoes",
+      "_id": "euromilhoes_635-02035064-M1L_1"
+    }
   }
 ]
