@@ -1,0 +1,89 @@
+name: Verificar Tudo
+
+on:
+  push:
+    paths:
+      - 'dados/*.json'
+      - 'apostas/*.json'
+      - '!resultados/**'
+      - '!notificacoes_*.json'
+      - '!estatisticas_completas.json'
+  workflow_dispatch:
+
+concurrency:
+  group: repo-write
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependências
+        run: pip install Pillow pywebpush
+
+      - name: Sincronizar repositório antes de processar
+        run: |
+          git config user.name "Bot Verificador"
+          git config user.email "bot@github.com"
+          git config pull.rebase false
+          git pull origin main --rebase
+
+      - name: Verificar Totoloto
+        continue-on-error: true
+        run: python scripts/verificar_totoloto.py
+
+      - name: Verificar Euromilhões
+        continue-on-error: true
+        run: python scripts/verificar_euromilhoes.py
+
+      - name: Verificar EuroDreams
+        continue-on-error: true
+        run: python scripts/verificar_eurodreams.py
+
+      - name: Verificar M1lhão
+        continue-on-error: true
+        run: python scripts/verificar_milhao.py
+
+      - name: Gerar notificações
+        env:
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE }}
+          VAPID_EMAIL: ${{ secrets.EMAIL_REMETENTE }}
+        run: python scripts/gerar_notificacoes.py
+
+      - name: Gerar estatísticas
+        run: python scripts/gerar_estatisticas_completas.py
+
+      - name: Commit resultados
+        run: |
+          git add resultados/ notificacoes_ativas.json notificacoes_historico.json estatisticas_completas.json
+
+          if ! git diff --cached --quiet; then
+            git commit -m "Verificação + notificações + estatísticas $(date +'%Y-%m-%d %H:%M')"
+            n=0
+            until git push origin main; do
+              n=$((n+1))
+              if [ "$n" -ge 5 ]; then
+                echo "❌ Push falhou após 5 tentativas"
+                exit 1
+              fi
+              sleep 15
+            done
+          else
+            echo "Sem alterações nos resultados."
+          fi
