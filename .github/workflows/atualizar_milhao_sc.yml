@@ -34,15 +34,18 @@ jobs:
         run: |
           pip install selenium chromedriver-autoinstaller
 
-      - name: Rodar script de scraping
-        run: python scripts/atualizar_milhao_sc.py
-
-      - name: Commit e push das alterações
+      - name: Sincronizar com o repositório remoto
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git config pull.rebase false
           git pull origin main --rebase
+
+      - name: Rodar script de scraping
+        run: python scripts/atualizar_milhao_sc.py
+
+      - name: Commit e push das alterações
+        run: |
           git add dados/
           git add logs/
           if ! git diff --cached --quiet; then
@@ -50,7 +53,10 @@ jobs:
             n=0
             until git push origin main; do
               n=$((n+1))
-              if [ "$n" -ge 5 ]; then exit 1; fi
+              if [ "$n" -ge 5 ]; then
+                echo "❌ Push falhou após 5 tentativas"
+                exit 1
+              fi
               sleep 15
             done
           else
