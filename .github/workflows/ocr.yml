@@ -41,6 +41,13 @@ jobs:
         run: |
           pip install google-genai Pillow opencv-python-headless pywebpush
 
+      - name: Sincronizar repositório antes de processar
+        run: |
+          git config user.name "Bot OCR"
+          git config user.email "bot@github.com"
+          git config pull.rebase false
+          git pull origin main --rebase
+
       - name: Executar OCR com Gemini
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
@@ -56,30 +63,22 @@ jobs:
             [ -f "$img" ] && mv "$img" uploads/processadas/$mes/ || true
           done
 
-      - name: Sincronizar e commitar
-        run: |
-          git config user.name "Bot OCR"
-          git config user.email "bot@github.com"
-          git config pull.rebase false
-          git pull origin main --rebase
-
-      - name: Guardar alterações (OCR)
+      - name: Commit e push (OCR)
         run: |
           mkdir -p apostas thumbnails
           git add apostas/*.json thumbnails/ uploads/processadas/
-          git commit -m "OCR: Atualização de dados e registos de processamento" || exit 0
-
-      - name: Push (com retry)
-        run: |
-          n=0
-          until git push origin main; do
-            n=$((n+1))
-            if [ "$n" -ge 5 ]; then
-              echo "❌ Push falhou após 5 tentativas"
-              exit 1
-            fi
-            sleep 20
-          done
+          if ! git diff --cached --quiet; then
+            git commit -m "OCR: Atualização de dados e registos de processamento"
+            n=0
+            until git push origin main; do
+              n=$((n+1))
+              if [ "$n" -ge 5 ]; then
+                echo "❌ Push falhou após 5 tentativas"
+                exit 1
+              fi
+              sleep 20
+            done
+          fi
 
       - name: Verificar validações pendentes e enviar push
         env:
