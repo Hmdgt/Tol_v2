@@ -71,7 +71,8 @@ jobs:
 
       - name: Commit resultados
         run: |
-          git add resultados/ notificacoes_ativas.json notificacoes_historico.json estatisticas_completas.json
+          git add resultados/ || true
+          git add notificacoes_ativas.json notificacoes_historico.json estatisticas_completas.json 2>/dev/null || true
 
           if ! git diff --cached --quiet; then
             git commit -m "Verificação + notificações + estatísticas $(date +'%Y-%m-%d %H:%M')"
