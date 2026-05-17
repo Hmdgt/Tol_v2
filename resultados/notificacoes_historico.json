@@ -1197,51 +1197,63 @@
     "data_leitura": "2026-03-14T23:59:08.614Z"
   },
   {
-  "id": "totoloto_072-01139302-005_1",
-  "jogo": "totoloto",
-  "data": "2026-03-14 22:25:57",
-  "lido": false,
-  "titulo": "🎫 Novo resultado TOTOLOTO",
-  "subtitulo": "Boletim: 072-01139302-005",
-  "resumo": "Ganhou: Nº da Sorte – Total: € 0,00",
-  "detalhes": {
-    "data_verificacao": "2026-03-14 22:25:57",
-    "metodo_validacao": "data + concurso",
-    "boletim": {
-      "referencia": "072-01139302-005",
-      "data_sorteio": "2026-03-14",
-      "concurso_sorteio": "021/2026",
-      "imagem_origem": "foto_1773425934604_mpwxsv.png"
-    },
-    "aposta": {
-      "indice": 1,
-      "numeros": ["04", "36", "42", "45", "48"],
-      "numero_da_sorte": "11"
-    },
-    "sorteio": {
-      "concurso": "021/2026",
-      "data": "14/03/2026",
-      "numeros": ["05", "09", "26", "39", "43"],
-      "numero_da_sorte": "11"
-    },
-    "acertos": {
-      "numeros": 0,
-      "numero_da_sorte": true,
-      "descricao": "0 número(s) com Nº da Sorte"
-    },
-    "ganhou": true,
-    "premios": [
-      {
-        "premio": "Nº da Sorte",
-        "descricao": "Nº da Sorte",
-        "vencedores": "77.078",
-        "valor": "Reembolso do valor da aposta de Totoloto"
-      }
-    ],
-    "_jogo": "totoloto",
-    "_id": "totoloto_072-01139302-005_1"
-  }
-},
+    "id": "totoloto_072-01139302-005_1",
+    "jogo": "totoloto",
+    "data": "2026-03-14 22:25:57",
+    "lido": false,
+    "titulo": "🎫 Novo resultado TOTOLOTO",
+    "subtitulo": "Boletim: 072-01139302-005",
+    "resumo": "Ganhou: Nº da Sorte – Total: € 0,00",
+    "detalhes": {
+      "data_verificacao": "2026-03-14 22:25:57",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "072-01139302-005",
+        "data_sorteio": "2026-03-14",
+        "concurso_sorteio": "021/2026",
+        "imagem_origem": "foto_1773425934604_mpwxsv.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "04",
+          "36",
+          "42",
+          "45",
+          "48"
+        ],
+        "numero_da_sorte": "11"
+      },
+      "sorteio": {
+        "concurso": "021/2026",
+        "data": "14/03/2026",
+        "numeros": [
+          "05",
+          "09",
+          "26",
+          "39",
+          "43"
+        ],
+        "numero_da_sorte": "11"
+      },
+      "acertos": {
+        "numeros": 0,
+        "numero_da_sorte": true,
+        "descricao": "0 número(s) com Nº da Sorte"
+      },
+      "ganhou": true,
+      "premios": [
+        {
+          "premio": "Nº da Sorte",
+          "descricao": "Nº da Sorte",
+          "vencedores": "77.078",
+          "valor": "Reembolso do valor da aposta de Totoloto"
+        }
+      ],
+      "_jogo": "totoloto",
+      "_id": "totoloto_072-01139302-005_1"
+    }
+  },
   {
     "id": "euromilhoes_576-01565603-M1L_1",
     "jogo": "euromilhoes",
@@ -3751,5 +3763,61 @@
       "_id": "euromilhoes_635-07212409-033_1"
     },
     "data_leitura": "2026-05-16T16:52:06.297Z"
+  },
+  {
+    "id": "totoloto_135-02844685-202_1",
+    "jogo": "totoloto",
+    "data": "2026-05-17 09:46:02",
+    "lido": true,
+    "titulo": "🎫 Novo resultado TOTOLOTO",
+    "subtitulo": "Boletim: 135-02844685-202",
+    "resumo": "Não ganhou",
+    "detalhes": {
+      "data_verificacao": "2026-05-17 09:46:02",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "135-02844685-202",
+        "data_sorteio": "2026-05-16",
+        "concurso_sorteio": "039/2026",
+        "imagem_origem": "foto_1778867426431_uwlgqz.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "03",
+          "14",
+          "22",
+          "35",
+          "42"
+        ],
+        "numero_da_sorte": "05"
+      },
+      "sorteio": {
+        "concurso": "039/2026",
+        "data": "16/05/2026",
+        "numeros": [
+          "09",
+          "24",
+          "25",
+          "36",
+          "42"
+        ],
+        "numero_da_sorte": "02"
+      },
+      "acertos": {
+        "numeros": 1,
+        "numero_da_sorte": false,
+        "descricao": "1 numero(s) sem Nº da Sorte",
+        "numeros_acertados": [
+          "42"
+        ],
+        "numero_da_sorte_acertado": null
+      },
+      "ganhou": false,
+      "premios": [],
+      "_jogo": "totoloto",
+      "_id": "totoloto_135-02844685-202_1"
+    },
+    "data_leitura": "2026-05-17T10:28:03.779Z"
   }
 ]
