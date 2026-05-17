@@ -176,7 +176,7 @@ def enviar_web_push_direto(tipo: str, jogo: str) -> bool:
     sucesso_total = 0
     subscriptions_validas = []
 
-    for sub in subscriptions:
+    for i, sub in enumerate(subscriptions, 1):
         try:
             webpush(
                 subscription_info=sub,
@@ -187,18 +187,26 @@ def enviar_web_push_direto(tipo: str, jogo: str) -> bool:
             )
             subscriptions_validas.append(sub)
             sucesso_total += 1
+            print(f"   ✅ Push {i} enviada com sucesso.")
         except WebPushException as ex:
-            if ex.response and ex.response.status_code == 410:
-                print(f"   🗑️ Subscription expirada (410) – será removida.")
-                # Não a adicionamos à lista de válidas
-            elif ex.response and ex.response.status_code in (429, 503):
+            # Verificar erro 410 através do objeto response ou da mensagem
+            is_gone = False
+            if hasattr(ex, 'response') and ex.response is not None:
+                is_gone = (ex.response.status_code == 410)
+            else:
+                is_gone = ("410" in str(ex))
+            
+            if is_gone:
+                print(f"   🗑️ Subscription {i} expirada (410) – será removida.")
+                # Não adicionar à lista de válidas
+            elif hasattr(ex, 'response') and ex.response is not None and ex.response.status_code in (429, 503):
                 print(f"   ⏳ Erro temporário ({ex.response.status_code}). A manter subscription.")
                 subscriptions_validas.append(sub)
             else:
-                print(f"   ⚠️ Erro no envio: {ex}")
+                print(f"   ⚠️ Erro no envio {i}: {ex}")
                 subscriptions_validas.append(sub)  # Mantemos na dúvida
         except Exception as e:
-            print(f"   ❌ Erro inesperado: {e}")
+            print(f"   ❌ Erro inesperado {i}: {e}")
             subscriptions_validas.append(sub)
 
     # Atualizar ficheiro se houve remoções
