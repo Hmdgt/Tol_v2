@@ -1,66 +1,49 @@
-# .github/workflows/atualizar_totoloto_sc.yml (CORRIGIDO)
+# horario: verao
 name: Atualizar Totoloto SC automaticamente
-
-on:
-  schedule:
-    - cron: "0 20 * * 3"
-    - cron: "0 21 * * 3"
-    - cron: "0 22 * * 3"
-    - cron: "0 9 * * 4"
-    - cron: "0 20 * * 6"
-    - cron: "0 21 * * 6"
-    - cron: "0 22 * * 6"
-    - cron: "0 9 * * 0"
-  workflow_dispatch:
-
 concurrency:
   group: repo-write
   cancel-in-progress: false
-
 defaults:
   run:
     shell: bash
-
 jobs:
   scrape:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+    - uses: actions/checkout@v4
+    - name: Instalar Chrome
+      uses: browser-actions/setup-chrome@v1
+    - name: Instalar dependências Python
+      run: pip install selenium chromedriver-autoinstaller
+    - name: Sincronizar com o repositório remoto
+      run: 'git config user.name "github-actions[bot]"
 
-      - name: Instalar Chrome
-        uses: browser-actions/setup-chrome@v1
+        git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Instalar dependências Python
-        run: pip install selenium chromedriver-autoinstaller
+        git config pull.rebase false
 
-      # 👇 Pull ANTES de gerar alterações
-      - name: Sincronizar com o repositório remoto
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git config pull.rebase false
-          git pull origin main --rebase
+        git pull origin main --rebase
 
-      - name: Rodar script de scraping
-        run: python scripts/atualizar_totoloto_sc.py
-
-      - name: Commit e push das alterações
-        run: |
-          git add dados/
-          git add logs/totoloto_sc_log.txt
-          if ! git diff --cached --quiet; then
-            git commit -m "Atualização automática Totoloto SC"
-            n=0
-            until git push origin main; do
-              n=$((n+1))
-              if [ "$n" -ge 5 ]; then
-                echo "❌ Push falhou após 5 tentativas"
-                exit 1
-              fi
-              sleep 15
-            done
-          else
-            echo "Nenhuma alteração, nada para commitar."
-          fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        '
+    - name: Rodar script de scraping
+      run: python scripts/atualizar_totoloto_sc.py
+    - name: Commit e push das alterações
+      run: "git add dados/\ngit add logs/totoloto_sc_log.txt\nif ! git diff --cached\
+        \ --quiet; then\n  git commit -m \"Atualização automática Totoloto SC\"\n\
+        \  n=0\n  until git push origin main; do\n    n=$((n+1))\n    if [ \"$n\"\
+        \ -ge 5 ]; then\n      echo \"❌ Push falhou após 5 tentativas\"\n      exit\
+        \ 1\n    fi\n    sleep 15\n  done\nelse\n  echo \"Nenhuma alteração, nada\
+        \ para commitar.\"\nfi\n"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+'on':
+  schedule:
+  - cron: 0 19 * * 3
+  - cron: 0 20 * * 3
+  - cron: 0 21 * * 3
+  - cron: 0 8 * * 4
+  - cron: 0 19 * * 6
+  - cron: 0 20 * * 6
+  - cron: 0 21 * * 6
+  - cron: 0 8 * * 0
+  workflow_dispatch: null
