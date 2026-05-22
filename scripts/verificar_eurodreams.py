@@ -37,6 +37,12 @@ def carregar_sorteios():
     ficheiros = glob.glob(os.path.join(PASTA_DADOS, FICHEIRO_SORTEIOS_PADRAO))
 
     for ficheiro in ficheiros:
+        nome = os.path.basename(ficheiro)
+        # 🔧 Ignorar o ficheiro "atual" (evita erro de parsing)
+        if nome == "eurodreams_atual.json":
+            print(f"   Ignorando {nome} (apenas último sorteio)")
+            continue
+
         try:
             with open(ficheiro, "r", encoding="utf-8") as f:
                 dados = json.load(f)
