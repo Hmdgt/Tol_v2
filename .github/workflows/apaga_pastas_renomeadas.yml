@@ -1,0 +1,35 @@
+name: Apagar imagens marcadas
+
+on:
+  schedule:
+    - cron: '30 2 * * 0'   # domingo às 02:30 UTC
+  workflow_dispatch:
+
+jobs:
+  delete_marked_folders:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Apagar pastas _old (uploads/processadas e thumbnails)
+        run: |
+          for base_dir in "uploads/processadas" "thumbnails"; do
+            if [ -d "$base_dir" ]; then
+              find "$base_dir" -maxdepth 1 -type d -name "*_old" | while read dir; do
+                echo "🗑️ Apagando $dir"
+                rm -rf "$dir"
+              done
+            fi
+          done
+
+      - name: Commit das remoções
+        run: |
+          git config user.name "Bot Limpeza"
+          git config user.email "bot@github.com"
+          git add uploads/processadas/ thumbnails/
+          if ! git diff --cached --quiet; then
+            git commit -m "Apagar imagens antigas (pastas _old removidas)"
+            git push origin main
+          else
+            echo "Nenhuma pasta _old para apagar."
+          fi
