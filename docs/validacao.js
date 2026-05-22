@@ -290,8 +290,15 @@ async function renderizarFormValidacao(imagem, jogos) {
   const container = document.getElementById('validacaoContainer');
   if (!container) return;
   
-  const thumbnailUrl = await carregarImagemGitHub(`thumbnails/${imagem}`);
-  const imagemUrl = thumbnailUrl || await carregarImagemGitHub(`uploads/${imagem}`);
+// tentar primeiro na pasta do mês (formato YYYY-MM)
+const hoje = new Date();
+const mes = hoje.toISOString().slice(0, 7); // "2026-05"
+let thumbnailUrl = await carregarImagemGitHub(`thumbnails/${mes}/${imagem}`);
+if (!thumbnailUrl) {
+    // fallback para a raiz das thumbnails
+    thumbnailUrl = await carregarImagemGitHub(`thumbnails/${imagem}`);
+}
+const imagemUrl = thumbnailUrl || await carregarImagemGitHub(`uploads/${imagem}`);
   
   let html = `
     <div class="validacao-header" style="justify-content: center;">
