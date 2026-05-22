@@ -3,7 +3,9 @@ name: Processamento OCR - Santa Casa
 on:
   push:
     paths:
-      - 'uploads/**'
+      - 'uploads/*.png'
+      - 'uploads/*.jpg'
+      - 'uploads/*.jpeg'
   workflow_dispatch:
 
 concurrency:
