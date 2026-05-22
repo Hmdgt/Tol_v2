@@ -66,7 +66,7 @@ Abre uma issue ou envia um pull request se quiseres contribuir.
 📄 Licença
 Este projeto está sob a licença MIT.
 
-🧬 Créditos
-Projeto criado e mantido por Pirika — parte do laboratório experimental PEXP.
+🧬 **Créditos**  
+Projeto criado e mantido por **Pirika** — parte do laboratório experimental [PEXP](https://pexp-dev.github.io/).
 
-Desenvolvido com ❤️ e curiosidade, sem pressa nem destino fixo.
+
