@@ -134,13 +134,16 @@ def gerar_hash(caminho):
     return h.hexdigest()
 
 def gerar_thumbnail(caminho_original, nome_arquivo):
-    """Gera uma thumbnail (máx 800px no lado maior) da imagem original"""
     os.makedirs(PASTA_THUMBNAILS, exist_ok=True)
     try:
         img = Image.open(caminho_original)
-        img = ImageOps.exif_transpose(img)  # Corrigir orientação EXIF
+        img = ImageOps.exif_transpose(img)
         img.thumbnail((800, 800))
-        caminho_thumb = os.path.join(PASTA_THUMBNAILS, nome_arquivo)
+        # 👇 estrutura organizada por mês
+        mes = datetime.now().strftime("%Y-%m")
+        pasta_thumb = os.path.join(PASTA_THUMBNAILS, mes)
+        os.makedirs(pasta_thumb, exist_ok=True)
+        caminho_thumb = os.path.join(pasta_thumb, nome_arquivo)
         img.save(caminho_thumb, optimize=True, quality=85)
         print(f"   🖼️ Thumbnail gerada: {nome_arquivo}")
     except Exception as e:
