@@ -40,7 +40,7 @@ Tudo funciona offline e está sincronizado via **GitHub** — o repositório ser
 
 ## 🚀 Uso
 
-```bash
+
 # Scraping dos sorteios oficiais
 python scripts/atualizar_euromilhoes_sc.py
 python scripts/atualizar_totoloto_sc.py
