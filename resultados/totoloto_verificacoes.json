@@ -925,5 +925,47 @@
     },
     "ganhou": false,
     "premios": []
+  },
+  {
+    "data_verificacao": "2026-05-23 21:44:20",
+    "metodo_validacao": "data + concurso",
+    "boletim": {
+      "referencia": "142-00098117-108",
+      "data_sorteio": "2026-05-23",
+      "concurso_sorteio": "041/2026",
+      "imagem_origem": "foto_1779453064835_6xatvz.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "numeros": [
+        "13",
+        "18",
+        "27",
+        "33",
+        "39"
+      ],
+      "numero_da_sorte": "08"
+    },
+    "sorteio": {
+      "concurso": "041/2026",
+      "data": "23/05/2026",
+      "numeros": [
+        "09",
+        "23",
+        "29",
+        "31",
+        "35"
+      ],
+      "numero_da_sorte": "10"
+    },
+    "acertos": {
+      "numeros": 0,
+      "numero_da_sorte": false,
+      "descricao": "0 numero(s) sem Nº da Sorte",
+      "numeros_acertados": [],
+      "numero_da_sorte_acertado": null
+    },
+    "ganhou": false,
+    "premios": []
   }
 ]
