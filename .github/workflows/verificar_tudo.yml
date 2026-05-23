@@ -9,6 +9,14 @@ on:
       - '!notificacoes_*.json'
       - '!estatisticas_completas.json'
   workflow_dispatch:
+  workflow_run:
+    workflows:
+      - "Atualizar Totoloto SC automaticamente"
+      - "Atualizar EuroMilhões automaticamente"
+      - "Atualizar EuroDreams automaticamente"
+      - "Atualizar M1lhão automaticamente"
+    types:
+      - completed
 
 concurrency:
   group: repo-write
@@ -20,6 +28,7 @@ defaults:
 
 jobs:
   verificar:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
