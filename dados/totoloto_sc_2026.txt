@@ -1,13 +1,7 @@
-Concurso: 040/2026
-Data: 20/05/2026
-Números: 6 16 19 34 41
-Especial: 4
+Concurso: 041/2026
+Data: 23/05/2026
+Números: 9 23 29 31 35
+Especial: 10
 ----------------------------------------
 Prémios:
-1.º Prémio - 5 Números + Nº da Sorte | Vencedores: 0 | Valor: (1)
-2.º Prémio - 5 Números | Vencedores: 0 | Valor: (2)
-3.º Prémio - 4 Números | Vencedores: 112 | Valor: € 407,49
-4.º Prémio - 3 Números | Vencedores: 4.922 | Valor: € 5,15
-5.º Prémio - 2 Números | Vencedores: 70.298 | Valor: € 2,16
-Nº da Sorte - Nº da Sorte | Vencedores: 71.336 | Valor: Reembolso do valor da aposta de Totoloto
 ----------------------------------------

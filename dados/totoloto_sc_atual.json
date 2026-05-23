@@ -1,50 +1,13 @@
 {
-  "concurso": "040/2026",
-  "data": "20/05/2026",
+  "concurso": "041/2026",
+  "data": "23/05/2026",
   "numeros": [
-    6,
-    16,
-    19,
-    34,
-    41
+    9,
+    23,
+    29,
+    31,
+    35
   ],
-  "especial": 4,
-  "premios": [
-    {
-      "premio": "1.º Prémio",
-      "descricao": "5 Números + Nº da Sorte",
-      "vencedores": "0",
-      "valor": "(1)"
-    },
-    {
-      "premio": "2.º Prémio",
-      "descricao": "5 Números",
-      "vencedores": "0",
-      "valor": "(2)"
-    },
-    {
-      "premio": "3.º Prémio",
-      "descricao": "4 Números",
-      "vencedores": "112",
-      "valor": "€ 407,49"
-    },
-    {
-      "premio": "4.º Prémio",
-      "descricao": "3 Números",
-      "vencedores": "4.922",
-      "valor": "€ 5,15"
-    },
-    {
-      "premio": "5.º Prémio",
-      "descricao": "2 Números",
-      "vencedores": "70.298",
-      "valor": "€ 2,16"
-    },
-    {
-      "premio": "Nº da Sorte",
-      "descricao": "Nº da Sorte",
-      "vencedores": "71.336",
-      "valor": "Reembolso do valor da aposta de Totoloto"
-    }
-  ]
+  "especial": 10,
+  "premios": []
 }
