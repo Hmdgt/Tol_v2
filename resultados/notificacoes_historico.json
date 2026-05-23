@@ -3819,5 +3819,70 @@
       "_id": "totoloto_135-02844685-202_1"
     },
     "data_leitura": "2026-05-17T10:28:03.779Z"
+  },
+  {
+    "id": "euromilhoes_642-0305210-M1L_1",
+    "jogo": "euromilhoes",
+    "data": "2026-05-23 09:27:33",
+    "lido": true,
+    "titulo": "🎫 Novo resultado EUROMILHOES",
+    "subtitulo": "Boletim: 642-0305210-M1L",
+    "resumo": "0 números + 0 estrelas",
+    "detalhes": {
+      "data_verificacao": "2026-05-23 09:27:33",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "642-0305210-M1L",
+        "data_sorteio": "2026-05-22",
+        "concurso_sorteio": "041/2026",
+        "imagem_origem": "foto_1779451411285_eluw5c.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "07",
+          "11",
+          "16",
+          "42",
+          "45"
+        ],
+        "estrelas": [
+          "01",
+          "04"
+        ]
+      },
+      "sorteio": {
+        "concurso": "041/2026",
+        "data": "22/05/2026",
+        "chave": "6 22 26 31 37 + 5 8",
+        "numeros": [
+          "06",
+          "22",
+          "26",
+          "31",
+          "37"
+        ],
+        "estrelas": [
+          "05",
+          "08"
+        ]
+      },
+      "acertos": {
+        "numeros": 0,
+        "estrelas": 0,
+        "descricao": "0 numero(s) e 0 estrela(s)",
+        "numeros_acertados": [],
+        "estrelas_acertadas": []
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem premio",
+        "descricao": "0 acertos",
+        "valor": "EUR 0,00"
+      },
+      "_jogo": "euromilhoes",
+      "_id": "euromilhoes_642-0305210-M1L_1"
+    },
+    "data_leitura": "2026-05-23T11:16:48.555Z"
   }
 ]
