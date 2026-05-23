@@ -83,3 +83,4 @@
 [2026-05-20 22:18:39] [santacasa] Concurso 040/2026 atualizado com novos dados!
 [2026-05-20 23:11:23] [santacasa] Concurso 040/2026 atualizado com novos dados!
 [2026-05-21 12:20:45] [santacasa] Concurso 040/2026 atualizado com novos dados!
+[2026-05-23 20:38:09] [santacasa] Concurso 040/2026 já está completo. Nada a atualizar.
