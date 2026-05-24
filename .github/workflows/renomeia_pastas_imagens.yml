@@ -1,42 +1,25 @@
+# horario: verao
 name: Marcar imagens antigas para apagar
-
-on:
-  schedule:
-    - cron: '0 2 * * 0'   # domingo às 02:00 UTC
-  workflow_dispatch:
-
 jobs:
   rename_old_folders:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Renomear pastas mensais com mais de 60 dias (uploads/processadas e thumbnails)
-        run: |
-          cutoff=$(date -d "60 days ago" +%s)
-          for base_dir in "uploads/processadas" "thumbnails"; do
-            if [ -d "$base_dir" ]; then
-              find "$base_dir" -maxdepth 1 -type d -name "????-??" | while read dir; do
-                dirname=$(basename "$dir")
-                year=${dirname:0:4}
-                month=${dirname:5:2}
-                folder_date=$(date -d "${year}-${month}-01" +%s)
-                if [ "$folder_date" -lt "$cutoff" ]; then
-                  echo "🔄 Renomeando $dir -> ${dir}_old"
-                  mv "$dir" "${dir}_old"
-                fi
-              done
-            fi
-          done
-
-      - name: Commit das renomeações
-        run: |
-          git config user.name "Bot Limpeza"
-          git config user.email "bot@github.com"
-          git add uploads/processadas/ thumbnails/
-          if ! git diff --cached --quiet; then
-            git commit -m "Marcar imagens antigas para apagar (renomeadas _old)"
-            git push origin main
-          else
-            echo "Nenhuma pasta antiga encontrada."
-          fi
+    - uses: actions/checkout@v4
+    - name: Renomear pastas mensais com mais de 60 dias (uploads/processadas e thumbnails)
+      run: "cutoff=$(date -d \"60 days ago\" +%s)\nfor base_dir in \"uploads/processadas\"\
+        \ \"thumbnails\"; do\n  if [ -d \"$base_dir\" ]; then\n    find \"$base_dir\"\
+        \ -maxdepth 1 -type d -name \"????-??\" | while read dir; do\n      dirname=$(basename\
+        \ \"$dir\")\n      year=${dirname:0:4}\n      month=${dirname:5:2}\n     \
+        \ folder_date=$(date -d \"${year}-${month}-01\" +%s)\n      if [ \"$folder_date\"\
+        \ -lt \"$cutoff\" ]; then\n        echo \"\U0001F504 Renomeando $dir -> ${dir}_old\"\
+        \n        mv \"$dir\" \"${dir}_old\"\n      fi\n    done\n  fi\ndone\n"
+    - name: Commit das renomeações
+      run: "git config user.name \"Bot Limpeza\"\ngit config user.email \"bot@github.com\"\
+        \ngit add uploads/processadas/ thumbnails/\nif ! git diff --cached --quiet;\
+        \ then\n  git commit -m \"Marcar imagens antigas para apagar (renomeadas _old)\"\
+        \n  git push origin main\nelse\n  echo \"Nenhuma pasta antiga encontrada.\"\
+        \nfi\n"
+'on':
+  schedule:
+  - cron: 0 1 * * 0
+  workflow_dispatch: null
