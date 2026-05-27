@@ -168,6 +168,7 @@ async function renderizarPremiados(container) {
     `;
   }).join('');
 
+  // --- BOTÃO "CONFIRMAR LEITURA" (clique normal) ---
   container.querySelectorAll('.btn-arquivar').forEach(btn => {
     btn.addEventListener('click', async (e) => {
       e.stopPropagation();
@@ -178,13 +179,48 @@ async function renderizarPremiados(container) {
     });
   });
 
-  container.querySelectorAll('.notification-card').forEach(card => {
-    card.addEventListener('click', () => {
-      const id = card.dataset.id;
-      if (typeof window.renderizarDetalheNotificacao === 'function') {
-        window.detalheOrigem = 'apostasView';   // ← define a origem
-        window.renderizarDetalheNotificacao(id);
-        window.ViewManager.goTo('detalheNotificacaoView');
+  // --- LONG PRESS NOS CARTÕES DOS PREMIADOS ---
+  const cards = container.querySelectorAll('.notification-card');
+  cards.forEach(card => {
+    let pressTimer = null;
+    let longPressTriggered = false;
+
+    // Início do toque/clique
+    card.addEventListener('pointerdown', (e) => {
+      longPressTriggered = false;
+      pressTimer = setTimeout(() => {
+        longPressTriggered = true;
+        const id = card.dataset.id;
+        // Diálogo de confirmação simples
+        if (confirm('Marcar este prémio como reclamado?')) {
+          marcarComoLida(id).then(() => {
+            renderizarPremiados(container);
+          });
+        }
+      }, 800); // 800 ms para considerar long press
+    });
+
+    // Fim do toque/clique (cancelar temporizador se for curto)
+    card.addEventListener('pointerup', () => {
+      clearTimeout(pressTimer);
+    });
+
+    card.addEventListener('pointerleave', () => {
+      clearTimeout(pressTimer);
+    });
+
+    // Prevenir que o clique normal abra o detalhe durante o long press
+    card.addEventListener('click', (e) => {
+      if (longPressTriggered) {
+        e.stopPropagation();
+        e.preventDefault();
+      } else {
+        const id = card.dataset.id;
+        if (typeof window.renderizarDetalheNotificacao === 'function') {
+          window.detalheOrigem = 'apostasView';
+          window.renderizarDetalheNotificacao(id);
+          window.ViewManager.goTo('detalheNotificacaoView');
+        }
       }
     });
   });
@@ -216,7 +252,7 @@ async function renderizarHistorico(container) {
     card.addEventListener('click', () => {
       const id = card.dataset.id;
       if (typeof window.renderizarDetalheNotificacao === 'function') {
-        window.detalheOrigem = 'apostasView';   // ← define a origem
+        window.detalheOrigem = 'apostasView';
         window.renderizarDetalheNotificacao(id);
         window.ViewManager.goTo('detalheNotificacaoView');
       }
