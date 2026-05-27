@@ -1,0 +1,111 @@
+1. Situação atual (resumo)
+Camada	O que temos
+Interface	PWA (HTML/CSS/JS) em docs/ – 12 ficheiros principais
+Lógica	8 scripts Python em scripts/ (scraping, verificação, OCR, notificações, estatísticas)
+Automação	7 workflows GitHub Actions (crons, triggers, commits)
+Dados	JSONs na cloud (apostas, sorteios, resultados, notificações)
+Notificações	Web Push (VAPID + Service Worker)
+OCR	API Gemini (chaves guardadas no GitHub Secrets)
+Tudo isto tem cerca de 25 ficheiros de lógica + frontend. É uma app pequena.
+
+2. Princípios da migração
+Local-first: tudo corre no telemóvel, sem servidor.
+
+Zero dependência do GitHub.
+
+Notificações locais (sem FCM).
+
+Base de dados leve: SQLite.
+
+Scraping simplificado: se possível, usar HTTP requests diretos em vez de Selenium.
+
+Framework sugerida: Flutter (multiplataforma, Dart é fácil de aprender, tem SQLite, WorkManager, notificações locais, câmara, etc.)
+
+3. Mapeamento ficheiro a ficheiro (o que fazer a cada um)
+📁 Backend (Python → Dart)
+Ficheiro Python	Função	Destino na app nativa
+atualizar_*.sc.py (4 scrapers)	Selenium → extrai sorteios	Reescrever: 1 classe ScraperService que faz HTTP GET ao site oficial e faz parse do HTML/JSON. Se não houver API, usar um WebView headless com flutter_inappwebview para extrair dados via JavaScript.
+verificar_*.py (4 verificadores)	Compara apostas com sorteios e atribui prémios	Reescrever: funções puras em Dart (compara listas, usa dicionários de prémios). A lógica é igual.
+processar_uploads.py	OCR com Gemini + pré‑processamento de imagem	Reescrever: classe OcrService que chama a API Gemini via HTTP (usando http package). O pré‑processamento pode ser feito com a biblioteca image do Dart.
+gerar_notificacoes.py	Lê resultados recentes e gera notificações ativas	Reescrever: função que verifica a BD local e cria registos na tabela de notificações.
+gerar_estatisticas_completas.py	Calcula estatísticas mensais/anuais	Reescrever: queries SQL e funções de agregação. Muito mais simples em SQLite.
+verificar_validacoes_pendentes.py	Verifica validações pendentes e envia push	Simplificar: a validação é feita pelo utilizador na UI. Push não existe; em vez disso, a app mostra notificação local se houver pendentes.
+enviar_premiados.py	Envia e-mail com prémios	Opcional: pode ser removido ou transformado num botão "Partilhar" que gera um resumo e abre o cliente de e-mail.
+📁 Automação (GitHub Actions → tarefas locais)
+Workflow YAML	Função	Destino
+atualizar_*.sc.yml (4)	Agendar scraping	Substituir por WorkManager (Android) / BGTaskScheduler (iOS) que corre 1x por dia após o sorteio.
+ocr.yml	Processar uploads quando há novas imagens	Substituir por ação imediata: o utilizador tira foto → a app chama OcrService e guarda o resultado.
+verificar_tudo.yml	Verificar todas as apostas após scraping	Substituir por rotina que corre automaticamente após o scraping e quando o utilizador abre a app.
+verificar-validacoes-diario.yml	Verificar validações pendentes diariamente	Remover: a UI mostra sempre o estado atual. Pode‑se adicionar um lembrete local.
+📁 Frontend (HTML/JS → Flutter/Dart)
+Ficheiro atual	Funcionalidade	Destino
+index.html + estilos.css (inline)	Estrutura da SPA, temas, botões	Reescrever em Flutter com widgets: MaterialApp, BottomNavigationBar, temas claro/escuro automáticos.
+app.js	Navegação entre views, gestão de estado	Substituir por Navigator e Provider/Riverpod.
+config.js	Configurações (REPO, pastas)	Transformar em constantes Dart.
+upload.js	Upload de imagem (leitura de ficheiro + base64)	Usar image_picker para capturar/carregar imagem, converter para base64 e enviar para OcrService.
+validacao.js	Interface de validação com zoom/pan	Reescrever com InteractiveViewer + formulários.
+notificacoes.js	Lista de notificações, badge, detalhe	Reescrever com widgets de lista e cartões.
+apostas.js	Views Pendentes / Premiados / Histórico	Reescrever com abas e filtros.
+estatisticas.js	Tabelas de estatísticas, gráficos	Reescrever com widgets Table ou fl_chart.
+utils.js	Toast, escapeHTML, base64, etc.	Substituir por funções Dart e packages (fluttertoast, convert).
+service-worker.js	Cache offline, notificações push	Remover: a app é nativa, o sistema operativo gere o armazenamento.
+manifest.json	PWA manifest	Substituir por AndroidManifest.xml / Info.plist.
+📁 Dados (JSON → SQLite)
+Ficheiro JSON	Conteúdo	Tabela(s) SQLite
+apostas/totoloto.json (etc.)	Apostas	apostas(id, tipo, data_sorteio, referencia_unica, concurso, valor_total, imagem_origem, hash_imagem, confirmado, ...) com tabelas auxiliares para números, estrelas, etc.
+dados/totoloto_sc_*.json	Sorteios	sorteios(id, jogo, concurso, data, numeros, estrelas, dream, premios) – prémios podem ser uma tabela à parte.
+resultados/*_verificacoes.json	Histórico de verificações	verificacoes(id, aposta_id, data_verificacao, ganhou, ...)
+resultados/notificacoes_ativas.json	Notificações ativas	notificacoes(id, jogo, data, lido, titulo, subtitulo, resumo, detalhes_json)
+subscription.json	Subscrições push	Remover
+apostas/cota_por_chave.json	Controlo de rate-limit da API Gemini	gemini_usage(data, key_id, usadas)
+apostas/registo_processamento.json	Imagens já processadas	imagens_processadas(hash, arquivo, data)
+4. Arquitetura da app nativa (Flutter)
+text
+lib/
+├── main.dart
+├── models/               // classes de dados (Aposta, Sorteio, Verificacao, etc.)
+├── services/
+│   ├── database_service.dart   // SQLite (sqflite)
+│   ├── scraper_service.dart    // HTTP scraping + parse
+│   ├── ocr_service.dart        // Gemini API
+│   ├── verificador_service.dart // lógica de verificação de todos os jogos
+│   ├── notificacao_service.dart // notificações locais (flutter_local_notifications)
+│   ├── estatistica_service.dart // cálculos de estatísticas
+│   └── gemini_auth.dart        // gestão das chaves API (guardadas em secure storage)
+├── screens/
+│   ├── home_screen.dart        // câmara + galeria
+│   ├── apostas_screen.dart     // pendentes/premiados/histórico
+│   ├── validacao_screen.dart   // zoom/pan + formulário
+│   ├── notificacoes_screen.dart
+│   ├── estatisticas_screen.dart
+│   └── config_screen.dart      // chaves API, preferências
+└── widgets/                    // componentes reutilizáveis (cartões, círculos de números, etc.)
+5. Desafios e soluções
+Desafio	Solução
+Scraping sem Selenium	Usar o endpoint não oficial que encontrei ao analisar o site da Santa Casa. Os dados vêm em JSON! (ex.: https://www.jogossantacasa.pt/web/ResultsBoard/EuroDreams – a página carrega dinamicamente, mas há chamadas XHR que podes reproduzir). Vou investigar para dar os URLs exatos. Se não, usar flutter_inappwebview para carregar a página e executar JS que extrai o conteúdo.
+Execução em background	WorkManager no Android (com workmanager package) para agendar scraping diário. No iOS é mais limitado, mas a app pode verificar sempre que é aberta.
+Armazenamento seguro das chaves	flutter_secure_storage para guardar as chaves Gemini.
+Notificações locais	flutter_local_notifications para mostrar resultados quando a app corre em background (limitado) ou ao abrir.
+Pré‑processamento de imagem	A biblioteca image do Dart permite redimensionar, converter para escala de cinzentos, etc. Pode‑se fazer uma versão simplificada.
+6. Plano de implementação passo a passo
+Configurar o projeto Flutter básico com navegação e temas.
+
+Criar a base de dados SQLite com todas as tabelas (models + database_service).
+
+Migrar a lógica de verificação (funções puras, testáveis).
+
+Implementar o OCR Service (chamada à Gemini, guardar resultado na BD).
+
+Implementar o Scraper Service (descobrir os endpoints HTTP ou usar WebView).
+
+Criar as tarefas agendadas para scraping e verificação automática.
+
+Implementar notificações locais.
+
+Construir as interfaces uma a uma (apostas, validação, notificações, estatísticas).
+
+Substituir o armazenamento de imagens (guardar localmente em vez de no GitHub).
+
+Testar e publicar.
+
+Queres que aprofunde algum passo? Posso começar por descobrir os endpoints HTTP exatos para o scraping.
