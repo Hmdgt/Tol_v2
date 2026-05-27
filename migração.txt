@@ -293,3 +293,161 @@ Estatísticas calculadas em tempo real com queries SQL, em vez de um ficheiro es
 Manutenção simplificada: uma migração de esquema é mais fácil do que alterar a estrutura de dezenas de ficheiros JSON.
 
 Integridade referencial: as chaves estrangeiras garantem que não há resultados órfãos.
+
+Toolbox de Inventário da App Atual (PWA + GitHub)
+📁 Estrutura Geral
+text
+Tol_v2-main/
+├── 📁 docs/                    # Frontend PWA
+│   ├── index.html              # Estrutura SPA, CSS inline, meta tags PWA
+│   ├── app.js                  # Navegação (ViewManager), service worker, polling, reset
+│   ├── config.js               # CONFIG.REPO, pastas, tipos de jogo
+│   ├── upload.js               # Upload de ficheiro via GitHub API
+│   ├── validacao.js            # Lista de validação, formulário de edição, zoom/pan
+│   ├── apostas.js              # View "Minhas Apostas" (pendentes, premiados, histórico)
+│   ├── notificacoes.js         # Lista de notificações, badge, marcação como lida
+│   ├── estatisticas.js         # Estatísticas (mensal/anual), tabelas, sorteios oficiais
+│   ├── utils.js                # base64, escapeHTML, ToastManager, UIManager
+│   ├── push.js                 # Subscrição Web Push, guarda no GitHub
+│   ├── service-worker.js       # Cache offline, push notifications, skipWaiting
+│   ├── theme.js                # Toggle dark/light
+│   ├── manifest.json           # PWA manifest
+│   └── assets/                 # Sprites de logos, favicon
+│
+├── 📁 scripts/                 # Backend Python (executado via GitHub Actions)
+│   ├── atualizar_*_sc.py (4)   # Scraping c/ Selenium → dados/{jogo}_*.json
+│   ├── verificar_*.py (4)      # Comparação apostas vs sorteios → resultados/*.json
+│   ├── processar_uploads.py    # OCR via Gemini API + pré‑processamento de imagem
+│   ├── gerar_notificacoes.py   # Gera notificações ativas + envia Web Push
+│   ├── gerar_estatisticas_completas.py
+│   ├── verificar_validacoes_pendentes.py
+│   ├── enviar_premiados.py     # E-mail de prémios não arquivados
+│   ├── atualiza_yml.py         # Ajuste horário verão/inverno nos cron jobs
+│   └── cria_logo.py            # Script acessório (geração de ícones)
+│
+├── 📁 .github/workflows/       # GitHub Actions (CI/CD)
+│   ├── verificar_tudo.yml      # Workflow unificado pós‑reestruturação
+│   ├── ocr.yml                 # Processamento OCR + validações + push
+│   ├── atualizar_*_sc.yml (4)  # Scraping agendado com Selenium
+│   ├── enviar_premiados.yml    # E-mail semanal de prémios
+│   ├── verificar-validacoes-diario.yml
+│   └── (outros: atualiza_horario, enviar‑web‑push, reset)
+│
+├── 📁 apostas/                 # Dados do utilizador
+│   ├── {jogo}.json (4)         # Array de apostas (confirmado: true/false)
+│   ├── cota_por_chave.json     # Rate‑limit da API Gemini
+│   ├── estado_validacoes.json  # IDs de validações já notificadas
+│   └── registo_processamento.json
+│
+├── 📁 dados/                   # Sorteios oficiais (scraping)
+│   ├── {jogo}_*.json           # Histórico anual (ex: euromilhoes_2026.json)
+│   └── {jogo}_atual.json       # Último sorteio (cache)
+│
+├── 📁 resultados/              # Verificações e notificações
+│   ├── {jogo}_verificacoes.json # Histórico completo
+│   ├── {jogo}_recentes.json     # Apenas última execução
+│   ├── notificacoes_ativas.json
+│   ├── notificacoes_historico.json
+│   └── estatisticas_completas.json
+│
+├── 📁 uploads/                 # Imagens originais (limpas após 60 dias)
+│   └── processadas/YYYY-MM/    # Arquivadas por mês
+├── 📁 thumbnails/              # Miniaturas PNG (para validação)
+└── 📁 logs/                    # Logs de scraping
+🖼️ Frontend (PWA)
+Componente	Como funciona	Dependências
+Estrutura SPA	index.html com <div class="view"> + navegação inferior (#bottomNav). CSS inline (temas escuro/claro).	ionicons (CDN)
+Navegação	app.js → ViewManager.goTo(viewId) alterna a visibilidade das views. Guarda último estado em sessionStorage.	—
+Temas	theme.js alterna data-theme="dark"/"light" no <html>. Estilos definidos em variáveis CSS no <head>.	—
+Upload	upload.js lê ficheiro, converte para base64 e faz PUT via GitHub API. Toast de confirmação/erro.	ToastManager
+Validação humana	validacao.js: lista boletins com confirmado: false, abre formulário com zoom/pan e campos editáveis, guarda alterações via GitHub API.	utils.js (base64), ToastManager
+Minhas Apostas	apostas.js: três abas (pendentes, premiados, histórico). Carrega dados do GitHub. Pendentes = apostas ainda sem resultado; premiados = notificações com ganhou: true não arquivadas; histórico = todas as notificações.	notificacoes.js (funções de renderização)
+Notificações	notificacoes.js: mistura notificações de resultados + validações pendentes. Badge no ícone. Marcação como lida move para histórico.	utils.js, pywebpush (indireto)
+Estatísticas	estatisticas.js: carrega estatisticas_completas.json, mostra tabelas por jogo/mês/ano. Aba "Sorteios" mostra chaves oficiais.	utils.js
+Offline	service-worker.js: cache de assets, estratégia network-first para navegação, cache-first para estáticos, stale-while-revalidate para imagens. Push notifications recebidas e exibidas quando a app está em background.	—
+Push subscriptions	push.js: gera subscrição VAPID, guarda no ficheiro subscription.json via GitHub API.	—
+⚙️ Backend (Python)
+Script	Função	Entrada	Saída	Execução
+atualizar_*.py (4)	Selenium headless → extrai concurso, data, chave, prémios	Página HTML da Santa Casa	dados/{jogo}_{ano}.json, _atual.json	Cron (GitHub Actions) nos dias de sorteio
+verificar_*.py (4)	Compara cada aposta com o sorteio correspondente, calcula acertos, procura prémio na lista do sorteio	apostas/{jogo}.json, dados/{jogo}_*.json	resultados/{jogo}_verificacoes.json, _recentes.json	workflow_run após scraping
+processar_uploads.py	OCR com Gemini (3 chaves, rate‑limit), pré‑processamento (binarização, contraste), guarda apostas	Imagens em uploads/	apostas/{jogo}.json, thumbnails, move originais para processadas/	Push em uploads/
+gerar_notificacoes.py	Lê *_recentes.json, gera notificações novas (não duplicadas), envia Web Push (pywebpush)	resultados/*_recentes.json	notificacoes_ativas.json, historico.json, limpa subscriptions expiradas	workflow_run após verificações
+gerar_estatisticas_completas.py	Agrega verificações por mês/ano/jogo, calcula gastos, recebimentos, saldo, médias	resultados/*_verificacoes.json, apostas/{jogo}.json	estatisticas_completas.json	workflow_run após notificações
+verificar_validacoes_pendentes.py	Lista boletins com confirmado: false, envia push se houver novos	apostas/{jogo}.json, estado_validacoes.json	estado_validacoes.json (atualizado)	Diário (cron)
+enviar_premiados.py	Envia e-mail (SMTP) com prémios não arquivados	notificacoes_historico.json	E-mail	Semanal (sexta‑feira)
+atualiza_yml.py	Ajusta crons dos workflows para horário de verão/inverno	.github/workflows/*.yml	Ficheiros YAML atualizados	Domingo/segunda
+🗂️ Dados (JSON)
+Ficheiro(s)	Estrutura	Observações
+apostas/{jogo}.json	Array de objetos: tipo, data_sorteio, referencia_unica, concurso, apostas[] (números, estrelas, dream, etc.), imagem_origem, hash_imagem, confirmado, data_validacao	Um ficheiro por jogo. Escrita apenas pelo OCR e pela validação humana.
+dados/{jogo}_{ano}.json	Objeto com chave do ano ("2026") contendo array de sorteios: concurso, data, numeros[], estrelas[]/dream/codigo, premios[]	Formato varia ligeiramente por jogo. _atual.json é uma cópia do último.
+resultados/{jogo}_verificacoes.json	Array de objetos: data_verificacao, boletim{}, aposta{}, sorteio{}, acertos{}, ganhou, premios[]	Histórico completo (incremental).
+resultados/{jogo}_recentes.json	Igual ao anterior, mas apenas os resultados da última execução	Substituído a cada verificação.
+notificacoes_ativas.json	Array de notificações não lidas: id, jogo, data, lido, titulo, subtitulo, resumo, detalhes{}	Movidas para historico quando marcadas como lidas.
+notificacoes_historico.json	Igual ao anterior, com campos data_leitura, arquivado	Acumula todo o histórico.
+estatisticas_completas.json	Objeto com mensal, anual, global → tabelas por jogo	Gerado sempre que há novas verificações.
+🔄 Fluxos de execução (resumo)
+Upload de foto
+
+Utilizador tira foto → upload.js → PUT no GitHub (uploads/).
+
+Push em uploads/ dispara ocr.yml → processar_uploads.py → OCR com Gemini → apostas guardadas → commit.
+
+Commit em apostas/ dispara verificar_tudo.yml → verificações + notificações + estatísticas → commit único.
+
+Scraping automático
+
+Cron dispara atualizar_*_sc.yml → Selenium extrai sorteio → commit em dados/.
+
+workflow_run dispara verificar_tudo.yml → verifica todas as apostas contra o novo sorteio → notificações push se houver novidade.
+
+Validação humana
+
+Utilizador abre a SPA → lista de pendentes → edita dados → validacao.js faz PUT no GitHub.
+
+Commit em apostas/ dispara verificar_tudo.yml novamente (se o sorteio já existir, recalcula resultados).
+
+Notificações
+
+gerar_notificacoes.py envia push diretamente (pywebpush) e remove subscriptions expiradas (erro 410).
+
+verificar_validacoes_pendentes.py envia push se houver novas validações pendentes.
+
+🎨 Estilos visuais
+Tema escuro (padrão): fundo #000, cartões #111, texto #fff, accent verde #4caf4c, gold #ffd700.
+
+Tema claro: fundo #f5f5f5, cartões #fff, texto #212529, accent verde #007b3e.
+
+Números da aposta: círculos com borda, tamanho configurável (--bubble-size).
+
+Fontes: sans-serif genérica, ícones via ionicons CDN.
+
+
+Plano de migração para app nativa (Flutter)
+Fase 1: Fundação (backend + dados)
+#	Tarefa	Descrição	Dependências
+1.1	Criar projeto Flutter	Configurar tema escuro/claro idêntico ao atual (variáveis CSS → ThemeData).	—
+1.2	Implementar base de dados SQLite	Todas as tabelas conforme esquema definido (jogos, sorteios, apostas, números, verificações, notificações, estado, gemini_usage).	—
+1.3	Migrar verificadores para Dart	Funções puras que recebem aposta + sorteio e devolvem acertos/prémios. Testar com dados JSON existentes.	—
+1.4	Criar DatabaseService	Métodos CRUD para todas as tabelas.	1.2
+1.5	Criar OcrService	Chamar Gemini API, pré‑processar imagem (redimensionar, converter para escala de cinzentos), extrair dados, guardar aposta na BD, gerar thumbnail WebP, eliminar original.	1.4, 1.3
+Fase 2: Fluxos automáticos (scraping + notificações)
+#	Tarefa	Descrição	Dependências
+2.1	Criar ScraperService	HTTP requests + parsing HTML para cada jogo, com fallback para fontes alternativas (Euromilhões/EuroDreams). Guardar sorteios na BD.	1.4
+2.2	Testar scraping real	Executar scrapers manuais e comparar com os ficheiros dados/*.json atuais.	2.1
+2.3	Implementar agendamento	WorkManager para correr scraping após as horas dos sorteios e verificar apostas automaticamente.	2.2
+2.4	Criar NotificacaoService	Notificações locais (flutter_local_notifications) para resultados novos e validações pendentes.	1.4
+2.5	Implementar verificação automática pós‑scraping	Correr verificadores sobre todas as apostas e gerar notificações locais.	2.3, 2.4, 1.3
+Fase 3: Interface do utilizador
+#	Tarefa	Descrição	Dependências
+3.1	Ecrã inicial (Home)	Botões para câmara e galeria. Tirar foto / escolher da galeria → chamar OcrService.	1.5
+3.2	Ecrã "Minhas Apostas"	Três abas (pendentes, premiadas, histórico) com cartões iguais aos atuais. Long press para arquivar prémios.	1.4
+3.3	Ecrã de validação	Zoom/pan com InteractiveViewer, formulário de edição (números, estrelas, datas), guardar na BD.	1.4
+3.4	Ecrã de notificações	Lista de notificações ativas, badge, clique leva ao detalhe.	1.4
+3.5	Ecrã de estatísticas	Tabelas mensais/anuais calculadas diretamente da BD (SQL). Aba "Sorteios" com as chaves oficiais.	1.4
+3.6	Ecrã de configurações	Chaves API Gemini, preferências de tema, informações da app.	1.4
+Fase 4: Finalização
+#	Tarefa	Descrição	Dependências
+4.1	Testes end‑to‑end	Simular um ciclo completo (upload → OCR → validação → scraping → verificação → notificação).	Todas as anteriores
+4.2	Otimizações	Garantir que as imagens originais são eliminadas, thumbnails WebP funcionam, BD não cresce indefinidamente.	4.1
+4.3	Publicação	Gerar APK/AAB para Android (e IPA para iOS, se quiseres).	4.2
+Nota: podes começar a Fase 1 e a Fase 2 em paralelo (os serviços de scraping e notificações são independentes da UI). A Fase 3 só depende da 1 e da 2, mas podes ir construindo os ecrãs com dados falsos para testar o layout.
