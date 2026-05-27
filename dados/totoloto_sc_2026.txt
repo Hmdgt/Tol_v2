@@ -1,13 +1,7 @@
-Concurso: 041/2026
-Data: 23/05/2026
-Números: 9 23 29 31 35
-Especial: 10
+Concurso: 042/2026
+Data: 27/05/2026
+Números: 22 28 38 42 47
+Especial: 1
 ----------------------------------------
 Prémios:
-1.º Prémio - 5 Números + Nº da Sorte | Vencedores: 0 | Valor: (1)
-2.º Prémio - 5 Números | Vencedores: 1 | Valor: € 23.703,09
-3.º Prémio - 4 Números | Vencedores: 115 | Valor: € 257,64
-4.º Prémio - 3 Números | Vencedores: 5.737 | Valor: € 5,16
-5.º Prémio - 2 Números | Vencedores: 84.348 | Valor: € 2,10
-Nº da Sorte - Nº da Sorte | Vencedores: 81.988 | Valor: Reembolso do valor da aposta de Totoloto
 ----------------------------------------
