@@ -108,4 +108,188 @@ Substituir o armazenamento de imagens (guardar localmente em vez de no GitHub).
 
 Testar e publicar.
 
+📡 Estratégia de scraping para a app nativa
+O scraping é a parte que alimenta a app com os sorteios oficiais. Na versão atual (GitHub Actions), usas Selenium + ChromeDriver, o que é pesado e inadequado para um telemóvel. Para a versão nativa, vamos usar pedidos HTTP simples com parsing de HTML (ou JSON, quando disponível). Isto reduz drasticamente o consumo de bateria, memória e largura de banda.
+
+🔗 Fontes de dados por jogo
+Jogo	Fonte primária (Santa Casa)	Fallback 1	Fallback 2
+Totoloto	https://www.jogossantacasa.pt/web/SCCartazResult/totolotoNew	(não tem)	(não tem)
+M1lhão	https://www.jogossantacasa.pt/web/SCCartazResult/m1lhao	(não tem)	(não tem)
+Euromilhões	https://www.jogossantacasa.pt/web/SCCartazResult/euroMilhoes	https://www.national-lottery.co.uk/results/euromillions (Reino Unido)	https://www.euro-millions.com (internacional)
+EuroDreams	https://www.jogossantacasa.pt/web/ResultsBoard/EuroDreams	https://www.loteriasyapuestas.es/es/resultados/eurodreams (Espanha)	https://www.eurodreams.com (oficial)
+Nota sobre o Euromilhões: Existe uma API pública em https://euromillions.api.pedromealha.dev que devolve os resultados em JSON. Pode ser usada como alternativa ainda mais leve (sem parsing de HTML).
+
+🧠 Lógica de fallback
+Para cada jogo, a app deve seguir esta ordem ao tentar obter um sorteio:
+
+Tentar a fonte primária (Santa Casa). Se falhar (erro HTTP, timeout, HTML alterado):
+
+Tentar o fallback 1. Se falhar também:
+
+Tentar o fallback 2 (se existir).
+
+Só se todas as fontes falharem é que o sorteio é considerado "não disponível". A app pode guardar os dados localmente e continuar a funcionar com o último sorteio conhecido.
+
+💻 Implementação técnica
+Linguagem: Dart (se usares Flutter) com o package http para os pedidos e html para o parsing.
+
+Parseamento: funções dedicadas por fonte, que extraem concurso, data, chave e prémios.
+
+Cache: os sorteios são guardados em SQLite local, tal como os outros dados.
+
+📉 Impacto na autonomia
+Um pedido HTTP típico demora menos de 1 segundo e consome menos de 50 KB de dados.
+
+Mesmo com fallback, o scraping de um sorteio não deve demorar mais de 5 segundos.
+
+Pode ser executado uma vez por dia, em background, sem que o utilizador note
+
 Queres que aprofunde algum passo? Posso começar por descobrir os endpoints HTTP exatos para o scraping.
+
+🧹 Otimizações de armazenamento e processamento (app nativa)
+A versão atual (PWA + GitHub) foi desenhada para funcionar com um repositório Git, onde o espaço não é um problema crítico. Na migração para uma app mobile nativa, o armazenamento local é limitado e precioso. As seguintes otimizações vão reduzir drasticamente o espaço ocupado e simplificar a lógica de dados.
+
+1. Eliminar a foto original após o OCR
+Como é hoje: a foto original em PNG/JPG é guardada na pasta uploads/ e, após o OCR, movida para uploads/processadas/YYYY-MM/. Mesmo com a limpeza ao fim de 60 dias, as fotos acumulam-se e ocupam muito espaço.
+
+Como vai ficar:
+
+O utilizador tira a foto (ou escolhe da galeria).
+
+A app gera uma thumbnail em WebP (ver ponto seguinte) e guarda-a na pasta thumbnails/YYYY-MM/.
+
+A imagem original é processada pelo OCR e eliminada imediatamente a seguir.
+
+Apenas a thumbnail persiste, para a interface de validação/histórico.
+
+Benefício: uma foto original de 3-5 MB é reduzida a uma thumbnail de ~20-50 KB. O espaço poupado é de ~99%.
+
+2. Converter as thumbnails para WebP
+Formato atual: PNG (gerado pelo Pillow/PIL).
+
+Formato proposto: WebP com qualidade 80-85%.
+
+Benefícios do WebP:
+
+Tamanho de ficheiro muito menor que PNG (para a mesma qualidade visual).
+
+Suportado nativamente em Android e iOS.
+
+Pode ser gerado diretamente no telemóvel (bibliotecas nativas ou via flutter_image_compress).
+
+Implementação: na função gerar_thumbnail, usar o formato WebP em vez de PNG. O código atual (Python) seria adaptado para Dart, usando o package image ou flutter_image_compress.
+
+3. Simplificar a estrutura de dados (JSON → SQLite)
+Como é hoje: múltiplos ficheiros JSON separados por jogo e por função:
+
+apostas/totoloto.json, apostas/euromilhoes.json, etc.
+
+dados/totoloto_sc_2026.json, dados/euromilhoes_2026.json, etc.
+
+resultados/totoloto_verificacoes.json, resultados/euromilhoes_recentes.json, etc.
+
+notificacoes_ativas.json, notificacoes_historico.json
+
+estatisticas_completas.json
+
+Como vai ficar: uma única base de dados SQLite com um esquema relacional limpo:
+
+sql
+-- Jogos suportados
+CREATE TABLE jogos (
+    id TEXT PRIMARY KEY,   -- 'totoloto', 'euromilhoes', 'eurodreams', 'milhao'
+    nome TEXT NOT NULL
+);
+
+-- Sorteios oficiais
+CREATE TABLE sorteios (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    jogo_id TEXT NOT NULL REFERENCES jogos(id),
+    concurso TEXT NOT NULL,        -- ex: '042/2026'
+    data_sorteio TEXT NOT NULL,    -- formato ISO 8601
+    numeros TEXT NOT NULL,         -- JSON array de strings
+    estrelas TEXT,                 -- JSON array (Euromilhões)
+    dream TEXT,                    -- string (EuroDreams)
+    codigo_premiado TEXT,          -- string (M1lhão)
+    premios TEXT NOT NULL,         -- JSON array de objetos
+    fonte TEXT DEFAULT 'santacasa',-- origem dos dados
+    data_scraping TEXT NOT NULL,
+    UNIQUE(jogo_id, concurso)
+);
+
+-- Apostas do utilizador
+CREATE TABLE apostas (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    jogo_id TEXT NOT NULL REFERENCES jogos(id),
+    data_sorteio TEXT NOT NULL,
+    referencia_unica TEXT UNIQUE NOT NULL,
+    concurso TEXT,
+    valor_total REAL NOT NULL,
+    imagem_thumb TEXT,             -- caminho para a thumbnail
+    hash_imagem TEXT,
+    confirmado INTEGER DEFAULT 0,  -- 0 = pendente, 1 = validado
+    data_validacao TEXT,
+    data_upload TEXT NOT NULL
+);
+
+-- Números de cada aposta (relação 1:N)
+CREATE TABLE apostas_numeros (
+    aposta_id INTEGER NOT NULL REFERENCES apostas(id) ON DELETE CASCADE,
+    indice INTEGER NOT NULL,       -- índice da linha de aposta
+    numeros TEXT NOT NULL,          -- JSON array
+    estrelas TEXT,                  -- JSON array (Euromilhões)
+    dream TEXT,                     -- string (EuroDreams)
+    numero_sorte TEXT,              -- string (Totoloto)
+    codigo TEXT,                    -- string (M1lhão)
+    PRIMARY KEY (aposta_id, indice)
+);
+
+-- Verificações (resultados)
+CREATE TABLE verificacoes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    aposta_id INTEGER NOT NULL REFERENCES apostas(id),
+    sorteio_id INTEGER NOT NULL REFERENCES sorteios(id),
+    data_verificacao TEXT NOT NULL,
+    ganhou INTEGER NOT NULL DEFAULT 0,
+    premios TEXT,                   -- JSON array de prémios ganhos
+    acertos TEXT NOT NULL           -- JSON com detalhes dos acertos
+);
+
+-- Notificações
+CREATE TABLE notificacoes (
+    id TEXT PRIMARY KEY,            -- formato: {jogo}_{referencia}_{indice}
+    jogo_id TEXT NOT NULL REFERENCES jogos(id),
+    data TEXT NOT NULL,
+    lido INTEGER DEFAULT 0,
+    arquivado INTEGER DEFAULT 0,
+    titulo TEXT,
+    subtitulo TEXT,
+    resumo TEXT,
+    detalhes TEXT,                  -- JSON completo
+    data_leitura TEXT
+);
+
+-- Configurações e estado
+CREATE TABLE estado (
+    chave TEXT PRIMARY KEY,
+    valor TEXT NOT NULL
+);
+
+-- Controlo de rate-limit da API Gemini
+CREATE TABLE gemini_usage (
+    data TEXT NOT NULL,
+    key_id TEXT NOT NULL,
+    usadas INTEGER DEFAULT 0,
+    PRIMARY KEY (data, key_id)
+);
+Benefícios desta estrutura unificada:
+
+Pesquisas muito mais rápidas (índices, joins).
+
+Sem redundância: cada aposta, sorteio e verificação existe num só sítio.
+
+Estatísticas calculadas em tempo real com queries SQL, em vez de um ficheiro estatisticas_completas.json que precisa de ser regenerado.
+
+Manutenção simplificada: uma migração de esquema é mais fácil do que alterar a estrutura de dezenas de ficheiros JSON.
+
+Integridade referencial: as chaves estrangeiras garantem que não há resultados órfãos.
