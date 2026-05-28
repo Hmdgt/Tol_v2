@@ -86,7 +86,60 @@ async function obterApostasPendentes(jogoFiltro) {
   });
 }
 
-// ---------- LEITURA DO HISTÓRICO DE VERIFICAÇÕES ----------
+// ---------- LEITURA DE PREMIADOS PENDENTES (NOVO FICHEIRO) ----------
+async function obterPremiadosPendentes(jogoFiltro) {
+  const url = `https://api.github.com/repos/${CONFIG.REPO}/contents/resultados/premiados_pendentes.json`;
+  const { content } = await carregarFicheiroGitHub(url);
+  let itens = content || [];
+  if (jogoFiltro !== 'global') {
+    itens = itens.filter(item => item.jogo === jogoFiltro);
+  }
+  itens = itens.filter(item => !item.arquivado);
+  itens.sort((a, b) => new Date(b.data) - new Date(a.data));
+  return itens;
+}
+
+// ---------- CONFIRMAR PREMIADO (REMOVER DO FICHEIRO PREMIADOS_PENDENTES) ----------
+async function confirmarPremiado(id) {
+  const token = localStorage.getItem("github_token");
+  if (!token) {
+    alert("Token não configurado.");
+    return false;
+  }
+  const url = `https://api.github.com/repos/${CONFIG.REPO}/contents/resultados/premiados_pendentes.json`;
+  try {
+    const { content, sha } = await carregarFicheiroGitHub(url);
+    if (!sha) {
+      console.error("Sem SHA para atualizar premiados_pendentes.json");
+      return false;
+    }
+    // Remove o item pelo ID
+    const atualizado = (content || []).filter(item => item.id !== id);
+    const body = {
+      message: `Prémio ${id} confirmado`,
+      content: stringToBase64(JSON.stringify(atualizado, null, 2)),
+      sha: sha
+    };
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(body)
+    });
+    if (!response.ok) {
+      console.error("Erro ao confirmar prémio:", await response.json());
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.error("Erro ao confirmar prémio:", err);
+    return false;
+  }
+}
+
+// ---------- LEITURA DO HISTÓRICO DE VERIFICAÇÕES (mantido igual) ----------
 async function obterHistoricoVerificacoes(jogoFiltro, apenasPremiados = false) {
   const { content } = await carregarFicheiroGitHub(CONFIG.FICHEIROS.HISTORICO);
   let itens = content || [];
@@ -146,7 +199,8 @@ async function renderizarPendentes(container) {
 }
 
 async function renderizarPremiados(container) {
-  const premiados = await obterHistoricoVerificacoes(apostaJogoAtual, true);
+  // ALTERADO: agora lê do novo ficheiro premiados_pendentes.json
+  const premiados = await obterPremiadosPendentes(apostaJogoAtual);
   if (!premiados.length) {
     container.innerHTML = '<div class="no-notifications">Nenhum prémio por confirmar</div>';
     return;
@@ -173,7 +227,8 @@ async function renderizarPremiados(container) {
     btn.addEventListener('click', async (e) => {
       e.stopPropagation();
       const id = btn.dataset.id;
-      if (await marcarComoLida(id)) {
+      // ALTERADO: usa confirmarPremiado em vez de marcarComoLida
+      if (await confirmarPremiado(id)) {
         renderizarPremiados(container);
       }
     });
@@ -193,7 +248,8 @@ async function renderizarPremiados(container) {
         const id = card.dataset.id;
         // Diálogo de confirmação simples
         if (confirm('Marcar este prémio como reclamado?')) {
-          marcarComoLida(id).then(() => {
+          // ALTERADO: usa confirmarPremiado
+          confirmarPremiado(id).then(() => {
             renderizarPremiados(container);
           });
         }
