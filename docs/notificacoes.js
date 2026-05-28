@@ -298,50 +298,78 @@ async function listarValidacoesPendentes() {
   }
 }
 
+// ---------- MARCAR COMO LIDA ----------
 async function marcarComoLida(idNotificacao) {
   const token = localStorage.getItem("github_token");
   if (!token) {
     alert("Token não configurado.");
     return false;
   }
+  
   try {
+    // 1. Carregar ativas e histórico
     const fAtivas = await lerFicheiroGitHub(GITHUB_API);
-    const notificacao = fAtivas.content.find(n => n.id === idNotificacao);
-    if (!notificacao) return true;
+    const fHist = await lerFicheiroGitHub(GITHUB_HISTORICO_API);
+    const historico = fHist.content || [];
+    let novasAtivas = fAtivas.content || [];
 
-    const novasAtivas = fAtivas.content.filter(n => n.id !== idNotificacao);
-    const ativasContent = JSON.stringify(novasAtivas, null, 2);
-    const ativasBase64 = stringToBase64(ativasContent);
-    
-    const ativasResponse = await fetch(GITHUB_API, {
-      method: "PUT",
-      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ message: `✅ Lida: ${idNotificacao}`, content: ativasBase64, sha: fAtivas.sha })
-    });
+    let notificacao = novasAtivas.find(n => n.id === idNotificacao);
+    let origem = 'ativas';
 
-    if (!ativasResponse.ok) {
-      console.error("❌ Erro ao atualizar ativas:", await ativasResponse.json());
-      return false;
+    if (!notificacao) {
+      // Se não está nas ativas, está no histórico
+      notificacao = historico.find(n => n.id === idNotificacao);
+      origem = 'historico';
     }
 
-    const fHist = await lerFicheiroGitHub(GITHUB_HISTORICO_API);
-    const historico = fHist.content;
-    if (!historico.some(n => n.id === idNotificacao)) {
-      notificacao.lido = true;
-      notificacao.data_leitura = new Date().toISOString();
-      historico.push(notificacao);
-      const histContent = JSON.stringify(historico, null, 2);
-      const histBase64 = stringToBase64(histContent);
-      const bodyHist = { message: `Histórico: ${idNotificacao}`, content: histBase64 };
-      if (fHist.sha) bodyHist.sha = fHist.sha;
-      await fetch(GITHUB_HISTORICO_API, {
+    if (!notificacao) {
+      console.warn("Notificação não encontrada em nenhum ficheiro.");
+      return true;
+    }
+
+    // 2. Marcar como lida/arquivada
+    notificacao.lido = true;
+    notificacao.arquivado = true;
+    notificacao.data_leitura = notificacao.data_leitura || new Date().toISOString();
+
+    // 3. Se estava nas ativas, remover de lá
+    if (origem === 'ativas') {
+      novasAtivas = novasAtivas.filter(n => n.id !== idNotificacao);
+      const ativasContent = JSON.stringify(novasAtivas, null, 2);
+      const ativasBase64 = stringToBase64(ativasContent);
+      const ativasResponse = await fetch(GITHUB_API, {
         method: "PUT",
         headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-        body: JSON.stringify(bodyHist)
+        body: JSON.stringify({ message: `Lida: ${idNotificacao}`, content: ativasBase64, sha: fAtivas.sha })
       });
+      if (!ativasResponse.ok) {
+        console.error("Erro ao atualizar ativas:", await ativasResponse.json());
+        return false;
+      }
     }
 
-    if (typeof window.atualizarBadge === "function") await window.atualizarBadge();
+    // 4. Atualizar ou adicionar no histórico
+    const indexNoHistorico = historico.findIndex(n => n.id === idNotificacao);
+    if (indexNoHistorico !== -1) {
+      historico[indexNoHistorico] = notificacao;
+    } else {
+      historico.push(notificacao);
+    }
+
+    const histContent = JSON.stringify(historico, null, 2);
+    const histBase64 = stringToBase64(histContent);
+    const bodyHist = { message: `Histórico: ${idNotificacao}`, content: histBase64 };
+    if (fHist.sha) bodyHist.sha = fHist.sha;
+    await fetch(GITHUB_HISTORICO_API, {
+      method: "PUT",
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+      body: JSON.stringify(bodyHist)
+    });
+
+    if (typeof window.atualizarBadge === "function") {
+      await window.atualizarBadge();
+    }
+    
     return true;
   } catch (err) {
     console.error("❌ Erro ao marcar como lida:", err);
