@@ -260,15 +260,41 @@ def main():
         print("📭 Sem notificações novas para adicionar.")
         return
 
-    # 4. Merge e Gravação
+    # 4. Merge e Gravação das notificações ativas (mantido igual)
     lista_final_ativas = ativas + novas_notificacoes
 
     with open(FICHEIRO_NOTIFICACOES_ATIVAS, "w", encoding="utf-8") as f:
         json.dump(lista_final_ativas, f, indent=2, ensure_ascii=False)
     
     print(f"\n✅ Sucesso: {len(novas_notificacoes)} notificações adicionadas.")
+
+    # 5. Atualizar ficheiro de premiados pendentes (NOVA LÓGICA)
+    caminho_premiados = os.path.join(PASTA_RESULTADOS, "premiados_pendentes.json")
+    premiados_existentes = carregar_json(caminho_premiados)
+    novos_premiados = []
+
+    for notif in novas_notificacoes:
+        detalhes = notif.get('detalhes', {})
+        # Verifica se ganhou
+        if detalhes.get('ganhou') or detalhes.get('premios'):
+            premiado = {
+                "id": notif['id'],
+                "jogo": notif['jogo'],
+                "data": notif['data'],
+                "titulo": f"🎫 Prémio {notif['jogo'].upper()}",
+                "resumo": notif['resumo'],
+                "detalhes": detalhes,
+                "arquivado": False
+            }
+            premiados_existentes.append(premiado)
+            novos_premiados.append(premiado['id'])
+
+    if novos_premiados:
+        with open(caminho_premiados, "w", encoding="utf-8") as f:
+            json.dump(premiados_existentes, f, indent=2, ensure_ascii=False)
+        print(f"   🏆 {len(novos_premiados)} prémio(s) adicionado(s) a premiados_pendentes.json")
     
-    # 5. Enviar Web Pushes diretamente para cada jogo
+    # 6. Enviar Web Pushes diretamente para cada jogo
     print("\n📤 A enviar Web Pushes diretamente...")
     jogos_notificados = set()
     for notif in novas_notificacoes:
