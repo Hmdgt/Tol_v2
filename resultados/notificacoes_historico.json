@@ -4245,5 +4245,45 @@
     },
     "arquivado": true,
     "data_leitura": "2026-05-29T21:55:58.004Z"
+  },
+  {
+    "id": "milhao_625-03800427-EUR_1",
+    "jogo": "milhao",
+    "data": "2026-05-29 21:50:14",
+    "lido": true,
+    "titulo": "🎫 Novo resultado MILHAO",
+    "subtitulo": "Boletim: 625-03800427-EUR",
+    "resumo": "0 acertos",
+    "detalhes": {
+      "data_verificacao": "2026-05-29 21:50:14",
+      "boletim": {
+        "referencia": "625-03800427-EUR",
+        "data_sorteio": "2026-05-29",
+        "imagem_origem": "foto_1778003498177_9klkfe.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "codigo": "KJW14843",
+        "codigo_original": "KJW14843"
+      },
+      "sorteio": {
+        "concurso": "005/2026",
+        "data": "29/05/2026",
+        "codigo_premiado": "KVJ19583",
+        "codigo_original": "KVJ 19583",
+        "premio_nome": "1.º Prémio",
+        "vencedores": "1"
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem prémio",
+        "descricao": "Código não premiado",
+        "valor": "€ 0,00"
+      },
+      "_jogo": "milhao",
+      "_id": "milhao_625-03800427-EUR_1"
+    },
+    "arquivado": true,
+    "data_leitura": "2026-05-29T21:56:11.377Z"
   }
 ]
