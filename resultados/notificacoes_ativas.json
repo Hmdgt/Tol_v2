@@ -62,5 +62,233 @@
       "_jogo": "euromilhoes",
       "_id": "euromilhoes_649-04797170-M1L_1"
     }
+  },
+  {
+    "id": "milhao_625-03800427-EUR_1",
+    "jogo": "milhao",
+    "data": "2026-05-29 21:50:14",
+    "lido": false,
+    "titulo": "🎫 Novo resultado MILHAO",
+    "subtitulo": "Boletim: 625-03800427-EUR",
+    "resumo": "0 acertos",
+    "detalhes": {
+      "data_verificacao": "2026-05-29 21:50:14",
+      "boletim": {
+        "referencia": "625-03800427-EUR",
+        "data_sorteio": "2026-05-29",
+        "imagem_origem": "foto_1778003498177_9klkfe.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "codigo": "KJW14843",
+        "codigo_original": "KJW14843"
+      },
+      "sorteio": {
+        "concurso": "005/2026",
+        "data": "29/05/2026",
+        "codigo_premiado": "KVJ19583",
+        "codigo_original": "KVJ 19583",
+        "premio_nome": "1.º Prémio",
+        "vencedores": "1"
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem prémio",
+        "descricao": "Código não premiado",
+        "valor": "€ 0,00"
+      },
+      "_jogo": "milhao",
+      "_id": "milhao_625-03800427-EUR_1"
+    }
+  },
+  {
+    "id": "milhao_632-05460770-EUR_1",
+    "jogo": "milhao",
+    "data": "2026-05-29 21:50:14",
+    "lido": false,
+    "titulo": "🎫 Novo resultado MILHAO",
+    "subtitulo": "Boletim: 632-05460770-EUR",
+    "resumo": "0 acertos",
+    "detalhes": {
+      "data_verificacao": "2026-05-29 21:50:14",
+      "boletim": {
+        "referencia": "632-05460770-EUR",
+        "data_sorteio": "2026-05-29",
+        "imagem_origem": "foto_1778603810924_lyut8v.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "codigo": "KPT11996",
+        "codigo_original": "KPT11996"
+      },
+      "sorteio": {
+        "concurso": "005/2026",
+        "data": "29/05/2026",
+        "codigo_premiado": "KVJ19583",
+        "codigo_original": "KVJ 19583",
+        "premio_nome": "1.º Prémio",
+        "vencedores": "1"
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem prémio",
+        "descricao": "Código não premiado",
+        "valor": "€ 0,00"
+      },
+      "_jogo": "milhao",
+      "_id": "milhao_632-05460770-EUR_1"
+    }
+  },
+  {
+    "id": "milhao_635-07212409-EUR_1",
+    "jogo": "milhao",
+    "data": "2026-05-29 21:50:14",
+    "lido": false,
+    "titulo": "🎫 Novo resultado MILHAO",
+    "subtitulo": "Boletim: 635-07212409-EUR",
+    "resumo": "0 acertos",
+    "detalhes": {
+      "data_verificacao": "2026-05-29 21:50:14",
+      "boletim": {
+        "referencia": "635-07212409-EUR",
+        "data_sorteio": "2026-05-29",
+        "imagem_origem": "foto_1778952160283_fy3vry.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "codigo": "KSS21832",
+        "codigo_original": "KSS21832"
+      },
+      "sorteio": {
+        "concurso": "005/2026",
+        "data": "29/05/2026",
+        "codigo_premiado": "KVJ19583",
+        "codigo_original": "KVJ 19583",
+        "premio_nome": "1.º Prémio",
+        "vencedores": "1"
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem prémio",
+        "descricao": "Código não premiado",
+        "valor": "€ 0,00"
+      },
+      "_jogo": "milhao",
+      "_id": "milhao_635-07212409-EUR_1"
+    }
+  },
+  {
+    "id": "milhao_642-01550393-EUR_1",
+    "jogo": "milhao",
+    "data": "2026-05-29 21:50:14",
+    "lido": false,
+    "titulo": "🎫 Novo resultado MILHAO",
+    "subtitulo": "Boletim: 642-01550393-EUR",
+    "resumo": "0 acertos",
+    "detalhes": {
+      "data_verificacao": "2026-05-29 21:50:14",
+      "boletim": {
+        "referencia": "642-01550393-EUR",
+        "data_sorteio": "2026-05-29",
+        "imagem_origem": "foto_1779455271297_ar6cf2.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "codigo": "KXN32326",
+        "codigo_original": "KXN32326"
+      },
+      "sorteio": {
+        "concurso": "005/2026",
+        "data": "29/05/2026",
+        "codigo_premiado": "KVJ19583",
+        "codigo_original": "KVJ 19583",
+        "premio_nome": "1.º Prémio",
+        "vencedores": "1"
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem prémio",
+        "descricao": "Código não premiado",
+        "valor": "€ 0,00"
+      },
+      "_jogo": "milhao",
+      "_id": "milhao_642-01550393-EUR_1"
+    }
+  },
+  {
+    "id": "milhao_646-08018576-EUR_1",
+    "jogo": "milhao",
+    "data": "2026-05-29 21:50:14",
+    "lido": false,
+    "titulo": "🎫 Novo resultado MILHAO",
+    "subtitulo": "Boletim: 646-08018576-EUR",
+    "resumo": "0 acertos",
+    "detalhes": {
+      "data_verificacao": "2026-05-29 21:50:14",
+      "boletim": {
+        "referencia": "646-08018576-EUR",
+        "data_sorteio": "2026-05-29",
+        "imagem_origem": "foto_1779822430510_glz2eg.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "codigo": "LCR20153",
+        "codigo_original": "LCR20153"
+      },
+      "sorteio": {
+        "concurso": "005/2026",
+        "data": "29/05/2026",
+        "codigo_premiado": "KVJ19583",
+        "codigo_original": "KVJ 19583",
+        "premio_nome": "1.º Prémio",
+        "vencedores": "1"
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem prémio",
+        "descricao": "Código não premiado",
+        "valor": "€ 0,00"
+      },
+      "_jogo": "milhao",
+      "_id": "milhao_646-08018576-EUR_1"
+    }
+  },
+  {
+    "id": "milhao_649-06697613-EUR_1",
+    "jogo": "milhao",
+    "data": "2026-05-29 21:50:14",
+    "lido": false,
+    "titulo": "🎫 Novo resultado MILHAO",
+    "subtitulo": "Boletim: 649-06697613-EUR",
+    "resumo": "0 acertos",
+    "detalhes": {
+      "data_verificacao": "2026-05-29 21:50:14",
+      "boletim": {
+        "referencia": "649-06697613-EUR",
+        "data_sorteio": "2026-05-29",
+        "imagem_origem": "foto_1780046673675_nudw68.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "codigo": "LDV01439",
+        "codigo_original": "LDV01439"
+      },
+      "sorteio": {
+        "concurso": "005/2026",
+        "data": "29/05/2026",
+        "codigo_premiado": "KVJ19583",
+        "codigo_original": "KVJ 19583",
+        "premio_nome": "1.º Prémio",
+        "vencedores": "1"
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem prémio",
+        "descricao": "Código não premiado",
+        "valor": "€ 0,00"
+      },
+      "_jogo": "milhao",
+      "_id": "milhao_649-06697613-EUR_1"
+    }
   }
 ]
