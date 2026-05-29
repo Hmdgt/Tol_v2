@@ -4285,5 +4285,45 @@
     },
     "arquivado": true,
     "data_leitura": "2026-05-29T21:56:11.377Z"
+  },
+  {
+    "id": "milhao_635-07212409-EUR_1",
+    "jogo": "milhao",
+    "data": "2026-05-29 21:50:14",
+    "lido": true,
+    "titulo": "🎫 Novo resultado MILHAO",
+    "subtitulo": "Boletim: 635-07212409-EUR",
+    "resumo": "0 acertos",
+    "detalhes": {
+      "data_verificacao": "2026-05-29 21:50:14",
+      "boletim": {
+        "referencia": "635-07212409-EUR",
+        "data_sorteio": "2026-05-29",
+        "imagem_origem": "foto_1778952160283_fy3vry.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "codigo": "KSS21832",
+        "codigo_original": "KSS21832"
+      },
+      "sorteio": {
+        "concurso": "005/2026",
+        "data": "29/05/2026",
+        "codigo_premiado": "KVJ19583",
+        "codigo_original": "KVJ 19583",
+        "premio_nome": "1.º Prémio",
+        "vencedores": "1"
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem prémio",
+        "descricao": "Código não premiado",
+        "valor": "€ 0,00"
+      },
+      "_jogo": "milhao",
+      "_id": "milhao_635-07212409-EUR_1"
+    },
+    "arquivado": true,
+    "data_leitura": "2026-05-29T21:57:31.100Z"
   }
 ]
