@@ -1,11 +1,11 @@
-Concurso: 004/2026
-Data: 24/04/2026
-Código vencedor: JHG 04555
+Concurso: 005/2026
+Data: 29/05/2026
+Código vencedor: KVJ 19583
 Vencedores: 1
 ----------------------------------------
 Estatísticas:
-Receita ilíquida apostas: € 4.635.385,20
+Receita ilíquida apostas: € 5.461.600,50
 Montante para prémios: € 1.000.000,00
-Nº de Registos: 8.725.798
-Nº de Códigos atribuídos: 15.451.284
+Nº de Registos: 10.357.585
+Nº de Códigos atribuídos: 18.205.335
 ----------------------------------------

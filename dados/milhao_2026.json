@@ -99,6 +99,31 @@
           "valor": "15.451.284"
         }
       ]
+    },
+    {
+      "concurso": "005/2026",
+      "data": "29/05/2026",
+      "codigo": "KVJ 19583",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1",
+      "estatisticas": [
+        {
+          "nome": "Receita ilíquida apostas",
+          "valor": "€ 5.461.600,50"
+        },
+        {
+          "nome": "Montante para prémios",
+          "valor": "€ 1.000.000,00"
+        },
+        {
+          "nome": "Nº de Registos",
+          "valor": "10.357.585"
+        },
+        {
+          "nome": "Nº de Códigos atribuídos",
+          "valor": "18.205.335"
+        }
+      ]
     }
   ]
 }
