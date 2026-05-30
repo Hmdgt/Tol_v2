@@ -36,7 +36,7 @@ jobs:
 
       - name: Instalar dependências Python
         run: |
-          pip install selenium chromedriver-autoinstaller
+          pip install selenium chromedriver-autoinstaller requests beautifulsoup4
 
       - name: Sincronizar com o repositório remoto
         run: |
