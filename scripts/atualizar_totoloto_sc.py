@@ -68,9 +68,9 @@ def extrair_totoloto_http():
     numeros = [int(n) for n in partes[0].strip().split()]
     especial = int(partes[1].strip())
 
-    # 3. Prémios
+    # 3. Prémios – seletor mais genérico para evitar falhas
     premios = []
-    for ul in soup.select('div.stripped.betMiddle.fourcol.regPad ul.colums'):
+    for ul in soup.select('div.stripped.betMiddle ul.colums'):
         itens = ul.find_all('li')
         if len(itens) >= 4:
             premios.append({
@@ -131,7 +131,7 @@ def extrair_totoloto_selenium():
         premios = []
         listas = driver.find_elements(
             By.CSS_SELECTOR,
-            "div.stripped.betMiddle.fourcol.regPad ul.colums"
+            "div.stripped.betMiddle ul.colums"
         )
         for ul in listas:
             itens = ul.find_elements(By.TAG_NAME, "li")
@@ -153,7 +153,7 @@ def extrair_totoloto_selenium():
     finally:
         driver.quit()
 
-# ===== LÓGICA PRINCIPAL (TENTA HTTP PRIMEIRO, DEPOIS SELENIUM) =====
+# ===== LÓGICA PRINCIPAL =====
 def extrair_totoloto_sc():
     try:
         print("🔍 A tentar scraping via HTTP...")
