@@ -3,12 +3,12 @@ name: Atualizar M1lhão automaticamente
 
 on:
   schedule:
-    # Todas as sextas-feiras (21h, 22h, 23h PT → 20h, 21h, 22h UTC)
+    # Todas as sextas-feiras (21:30h, 22:30h, 23:30h PT → 20:30h, 21:30h, 22:30h UTC)
     - cron: "30 20 * * 5"
     - cron: "30 21 * * 5"
     - cron: "30 22 * * 5"
 
-    # Backup no sábado às 10:00 PT → 9:00 UTC
+    # Backup no sábado às 10:30 PT → 9:30 UTC
     - cron: "30 9 * * 6"
 
   workflow_dispatch:
