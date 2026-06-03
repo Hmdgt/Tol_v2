@@ -298,7 +298,7 @@ async function listarValidacoesPendentes() {
   }
 }
 
-// ---------- MARCAR COMO LIDA ----------
+// ---------- MARCAR COMO LIDA (ATUALIZA HISTÓRICO) ----------
 async function marcarComoLida(idNotificacao) {
   const token = localStorage.getItem("github_token");
   if (!token) {
@@ -317,7 +317,6 @@ async function marcarComoLida(idNotificacao) {
     let origem = 'ativas';
 
     if (!notificacao) {
-      // Se não está nas ativas, está no histórico
       notificacao = historico.find(n => n.id === idNotificacao);
       origem = 'historico';
     }
@@ -422,7 +421,9 @@ window.renderizarDetalheNotificacao = async function(idNotificacao) {
   const btnReclamar = document.getElementById('btnReclamarDetalhe');
   if (btnReclamar) {
     btnReclamar.addEventListener('click', async () => {
-      if (await marcarComoLida(idNotificacao)) {
+      // Remove o prémio dos pendentes e atualiza o histórico
+      if (await confirmarPremiado(idNotificacao)) {
+        await marcarComoLida(idNotificacao);
         const destino = window.detalheOrigem || 'notificacoesView';
         if (destino === 'apostasView' && typeof window.carregarApostasView === 'function') {
           window.carregarApostasView();
@@ -442,7 +443,8 @@ window.renderizarDetalheNotificacao = async function(idNotificacao) {
       pressTimer = setTimeout(async () => {
         if (notificacao.detalhes?.ganhou && !notificacao.arquivado) {
           if (confirm('Marcar este prémio como reclamado?')) {
-            if (await marcarComoLida(idNotificacao)) {
+            if (await confirmarPremiado(idNotificacao)) {
+              await marcarComoLida(idNotificacao);
               const destino = window.detalheOrigem || 'notificacoesView';
               if (destino === 'apostasView' && typeof window.carregarApostasView === 'function') {
                 window.carregarApostasView();
@@ -459,7 +461,7 @@ window.renderizarDetalheNotificacao = async function(idNotificacao) {
     cardDetalhe.addEventListener('pointerleave', () => clearTimeout(pressTimer));
   }
 
-  // Arquiva automaticamente se estava nas ativas
+  // Arquiva automaticamente se ainda estava nas ativas (caso não tenha sido reclamado manualmente)
   if (notificacoes.some(n => n.id === idNotificacao)) {
     marcarComoLida(idNotificacao);
   }
