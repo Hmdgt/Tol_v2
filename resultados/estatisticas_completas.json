@@ -64,6 +64,22 @@
         "mediana_premios": 0.0,
         "media_acertos_numeros": 0.33,
         "media_acertos_especial": 0.0
+      },
+      "2026-06": {
+        "total_apostas": 1,
+        "total_gasto": 1.0,
+        "total_recebido": 0.0,
+        "ganhadoras": 0,
+        "acertos_numeros": 1,
+        "acertos_especial": 0,
+        "maior_premio": 0.0,
+        "data_maior_premio": null,
+        "saldo": -1.0,
+        "percentagem_ganhadoras": 0.0,
+        "media_premios": 0,
+        "mediana_premios": 0.0,
+        "media_acertos_numeros": 1.0,
+        "media_acertos_especial": 0.0
       }
     },
     "euromilhoes": {
@@ -284,18 +300,18 @@
   "anual": {
     "totoloto": {
       "2026": {
-        "total_apostas": 25,
-        "total_gasto": 25.0,
+        "total_apostas": 26,
+        "total_gasto": 26.0,
         "total_recebido": 4.0,
         "ganhadoras": 4,
-        "acertos_numeros": 10,
+        "acertos_numeros": 11,
         "acertos_especial": 0,
         "maior_premio": 1.0,
         "data_maior_premio": "2026-02-07",
-        "saldo": -21.0,
-        "percentagem_ganhadoras": 16.0,
+        "saldo": -22.0,
+        "percentagem_ganhadoras": 15.38,
         "media_premios": 1.0,
-        "media_acertos_numeros": 0.4,
+        "media_acertos_numeros": 0.42,
         "media_acertos_especial": 0.0
       }
     },
@@ -394,28 +410,28 @@
         "percentagem_ganhadoras": 0.0
       },
       "2026-06": {
-        "total_apostas": 1,
-        "total_gasto": 2.2,
+        "total_apostas": 2,
+        "total_gasto": 3.2,
         "total_recebido": 3.76,
         "ganhadoras": 1,
         "maior_premio": 3.76,
         "data_maior_premio": "2026-06-02",
-        "saldo": 1.56,
-        "percentagem_ganhadoras": 100.0
+        "saldo": 0.56,
+        "percentagem_ganhadoras": 50.0
       }
     },
     "anual": {
       "2026": {
-        "total_apostas": 86,
-        "total_gasto": 109.99999999999999,
+        "total_apostas": 87,
+        "total_gasto": 110.99999999999999,
         "total_recebido": 17.41,
         "ganhadoras": 7,
         "maior_premio": 7.15,
         "data_maior_premio": "2026-02-27",
-        "saldo": -92.59,
-        "percentagem_ganhadoras": 8.14
+        "saldo": -93.59,
+        "percentagem_ganhadoras": 8.05
       }
     }
   },
-  "ultima_atualizacao": "2026-06-03T13:19:52.194431"
+  "ultima_atualizacao": "2026-06-03T22:26:09.286766"
 }
