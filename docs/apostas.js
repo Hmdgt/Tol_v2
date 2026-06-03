@@ -88,8 +88,8 @@ async function obterApostasPendentes(jogoFiltro) {
 
 // ---------- LEITURA DE PREMIADOS PENDENTES (NOVO FICHEIRO) ----------
 async function obterPremiadosPendentes(jogoFiltro) {
-  const url = `https://api.github.com/repos/${CONFIG.REPO}/contents/resultados/premiados_pendentes.json`;
-  const { content } = await carregarFicheiroGitHub(url);
+  // Caminho relativo para o ficheiro (a função carregarFicheiroGitHub já junta o CONFIG.REPO)
+  const { content } = await carregarFicheiroGitHub("resultados/premiados_pendentes.json");
   let itens = content || [];
   if (jogoFiltro !== 'global') {
     itens = itens.filter(item => item.jogo === jogoFiltro);
