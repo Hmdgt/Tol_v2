@@ -4621,5 +4621,60 @@
     },
     "arquivado": true,
     "data_leitura": "2026-06-05T23:08:05.430Z"
+  },
+  {
+    "id": "totoloto_156-04354669-066_1",
+    "jogo": "totoloto",
+    "data": "2026-06-06 20:54:06",
+    "lido": true,
+    "titulo": "🎫 Novo resultado TOTOLOTO",
+    "subtitulo": "Boletim: 156-04354669-066",
+    "resumo": "Não ganhou",
+    "detalhes": {
+      "data_verificacao": "2026-06-06 20:54:06",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "156-04354669-066",
+        "data_sorteio": "2026-06-06",
+        "concurso_sorteio": "045/2026",
+        "imagem_origem": "foto_1780676460701_815l05.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "05",
+          "10",
+          "22",
+          "26",
+          "28"
+        ],
+        "numero_da_sorte": "05"
+      },
+      "sorteio": {
+        "concurso": "045/2026",
+        "data": "06/06/2026",
+        "numeros": [
+          "06",
+          "08",
+          "15",
+          "33",
+          "49"
+        ],
+        "numero_da_sorte": "12"
+      },
+      "acertos": {
+        "numeros": 0,
+        "numero_da_sorte": false,
+        "descricao": "0 numero(s) sem Nº da Sorte",
+        "numeros_acertados": [],
+        "numero_da_sorte_acertado": null
+      },
+      "ganhou": false,
+      "premios": [],
+      "_jogo": "totoloto",
+      "_id": "totoloto_156-04354669-066_1"
+    },
+    "arquivado": true,
+    "data_leitura": "2026-06-06T21:11:45.007Z"
   }
 ]
