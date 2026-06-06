@@ -106,21 +106,28 @@ async function confirmarPremiado(id) {
     alert("Token não configurado.");
     return false;
   }
-  const url = `https://api.github.com/repos/${CONFIG.REPO}/contents/resultados/premiados_pendentes.json`;
+
+  const caminhoRelativo = "resultados/premiados_pendentes.json";
+  const urlAPI = `https://api.github.com/repos/${CONFIG.REPO}/contents/${caminhoRelativo}`;
+
   try {
-    const { content, sha } = await carregarFicheiroGitHub(url);
+    // ⚠️ Passar apenas o caminho relativo!
+    const { content, sha } = await carregarFicheiroGitHub(caminhoRelativo);
     if (!sha) {
       console.error("Sem SHA para atualizar premiados_pendentes.json");
       return false;
     }
+
     // Remove o item pelo ID
     const atualizado = (content || []).filter(item => item.id !== id);
+
     const body = {
       message: `Prémio ${id} confirmado`,
       content: stringToBase64(JSON.stringify(atualizado, null, 2)),
       sha: sha
     };
-    const response = await fetch(url, {
+
+    const response = await fetch(urlAPI, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -128,6 +135,7 @@ async function confirmarPremiado(id) {
       },
       body: JSON.stringify(body)
     });
+
     if (!response.ok) {
       console.error("Erro ao confirmar prémio:", await response.json());
       return false;
