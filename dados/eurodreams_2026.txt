@@ -1,15 +1,15 @@
-Concurso: 045/2026
-Data: 04/06/2026
-Chave: 1 9 17 22 37 39 + 3
-Ordem de saída: 1 39 37 9 22 17 + 3
-Números: 01 09 17 22 37 39
-Dream: 3
+Concurso: 046/2026
+Data: 08/06/2026
+Chave: 2 4 9 22 28 34 + 4
+Ordem de saída: 28 22 9 34 2 4 + 4
+Números: 02 04 09 22 28 34
+Dream: 4
 ----------------------------------------
 Prémios:
-1.º Prémio - 6 Números + 1 Nº de Sonho | PT: 0 | EU: 0 | Valor: € 20.000/mês x 30 anos
-2.º Prémio - 6 Números | PT: 1 | EU: 2 | Valor: € 2.000/mês x 5 anos
-3.º Prémio - 5 Números | PT: 35 | EU: 117 | Valor: € 473,98
-4.º Prémio - 4 Números | PT: 649 | EU: 4.094 | Valor: € 37,97
-5.º Prémio - 3 Números | PT: 8.872 | EU: 59.394 | Valor: € 5,49
-6.º Prémio - 2 Números | PT: 50.413 | EU: 351.729 | Valor: € 2,50
+1.º Prémio - 6 Números + 1 Nº de Sonho | PT: 0 | EU: 1 | Valor: € 20.000/mês x 30 anos
+2.º Prémio - 6 Números | PT: 1 | EU: 1 | Valor: € 2.000/mês x 5 anos
+3.º Prémio - 5 Números | PT: 21 | EU: 105 | Valor: € 482,80
+4.º Prémio - 4 Números | PT: 673 | EU: 4.151 | Valor: € 34,23
+5.º Prémio - 3 Números | PT: 9.756 | EU: 60.155 | Valor: € 4,96
+6.º Prémio - 2 Números | PT: 56.523 | EU: 344.417 | Valor: € 2,50
 ----------------------------------------
