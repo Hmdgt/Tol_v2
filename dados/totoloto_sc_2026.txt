@@ -1,13 +1,7 @@
-Concurso: 045/2026
-Data: 06/06/2026
-Números: 6 8 15 33 49
-Especial: 12
+Concurso: 046/2026
+Data: 10/06/2026
+Números: 7 13 22 40 48
+Especial: 2
 ----------------------------------------
 Prémios:
-1.� Pr�mio - 5 N�meros + N� da Sorte | Vencedores: 0 | Valor: (1)
-2.� Pr�mio - 5 N�meros | Vencedores: 1 | Valor: € 23.437,47
-3.� Pr�mio - 4 N�meros | Vencedores: 117 | Valor: € 250,40
-4.� Pr�mio - 3 N�meros | Vencedores: 5.580 | Valor: € 5,25
-5.� Pr�mio - 2 N�meros | Vencedores: 79.770 | Valor: € 2,20
-N� da Sorte - N� da Sorte | Vencedores: 66.675 | Valor: Reembolso do valor da aposta de Totoloto
 ----------------------------------------
