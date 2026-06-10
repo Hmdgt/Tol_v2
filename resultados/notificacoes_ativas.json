@@ -1,1 +1,66 @@
-[]
+[
+  {
+    "id": "euromilhoes_660-04514159-M1L_1",
+    "jogo": "euromilhoes",
+    "data": "2026-06-10 10:56:49",
+    "lido": false,
+    "titulo": "🎫 Novo resultado EUROMILHOES",
+    "subtitulo": "Boletim: 660-04514159-M1L",
+    "resumo": "0 números + 0 estrelas",
+    "detalhes": {
+      "data_verificacao": "2026-06-10 10:56:49",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "660-04514159-M1L",
+        "data_sorteio": "2026-06-09",
+        "concurso_sorteio": "046/2026",
+        "imagem_origem": "foto_1781088833731_qzwukm.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "09",
+          "13",
+          "20",
+          "29",
+          "34"
+        ],
+        "estrelas": [
+          "10",
+          "11"
+        ]
+      },
+      "sorteio": {
+        "concurso": "046/2026",
+        "data": "09/06/2026",
+        "chave": "2 7 23 44 46 + 3 5",
+        "numeros": [
+          "02",
+          "07",
+          "23",
+          "44",
+          "46"
+        ],
+        "estrelas": [
+          "03",
+          "05"
+        ]
+      },
+      "acertos": {
+        "numeros": 0,
+        "estrelas": 0,
+        "descricao": "0 numero(s) e 0 estrela(s)",
+        "numeros_acertados": [],
+        "estrelas_acertadas": []
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem premio",
+        "descricao": "0 acertos",
+        "valor": "EUR 0,00"
+      },
+      "_jogo": "euromilhoes",
+      "_id": "euromilhoes_660-04514159-M1L_1"
+    }
+  }
+]
