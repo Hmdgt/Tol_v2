@@ -1,13 +1,7 @@
-Concurso: 046/2026
-Data: 10/06/2026
-Números: 7 13 22 40 48
-Especial: 2
+Concurso: 047/2026
+Data: 13/06/2026
+Números: 2 22 23 30 43
+Especial: 7
 ----------------------------------------
 Prémios:
-1.� Pr�mio - 5 N�meros + N� da Sorte | Vencedores: 0 | Valor: (1)
-2.� Pr�mio - 5 N�meros | Vencedores: 0 | Valor: (2)
-3.� Pr�mio - 4 N�meros | Vencedores: 106 | Valor: € 422,27
-4.� Pr�mio - 3 N�meros | Vencedores: 4.991 | Valor: € 4,98
-5.� Pr�mio - 2 N�meros | Vencedores: 73.343 | Valor: € 2,03
-N� da Sorte - N� da Sorte | Vencedores: 55.953 | Valor: Reembolso do valor da aposta de Totoloto
 ----------------------------------------
