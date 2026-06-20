@@ -154,3 +154,6 @@
 [2026-06-17 23:22:05] [santacasa] Concurso 048/2026 atualizado com novos dados!
 [2026-06-18 12:29:39] [totoloto] Scraping via HTTP bem-sucedido
 [2026-06-18 12:29:39] [santacasa] Concurso 048/2026 atualizado com novos dados!
+[2026-06-20 21:03:02] [totoloto] HTTP falhou: Prémios não encontrados. A tentar Selenium.
+[2026-06-20 21:03:06] [totoloto] Scraping via Selenium bem-sucedido
+[2026-06-20 21:03:06] [santacasa] Resultado do concurso 049/2026 adicionado ao JSON totoloto_sc_2026.
