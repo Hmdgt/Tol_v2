@@ -1,15 +1,15 @@
-Concurso: 049/2026
-Data: 18/06/2026
-Chave: 2 19 23 27 28 30 + 3
-Ordem de saída: 28 30 27 2 19 23 + 3
-Números: 02 19 23 27 28 30
+Concurso: 050/2026
+Data: 22/06/2026
+Chave: 4 10 14 15 29 37 + 3
+Ordem de saída: 4 10 15 14 37 29 + 3
+Números: 04 10 14 15 29 37
 Dream: 3
 ----------------------------------------
 Prémios:
-1.º Prémio - 6 Números + 1 Nº de Sonho | PT: 0 | EU: 0 | Valor: € 20.000/mês x 30 anos
+1.º Prémio - 6 Números + 1 Nº de Sonho | PT: 0 | EU: 1 | Valor: € 20.000/mês x 30 anos
 2.º Prémio - 6 Números | PT: 0 | EU: 0 | Valor: € 2.000/mês x 5 anos
-3.º Prémio - 5 Números | PT: 10 | EU: 92 | Valor: € 523,38
-4.º Prémio - 4 Números | PT: 692 | EU: 4.204 | Valor: € 32,10
-5.º Prémio - 3 Números | PT: 9.711 | EU: 60.974 | Valor: € 4,64
-6.º Prémio - 2 Números | PT: 54.872 | EU: 356.604 | Valor: € 2,50
+3.º Prémio - 5 Números | PT: 15 | EU: 84 | Valor: € 571,84
+4.º Prémio - 4 Números | PT: 583 | EU: 3.397 | Valor: € 39,63
+5.º Prémio - 3 Números | PT: 8.697 | EU: 50.689 | Valor: € 5,57
+6.º Prémio - 2 Números | PT: 53.282 | EU: 307.418 | Valor: € 2,50
 ----------------------------------------
