@@ -111,14 +111,12 @@ async function confirmarPremiado(id) {
   const urlAPI = `https://api.github.com/repos/${CONFIG.REPO}/contents/${caminhoRelativo}`;
 
   try {
-    // ⚠️ Passar apenas o caminho relativo!
     const { content, sha } = await carregarFicheiroGitHub(caminhoRelativo);
     if (!sha) {
       console.error("Sem SHA para atualizar premiados_pendentes.json");
       return false;
     }
 
-    // Remove o item pelo ID
     const atualizado = (content || []).filter(item => item.id !== id);
 
     const body = {
@@ -140,6 +138,12 @@ async function confirmarPremiado(id) {
       console.error("Erro ao confirmar prémio:", await response.json());
       return false;
     }
+
+    // ✅ Marca como lida/arquivada no histórico
+    if (typeof marcarComoLida === 'function') {
+      await marcarComoLida(id);
+    }
+
     return true;
   } catch (err) {
     console.error("Erro ao confirmar prémio:", err);
