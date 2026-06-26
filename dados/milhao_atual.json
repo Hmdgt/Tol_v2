@@ -1,13 +1,13 @@
 {
-  "concurso": "005/2026",
-  "data": "29/05/2026",
-  "codigo": "KVJ 19583",
+  "concurso": "006/2026",
+  "data": "26/06/2026",
+  "codigo": "LQV 19776",
   "premio_nome": "1.º Prémio",
   "vencedores": "1",
   "estatisticas": [
     {
       "nome": "Receita ilíquida apostas",
-      "valor": "€ 5.461.600,50"
+      "valor": "€ 4.391.628,00"
     },
     {
       "nome": "Montante para prémios",
@@ -15,11 +15,11 @@
     },
     {
       "nome": "Nº de Registos",
-      "valor": "10.357.585"
+      "valor": "8.287.584"
     },
     {
       "nome": "Nº de Códigos atribuídos",
-      "valor": "18.205.335"
+      "valor": "14.638.760"
     }
   ]
 }
