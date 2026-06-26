@@ -294,6 +294,22 @@
         "mediana_premios": 0.0,
         "media_acertos_numeros": 0.0,
         "media_acertos_especial": 0.0
+      },
+      "2026-06": {
+        "total_apostas": 5,
+        "total_gasto": 1.5,
+        "total_recebido": 0.0,
+        "ganhadoras": 0,
+        "acertos_numeros": 0,
+        "acertos_especial": 0,
+        "maior_premio": 0.0,
+        "data_maior_premio": null,
+        "saldo": -1.5,
+        "percentagem_ganhadoras": 0.0,
+        "media_premios": 0,
+        "mediana_premios": 0.0,
+        "media_acertos_numeros": 0.0,
+        "media_acertos_especial": 0.0
       }
     }
   },
@@ -351,15 +367,15 @@
     },
     "milhao": {
       "2026": {
-        "total_apostas": 26,
-        "total_gasto": 7.8,
+        "total_apostas": 31,
+        "total_gasto": 9.3,
         "total_recebido": 0.0,
         "ganhadoras": 0,
         "acertos_numeros": 0,
         "acertos_especial": 0,
         "maior_premio": 0.0,
         "data_maior_premio": null,
-        "saldo": -7.8,
+        "saldo": -9.3,
         "percentagem_ganhadoras": 0.0,
         "media_premios": 0,
         "media_acertos_numeros": 0.0,
@@ -410,28 +426,28 @@
         "percentagem_ganhadoras": 0.0
       },
       "2026-06": {
-        "total_apostas": 11,
-        "total_gasto": 18.2,
+        "total_apostas": 16,
+        "total_gasto": 19.7,
         "total_recebido": 9.43,
         "ganhadoras": 2,
         "maior_premio": 5.67,
         "data_maior_premio": "2026-06-05",
-        "saldo": -8.77,
-        "percentagem_ganhadoras": 18.18
+        "saldo": -10.27,
+        "percentagem_ganhadoras": 12.5
       }
     },
     "anual": {
       "2026": {
-        "total_apostas": 96,
-        "total_gasto": 125.99999999999999,
+        "total_apostas": 101,
+        "total_gasto": 127.49999999999999,
         "total_recebido": 23.08,
         "ganhadoras": 8,
         "maior_premio": 7.15,
         "data_maior_premio": "2026-02-27",
-        "saldo": -102.92,
-        "percentagem_ganhadoras": 8.33
+        "saldo": -104.42,
+        "percentagem_ganhadoras": 7.92
       }
     }
   },
-  "ultima_atualizacao": "2026-06-26T22:17:29.813811"
+  "ultima_atualizacao": "2026-06-26T22:44:32.312400"
 }

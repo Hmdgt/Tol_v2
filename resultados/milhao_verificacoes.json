@@ -700,5 +700,140 @@
       "descricao": "Código não premiado",
       "valor": "€ 0,00"
     }
+  },
+  {
+    "data_verificacao": "2026-06-26 22:44:30",
+    "boletim": {
+      "referencia": "653-04612073-EUR",
+      "data_sorteio": "2026-06-26",
+      "imagem_origem": "foto_1780392021229_yfuyfg.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "codigo": "LHS00372",
+      "codigo_original": "LHS00372"
+    },
+    "sorteio": {
+      "concurso": "006/2026",
+      "data": "26/06/2026",
+      "codigo_premiado": "LQV19776",
+      "codigo_original": "LQV 19776",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Código não premiado",
+      "valor": "€ 0,00"
+    }
+  },
+  {
+    "data_verificacao": "2026-06-26 22:44:30",
+    "boletim": {
+      "referencia": "656-01964930-EUR",
+      "data_sorteio": "2026-06-26",
+      "imagem_origem": "foto_1780677301237_0uw68n.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "codigo": "LMD12765",
+      "codigo_original": "LMD12765"
+    },
+    "sorteio": {
+      "concurso": "006/2026",
+      "data": "26/06/2026",
+      "codigo_premiado": "LQV19776",
+      "codigo_original": "LQV 19776",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Código não premiado",
+      "valor": "€ 0,00"
+    }
+  },
+  {
+    "data_verificacao": "2026-06-26 22:44:30",
+    "boletim": {
+      "referencia": "660-05759340-EUR",
+      "data_sorteio": "2026-06-26",
+      "imagem_origem": "foto_1781089494720_yqeoxj.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "codigo": "LQB25028",
+      "codigo_original": "LQB25028"
+    },
+    "sorteio": {
+      "concurso": "006/2026",
+      "data": "26/06/2026",
+      "codigo_premiado": "LQV19776",
+      "codigo_original": "LQV 19776",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Código não premiado",
+      "valor": "€ 0,00"
+    }
+  },
+  {
+    "data_verificacao": "2026-06-26 22:44:30",
+    "boletim": {
+      "referencia": "670-07789545-EUR",
+      "data_sorteio": "2026-06-26",
+      "imagem_origem": "foto_1781854275016_l4me90.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "codigo": "LWH04261",
+      "codigo_original": "LWH04261"
+    },
+    "sorteio": {
+      "concurso": "006/2026",
+      "data": "26/06/2026",
+      "codigo_premiado": "LQV19776",
+      "codigo_original": "LQV 19776",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Código não premiado",
+      "valor": "€ 0,00"
+    }
+  },
+  {
+    "data_verificacao": "2026-06-26 22:44:30",
+    "boletim": {
+      "referencia": "673-03289386-EUR",
+      "data_sorteio": "2026-06-26",
+      "imagem_origem": "foto_1782145911287_h77h7v.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "codigo": "LZJ38525",
+      "codigo_original": "LZJ38525"
+    },
+    "sorteio": {
+      "concurso": "006/2026",
+      "data": "26/06/2026",
+      "codigo_premiado": "LQV19776",
+      "codigo_original": "LQV 19776",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Código não premiado",
+      "valor": "€ 0,00"
+    }
   }
 ]
