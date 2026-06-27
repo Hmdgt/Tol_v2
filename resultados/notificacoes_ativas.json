@@ -1,1 +1,58 @@
-[]
+[
+  {
+    "id": "totoloto_177-04015852-222_1",
+    "jogo": "totoloto",
+    "data": "2026-06-27 21:54:02",
+    "lido": false,
+    "titulo": "🎫 Novo resultado TOTOLOTO",
+    "subtitulo": "Boletim: 177-04015852-222",
+    "resumo": "Não ganhou",
+    "detalhes": {
+      "data_verificacao": "2026-06-27 21:54:02",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "177-04015852-222",
+        "data_sorteio": "2026-06-27",
+        "concurso_sorteio": "051/2026",
+        "imagem_origem": "foto_1782474002152_gsnq3o.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "05",
+          "07",
+          "22",
+          "24",
+          "37"
+        ],
+        "numero_da_sorte": "06"
+      },
+      "sorteio": {
+        "concurso": "051/2026",
+        "data": "27/06/2026",
+        "numeros": [
+          "07",
+          "12",
+          "17",
+          "22",
+          "46"
+        ],
+        "numero_da_sorte": "09"
+      },
+      "acertos": {
+        "numeros": 2,
+        "numero_da_sorte": false,
+        "descricao": "2 numero(s) sem Nº da Sorte",
+        "numeros_acertados": [
+          "07",
+          "22"
+        ],
+        "numero_da_sorte_acertado": null
+      },
+      "ganhou": false,
+      "premios": [],
+      "_jogo": "totoloto",
+      "_id": "totoloto_177-04015852-222_1"
+    }
+  }
+]
