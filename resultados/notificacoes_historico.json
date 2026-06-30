@@ -5365,5 +5365,73 @@
     },
     "arquivado": true,
     "data_leitura": "2026-06-27T22:07:46.478Z"
+  },
+  {
+    "id": "euromilhoes_681-08314052-M1L_1",
+    "jogo": "euromilhoes",
+    "data": "2026-06-30 21:24:22",
+    "lido": true,
+    "titulo": "🎫 Novo resultado EUROMILHOES",
+    "subtitulo": "Boletim: 681-08314052-M1L",
+    "resumo": "1 números + 0 estrelas",
+    "detalhes": {
+      "data_verificacao": "2026-06-30 21:24:22",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "681-08314052-M1L",
+        "data_sorteio": "2026-06-30",
+        "concurso_sorteio": "052/2026",
+        "imagem_origem": "foto_1782804709919_hen6oa.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "08",
+          "09",
+          "13",
+          "18",
+          "50"
+        ],
+        "estrelas": [
+          "01",
+          "05"
+        ]
+      },
+      "sorteio": {
+        "concurso": "052/2026",
+        "data": "30/06/2026",
+        "chave": "1 8 37 44 48 + 2 6",
+        "numeros": [
+          "01",
+          "08",
+          "37",
+          "44",
+          "48"
+        ],
+        "estrelas": [
+          "02",
+          "06"
+        ]
+      },
+      "acertos": {
+        "numeros": 1,
+        "estrelas": 0,
+        "descricao": "1 numero(s) e 0 estrela(s)",
+        "numeros_acertados": [
+          "08"
+        ],
+        "estrelas_acertadas": []
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem premio",
+        "descricao": "Nao corresponde a qualquer premio",
+        "valor": "EUR 0,00"
+      },
+      "_jogo": "euromilhoes",
+      "_id": "euromilhoes_681-08314052-M1L_1"
+    },
+    "arquivado": true,
+    "data_leitura": "2026-06-30T21:24:51.710Z"
   }
 ]
