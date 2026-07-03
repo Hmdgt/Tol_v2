@@ -5488,5 +5488,73 @@
     },
     "arquivado": true,
     "data_leitura": "2026-07-01T22:32:52.395Z"
+  },
+  {
+    "id": "euromilhoes_684-05231704-M1L_1",
+    "jogo": "euromilhoes",
+    "data": "2026-07-03 20:56:19",
+    "lido": true,
+    "titulo": "🎫 Novo resultado EUROMILHOES",
+    "subtitulo": "Boletim: 684-05231704-M1L",
+    "resumo": "0 números + 1 estrelas",
+    "detalhes": {
+      "data_verificacao": "2026-07-03 20:56:19",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "684-05231704-M1L",
+        "data_sorteio": "2026-07-03",
+        "concurso_sorteio": "053/2026",
+        "imagem_origem": "foto_1783100229534_ofqy1e.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "01",
+          "18",
+          "20",
+          "28",
+          "50"
+        ],
+        "estrelas": [
+          "02",
+          "08"
+        ]
+      },
+      "sorteio": {
+        "concurso": "053/2026",
+        "data": "03/07/2026",
+        "chave": "2 12 17 25 39 + 1 2",
+        "numeros": [
+          "02",
+          "12",
+          "17",
+          "25",
+          "39"
+        ],
+        "estrelas": [
+          "01",
+          "02"
+        ]
+      },
+      "acertos": {
+        "numeros": 0,
+        "estrelas": 1,
+        "descricao": "0 numero(s) e 1 estrela(s)",
+        "numeros_acertados": [],
+        "estrelas_acertadas": [
+          "02"
+        ]
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem premio",
+        "descricao": "Nao corresponde a qualquer premio",
+        "valor": "EUR 0,00"
+      },
+      "_jogo": "euromilhoes",
+      "_id": "euromilhoes_684-05231704-M1L_1"
+    },
+    "arquivado": true,
+    "data_leitura": "2026-07-03T21:27:26.804Z"
   }
 ]
