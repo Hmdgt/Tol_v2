@@ -1,50 +1,13 @@
 {
-  "concurso": "052/2026",
-  "data": "01/07/2026",
+  "concurso": "053/2026",
+  "data": "04/07/2026",
   "numeros": [
-    12,
+    7,
+    10,
     16,
-    35,
-    44,
-    47
+    20,
+    28
   ],
-  "especial": 10,
-  "premios": [
-    {
-      "premio": "1.� Pr�mio",
-      "descricao": "5 N�meros + N� da Sorte",
-      "vencedores": "0",
-      "valor": "(1)"
-    },
-    {
-      "premio": "2.� Pr�mio",
-      "descricao": "5 N�meros",
-      "vencedores": "0",
-      "valor": "(2)"
-    },
-    {
-      "premio": "3.� Pr�mio",
-      "descricao": "4 N�meros",
-      "vencedores": "103",
-      "valor": "€ 449,17"
-    },
-    {
-      "premio": "4.� Pr�mio",
-      "descricao": "3 N�meros",
-      "vencedores": "4.268",
-      "valor": "€ 6,02"
-    },
-    {
-      "premio": "5.� Pr�mio",
-      "descricao": "2 N�meros",
-      "vencedores": "62.624",
-      "valor": "€ 2,46"
-    },
-    {
-      "premio": "N� da Sorte",
-      "descricao": "N� da Sorte",
-      "vencedores": "70.372",
-      "valor": "Reembolso do valor da aposta de Totoloto"
-    }
-  ]
+  "especial": 11,
+  "premios": []
 }
