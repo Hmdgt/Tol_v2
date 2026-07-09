@@ -1,15 +1,15 @@
-Concurso: 054/2026
-Data: 06/07/2026
-Chave: 4 5 7 12 29 37 + 2
-Ordem de saída: 5 37 12 7 4 29 + 2
-Números: 04 05 07 12 29 37
-Dream: 2
+Concurso: 055/2026
+Data: 09/07/2026
+Chave: 5 14 18 22 33 35 + 4
+Ordem de saída: 18 5 14 22 33 35 + 4
+Números: 05 14 18 22 33 35
+Dream: 4
 ----------------------------------------
 Prémios:
 1.º Prémio - 6 Números + 1 Nº de Sonho | PT: 0 | EU: 0 | Valor: € 20.000/mês x 30 anos
-2.º Prémio - 6 Números | PT: 0 | EU: 1 | Valor: € 2.000/mês x 5 anos
-3.º Prémio - 5 Números | PT: 11 | EU: 112 | Valor: € 397,19
-4.º Prémio - 4 Números | PT: 660 | EU: 4.292 | Valor: € 29,05
-5.º Prémio - 3 Números | PT: 9.834 | EU: 62.373 | Valor: € 4,19
-6.º Prémio - 2 Números | PT: 57.980 | EU: 352.258 | Valor: € 2,50
+2.º Prémio - 6 Números | PT: 0 | EU: 0 | Valor: € 2.000/mês x 5 anos
+3.º Prémio - 5 Números | PT: 13 | EU: 108 | Valor: € 493,48
+4.º Prémio - 4 Números | PT: 737 | EU: 4.397 | Valor: € 33,97
+5.º Prémio - 3 Números | PT: 10.020 | EU: 60.552 | Valor: € 5,18
+6.º Prémio - 2 Números | PT: 59.147 | EU: 349.892 | Valor: € 2,50
 ----------------------------------------
