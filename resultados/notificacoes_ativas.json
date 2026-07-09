@@ -1,1 +1,59 @@
-[]
+[
+  {
+    "id": "eurodreams_260708-17-7065150098-567_1",
+    "jogo": "eurodreams",
+    "data": "2026-07-09 21:26:34",
+    "lido": false,
+    "titulo": "🎫 Novo resultado EURODREAMS",
+    "subtitulo": "Boletim: 260708-17-7065150098-567",
+    "resumo": "0 acertos",
+    "detalhes": {
+      "data_verificacao": "2026-07-09 21:26:34",
+      "boletim": {
+        "referencia": "260708-17-7065150098-567",
+        "concurso_sorteio": "055/2026",
+        "data_sorteio": "2026-07-09"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "03",
+          "07",
+          "09",
+          "16",
+          "29",
+          "37"
+        ],
+        "dream": [
+          "01"
+        ]
+      },
+      "sorteio": {
+        "concurso": "055/2026",
+        "data": "09/07/2026",
+        "numeros": [
+          "05",
+          "14",
+          "18",
+          "22",
+          "33",
+          "35"
+        ],
+        "dream": "04"
+      },
+      "acertos": {
+        "numeros": 0,
+        "dream": false,
+        "numeros_acertados": [],
+        "dream_acertado": null
+      },
+      "ganhou": false,
+      "premio": {
+        "premio": "Sem premio",
+        "valor": "EUR 0,00"
+      },
+      "_jogo": "eurodreams",
+      "_id": "eurodreams_260708-17-7065150098-567_1"
+    }
+  }
+]
