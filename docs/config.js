@@ -24,7 +24,7 @@ const CONFIG = {
   TIPOS_JOGO: ['euromilhoes', 'totoloto', 'eurodreams', 'milhao'],
   
   // Cache do Service Worker
-  CACHE_VERSION: "v2026-03-01"
+  CACHE_VERSION: "v2026-07-10"
 };
 
 // Para facilitar o acesso (mantém compatibilidade)
