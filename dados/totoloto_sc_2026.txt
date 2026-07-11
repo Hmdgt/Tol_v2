@@ -1,13 +1,7 @@
-Concurso: 054/2026
-Data: 08/07/2026
-Números: 3 18 22 24 44
-Especial: 8
+Concurso: 055/2026
+Data: 11/07/2026
+Números: 4 7 8 25 30
+Especial: 1
 ----------------------------------------
 Prémios:
-1.� Pr�mio - 5 N�meros + N� da Sorte | Vencedores: 0 | Valor: (1)
-2.� Pr�mio - 5 N�meros | Vencedores: 0 | Valor: (2)
-3.� Pr�mio - 4 N�meros | Vencedores: 95 | Valor: € 507,98
-4.� Pr�mio - 3 N�meros | Vencedores: 5.446 | Valor: € 4,92
-5.� Pr�mio - 2 N�meros | Vencedores: 76.616 | Valor: € 2,09
-N� da Sorte - N� da Sorte | Vencedores: 105.493 | Valor: Reembolso do valor da aposta de Totoloto
 ----------------------------------------
