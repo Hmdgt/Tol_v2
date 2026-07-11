@@ -5798,5 +5798,62 @@
     },
     "arquivado": true,
     "data_leitura": "2026-07-10T21:55:39.214Z"
+  },
+  {
+    "id": "totoloto_192-02427011-228_1",
+    "jogo": "totoloto",
+    "data": "2026-07-11 20:38:09",
+    "lido": true,
+    "titulo": "🎫 Novo resultado TOTOLOTO",
+    "subtitulo": "Boletim: 192-02427011-228",
+    "resumo": "Não ganhou",
+    "detalhes": {
+      "data_verificacao": "2026-07-11 20:38:09",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "192-02427011-228",
+        "data_sorteio": "2026-07-11",
+        "concurso_sorteio": "055/2026",
+        "imagem_origem": "foto_1783800246489_ji7ifu.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "07",
+          "26",
+          "29",
+          "31",
+          "36"
+        ],
+        "numero_da_sorte": "04"
+      },
+      "sorteio": {
+        "concurso": "055/2026",
+        "data": "11/07/2026",
+        "numeros": [
+          "04",
+          "07",
+          "08",
+          "25",
+          "30"
+        ],
+        "numero_da_sorte": "01"
+      },
+      "acertos": {
+        "numeros": 1,
+        "numero_da_sorte": false,
+        "descricao": "1 numero(s) sem Nº da Sorte",
+        "numeros_acertados": [
+          "07"
+        ],
+        "numero_da_sorte_acertado": null
+      },
+      "ganhou": false,
+      "premios": [],
+      "_jogo": "totoloto",
+      "_id": "totoloto_192-02427011-228_1"
+    },
+    "arquivado": true,
+    "data_leitura": "2026-07-11T21:43:55.265Z"
   }
 ]
