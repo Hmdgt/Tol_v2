@@ -4454,6 +4454,105 @@
           "valor": "€ 4,04"
         }
       ]
+    },
+    {
+      "concurso": "056/2026",
+      "data": "14/07/2026",
+      "chave": "10 19 37 42 47 + 9 12",
+      "ordem_saida": "42 10 19 37 47 + 9 12",
+      "premios": [
+        {
+          "premio": "1.º Prémio",
+          "descricao": "5 Números + 2 Estrelas",
+          "vencedores_pt": "0",
+          "vencedores_eu": "0",
+          "valor": "(1)"
+        },
+        {
+          "premio": "2.º Prémio",
+          "descricao": "5 Números + 1 Estrela",
+          "vencedores_pt": "0",
+          "vencedores_eu": "2",
+          "valor": "€ 238.156,45"
+        },
+        {
+          "premio": "3.º Prémio",
+          "descricao": "5 Números + 0 Estrelas",
+          "vencedores_pt": "0",
+          "vencedores_eu": "5",
+          "valor": "€ 22.264,43"
+        },
+        {
+          "premio": "4.º Prémio",
+          "descricao": "4 Números + 2 Estrelas",
+          "vencedores_pt": "1",
+          "vencedores_eu": "24",
+          "valor": "€ 1.444,75"
+        },
+        {
+          "premio": "5.º Prémio",
+          "descricao": "4 Números + 1 Estrela",
+          "vencedores_pt": "49",
+          "vencedores_eu": "467",
+          "valor": "€ 136,77"
+        },
+        {
+          "premio": "6.º Prémio",
+          "descricao": "3 Números + 2 Estrelas",
+          "vencedores_pt": "73",
+          "vencedores_eu": "866",
+          "valor": "€ 77,97"
+        },
+        {
+          "premio": "7.º Prémio",
+          "descricao": "4 Números + 0 Estrelas",
+          "vencedores_pt": "101",
+          "vencedores_eu": "1.168",
+          "valor": "€ 40,62"
+        },
+        {
+          "premio": "8.º Prémio",
+          "descricao": "2 Números + 2 Estrelas",
+          "vencedores_pt": "936",
+          "vencedores_eu": "12.776",
+          "valor": "€ 18,56"
+        },
+        {
+          "premio": "9.º Prémio",
+          "descricao": "3 Números + 1 Estrela",
+          "vencedores_pt": "1.627",
+          "vencedores_eu": "20.400",
+          "valor": "€ 12,97"
+        },
+        {
+          "premio": "10.º Prémio",
+          "descricao": "3 Números + 0 Estrelas",
+          "vencedores_pt": "4.081",
+          "vencedores_eu": "50.012",
+          "valor": "€ 9,85"
+        },
+        {
+          "premio": "11.º Prémio",
+          "descricao": "1 Número + 2 Estrelas",
+          "vencedores_pt": "4.682",
+          "vencedores_eu": "66.955",
+          "valor": "€ 8,91"
+        },
+        {
+          "premio": "12.º Prémio",
+          "descricao": "2 Números + 1 Estrela",
+          "vencedores_pt": "23.354",
+          "vencedores_eu": "301.034",
+          "valor": "€ 6,24"
+        },
+        {
+          "premio": "13.º Prémio",
+          "descricao": "2 Números + 0 Estrelas",
+          "vencedores_pt": "61.599",
+          "vencedores_eu": "752.440",
+          "valor": "€ 4,02"
+        }
+      ]
     }
   ]
 }
