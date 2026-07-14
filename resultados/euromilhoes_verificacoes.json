@@ -1855,5 +1855,60 @@
       "descricao": "Nao corresponde a qualquer premio",
       "valor": "EUR 0,00"
     }
+  },
+  {
+    "data_verificacao": "2026-07-14 20:55:23",
+    "metodo_validacao": "data + concurso",
+    "boletim": {
+      "referencia": "695-02988565-077",
+      "data_sorteio": "2026-07-14",
+      "concurso_sorteio": "056/2026",
+      "imagem_origem": "foto_1784014102796_70nmkv.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "numeros": [
+        "05",
+        "10",
+        "43",
+        "44",
+        "46"
+      ],
+      "estrelas": [
+        "03",
+        "05"
+      ]
+    },
+    "sorteio": {
+      "concurso": "056/2026",
+      "data": "14/07/2026",
+      "chave": "10 19 37 42 47 + 9 12",
+      "numeros": [
+        "10",
+        "19",
+        "37",
+        "42",
+        "47"
+      ],
+      "estrelas": [
+        "09",
+        "12"
+      ]
+    },
+    "acertos": {
+      "numeros": 1,
+      "estrelas": 0,
+      "descricao": "1 numero(s) e 0 estrela(s)",
+      "numeros_acertados": [
+        "10"
+      ],
+      "estrelas_acertadas": []
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem premio",
+      "descricao": "Nao corresponde a qualquer premio",
+      "valor": "EUR 0,00"
+    }
   }
 ]
