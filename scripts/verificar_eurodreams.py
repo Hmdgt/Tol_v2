@@ -1,0 +1,290 @@
+import json
+import os
+import glob
+import re
+from datetime import datetime
+from typing import List, Tuple
+
+# ===== CONFIGURACAO =====
+FICHEIRO_APOSTAS = "apostas/eurodreams.json"
+PASTA_DADOS = "dados/"
+FICHEIRO_SORTEIOS_PADRAO = "eurodreams_*.json"
+FICHEIRO_RESULTADOS = "resultados/eurodreams_verificacoes.json"
+
+# ===== TABELA DE PREMIOS EURODREAMS =====
+PREMIOS_EURODREAMS = {
+    (6, True):  "1. Prémio",
+    (6, False): "2. Prémio",
+    (5, False): "3. Prémio",
+    (4, False): "4. Prémio",
+    (2, False): "6. Prémio",
+    (3, False): "5. Prémio",   # Corrigida ordem para coerencia
+}
+
+# ============================================================
+# UTILITARIOS
+# ============================================================
+
+def carregar_json(ficheiro: str):
+    if not os.path.exists(ficheiro):
+        print(f"Aviso: Ficheiro nao encontrado: {ficheiro}")
+        return []
+    with open(ficheiro, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+def carregar_sorteios():
+    todos = {}
+    ficheiros = glob.glob(os.path.join(PASTA_DADOS, FICHEIRO_SORTEIOS_PADRAO))
+
+    for ficheiro in ficheiros:
+        nome = os.path.basename(ficheiro)
+        # 🔧 Ignorar o ficheiro "atual" (evita erro de parsing)
+        if nome == "eurodreams_atual.json":
+            print(f"   Ignorando {nome} (apenas último sorteio)")
+            continue
+
+        try:
+            with open(ficheiro, "r", encoding="utf-8") as f:
+                dados = json.load(f)
+
+            if isinstance(dados, list):
+                lista = dados
+            else:
+                # Caso esteja estruturado por ano
+                lista = []
+                for ano in dados.values():
+                    lista.extend(ano)
+
+            index = {}
+            for s in lista:
+                chave = f"{s.get('data')}|{s.get('concurso')}"
+                index[chave] = s
+
+            todos.update(index)
+
+        except Exception as e:
+            print(f"Erro ao carregar {ficheiro}: {e}")
+
+    return todos
+
+def normalizar_data_para_busca(data_iso: str) -> str:
+    try:
+        ano, mes, dia = data_iso.split("-")
+        return f"{dia}/{mes}/{ano}"
+    except:
+        return data_iso
+
+def extrair_numeros_sorteio(sorteio: dict) -> Tuple[List[str], str]:
+    numeros = [str(n).zfill(2) for n in sorteio.get("numeros", [])]
+    dream = str(sorteio.get("dream", "")).zfill(2)  # Garantir 2 digitos
+    return numeros, dream
+
+def extrair_dream_aposta(aposta: dict) -> str:
+    """Extrai o numero dream da aposta, tratando tanto listas como strings."""
+    dream_raw = aposta.get("dream", "")
+    if isinstance(dream_raw, list):
+        return str(dream_raw[0]).zfill(2) if dream_raw else ""
+    else:
+        return str(dream_raw).zfill(2)
+
+def calcular_acertos(aposta_numeros, aposta_dream, sorteio_numeros, sorteio_dream):
+    acertos = len(set(aposta_numeros) & set(sorteio_numeros))
+    acertou_dream = (aposta_dream == sorteio_dream)
+    return acertos, acertou_dream
+
+def normalizar(texto):
+    """Remove acentos, ordinais e pontuação para comparações exatas."""
+    texto = texto.lower()
+    texto = re.sub(r'[ºª]', '', texto)           # remove ordinais
+    texto = re.sub(r'[^a-z0-9 ]', '', texto)     # remove pontuação
+    texto = re.sub(r'\s+', ' ', texto).strip()   # normaliza espaços
+    return texto
+
+def encontrar_premio_por_nome(lista_premios, nome_esperado):
+    """Procura um prémio na lista ignorando diferenças de acentos/ordinais."""
+    if not nome_esperado:
+        return None
+    esperado_norm = normalizar(nome_esperado)
+    for p in lista_premios:
+        if normalizar(p.get("premio", "")) == esperado_norm:
+            return p
+    return None
+
+# ============================================================
+# LOGICA DE PREMIOS (OFICIAL)
+# ============================================================
+
+def encontrar_premio(sorteio: dict, acertos_n: int, acertou_dream: bool):
+    if acertos_n == 6:
+        nome = "1. Prémio" if acertou_dream else "2. Prémio"
+    else:
+        nome = PREMIOS_EURODREAMS.get((acertos_n, False))
+
+    if not nome:
+        return None
+
+    # 👇 Usa a procura normalizada em vez da comparação exata
+    return encontrar_premio_por_nome(sorteio.get("premios", []), nome)
+
+# ============================================================
+# VERIFICACAO
+# ============================================================
+
+def verificar_boletins(apostas, sorteios):
+    resultados = []
+
+    for boletim in apostas:
+        data = boletim.get("data_sorteio")
+        concurso = boletim.get("concurso")
+        chave = f"{normalizar_data_para_busca(data)}|{concurso}"
+
+        sorteio = sorteios.get(chave)
+        if not sorteio:
+            print(f"Aviso: Sorteio nao encontrado para data {data}")
+            continue
+
+        numeros_sorteio, dream_sorteio = extrair_numeros_sorteio(sorteio)
+
+        for aposta in boletim.get("apostas", []):
+            numeros_aposta = aposta.get("numeros", [])
+            dream_aposta = extrair_dream_aposta(aposta)
+
+            acertos_n, acertou_dream = calcular_acertos(
+                numeros_aposta, dream_aposta,
+                numeros_sorteio, dream_sorteio
+            )
+
+            # Listas exatas para o frontend destacar acertos
+            numeros_acertados = sorted(list(set(numeros_aposta) & set(numeros_sorteio)))
+            dream_acertado = dream_aposta if acertou_dream else None
+
+            premio = encontrar_premio(sorteio, acertos_n, acertou_dream)
+
+            resultado = {
+                "data_verificacao": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "boletim": {
+                    "referencia": boletim.get("referencia_unica"),
+                    "concurso_sorteio": concurso,
+                    "data_sorteio": data
+                },
+                "aposta": {
+                    "indice": aposta.get("indice"),
+                    "numeros": numeros_aposta,
+                    "dream": [dream_aposta]              # ← array com um elemento
+                },
+                "sorteio": {                            # ← campo obrigatório
+                    "concurso": sorteio.get("concurso"),
+                    "data": sorteio.get("data"),
+                    "numeros": numeros_sorteio,
+                    "dream": dream_sorteio
+                },
+                "acertos": {
+                    "numeros": acertos_n,
+                    "dream": acertou_dream,
+                    "numeros_acertados": numeros_acertados,
+                    "dream_acertado": dream_acertado
+                },
+                "ganhou": bool(premio),
+                "premio": premio if premio else {
+                    "premio": "Sem premio",
+                    "valor": "EUR 0,00"
+                }
+            }
+
+            resultados.append(resultado)
+
+    return resultados
+
+# ============================================================
+# GUARDAR RESULTADOS (SEM DUPLICACAO) + FICHEIRO RECENTE
+# ============================================================
+
+def guardar_resultados(resultados):
+    os.makedirs("resultados", exist_ok=True)
+
+    if os.path.exists(FICHEIRO_RESULTADOS):
+        with open(FICHEIRO_RESULTADOS, "r", encoding="utf-8") as f:
+            historico = json.load(f)
+    else:
+        historico = []
+
+    novos = 0
+    for novo in resultados:
+        chave_nova = (
+            novo["boletim"]["referencia"],
+            novo["aposta"]["indice"],
+            novo["boletim"]["concurso_sorteio"]
+        )
+
+        existe = False
+        for existente in historico:
+            chave_existente = (
+                existente["boletim"]["referencia"],
+                existente["aposta"]["indice"],
+                existente["boletim"]["concurso_sorteio"]
+            )
+            if chave_nova == chave_existente:
+                existe = True
+                break
+
+        if not existe:
+            historico.append(novo)
+            novos += 1
+
+    with open(FICHEIRO_RESULTADOS, "w", encoding="utf-8") as f:
+        json.dump(historico, f, indent=2, ensure_ascii=False)
+
+    print(f"\nHistorico guardado em: {FICHEIRO_RESULTADOS}")
+    print(f"Novas verificacoes no historico: {novos}")
+    print(f"Total no historico: {len(historico)}")
+
+    if resultados:
+        caminho_recentes = os.path.join("resultados", "eurodreams_recentes.json")
+        with open(caminho_recentes, "w", encoding="utf-8") as f:
+            json.dump(resultados, f, indent=2, ensure_ascii=False)
+        print(f"Resultados recentes guardados em: {caminho_recentes}")
+        print(f"Total de resultados recentes: {len(resultados)}")
+
+# ============================================================
+# RELATORIO
+# ============================================================
+
+def gerar_relatorio(resultados):
+    total = len(resultados)
+    ganhos = sum(1 for r in resultados if r["ganhou"])
+
+    print("\n" + "="*60)
+    print("RELATORIO FINAL - EURODREAMS")
+    print("="*60)
+    print(f"Total apostas verificadas: {total}")
+    print(f"Apostas premiadas: {ganhos}")
+    print(f"Sem premio: {total - ganhos}")
+
+# ============================================================
+# MAIN
+# ============================================================
+
+def main():
+    print("\nVERIFICADOR EURODREAMS")
+    print("="*60)
+
+    apostas = carregar_json(FICHEIRO_APOSTAS)
+    if not apostas:
+        print("ERRO: Sem apostas")
+        return
+
+    sorteios = carregar_sorteios()
+    if not sorteios:
+        print("ERRO: Sem sorteios")
+        return
+
+    resultados = verificar_boletins(apostas, sorteios)
+
+    if resultados:
+        guardar_resultados(resultados)
+        gerar_relatorio(resultados)
+    else:
+        print("Nenhum resultado gerado")
+
+if __name__ == "__main__":
+    main()

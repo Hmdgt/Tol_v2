@@ -1,0 +1,280 @@
+import json
+import os
+import glob
+import re
+from datetime import datetime
+from typing import List, Tuple
+
+# ===== CONFIGURACAO =====
+FICHEIRO_APOSTAS = "apostas/totoloto.json"
+PASTA_DADOS = "dados/"
+FICHEIRO_SORTEIOS_PADRAO = "totoloto_sc_*.json"
+FICHEIRO_RESULTADOS = "resultados/totoloto_verificacoes.json"
+
+# ===== TABELA DE PREMIOS =====
+PREMIOS_NUMEROS_TOTOLOTO = {
+    5: "2. Premio",
+    4: "3. Premio",
+    3: "4. Premio",
+    2: "5. Premio",
+}
+
+# ============================================================
+# UTILITARIOS
+# ============================================================
+
+def carregar_json(ficheiro: str):
+    if not os.path.exists(ficheiro):
+        print(f"Aviso: Ficheiro nao encontrado: {ficheiro}")
+        return []
+    with open(ficheiro, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+def carregar_todos_sorteios() -> dict:
+    todos_sorteios = {}
+    ficheiros = glob.glob(os.path.join(PASTA_DADOS, FICHEIRO_SORTEIOS_PADRAO))
+    for ficheiro in ficheiros:
+        nome = os.path.basename(ficheiro)
+        if nome == "totoloto_sc_atual.json":
+            continue
+        match = re.search(r'totoloto_sc_(\d{4})\.json', nome)
+        if not match:
+            continue
+        ano = match.group(1)
+        try:
+            with open(ficheiro, "r", encoding="utf-8") as f:
+                dados = json.load(f)
+            if ano in dados and isinstance(dados[ano], list):
+                lista_sorteios = dados[ano]
+            elif isinstance(dados, list):
+                lista_sorteios = dados
+            else:
+                continue
+            index = {}
+            for s in lista_sorteios:
+                chave = f"{s.get('data')}|{s.get('concurso')}"
+                index[chave] = s
+            todos_sorteios[ano] = {"lista": lista_sorteios, "index": index}
+        except:
+            continue
+    return todos_sorteios
+
+def normalizar_data_para_busca(data_aposta: str) -> str:
+    try:
+        ano, mes, dia = data_aposta.split('-')
+        return f"{dia}/{mes}/{ano}"
+    except:
+        return data_aposta
+
+def extrair_numeros_sorteio(sorteio: dict) -> Tuple[List[str], str]:
+    numeros = [str(n).zfill(2) for n in sorteio.get("numeros", [])]
+    especial = str(sorteio.get("especial", "")).zfill(2)
+    return numeros, especial
+
+def calcular_acertos(aposta_numeros: List[str], aposta_especial: str,
+                     sorteio_numeros: List[str], sorteio_especial: str) -> Tuple[int, bool]:
+    acertos_numeros = len(set(aposta_numeros) & set(sorteio_numeros))
+    acertou_especial = aposta_especial == sorteio_especial
+    return acertos_numeros, acertou_especial
+
+def encontrar_premios(sorteio: dict, acertos_n: int, acertou_especial: bool) -> List[dict]:
+    premios_ganhos = []
+
+    def procurar(padrao: str):
+        padrao_clean = re.sub(r'[^\w\s]', '', padrao).lower()
+        for p in sorteio.get("premios", []):
+            nome = p.get("premio", "")
+            nome_clean = re.sub(r'[^\w\s]', '', nome).lower()
+            if padrao_clean in nome_clean:
+                return p
+        return None
+
+    if acertos_n == 5:
+        if acertou_especial:
+            p = procurar("1")
+        else:
+            p = procurar("2")
+        if p:
+            premios_ganhos.append(p)
+    elif acertos_n == 4:
+        p = procurar("3")
+        if p:
+            premios_ganhos.append(p)
+        if acertou_especial:
+            p_sorte = procurar("sorte")
+            if p_sorte:
+                premios_ganhos.append(p_sorte)
+    elif acertos_n == 3:
+        p = procurar("4")
+        if p:
+            premios_ganhos.append(p)
+        if acertou_especial:
+            p_sorte = procurar("sorte")
+            if p_sorte:
+                premios_ganhos.append(p_sorte)
+    elif acertos_n == 2:
+        p = procurar("5")
+        if p:
+            premios_ganhos.append(p)
+        if acertou_especial:
+            p_sorte = procurar("sorte")
+            if p_sorte:
+                premios_ganhos.append(p_sorte)
+    elif acertos_n <= 1 and acertou_especial:
+        p_sorte = procurar("sorte")
+        if p_sorte:
+            premios_ganhos.append(p_sorte)
+
+    return premios_ganhos
+
+# ============================================================
+# VERIFICACAO
+# ============================================================
+
+def verificar_boletins(apostas: list, todos_sorteios: dict) -> list:
+    resultados = []
+    for aposta in apostas:
+        data_aposta = aposta.get("data_sorteio")
+        concurso_aposta = aposta.get("concurso")
+        try:
+            ano_aposta = data_aposta.split('-')[0]
+        except:
+            continue
+        dados_ano = todos_sorteios.get(ano_aposta)
+        if not dados_ano:
+            continue
+        data_sorteio_formatada = normalizar_data_para_busca(data_aposta)
+        sorteio_encontrado = None
+        metodo_encontrado = ""
+        if concurso_aposta:
+            chave_exata = f"{data_sorteio_formatada}|{concurso_aposta}"
+            sorteio_encontrado = dados_ano["index"].get(chave_exata)
+            if sorteio_encontrado:
+                metodo_encontrado = "data + concurso"
+        if not sorteio_encontrado:
+            for s in dados_ano["lista"]:
+                if s.get("data") == data_sorteio_formatada:
+                    sorteio_encontrado = s
+                    metodo_encontrado = "apenas data"
+                    break
+        if not sorteio_encontrado:
+            continue
+        numeros_sorteio, especial_sorteio = extrair_numeros_sorteio(sorteio_encontrado)
+        for aposta_ind in aposta.get("apostas", []):
+            numeros_aposta = aposta_ind.get("numeros", [])
+            especial_aposta = aposta_ind.get("numero_da_sorte", "")
+            acertos_n, acertou_especial = calcular_acertos(
+                numeros_aposta, especial_aposta,
+                numeros_sorteio, especial_sorteio
+            )
+
+            # Listas exatas para o frontend destacar acertos
+            numeros_acertados = sorted(list(set(numeros_aposta) & set(numeros_sorteio)))
+            especial_acertado = especial_aposta if acertou_especial else None
+
+            premios_ganhos = encontrar_premios(sorteio_encontrado, acertos_n, acertou_especial)
+
+            resultado = {
+                "data_verificacao": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "metodo_validacao": metodo_encontrado,
+                "boletim": {
+                    "referencia": aposta.get("referencia_unica"),
+                    "data_sorteio": data_aposta,
+                    "concurso_sorteio": concurso_aposta,
+                    "imagem_origem": aposta.get("imagem_origem")
+                },
+                "aposta": {
+                    "indice": aposta_ind.get("indice", 1),
+                    "numeros": numeros_aposta,
+                    "numero_da_sorte": especial_aposta
+                },
+                "sorteio": {
+                    "concurso": sorteio_encontrado.get("concurso"),
+                    "data": sorteio_encontrado.get("data"),
+                    "numeros": numeros_sorteio,
+                    "numero_da_sorte": especial_sorteio
+                },
+                "acertos": {
+                    "numeros": acertos_n,
+                    "numero_da_sorte": acertou_especial,
+                    "descricao": f"{acertos_n} numero(s) {'com' if acertou_especial else 'sem'} Nº da Sorte",
+                    "numeros_acertados": numeros_acertados,
+                    "numero_da_sorte_acertado": especial_acertado
+                }
+            }
+
+            if premios_ganhos:
+                resultado["ganhou"] = True
+                resultado["premios"] = premios_ganhos
+            else:
+                resultado["ganhou"] = False
+                resultado["premios"] = []
+
+            resultados.append(resultado)
+    return resultados
+
+# ============================================================
+# GUARDAR RESULTADOS (HISTORICO + RECENTES)
+# ============================================================
+
+def guardar_resultados(resultados: list):
+    os.makedirs("resultados", exist_ok=True)
+
+    # Historico completo (incremental)
+    if os.path.exists(FICHEIRO_RESULTADOS):
+        with open(FICHEIRO_RESULTADOS, "r", encoding="utf-8") as f:
+            historico = json.load(f)
+    else:
+        historico = []
+
+    novos = 0
+    for novo in resultados:
+        chave = (
+            novo["boletim"]["referencia"],
+            novo["aposta"]["indice"],
+            novo["boletim"]["concurso_sorteio"]
+        )
+        if not any(
+            e["boletim"]["referencia"] == chave[0] and
+            e["aposta"]["indice"] == chave[1] and
+            e["boletim"]["concurso_sorteio"] == chave[2]
+            for e in historico
+        ):
+            historico.append(novo)
+            novos += 1
+
+    with open(FICHEIRO_RESULTADOS, "w", encoding="utf-8") as f:
+        json.dump(historico, f, indent=2, ensure_ascii=False)
+
+    print(f"\nHistorico guardado ({novos} novos, total {len(historico)})")
+
+    # Ficheiro de resultados recentes (substituido a cada execucao)
+    nome_base = os.path.basename(FICHEIRO_RESULTADOS)
+    nome_recentes = nome_base.replace('_verificacoes', '_recentes')
+    caminho_recentes = os.path.join("resultados", nome_recentes)
+    with open(caminho_recentes, "w", encoding="utf-8") as f:
+        json.dump(resultados, f, indent=2, ensure_ascii=False)
+    print(f"Resultados recentes guardados em: {caminho_recentes}")
+
+# ============================================================
+# MAIN
+# ============================================================
+
+def main():
+    print("\nVERIFICADOR DE BOLETINS TOTOLOTO")
+    apostas = carregar_json(FICHEIRO_APOSTAS)
+    if not apostas:
+        print("ERRO: Nenhuma aposta encontrada")
+        return
+    todos_sorteios = carregar_todos_sorteios()
+    if not todos_sorteios:
+        print("ERRO: Nenhum sorteio encontrado")
+        return
+    resultados = verificar_boletins(apostas, todos_sorteios)
+    if resultados:
+        guardar_resultados(resultados)
+    else:
+        print("\nNenhum resultado para verificar")
+
+if __name__ == "__main__":
+    main()
