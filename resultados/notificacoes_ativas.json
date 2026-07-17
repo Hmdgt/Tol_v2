@@ -1,1 +1,66 @@
-[]
+[
+  {
+    "id": "euromilhoes_698-04177565-M1L_1",
+    "jogo": "euromilhoes",
+    "data": "2026-07-17 20:44:57",
+    "lido": false,
+    "titulo": "🎫 Novo resultado EUROMILHOES",
+    "subtitulo": "Boletim: 698-04177565-M1L",
+    "resumo": "0 números + 0 estrelas",
+    "detalhes": {
+      "data_verificacao": "2026-07-17 20:44:57",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "698-04177565-M1L",
+        "data_sorteio": "2026-07-17",
+        "concurso_sorteio": "057/2026",
+        "imagem_origem": "foto_1784284416244_165ovo.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "13",
+          "15",
+          "25",
+          "39",
+          "42"
+        ],
+        "estrelas": [
+          "04",
+          "12"
+        ]
+      },
+      "sorteio": {
+        "concurso": "057/2026",
+        "data": "17/07/2026",
+        "chave": "12 21 23 34 40 + 9 10",
+        "numeros": [
+          "12",
+          "21",
+          "23",
+          "34",
+          "40"
+        ],
+        "estrelas": [
+          "09",
+          "10"
+        ]
+      },
+      "acertos": {
+        "numeros": 0,
+        "estrelas": 0,
+        "descricao": "0 numero(s) e 0 estrela(s)",
+        "numeros_acertados": [],
+        "estrelas_acertadas": []
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem premio",
+        "descricao": "0 acertos",
+        "valor": "EUR 0,00"
+      },
+      "_jogo": "euromilhoes",
+      "_id": "euromilhoes_698-04177565-M1L_1"
+    }
+  }
+]
