@@ -143,6 +143,11 @@ def verificar_boletins(apostas, sorteios):
             print(f"Aviso: Sorteio nao encontrado para data {data}")
             continue
 
+        # ✅ Verificar se o sorteio já tem a lista de prémios completa (mínimo 6 para EuroDreams)
+        if not sorteio.get("premios") or len(sorteio["premios"]) < 6:
+            print(f"Aviso: Sorteio {concurso} sem lista de prémios completa. Ignorado.")
+            continue
+
         numeros_sorteio, dream_sorteio = extrair_numeros_sorteio(sorteio)
 
         for aposta in boletim.get("apostas", []):
