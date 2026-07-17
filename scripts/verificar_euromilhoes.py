@@ -215,6 +215,11 @@ def verificar_boletins(apostas: list, todos_sorteios: dict) -> list:
         if not sorteio_encontrado:
             print(f"Aviso: Sorteio nao encontrado para data {data_aposta}")
             continue
+
+        # ✅ Verificar se o sorteio já tem a lista de prémios completa (mínimo 13 para Euromilhões)
+        if not sorteio_encontrado.get("premios") or len(sorteio_encontrado["premios"]) < 13:
+            print(f"Aviso: Sorteio {concurso_aposta} sem lista de prémios completa. Ignorado.")
+            continue
         
         numeros_sorteio, estrelas_sorteio = extrair_chave_sorteio(sorteio_encontrado.get("chave", ""))
         
