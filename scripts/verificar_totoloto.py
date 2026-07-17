@@ -159,6 +159,12 @@ def verificar_boletins(apostas: list, todos_sorteios: dict) -> list:
                     break
         if not sorteio_encontrado:
             continue
+
+        # ✅ Verificar se o sorteio já tem a lista de prémios completa (mínimo 6 para Totoloto)
+        if not sorteio_encontrado.get("premios") or len(sorteio_encontrado["premios"]) < 6:
+            print(f"Aviso: Sorteio {concurso_aposta} sem lista de prémios completa. Ignorado.")
+            continue
+
         numeros_sorteio, especial_sorteio = extrair_numeros_sorteio(sorteio_encontrado)
         for aposta_ind in aposta.get("apostas", []):
             numeros_aposta = aposta_ind.get("numeros", [])
