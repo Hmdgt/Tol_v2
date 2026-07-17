@@ -119,33 +119,24 @@ def limpar_codigo(codigo: str) -> str:
     return re.sub(r'\s+', '', codigo).upper()
 
 def verificar_boletins(apostas: list, todos_sorteios: dict) -> list:
-    """
-    Verifica todos os boletins M1lhão contra os sorteios
-    Para o M1lhão, a validação é simples: o código da aposta tem que coincidir
-    com o código premiado no sorteio da data correspondente
-    """
     resultados = []
     
     for aposta in apostas:
         data_aposta = aposta.get("data_sorteio")
         
-        # Extrair ano da data
         try:
             ano_aposta = data_aposta.split('-')[0]
         except:
             print(f"⚠️ Data inválida: {data_aposta}")
             continue
         
-        # Obter dados do ano correspondente
         dados_ano = todos_sorteios.get(ano_aposta)
         if not dados_ano:
             print(f"⚠️ Nenhum sorteio encontrado para o ano {ano_aposta}")
             continue
         
-        # Preparar data no formato do sorteio (DD/MM/YYYY)
         data_sorteio_formatada = normalizar_data_para_busca(data_aposta)
         
-        # Encontrar sorteio pela data
         sorteio_encontrado = None
         for sorteio in dados_ano["lista"]:
             if sorteio.get("data") == data_sorteio_formatada:
@@ -155,18 +146,16 @@ def verificar_boletins(apostas: list, todos_sorteios: dict) -> list:
         if not sorteio_encontrado:
             print(f"⚠️ Sorteio não encontrado para data {data_aposta}")
             continue
-        
-        # Código premiado neste sorteio
+
+        # ✅ Verificar se o sorteio já tem o código premiado
         codigo_premiado = limpar_codigo(sorteio_encontrado.get('codigo', ''))
-        
-        # Verificar cada aposta (índice)
-        # Nota: algumas apostas podem ter "codigo" diretamente no nível superior
-        # ou dentro de "apostas"
+        if not codigo_premiado:
+            print(f"Aviso: Sorteio {sorteio_encontrado.get('concurso')} sem código premiado. Ignorado.")
+            continue
+
         apostas_list = aposta.get("apostas", [])
         
-        # Se não houver lista de apostas, pode ser formato antigo com código direto
         if not apostas_list and aposta.get("codigo"):
-            # Criar aposta virtual
             apostas_list = [{"indice": 1, "codigo": aposta.get("codigo")}]
         
         for aposta_ind in apostas_list:
@@ -175,10 +164,8 @@ def verificar_boletins(apostas: list, todos_sorteios: dict) -> list:
             if not codigo_aposta:
                 continue
             
-            # Verificar se ganhou
             ganhou = (codigo_aposta == codigo_premiado)
             
-            # Criar resultado
             resultado = {
                 "data_verificacao": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 "boletim": {
@@ -202,12 +189,11 @@ def verificar_boletins(apostas: list, todos_sorteios: dict) -> list:
                 "ganhou": ganhou
             }
             
-            # Adicionar informação de prémio
             if ganhou:
                 resultado["premio"] = {
                     "categoria": sorteio_encontrado.get('premio_nome', '1.º Prémio'),
                     "descricao": "Código premiado",
-                    "valor": "€ 1.000.000,00",  # Valor fixo do M1lhão
+                    "valor": "€ 1.000.000,00",
                     "vencedores": sorteio_encontrado.get('vencedores', '1')
                 }
             else:
@@ -218,8 +204,6 @@ def verificar_boletins(apostas: list, todos_sorteios: dict) -> list:
                 }
             
             resultados.append(resultado)
-            
-            # Mostrar resultado imediato
             mostrar_resultado_simples(resultado)
     
     return resultados
