@@ -1,13 +1,7 @@
-Concurso: 056/2026
-Data: 15/07/2026
-Números: 8 9 23 35 47
-Especial: 12
+Concurso: 057/2026
+Data: 18/07/2026
+Números: 8 24 28 31 47
+Especial: 3
 ----------------------------------------
 Prémios:
-1.� Pr�mio - 5 N�meros + N� da Sorte | Vencedores: 0 | Valor: (1)
-2.� Pr�mio - 5 N�meros | Vencedores: 0 | Valor: (2)
-3.� Pr�mio - 4 N�meros | Vencedores: 98 | Valor: € 494,17
-4.� Pr�mio - 3 N�meros | Vencedores: 4.834 | Valor: € 5,56
-5.� Pr�mio - 2 N�meros | Vencedores: 74.098 | Valor: € 2,17
-N� da Sorte - N� da Sorte | Vencedores: 61.481 | Valor: Reembolso do valor da aposta de Totoloto
 ----------------------------------------
