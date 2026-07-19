@@ -226,40 +226,46 @@ def verificar_boletins(apostas: list, todos_sorteios: dict) -> list:
 def guardar_resultados(resultados: list):
     os.makedirs("resultados", exist_ok=True)
 
-    # Historico completo (incremental)
+    # Carregar histórico existente
     if os.path.exists(FICHEIRO_RESULTADOS):
         with open(FICHEIRO_RESULTADOS, "r", encoding="utf-8") as f:
             historico = json.load(f)
     else:
         historico = []
 
-    novos = 0
-    for novo in resultados:
+    # Converter para dicionário com chave composta
+    historico_dict = {}
+    for entry in historico:
         chave = (
+            entry["boletim"]["referencia"],
+            entry["aposta"]["indice"],
+            entry["boletim"]["concurso_sorteio"]
+        )
+        historico_dict[chave] = entry
+
+    # Substituir (ou adicionar) os novos resultados
+    for novo in resultados:
+        chave_nova = (
             novo["boletim"]["referencia"],
             novo["aposta"]["indice"],
             novo["boletim"]["concurso_sorteio"]
         )
-        if not any(
-            e["boletim"]["referencia"] == chave[0] and
-            e["aposta"]["indice"] == chave[1] and
-            e["boletim"]["concurso_sorteio"] == chave[2]
-            for e in historico
-        ):
-            historico.append(novo)
-            novos += 1
+        historico_dict[chave_nova] = novo  # substitui se existir, adiciona se não
 
+    novo_historico = list(historico_dict.values())
+
+    # Guardar histórico atualizado
     with open(FICHEIRO_RESULTADOS, "w", encoding="utf-8") as f:
-        json.dump(historico, f, indent=2, ensure_ascii=False)
+        json.dump(novo_historico, f, indent=2, ensure_ascii=False)
 
-    print(f"\nHistorico guardado ({novos} novos, total {len(historico)})")
-
-    # Ficheiro de resultados recentes (substituido a cada execucao)
+    # Ficheiro de resultados recentes (substituído a cada execução)
     nome_base = os.path.basename(FICHEIRO_RESULTADOS)
     nome_recentes = nome_base.replace('_verificacoes', '_recentes')
     caminho_recentes = os.path.join("resultados", nome_recentes)
     with open(caminho_recentes, "w", encoding="utf-8") as f:
         json.dump(resultados, f, indent=2, ensure_ascii=False)
+
+    print(f"\nHistorico atualizado (total {len(novo_historico)})")
     print(f"Resultados recentes guardados em: {caminho_recentes}")
 
 # ============================================================
