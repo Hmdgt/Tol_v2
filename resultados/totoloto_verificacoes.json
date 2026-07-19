@@ -1,6 +1,6 @@
 [
   {
-    "data_verificacao": "2026-03-13 13:57:27",
+    "data_verificacao": "2026-07-19 09:59:47",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "037-03194624-022",
@@ -34,7 +34,11 @@
     "acertos": {
       "numeros": 1,
       "numero_da_sorte": true,
-      "descricao": "1 número(s) com Nº da Sorte"
+      "descricao": "1 numero(s) com Nº da Sorte",
+      "numeros_acertados": [
+        "47"
+      ],
+      "numero_da_sorte_acertado": "05"
     },
     "ganhou": true,
     "premios": [
@@ -47,7 +51,7 @@
     ]
   },
   {
-    "data_verificacao": "2026-03-13 14:16:11",
+    "data_verificacao": "2026-07-19 09:59:47",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "048-07243502-091",
@@ -81,7 +85,11 @@
     "acertos": {
       "numeros": 1,
       "numero_da_sorte": true,
-      "descricao": "1 número(s) com Nº da Sorte"
+      "descricao": "1 numero(s) com Nº da Sorte",
+      "numeros_acertados": [
+        "26"
+      ],
+      "numero_da_sorte_acertado": "09"
     },
     "ganhou": true,
     "premios": [
@@ -94,7 +102,7 @@
     ]
   },
   {
-    "data_verificacao": "2026-03-13 22:15:03",
+    "data_verificacao": "2026-07-19 09:59:47",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "051-01634852-249",
@@ -128,13 +136,15 @@
     "acertos": {
       "numeros": 0,
       "numero_da_sorte": false,
-      "descricao": "0 número(s) sem Nº da Sorte"
+      "descricao": "0 numero(s) sem Nº da Sorte",
+      "numeros_acertados": [],
+      "numero_da_sorte_acertado": null
     },
     "ganhou": false,
     "premios": []
   },
   {
-    "data_verificacao": "2026-03-13 22:15:03",
+    "data_verificacao": "2026-07-19 09:59:47",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "055-07189292-166",
@@ -168,13 +178,15 @@
     "acertos": {
       "numeros": 0,
       "numero_da_sorte": false,
-      "descricao": "0 número(s) sem Nº da Sorte"
+      "descricao": "0 numero(s) sem Nº da Sorte",
+      "numeros_acertados": [],
+      "numero_da_sorte_acertado": null
     },
     "ganhou": false,
     "premios": []
   },
   {
-    "data_verificacao": "2026-03-13 22:27:08",
+    "data_verificacao": "2026-07-19 09:59:47",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "062-06308289-177",
@@ -208,13 +220,15 @@
     "acertos": {
       "numeros": 0,
       "numero_da_sorte": false,
-      "descricao": "0 número(s) sem Nº da Sorte"
+      "descricao": "0 numero(s) sem Nº da Sorte",
+      "numeros_acertados": [],
+      "numero_da_sorte_acertado": null
     },
     "ganhou": false,
     "premios": []
   },
   {
-    "data_verificacao": "2026-03-13 22:27:08",
+    "data_verificacao": "2026-07-19 09:59:47",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "058-05797711-210",
@@ -248,7 +262,9 @@
     "acertos": {
       "numeros": 0,
       "numero_da_sorte": true,
-      "descricao": "0 número(s) com Nº da Sorte"
+      "descricao": "0 numero(s) com Nº da Sorte",
+      "numeros_acertados": [],
+      "numero_da_sorte_acertado": "04"
     },
     "ganhou": true,
     "premios": [
@@ -261,7 +277,7 @@
     ]
   },
   {
-    "data_verificacao": "2026-03-14 09:57:19",
+    "data_verificacao": "2026-07-19 09:59:47",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "065-00099310-101",
@@ -295,13 +311,15 @@
     "acertos": {
       "numeros": 0,
       "numero_da_sorte": false,
-      "descricao": "0 número(s) sem Nº da Sorte"
+      "descricao": "0 numero(s) sem Nº da Sorte",
+      "numeros_acertados": [],
+      "numero_da_sorte_acertado": null
     },
     "ganhou": false,
     "premios": []
   },
   {
-    "data_verificacao": "2026-03-14 10:00:47",
+    "data_verificacao": "2026-07-19 09:59:47",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "069-06457998-027",
@@ -335,13 +353,17 @@
     "acertos": {
       "numeros": 1,
       "numero_da_sorte": false,
-      "descricao": "1 número(s) sem Nº da Sorte"
+      "descricao": "1 numero(s) sem Nº da Sorte",
+      "numeros_acertados": [
+        "46"
+      ],
+      "numero_da_sorte_acertado": null
     },
     "ganhou": false,
     "premios": []
   },
   {
-    "data_verificacao": "2026-03-14 22:25:57",
+    "data_verificacao": "2026-07-19 09:59:47",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "072-01139302-005",
@@ -375,7 +397,9 @@
     "acertos": {
       "numeros": 0,
       "numero_da_sorte": true,
-      "descricao": "0 número(s) com Nº da Sorte"
+      "descricao": "0 numero(s) com Nº da Sorte",
+      "numeros_acertados": [],
+      "numero_da_sorte_acertado": "11"
     },
     "ganhou": true,
     "premios": [
@@ -388,7 +412,7 @@
     ]
   },
   {
-    "data_verificacao": "2026-03-14 22:25:57",
+    "data_verificacao": "2026-07-19 09:59:47",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "073-04582965-084",
@@ -422,13 +446,15 @@
     "acertos": {
       "numeros": 0,
       "numero_da_sorte": false,
-      "descricao": "0 número(s) sem Nº da Sorte"
+      "descricao": "0 numero(s) sem Nº da Sorte",
+      "numeros_acertados": [],
+      "numero_da_sorte_acertado": null
     },
     "ganhou": false,
     "premios": []
   },
   {
-    "data_verificacao": "2026-03-18 22:27:48",
+    "data_verificacao": "2026-07-19 09:59:47",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "076-01549737-030",
@@ -462,13 +488,15 @@
     "acertos": {
       "numeros": 0,
       "numero_da_sorte": false,
-      "descricao": "0 número(s) sem Nº da Sorte"
+      "descricao": "0 numero(s) sem Nº da Sorte",
+      "numeros_acertados": [],
+      "numero_da_sorte_acertado": null
     },
     "ganhou": false,
     "premios": []
   },
   {
-    "data_verificacao": "2026-03-21 22:24:00",
+    "data_verificacao": "2026-07-19 09:59:47",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "079-06988621-059",
@@ -502,13 +530,15 @@
     "acertos": {
       "numeros": 0,
       "numero_da_sorte": false,
-      "descricao": "0 número(s) sem Nº da Sorte"
+      "descricao": "0 numero(s) sem Nº da Sorte",
+      "numeros_acertados": [],
+      "numero_da_sorte_acertado": null
     },
     "ganhou": false,
     "premios": []
   },
   {
-    "data_verificacao": "2026-03-28 22:28:47",
+    "data_verificacao": "2026-07-19 09:59:47",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "086-08200358-225",
@@ -542,13 +572,15 @@
     "acertos": {
       "numeros": 0,
       "numero_da_sorte": false,
-      "descricao": "0 número(s) sem Nº da Sorte"
+      "descricao": "0 numero(s) sem Nº da Sorte",
+      "numeros_acertados": [],
+      "numero_da_sorte_acertado": null
     },
     "ganhou": false,
     "premios": []
   },
   {
-    "data_verificacao": "2026-04-01 21:41:58",
+    "data_verificacao": "2026-07-19 09:59:47",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "090-05924913-026",
@@ -582,13 +614,15 @@
     "acertos": {
       "numeros": 0,
       "numero_da_sorte": false,
-      "descricao": "0 número(s) sem Nº da Sorte"
+      "descricao": "0 numero(s) sem Nº da Sorte",
+      "numeros_acertados": [],
+      "numero_da_sorte_acertado": null
     },
     "ganhou": false,
     "premios": []
   },
   {
-    "data_verificacao": "2026-04-11 21:26:58",
+    "data_verificacao": "2026-07-19 09:59:47",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "100-00379626-170",
@@ -622,13 +656,17 @@
     "acertos": {
       "numeros": 1,
       "numero_da_sorte": false,
-      "descricao": "1 número(s) sem Nº da Sorte"
+      "descricao": "1 numero(s) sem Nº da Sorte",
+      "numeros_acertados": [
+        "31"
+      ],
+      "numero_da_sorte_acertado": null
     },
     "ganhou": false,
     "premios": []
   },
   {
-    "data_verificacao": "2026-04-15 23:09:38",
+    "data_verificacao": "2026-07-19 09:59:47",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "105-00037162-000",
@@ -662,13 +700,17 @@
     "acertos": {
       "numeros": 1,
       "numero_da_sorte": false,
-      "descricao": "1 número(s) sem Nº da Sorte"
+      "descricao": "1 numero(s) sem Nº da Sorte",
+      "numeros_acertados": [
+        "14"
+      ],
+      "numero_da_sorte_acertado": null
     },
     "ganhou": false,
     "premios": []
   },
   {
-    "data_verificacao": "2026-04-18 20:25:20",
+    "data_verificacao": "2026-07-19 09:59:47",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "107-07991301-248",
@@ -702,13 +744,15 @@
     "acertos": {
       "numeros": 0,
       "numero_da_sorte": false,
-      "descricao": "0 número(s) sem Nº da Sorte"
+      "descricao": "0 numero(s) sem Nº da Sorte",
+      "numeros_acertados": [],
+      "numero_da_sorte_acertado": null
     },
     "ganhou": false,
     "premios": []
   },
   {
-    "data_verificacao": "2026-04-22 21:41:04",
+    "data_verificacao": "2026-07-19 09:59:47",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "111-02024895-053",
@@ -749,11 +793,18 @@
       ],
       "numero_da_sorte_acertado": null
     },
-    "ganhou": false,
-    "premios": []
+    "ganhou": true,
+    "premios": [
+      {
+        "premio": "5.º Prémio",
+        "descricao": "2 Números",
+        "vencedores": "68.997",
+        "valor": "€ 2,09"
+      }
+    ]
   },
   {
-    "data_verificacao": "2026-04-25 21:28:03",
+    "data_verificacao": "2026-07-19 09:59:47",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "114-03992832-187",
@@ -797,7 +848,7 @@
     "premios": []
   },
   {
-    "data_verificacao": "2026-05-06 21:05:59",
+    "data_verificacao": "2026-07-19 09:59:47",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "125-06322197-078",
@@ -839,7 +890,7 @@
     "premios": []
   },
   {
-    "data_verificacao": "2026-05-13 21:21:23",
+    "data_verificacao": "2026-07-19 09:59:47",
     "metodo_validacao": "apenas data",
     "boletim": {
       "referencia": "132-05852463-018",
@@ -883,7 +934,7 @@
     "premios": []
   },
   {
-    "data_verificacao": "2026-05-17 09:46:02",
+    "data_verificacao": "2026-07-19 09:59:47",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "135-02844685-202",
@@ -927,7 +978,7 @@
     "premios": []
   },
   {
-    "data_verificacao": "2026-05-23 21:44:20",
+    "data_verificacao": "2026-07-19 09:59:47",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "142-00098117-108",
@@ -969,7 +1020,7 @@
     "premios": []
   },
   {
-    "data_verificacao": "2026-05-27 21:48:04",
+    "data_verificacao": "2026-07-19 09:59:47",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "146-02205104-175",
@@ -1011,7 +1062,7 @@
     "premios": []
   },
   {
-    "data_verificacao": "2026-05-30 22:06:59",
+    "data_verificacao": "2026-07-19 09:59:47",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "149-06238321-103",
@@ -1053,7 +1104,7 @@
     "premios": []
   },
   {
-    "data_verificacao": "2026-06-03 22:26:08",
+    "data_verificacao": "2026-07-19 09:59:47",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "153-06884616-060",
@@ -1097,7 +1148,7 @@
     "premios": []
   },
   {
-    "data_verificacao": "2026-06-06 20:54:06",
+    "data_verificacao": "2026-07-19 09:59:47",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "156-04354669-066",
@@ -1139,7 +1190,7 @@
     "premios": []
   },
   {
-    "data_verificacao": "2026-06-10 21:53:19",
+    "data_verificacao": "2026-07-19 09:59:47",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "160-04424032-174",
@@ -1181,7 +1232,7 @@
     "premios": []
   },
   {
-    "data_verificacao": "2026-06-20 21:03:39",
+    "data_verificacao": "2026-07-19 09:59:47",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "170-03738312-203",
@@ -1223,7 +1274,7 @@
     "premios": []
   },
   {
-    "data_verificacao": "2026-06-24 21:18:43",
+    "data_verificacao": "2026-07-19 09:59:47",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "173-07031008-214",
@@ -1267,7 +1318,7 @@
     "premios": []
   },
   {
-    "data_verificacao": "2026-06-27 21:54:02",
+    "data_verificacao": "2026-07-19 09:59:47",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "177-04015852-222",
@@ -1308,11 +1359,18 @@
       ],
       "numero_da_sorte_acertado": null
     },
-    "ganhou": false,
-    "premios": []
+    "ganhou": true,
+    "premios": [
+      {
+        "premio": "5.� Pr�mio",
+        "descricao": "2 N�meros",
+        "vencedores": "97.879",
+        "valor": "€ 1,93"
+      }
+    ]
   },
   {
-    "data_verificacao": "2026-07-01 22:11:30",
+    "data_verificacao": "2026-07-19 09:59:47",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "181-07078288-009",
@@ -1354,7 +1412,7 @@
     "premios": []
   },
   {
-    "data_verificacao": "2026-07-05 11:55:31",
+    "data_verificacao": "2026-07-19 09:59:47",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "184-01904247-093",
@@ -1398,7 +1456,7 @@
     "premios": []
   },
   {
-    "data_verificacao": "2026-07-08 21:56:18",
+    "data_verificacao": "2026-07-19 09:59:47",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "189-07852519-017",
@@ -1439,11 +1497,18 @@
       ],
       "numero_da_sorte_acertado": null
     },
-    "ganhou": false,
-    "premios": []
+    "ganhou": true,
+    "premios": [
+      {
+        "premio": "5.� Pr�mio",
+        "descricao": "2 N�meros",
+        "vencedores": "76.616",
+        "valor": "€ 2,09"
+      }
+    ]
   },
   {
-    "data_verificacao": "2026-07-11 20:38:09",
+    "data_verificacao": "2026-07-19 09:59:47",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "192-02427011-228",
@@ -1487,7 +1552,7 @@
     "premios": []
   },
   {
-    "data_verificacao": "2026-07-15 21:45:11",
+    "data_verificacao": "2026-07-19 09:59:47",
     "metodo_validacao": "data + concurso",
     "boletim": {
       "referencia": "195-02926342-064",
@@ -1517,6 +1582,50 @@
         "47"
       ],
       "numero_da_sorte": "12"
+    },
+    "acertos": {
+      "numeros": 1,
+      "numero_da_sorte": false,
+      "descricao": "1 numero(s) sem Nº da Sorte",
+      "numeros_acertados": [
+        "08"
+      ],
+      "numero_da_sorte_acertado": null
+    },
+    "ganhou": false,
+    "premios": []
+  },
+  {
+    "data_verificacao": "2026-07-19 09:59:47",
+    "metodo_validacao": "data + concurso",
+    "boletim": {
+      "referencia": "198-00849693-018",
+      "data_sorteio": "2026-07-18",
+      "concurso_sorteio": "057/2026",
+      "imagem_origem": "foto_1784284022496_s01d36.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "numeros": [
+        "08",
+        "15",
+        "21",
+        "44",
+        "45"
+      ],
+      "numero_da_sorte": "11"
+    },
+    "sorteio": {
+      "concurso": "057/2026",
+      "data": "18/07/2026",
+      "numeros": [
+        "08",
+        "24",
+        "28",
+        "31",
+        "47"
+      ],
+      "numero_da_sorte": "03"
     },
     "acertos": {
       "numeros": 1,
