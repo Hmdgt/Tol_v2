@@ -6046,5 +6046,62 @@
     },
     "arquivado": true,
     "data_leitura": "2026-07-17T20:48:12.419Z"
+  },
+  {
+    "id": "totoloto_198-00849693-018_1",
+    "jogo": "totoloto",
+    "data": "2026-07-19 09:59:47",
+    "lido": true,
+    "titulo": "🎫 Novo resultado TOTOLOTO",
+    "subtitulo": "Boletim: 198-00849693-018",
+    "resumo": "Não ganhou",
+    "detalhes": {
+      "data_verificacao": "2026-07-19 09:59:47",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "198-00849693-018",
+        "data_sorteio": "2026-07-18",
+        "concurso_sorteio": "057/2026",
+        "imagem_origem": "foto_1784284022496_s01d36.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "08",
+          "15",
+          "21",
+          "44",
+          "45"
+        ],
+        "numero_da_sorte": "11"
+      },
+      "sorteio": {
+        "concurso": "057/2026",
+        "data": "18/07/2026",
+        "numeros": [
+          "08",
+          "24",
+          "28",
+          "31",
+          "47"
+        ],
+        "numero_da_sorte": "03"
+      },
+      "acertos": {
+        "numeros": 1,
+        "numero_da_sorte": false,
+        "descricao": "1 numero(s) sem Nº da Sorte",
+        "numeros_acertados": [
+          "08"
+        ],
+        "numero_da_sorte_acertado": null
+      },
+      "ganhou": false,
+      "premios": [],
+      "_jogo": "totoloto",
+      "_id": "totoloto_198-00849693-018_1"
+    },
+    "arquivado": true,
+    "data_leitura": "2026-07-19T10:23:02.663Z"
   }
 ]
