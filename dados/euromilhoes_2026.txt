@@ -4,4 +4,17 @@ Chave: 2 3 8 28 39 + 2 11
 Ordem de saída: 39 8 28 2 3 + 11 2
 ----------------------------------------
 Prémios:
+1.º Prémio - 5 Números + 2 Estrelas | PT: 0 | EU: 0 | Valor: (1)
+2.º Prémio - 5 Números + 1 Estrela | PT: 1 | EU: 2 | Valor: € 250.104,36
+3.º Prémio - 5 Números + 0 Estrelas | PT: 0 | EU: 2 | Valor: € 58.453,51
+4.º Prémio - 4 Números + 2 Estrelas | PT: 0 | EU: 19 | Valor: € 1.916,50
+5.º Prémio - 4 Números + 1 Estrela | PT: 54 | EU: 606 | Valor: € 110,68
+6.º Prémio - 3 Números + 2 Estrelas | PT: 89 | EU: 1.224 | Valor: € 57,93
+7.º Prémio - 4 Números + 0 Estrelas | PT: 94 | EU: 1.150 | Valor: € 43,32
+8.º Prémio - 2 Números + 2 Estrelas | PT: 1.325 | EU: 17.520 | Valor: € 14,22
+9.º Prémio - 3 Números + 1 Estrela | PT: 2.264 | EU: 26.369 | Valor: € 10,53
+10.º Prémio - 3 Números + 0 Estrelas | PT: 4.877 | EU: 58.007 | Valor: € 8,92
+11.º Prémio - 1 Número + 2 Estrelas | PT: 6.665 | EU: 89.922 | Valor: € 6,96
+12.º Prémio - 2 Números + 1 Estrela | PT: 30.660 | EU: 365.439 | Valor: € 5,40
+13.º Prémio - 2 Números + 0 Estrelas | PT: 69.200 | EU: 836.260 | Valor: € 3,80
 ----------------------------------------
