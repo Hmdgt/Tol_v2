@@ -251,3 +251,6 @@
 [2026-07-19 10:37:14] [santacasa] Concurso 057/2026 já está completo.
 [2026-07-22 20:57:26] [totoloto] Scraping via HTTP bem-sucedido
 [2026-07-22 20:57:26] [santacasa] Concurso 057/2026 já está completo.
+[2026-07-22 21:53:05] [totoloto] HTTP falhou: Prémios não encontrados. A tentar Selenium.
+[2026-07-22 21:53:16] [totoloto] Scraping via Selenium bem-sucedido
+[2026-07-22 21:53:16] [santacasa] Resultado do concurso 058/2026 adicionado ao JSON totoloto_sc_2026.
