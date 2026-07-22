@@ -6103,5 +6103,71 @@
     },
     "arquivado": true,
     "data_leitura": "2026-07-19T10:23:02.663Z"
+  },
+  {
+    "id": "euromilhoes_702-05699272-M1L_1",
+    "jogo": "euromilhoes",
+    "data": "2026-07-21 22:45:37",
+    "lido": true,
+    "titulo": "🎫 Novo resultado EUROMILHOES",
+    "subtitulo": "Boletim: 702-05699272-M1L",
+    "resumo": "0 números + 0 estrelas",
+    "detalhes": {
+      "data_verificacao": "2026-07-21 22:45:37",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "702-05699272-M1L",
+        "data_sorteio": "2026-07-21",
+        "concurso_sorteio": "058/2026",
+        "imagem_origem": "foto_1784653497739_4diby2.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "11",
+          "14",
+          "16",
+          "24",
+          "45"
+        ],
+        "estrelas": [
+          "08",
+          "12"
+        ]
+      },
+      "sorteio": {
+        "concurso": "058/2026",
+        "data": "21/07/2026",
+        "chave": "2 3 8 28 39 + 2 11",
+        "numeros": [
+          "02",
+          "03",
+          "08",
+          "28",
+          "39"
+        ],
+        "estrelas": [
+          "02",
+          "11"
+        ]
+      },
+      "acertos": {
+        "numeros": 0,
+        "estrelas": 0,
+        "descricao": "0 numero(s) e 0 estrela(s)",
+        "numeros_acertados": [],
+        "estrelas_acertadas": []
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem premio",
+        "descricao": "0 acertos",
+        "valor": "EUR 0,00"
+      },
+      "_jogo": "euromilhoes",
+      "_id": "euromilhoes_702-05699272-M1L_1"
+    },
+    "arquivado": true,
+    "data_leitura": "2026-07-22T06:15:40.186Z"
   }
 ]
