@@ -9,5 +9,42 @@
     41
   ],
   "especial": 9,
-  "premios": []
+  "premios": [
+    {
+      "premio": "1.� Pr�mio",
+      "descricao": "5 N�meros + N� da Sorte",
+      "vencedores": "0",
+      "valor": "(1)"
+    },
+    {
+      "premio": "2.� Pr�mio",
+      "descricao": "5 N�meros",
+      "vencedores": "1",
+      "valor": "€ 21.675,95"
+    },
+    {
+      "premio": "3.� Pr�mio",
+      "descricao": "4 N�meros",
+      "vencedores": "145",
+      "valor": "€ 186,86"
+    },
+    {
+      "premio": "4.� Pr�mio",
+      "descricao": "3 N�meros",
+      "vencedores": "5.954",
+      "valor": "€ 4,55"
+    },
+    {
+      "premio": "5.� Pr�mio",
+      "descricao": "2 N�meros",
+      "vencedores": "83.476",
+      "valor": "€ 1,94"
+    },
+    {
+      "premio": "N� da Sorte",
+      "descricao": "N� da Sorte",
+      "vencedores": "88.109",
+      "valor": "Reembolso do valor da aposta de Totoloto"
+    }
+  ]
 }
