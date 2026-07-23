@@ -1,15 +1,15 @@
-Concurso: 058/2026
-Data: 20/07/2026
-Chave: 8 11 12 22 26 36 + 1
-Ordem de saída: 22 26 36 12 11 8 + 1
-Números: 08 11 12 22 26 36
-Dream: 1
+Concurso: 059/2026
+Data: 23/07/2026
+Chave: 3 4 17 21 31 33 + 2
+Ordem de saída: 33 17 21 4 3 31 + 2
+Números: 03 04 17 21 31 33
+Dream: 2
 ----------------------------------------
 Prémios:
 1.º Prémio - 6 Números + 1 Nº de Sonho | PT: 0 | EU: 0 | Valor: € 20.000/mês x 30 anos
 2.º Prémio - 6 Números | PT: 0 | EU: 0 | Valor: € 2.000/mês x 5 anos
-3.º Prémio - 5 Números | PT: 19 | EU: 102 | Valor: € 440,99
-4.º Prémio - 4 Números | PT: 606 | EU: 4.085 | Valor: € 30,86
-5.º Prémio - 3 Números | PT: 9.669 | EU: 58.106 | Valor: € 4,55
-6.º Prémio - 2 Números | PT: 58.466 | EU: 333.581 | Valor: € 2,50
+3.º Prémio - 5 Números | PT: 14 | EU: 113 | Valor: € 441,14
+4.º Prémio - 4 Números | PT: 723 | EU: 4.141 | Valor: € 33,74
+5.º Prémio - 3 Números | PT: 10.881 | EU: 61.653 | Valor: € 4,75
+6.º Prémio - 2 Números | PT: 60.534 | EU: 355.641 | Valor: € 2,50
 ----------------------------------------
