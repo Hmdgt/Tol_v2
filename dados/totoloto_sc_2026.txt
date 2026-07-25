@@ -1,13 +1,7 @@
-Concurso: 058/2026
-Data: 22/07/2026
-Números: 7 20 23 24 41
-Especial: 9
+Concurso: 059/2026
+Data: 25/07/2026
+Números: 2 27 43 45 47
+Especial: 1
 ----------------------------------------
 Prémios:
-1.� Pr�mio - 5 N�meros + N� da Sorte | Vencedores: 0 | Valor: (1)
-2.� Pr�mio - 5 N�meros | Vencedores: 1 | Valor: € 21.675,95
-3.� Pr�mio - 4 N�meros | Vencedores: 145 | Valor: € 186,86
-4.� Pr�mio - 3 N�meros | Vencedores: 5.954 | Valor: € 4,55
-5.� Pr�mio - 2 N�meros | Vencedores: 83.476 | Valor: € 1,94
-N� da Sorte - N� da Sorte | Vencedores: 88.109 | Valor: Reembolso do valor da aposta de Totoloto
 ----------------------------------------
