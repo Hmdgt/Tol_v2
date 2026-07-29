@@ -1,50 +1,13 @@
 {
-  "concurso": "059/2026",
-  "data": "25/07/2026",
+  "concurso": "060/2026",
+  "data": "29/07/2026",
   "numeros": [
-    2,
-    27,
-    43,
-    45,
-    47
+    16,
+    33,
+    39,
+    42,
+    45
   ],
-  "especial": 1,
-  "premios": [
-    {
-      "premio": "1.� Pr�mio",
-      "descricao": "5 N�meros + N� da Sorte",
-      "vencedores": "0",
-      "valor": "(1)"
-    },
-    {
-      "premio": "2.� Pr�mio",
-      "descricao": "5 N�meros",
-      "vencedores": "0",
-      "valor": "(2)"
-    },
-    {
-      "premio": "3.� Pr�mio",
-      "descricao": "4 N�meros",
-      "vencedores": "112",
-      "valor": "€ 545,46"
-    },
-    {
-      "premio": "4.� Pr�mio",
-      "descricao": "3 N�meros",
-      "vencedores": "5.539",
-      "valor": "€ 6,12"
-    },
-    {
-      "premio": "5.� Pr�mio",
-      "descricao": "2 N�meros",
-      "vencedores": "83.058",
-      "valor": "€ 2,45"
-    },
-    {
-      "premio": "N� da Sorte",
-      "descricao": "N� da Sorte",
-      "vencedores": "71.334",
-      "valor": "Reembolso do valor da aposta de Totoloto"
-    }
-  ]
+  "especial": 4,
+  "premios": []
 }
