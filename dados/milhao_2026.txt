@@ -1,11 +1,11 @@
-Concurso: 006/2026
-Data: 26/06/2026
-Código vencedor: LQV 19776
+Concurso: 007/2026
+Data: 31/07/2026
+Código vencedor: NFN 37781
 Vencedores: 1
 ----------------------------------------
 Estatísticas:
-Receita ilíquida apostas: € 4.391.628,00
+Receita ilíquida apostas: € 5.105.346,60
 Montante para prémios: € 1.000.000,00
-Nº de Registos: 8.287.584
-Nº de Códigos atribuídos: 14.638.760
+Nº de Registos: 9.704.060
+Nº de Códigos atribuídos: 17.017.822
 ----------------------------------------

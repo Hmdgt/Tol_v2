@@ -1,13 +1,13 @@
 {
-  "concurso": "006/2026",
-  "data": "26/06/2026",
-  "codigo": "LQV 19776",
+  "concurso": "007/2026",
+  "data": "31/07/2026",
+  "codigo": "NFN 37781",
   "premio_nome": "1.º Prémio",
   "vencedores": "1",
   "estatisticas": [
     {
       "nome": "Receita ilíquida apostas",
-      "valor": "€ 4.391.628,00"
+      "valor": "€ 5.105.346,60"
     },
     {
       "nome": "Montante para prémios",
@@ -15,11 +15,11 @@
     },
     {
       "nome": "Nº de Registos",
-      "valor": "8.287.584"
+      "valor": "9.704.060"
     },
     {
       "nome": "Nº de Códigos atribuídos",
-      "valor": "14.638.760"
+      "valor": "17.017.822"
     }
   ]
 }
