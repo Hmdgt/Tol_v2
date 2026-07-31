@@ -6710,5 +6710,45 @@
     },
     "arquivado": true,
     "data_leitura": "2026-07-31T21:43:26.662Z"
+  },
+  {
+    "id": "milhao_681-02219211-EUR_1",
+    "jogo": "milhao",
+    "data": "2026-07-31 21:34:46",
+    "lido": true,
+    "titulo": "🎫 Novo resultado MILHAO",
+    "subtitulo": "Boletim: 681-02219211-EUR",
+    "resumo": "0 acertos",
+    "detalhes": {
+      "data_verificacao": "2026-07-31 21:34:46",
+      "boletim": {
+        "referencia": "681-02219211-EUR",
+        "data_sorteio": "2026-07-31",
+        "imagem_origem": "foto_1782836383077_souorx.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "codigo": "MFX20616",
+        "codigo_original": "MFX20616"
+      },
+      "sorteio": {
+        "concurso": "007/2026",
+        "data": "31/07/2026",
+        "codigo_premiado": "NFN37781",
+        "codigo_original": "NFN 37781",
+        "premio_nome": "1.º Prémio",
+        "vencedores": "1"
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem prémio",
+        "descricao": "Código não premiado",
+        "valor": "€ 0,00"
+      },
+      "_jogo": "milhao",
+      "_id": "milhao_681-02219211-EUR_1"
+    },
+    "arquivado": true,
+    "data_leitura": "2026-07-31T21:43:35.952Z"
   }
 ]
