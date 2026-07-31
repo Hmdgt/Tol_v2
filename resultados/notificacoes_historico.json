@@ -6590,5 +6590,45 @@
     },
     "arquivado": true,
     "data_leitura": "2026-07-31T21:43:06.169Z"
+  },
+  {
+    "id": "milhao_695-02988565-EUR_1",
+    "jogo": "milhao",
+    "data": "2026-07-31 21:34:46",
+    "lido": true,
+    "titulo": "🎫 Novo resultado MILHAO",
+    "subtitulo": "Boletim: 695-02988565-EUR",
+    "resumo": "0 acertos",
+    "detalhes": {
+      "data_verificacao": "2026-07-31 21:34:46",
+      "boletim": {
+        "referencia": "695-02988565-EUR",
+        "data_sorteio": "2026-07-31",
+        "imagem_origem": "foto_1784014438893_s4svyj.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "codigo": "MQH06166",
+        "codigo_original": "MQH06166"
+      },
+      "sorteio": {
+        "concurso": "007/2026",
+        "data": "31/07/2026",
+        "codigo_premiado": "NFN37781",
+        "codigo_original": "NFN 37781",
+        "premio_nome": "1.º Prémio",
+        "vencedores": "1"
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem prémio",
+        "descricao": "Código não premiado",
+        "valor": "€ 0,00"
+      },
+      "_jogo": "milhao",
+      "_id": "milhao_695-02988565-EUR_1"
+    },
+    "arquivado": true,
+    "data_leitura": "2026-07-31T21:43:11.418Z"
   }
 ]
