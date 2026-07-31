@@ -835,5 +835,248 @@
       "descricao": "Código não premiado",
       "valor": "€ 0,00"
     }
+  },
+  {
+    "data_verificacao": "2026-07-31 21:34:46",
+    "boletim": {
+      "referencia": "681-02219211-EUR",
+      "data_sorteio": "2026-07-31",
+      "imagem_origem": "foto_1782836383077_souorx.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "codigo": "MFX20616",
+      "codigo_original": "MFX20616"
+    },
+    "sorteio": {
+      "concurso": "007/2026",
+      "data": "31/07/2026",
+      "codigo_premiado": "NFN37781",
+      "codigo_original": "NFN 37781",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Código não premiado",
+      "valor": "€ 0,00"
+    }
+  },
+  {
+    "data_verificacao": "2026-07-31 21:34:46",
+    "boletim": {
+      "referencia": "684-06935646-EUR",
+      "data_sorteio": "2026-07-31",
+      "imagem_origem": "foto_1783252373886_160eo8.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "codigo": "MJZ27821",
+      "codigo_original": "MJZ27821"
+    },
+    "sorteio": {
+      "concurso": "007/2026",
+      "data": "31/07/2026",
+      "codigo_premiado": "NFN37781",
+      "codigo_original": "NFN 37781",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Código não premiado",
+      "valor": "€ 0,00"
+    }
+  },
+  {
+    "data_verificacao": "2026-07-31 21:34:46",
+    "boletim": {
+      "referencia": "691-07996207-EUR",
+      "data_sorteio": "2026-07-31",
+      "imagem_origem": "foto_1783699633331_z6u2jg.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "codigo": "MMW13834",
+      "codigo_original": "MMW13834"
+    },
+    "sorteio": {
+      "concurso": "007/2026",
+      "data": "31/07/2026",
+      "codigo_premiado": "NFN37781",
+      "codigo_original": "NFN 37781",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Código não premiado",
+      "valor": "€ 0,00"
+    }
+  },
+  {
+    "data_verificacao": "2026-07-31 21:34:46",
+    "boletim": {
+      "referencia": "695-02988565-EUR",
+      "data_sorteio": "2026-07-31",
+      "imagem_origem": "foto_1784014438893_s4svyj.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "codigo": "MQH06166",
+      "codigo_original": "MQH06166"
+    },
+    "sorteio": {
+      "concurso": "007/2026",
+      "data": "31/07/2026",
+      "codigo_premiado": "NFN37781",
+      "codigo_original": "NFN 37781",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Código não premiado",
+      "valor": "€ 0,00"
+    }
+  },
+  {
+    "data_verificacao": "2026-07-31 21:34:46",
+    "boletim": {
+      "referencia": "698-05160604-EUR",
+      "data_sorteio": "2026-07-31",
+      "imagem_origem": "foto_1784284585812_2s6tdl.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "codigo": "MSL24112",
+      "codigo_original": "MSL24112"
+    },
+    "sorteio": {
+      "concurso": "007/2026",
+      "data": "31/07/2026",
+      "codigo_premiado": "NFN37781",
+      "codigo_original": "NFN 37781",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Código não premiado",
+      "valor": "€ 0,00"
+    }
+  },
+  {
+    "data_verificacao": "2026-07-31 21:34:46",
+    "boletim": {
+      "referencia": "702-03471050-EUR",
+      "data_sorteio": "2026-07-31",
+      "imagem_origem": "foto_1784653651386_cxy6a6.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "codigo": "MWJ03229",
+      "codigo_original": "MWJ03229"
+    },
+    "sorteio": {
+      "concurso": "007/2026",
+      "data": "31/07/2026",
+      "codigo_premiado": "NFN37781",
+      "codigo_original": "NFN 37781",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Código não premiado",
+      "valor": "€ 0,00"
+    }
+  },
+  {
+    "data_verificacao": "2026-07-31 21:34:46",
+    "boletim": {
+      "referencia": "705-04215547-EUR",
+      "data_sorteio": "2026-07-31",
+      "imagem_origem": "foto_1784915444987_asq5sb.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "codigo": "MZQ24904",
+      "codigo_original": "MZQ24904"
+    },
+    "sorteio": {
+      "concurso": "007/2026",
+      "data": "31/07/2026",
+      "codigo_premiado": "NFN37781",
+      "codigo_original": "NFN 37781",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Código não premiado",
+      "valor": "€ 0,00"
+    }
+  },
+  {
+    "data_verificacao": "2026-07-31 21:34:46",
+    "boletim": {
+      "referencia": "709-08327798-EUR",
+      "data_sorteio": "2026-07-31",
+      "imagem_origem": "foto_1785261230046_l6kkhh.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "codigo": "NCT29694",
+      "codigo_original": "NCT29694"
+    },
+    "sorteio": {
+      "concurso": "007/2026",
+      "data": "31/07/2026",
+      "codigo_premiado": "NFN37781",
+      "codigo_original": "NFN 37781",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Código não premiado",
+      "valor": "€ 0,00"
+    }
+  },
+  {
+    "data_verificacao": "2026-07-31 21:34:46",
+    "boletim": {
+      "referencia": "712-02813552-EUR",
+      "data_sorteio": "2026-07-31",
+      "imagem_origem": "foto_1785483196378_yl4ije.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "codigo": "NDT19636",
+      "codigo_original": "NDT19636"
+    },
+    "sorteio": {
+      "concurso": "007/2026",
+      "data": "31/07/2026",
+      "codigo_premiado": "NFN37781",
+      "codigo_original": "NFN 37781",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Código não premiado",
+      "valor": "€ 0,00"
+    }
   }
 ]
