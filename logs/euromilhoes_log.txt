@@ -159,3 +159,4 @@
 [2026-07-28 21:56:26] [euromilhoes] Concurso 060/2026 já está completo. Nada a atualizar.
 [2026-07-28 22:51:45] [euromilhoes] Concurso 060/2026 já está completo. Nada a atualizar.
 [2026-07-29 11:27:54] [euromilhoes] Concurso 060/2026 já está completo. Nada a atualizar.
+[2026-07-31 20:56:50] [euromilhoes] Resultado do concurso 061/2026 adicionado ao JSON euromilhoes_2026.
