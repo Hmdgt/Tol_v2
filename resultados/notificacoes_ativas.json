@@ -1,1 +1,110 @@
-[]
+[
+  {
+    "id": "totoloto_217-04660368-031_1",
+    "jogo": "totoloto",
+    "data": "2026-08-06 11:28:37",
+    "lido": false,
+    "titulo": "🎫 Novo resultado TOTOLOTO",
+    "subtitulo": "Boletim: 217-04660368-031",
+    "resumo": "Não ganhou",
+    "detalhes": {
+      "data_verificacao": "2026-08-06 11:28:37",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "217-04660368-031",
+        "data_sorteio": "2026-08-05",
+        "concurso_sorteio": "062/2026",
+        "imagem_origem": "foto_1785948184449_whz1rk.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "11",
+          "16",
+          "17",
+          "23",
+          "44"
+        ],
+        "numero_da_sorte": "09"
+      },
+      "sorteio": {
+        "concurso": "062/2026",
+        "data": "05/08/2026",
+        "numeros": [
+          "06",
+          "14",
+          "17",
+          "21",
+          "32"
+        ],
+        "numero_da_sorte": "02"
+      },
+      "acertos": {
+        "numeros": 1,
+        "numero_da_sorte": false,
+        "descricao": "1 numero(s) sem Nº da Sorte",
+        "numeros_acertados": [
+          "17"
+        ],
+        "numero_da_sorte_acertado": null
+      },
+      "ganhou": false,
+      "premios": [],
+      "_jogo": "totoloto",
+      "_id": "totoloto_217-04660368-031_1"
+    }
+  },
+  {
+    "id": "totoloto_217-04660368-031_2",
+    "jogo": "totoloto",
+    "data": "2026-08-06 11:28:37",
+    "lido": false,
+    "titulo": "🎫 Novo resultado TOTOLOTO",
+    "subtitulo": "Boletim: 217-04660368-031",
+    "resumo": "Não ganhou",
+    "detalhes": {
+      "data_verificacao": "2026-08-06 11:28:37",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "217-04660368-031",
+        "data_sorteio": "2026-08-05",
+        "concurso_sorteio": "062/2026",
+        "imagem_origem": "foto_1785948184449_whz1rk.png"
+      },
+      "aposta": {
+        "indice": 2,
+        "numeros": [
+          "13",
+          "16",
+          "20",
+          "29",
+          "33"
+        ],
+        "numero_da_sorte": "09"
+      },
+      "sorteio": {
+        "concurso": "062/2026",
+        "data": "05/08/2026",
+        "numeros": [
+          "06",
+          "14",
+          "17",
+          "21",
+          "32"
+        ],
+        "numero_da_sorte": "02"
+      },
+      "acertos": {
+        "numeros": 0,
+        "numero_da_sorte": false,
+        "descricao": "0 numero(s) sem Nº da Sorte",
+        "numeros_acertados": [],
+        "numero_da_sorte_acertado": null
+      },
+      "ganhou": false,
+      "premios": [],
+      "_jogo": "totoloto",
+      "_id": "totoloto_217-04660368-031_2"
+    }
+  }
+]
