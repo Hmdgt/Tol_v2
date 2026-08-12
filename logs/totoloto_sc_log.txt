@@ -310,3 +310,5 @@
 [2026-08-08 22:30:09] [santacasa] Concurso 063/2026 atualizado com novos dados!
 [2026-08-09 09:42:42] [totoloto] Scraping via HTTP bem-sucedido
 [2026-08-09 09:42:42] [santacasa] Concurso 063/2026 atualizado com novos dados!
+[2026-08-12 20:35:32] [totoloto] Scraping via HTTP bem-sucedido
+[2026-08-12 20:35:32] [santacasa] Concurso 063/2026 já está completo.
