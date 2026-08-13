@@ -318,3 +318,5 @@
 [2026-08-12 22:36:52] [totoloto] HTTP falhou: Prémios não encontrados. A tentar Selenium.
 [2026-08-12 22:36:56] [totoloto] Scraping via Selenium bem-sucedido
 [2026-08-12 22:36:56] [santacasa] Concurso 064/2026 atualizado com novos dados!
+[2026-08-13 10:12:27] [totoloto] Scraping via HTTP bem-sucedido
+[2026-08-13 10:12:27] [santacasa] Concurso 064/2026 atualizado com novos dados!
