@@ -1,15 +1,15 @@
-Concurso: 064/2026
-Data: 10/08/2026
-Chave: 7 9 10 26 33 40 + 1
-Ordem de saída: 10 9 33 26 7 40 + 1
-Números: 07 09 10 26 33 40
-Dream: 1
+Concurso: 065/2026
+Data: 13/08/2026
+Chave: 10 14 18 20 26 30 + 5
+Ordem de saída: 14 18 10 26 20 30 + 5
+Números: 10 14 18 20 26 30
+Dream: 5
 ----------------------------------------
 Prémios:
 1.º Prémio - 6 Números + 1 Nº de Sonho | PT: 0 | EU: 0 | Valor: € 20.000/mês x 30 anos
-2.º Prémio - 6 Números | PT: 0 | EU: 0 | Valor: € 2.000/mês x 5 anos
-3.º Prémio - 5 Números | PT: 19 | EU: 111 | Valor: € 397,29
-4.º Prémio - 4 Números | PT: 820 | EU: 4.489 | Valor: € 27,53
-5.º Prémio - 3 Números | PT: 11.780 | EU: 63.827 | Valor: € 4,06
-6.º Prémio - 2 Números | PT: 67.088 | EU: 359.578 | Valor: € 2,50
+2.º Prémio - 6 Números | PT: 0 | EU: 1 | Valor: € 2.000/mês x 5 anos
+3.º Prémio - 5 Números | PT: 24 | EU: 149 | Valor: € 364,52
+4.º Prémio - 4 Números | PT: 898 | EU: 4.814 | Valor: € 31,62
+5.º Prémio - 3 Números | PT: 10.933 | EU: 62.891 | Valor: € 5,08
+6.º Prémio - 2 Números | PT: 58.976 | EU: 348.463 | Valor: € 2,50
 ----------------------------------------
