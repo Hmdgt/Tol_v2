@@ -1,50 +1,13 @@
 {
-  "concurso": "064/2026",
-  "data": "12/08/2026",
+  "concurso": "065/2026",
+  "data": "15/08/2026",
   "numeros": [
-    1,
-    3,
-    8,
-    12,
+    5,
+    16,
+    32,
+    34,
     37
   ],
-  "especial": 10,
-  "premios": [
-    {
-      "premio": "1.� Pr�mio",
-      "descricao": "5 N�meros + N� da Sorte",
-      "vencedores": "0",
-      "valor": "(1)"
-    },
-    {
-      "premio": "2.� Pr�mio",
-      "descricao": "5 N�meros",
-      "vencedores": "0",
-      "valor": "(2)"
-    },
-    {
-      "premio": "3.� Pr�mio",
-      "descricao": "4 N�meros",
-      "vencedores": "128",
-      "valor": "€ 394,19"
-    },
-    {
-      "premio": "4.� Pr�mio",
-      "descricao": "3 N�meros",
-      "vencedores": "6.365",
-      "valor": "€ 4,40"
-    },
-    {
-      "premio": "5.� Pr�mio",
-      "descricao": "2 N�meros",
-      "vencedores": "84.658",
-      "valor": "€ 1,98"
-    },
-    {
-      "premio": "N� da Sorte",
-      "descricao": "N� da Sorte",
-      "vencedores": "75.606",
-      "valor": "Reembolso do valor da aposta de Totoloto"
-    }
-  ]
+  "especial": 2,
+  "premios": []
 }
