@@ -1,13 +1,7 @@
-Concurso: 065/2026
-Data: 15/08/2026
-Números: 5 16 32 34 37
-Especial: 2
+Concurso: 066/2026
+Data: 19/08/2026
+Números: 3 5 26 36 46
+Especial: 5
 ----------------------------------------
 Prémios:
-1.� Pr�mio - 5 N�meros + N� da Sorte | Vencedores: 0 | Valor: (1)
-2.� Pr�mio - 5 N�meros | Vencedores: 1 | Valor: € 26.725,12
-3.� Pr�mio - 4 N�meros | Vencedores: 199 | Valor: € 167,87
-4.� Pr�mio - 3 N�meros | Vencedores: 6.758 | Valor: € 4,94
-5.� Pr�mio - 2 N�meros | Vencedores: 89.392 | Valor: € 2,24
-N� da Sorte - N� da Sorte | Vencedores: 75.991 | Valor: Reembolso do valor da aposta de Totoloto
 ----------------------------------------
