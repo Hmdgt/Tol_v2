@@ -2235,5 +2235,58 @@
       "descricao": "0 acertos",
       "valor": "EUR 0,00"
     }
+  },
+  {
+    "data_verificacao": "2026-08-23 11:54:41",
+    "metodo_validacao": "data + concurso",
+    "boletim": {
+      "referencia": "733-05805759-M1L",
+      "data_sorteio": "2026-08-21",
+      "concurso_sorteio": "067/2026",
+      "imagem_origem": "foto_1787485824410_bmjgkn.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "numeros": [
+        "01",
+        "25",
+        "28",
+        "32",
+        "41"
+      ],
+      "estrelas": [
+        "10",
+        "11"
+      ]
+    },
+    "sorteio": {
+      "concurso": "067/2026",
+      "data": "21/08/2026",
+      "chave": "10 14 15 19 45 + 4 12",
+      "numeros": [
+        "10",
+        "14",
+        "15",
+        "19",
+        "45"
+      ],
+      "estrelas": [
+        "04",
+        "12"
+      ]
+    },
+    "acertos": {
+      "numeros": 0,
+      "estrelas": 0,
+      "descricao": "0 numero(s) e 0 estrela(s)",
+      "numeros_acertados": [],
+      "estrelas_acertadas": []
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem premio",
+      "descricao": "0 acertos",
+      "valor": "EUR 0,00"
+    }
   }
 ]
