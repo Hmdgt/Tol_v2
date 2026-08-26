@@ -1,13 +1,7 @@
-Concurso: 067/2026
-Data: 22/08/2026
-Números: 12 30 42 45 48
-Especial: 9
+Concurso: 068/2026
+Data: 26/08/2026
+Números: 1 8 24 26 40
+Especial: 4
 ----------------------------------------
 Prémios:
-1.� Pr�mio - 5 N�meros + N� da Sorte | Vencedores: 0 | Valor: (1)
-2.� Pr�mio - 5 N�meros | Vencedores: 0 | Valor: (2)
-3.� Pr�mio - 4 N�meros | Vencedores: 96 | Valor: € 512,16
-4.� Pr�mio - 3 N�meros | Vencedores: 4.461 | Valor: € 6,12
-5.� Pr�mio - 2 N�meros | Vencedores: 67.733 | Valor: € 2,41
-N� da Sorte - N� da Sorte | Vencedores: 91.054 | Valor: Reembolso do valor da aposta de Totoloto
 ----------------------------------------
