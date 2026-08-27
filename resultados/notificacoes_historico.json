@@ -7449,5 +7449,67 @@
     },
     "arquivado": true,
     "data_leitura": "2026-08-25T21:39:11.119Z"
+  },
+  {
+    "id": "totoloto_237-01282390-208_1",
+    "jogo": "totoloto",
+    "data": "2026-08-27 00:19:32",
+    "lido": true,
+    "titulo": "🎫 Novo resultado TOTOLOTO",
+    "subtitulo": "Boletim: 237-01282390-208",
+    "resumo": "Ganhou: Nº da Sorte – Total: € 0,00",
+    "detalhes": {
+      "data_verificacao": "2026-08-27 00:19:32",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "237-01282390-208",
+        "data_sorteio": "2026-08-26",
+        "concurso_sorteio": "068/2026",
+        "imagem_origem": "foto_1787674488234_ncha1k.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "06",
+          "10",
+          "19",
+          "22",
+          "38"
+        ],
+        "numero_da_sorte": "04"
+      },
+      "sorteio": {
+        "concurso": "068/2026",
+        "data": "26/08/2026",
+        "numeros": [
+          "01",
+          "08",
+          "24",
+          "26",
+          "40"
+        ],
+        "numero_da_sorte": "04"
+      },
+      "acertos": {
+        "numeros": 0,
+        "numero_da_sorte": true,
+        "descricao": "0 numero(s) com Nº da Sorte",
+        "numeros_acertados": [],
+        "numero_da_sorte_acertado": "04"
+      },
+      "ganhou": true,
+      "premios": [
+        {
+          "premio": "N� da Sorte",
+          "descricao": "N� da Sorte",
+          "vencedores": "64.316",
+          "valor": "Reembolso do valor da aposta de Totoloto"
+        }
+      ],
+      "_jogo": "totoloto",
+      "_id": "totoloto_237-01282390-208_1"
+    },
+    "arquivado": true,
+    "data_leitura": "2026-08-27T09:39:03.450Z"
   }
 ]
