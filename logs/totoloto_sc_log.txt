@@ -356,3 +356,5 @@
 [2026-08-26 22:38:12] [santacasa] Resultado do concurso 068/2026 adicionado ao JSON totoloto_sc_2026.
 [2026-08-27 00:19:00] [totoloto] Scraping via HTTP bem-sucedido
 [2026-08-27 00:19:00] [santacasa] Concurso 068/2026 atualizado com novos dados!
+[2026-08-27 02:53:14] [totoloto] Scraping via HTTP bem-sucedido
+[2026-08-27 02:53:14] [santacasa] Concurso 068/2026 já está completo.
