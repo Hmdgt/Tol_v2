@@ -74,43 +74,5 @@
       "_jogo": "milhao",
       "_id": "milhao_733-02725566-EUR_1"
     }
-  },
-  {
-    "id": "milhao_737-03054015-EUR_1",
-    "jogo": "milhao",
-    "data": "2026-08-29 02:52:50",
-    "lido": false,
-    "titulo": "🎫 Novo resultado MILHAO",
-    "subtitulo": "Boletim: 737-03054015-EUR",
-    "resumo": "0 acertos",
-    "detalhes": {
-      "data_verificacao": "2026-08-29 02:52:50",
-      "boletim": {
-        "referencia": "737-03054015-EUR",
-        "data_sorteio": "2026-08-28",
-        "imagem_origem": "foto_1787674406339_0nbsjy.png"
-      },
-      "aposta": {
-        "indice": 1,
-        "codigo": "NZK35942",
-        "codigo_original": "NZK35942"
-      },
-      "sorteio": {
-        "concurso": "008/2026",
-        "data": "28/08/2026",
-        "codigo_premiado": "PCN33999",
-        "codigo_original": "PCN 33999",
-        "premio_nome": "1.º Prémio",
-        "vencedores": "1"
-      },
-      "ganhou": false,
-      "premio": {
-        "categoria": "Sem prémio",
-        "descricao": "Código não premiado",
-        "valor": "€ 0,00"
-      },
-      "_jogo": "milhao",
-      "_id": "milhao_737-03054015-EUR_1"
-    }
   }
 ]
