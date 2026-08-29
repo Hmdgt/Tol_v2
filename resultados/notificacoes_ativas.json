@@ -1,1 +1,70 @@
-[]
+[
+  {
+    "id": "euromilhoes_740-03182153-M1L_1",
+    "jogo": "euromilhoes",
+    "data": "2026-08-29 02:38:56",
+    "lido": false,
+    "titulo": "🎫 Novo resultado EUROMILHOES",
+    "subtitulo": "Boletim: 740-03182153-M1L",
+    "resumo": "1 números + 1 estrelas",
+    "detalhes": {
+      "data_verificacao": "2026-08-29 02:38:56",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "740-03182153-M1L",
+        "data_sorteio": "2026-08-28",
+        "concurso_sorteio": "069/2026",
+        "imagem_origem": "foto_1787934514283_y2b11e.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "15",
+          "22",
+          "30",
+          "36",
+          "42"
+        ],
+        "estrelas": [
+          "06",
+          "11"
+        ]
+      },
+      "sorteio": {
+        "concurso": "069/2026",
+        "data": "28/08/2026",
+        "chave": "7 14 28 42 45 + 6 9",
+        "numeros": [
+          "07",
+          "14",
+          "28",
+          "42",
+          "45"
+        ],
+        "estrelas": [
+          "06",
+          "09"
+        ]
+      },
+      "acertos": {
+        "numeros": 1,
+        "estrelas": 1,
+        "descricao": "1 numero(s) e 1 estrela(s)",
+        "numeros_acertados": [
+          "42"
+        ],
+        "estrelas_acertadas": [
+          "06"
+        ]
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem premio",
+        "descricao": "Nao corresponde a qualquer premio",
+        "valor": "EUR 0,00"
+      },
+      "_jogo": "euromilhoes",
+      "_id": "euromilhoes_740-03182153-M1L_1"
+    }
+  }
+]
