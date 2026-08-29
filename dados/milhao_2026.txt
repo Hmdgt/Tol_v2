@@ -1,11 +1,11 @@
-Concurso: 007/2026
-Data: 31/07/2026
-Código vencedor: NFN 37781
+Concurso: 008/2026
+Data: 28/08/2026
+Código vencedor: PCN 33999
 Vencedores: 1
 ----------------------------------------
 Estatísticas:
-Receita ilíquida apostas: € 5.105.346,60
+Receita ilíquida apostas: € 4.237.187,70
 Montante para prémios: € 1.000.000,00
-Nº de Registos: 9.704.060
-Nº de Códigos atribuídos: 17.017.822
+Nº de Registos: 7.976.620
+Nº de Códigos atribuídos: 14.123.959
 ----------------------------------------

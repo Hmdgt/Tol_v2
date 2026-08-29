@@ -3,3 +3,4 @@
 [2026-05-29 21:49:47] [milhao] Resultado do concurso 005/2026 adicionado ao JSON milhao_2026.
 [2026-06-26 22:44:02] [milhao] Resultado do concurso 006/2026 adicionado ao JSON milhao_2026.
 [2026-07-31 21:34:08] [milhao] Resultado do concurso 007/2026 adicionado ao JSON milhao_2026.
+[2026-08-29 02:52:00] [milhao] Resultado do concurso 008/2026 adicionado ao JSON milhao_2026.
