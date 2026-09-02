@@ -1,1 +1,70 @@
-[]
+[
+  {
+    "id": "totoloto_244-05849541-001_1",
+    "jogo": "totoloto",
+    "data": "2026-09-02 23:51:18",
+    "titulo": "🎫 Prémio TOTOLOTO",
+    "resumo": "Ganhou: 2 números + Nº da Sorte – Total: € 1,97",
+    "detalhes": {
+      "data_verificacao": "2026-09-02 23:51:18",
+      "metodo_validacao": "apenas data",
+      "boletim": {
+        "referencia": "244-05849541-001",
+        "data_sorteio": "2026-09-02",
+        "concurso_sorteio": "070",
+        "imagem_origem": "foto_1788281269510_3vbez4.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "07",
+          "08",
+          "11",
+          "21",
+          "40"
+        ],
+        "numero_da_sorte": "09"
+      },
+      "sorteio": {
+        "concurso": "070/2026",
+        "data": "02/09/2026",
+        "numeros": [
+          "05",
+          "07",
+          "08",
+          "29",
+          "45"
+        ],
+        "numero_da_sorte": "09"
+      },
+      "acertos": {
+        "numeros": 2,
+        "numero_da_sorte": true,
+        "descricao": "2 numero(s) com Nº da Sorte",
+        "numeros_acertados": [
+          "07",
+          "08"
+        ],
+        "numero_da_sorte_acertado": "09"
+      },
+      "ganhou": true,
+      "premios": [
+        {
+          "premio": "5.� Pr�mio",
+          "descricao": "2 N�meros",
+          "vencedores": "69.177",
+          "valor": "€ 1,97"
+        },
+        {
+          "premio": "N� da Sorte",
+          "descricao": "N� da Sorte",
+          "vencedores": "74.683",
+          "valor": "Reembolso do valor da aposta de Totoloto"
+        }
+      ],
+      "_jogo": "totoloto",
+      "_id": "totoloto_244-05849541-001_1"
+    },
+    "arquivado": false
+  }
+]
