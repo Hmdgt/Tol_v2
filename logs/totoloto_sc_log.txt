@@ -379,3 +379,5 @@
 [2026-09-02 22:53:04] [santacasa] Concurso 070/2026 atualizado com novos dados!
 [2026-09-02 23:50:49] [totoloto] Scraping via HTTP bem-sucedido
 [2026-09-02 23:50:49] [santacasa] Concurso 070/2026 atualizado com novos dados!
+[2026-09-03 13:26:21] [totoloto] Scraping via HTTP bem-sucedido
+[2026-09-03 13:26:21] [santacasa] Concurso 070/2026 já está completo.
