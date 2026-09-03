@@ -1,15 +1,15 @@
-Concurso: 070/2026
-Data: 31/08/2026
-Chave: 6 14 15 17 34 37 + 2
-Ordem de saída: 6 34 37 14 17 15 + 2
-Números: 06 14 15 17 34 37
-Dream: 2
+Concurso: 071/2026
+Data: 03/09/2026
+Chave: 8 18 20 22 33 40 + 1
+Ordem de saída: 33 40 8 20 22 18 + 1
+Números: 08 18 20 22 33 40
+Dream: 1
 ----------------------------------------
 Prémios:
 1.º Prémio - 6 Números + 1 Nº de Sonho | PT: 0 | EU: 0 | Valor: € 20.000/mês x 30 anos
 2.º Prémio - 6 Números | PT: 0 | EU: 0 | Valor: € 2.000/mês x 5 anos
-3.º Prémio - 5 Números | PT: 19 | EU: 88 | Valor: € 602,43
-4.º Prémio - 4 Números | PT: 638 | EU: 3.533 | Valor: € 42,06
-5.º Prémio - 3 Números | PT: 9.166 | EU: 51.846 | Valor: € 6,01
-6.º Prémio - 2 Números | PT: 55.923 | EU: 321.258 | Valor: € 2,50
+3.º Prémio - 5 Números | PT: 15 | EU: 136 | Valor: € 381,82
+4.º Prémio - 4 Números | PT: 819 | EU: 5.183 | Valor: € 28,08
+5.º Prémio - 3 Números | PT: 11.056 | EU: 67.449 | Valor: € 4,53
+6.º Prémio - 2 Números | PT: 60.812 | EU: 373.448 | Valor: € 2,50
 ----------------------------------------
