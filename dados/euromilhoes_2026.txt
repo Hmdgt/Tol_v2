@@ -1,20 +1,20 @@
-Concurso: 070/2026
-Data: 01/09/2026
-Chave: 2 10 23 37 47 + 3 5
-Ordem de saída: 23 47 37 10 2 + 3 5
+Concurso: 071/2026
+Data: 04/09/2026
+Chave: 11 12 19 27 46 + 4 12
+Ordem de saída: 46 27 12 19 11 + 4 12
 ----------------------------------------
 Prémios:
 1.º Prémio - 5 Números + 2 Estrelas | PT: 0 | EU: 0 | Valor: (1)
-2.º Prémio - 5 Números + 1 Estrela | PT: 2 | EU: 6 | Valor: € 88.442,56
-3.º Prémio - 5 Números + 0 Estrelas | PT: 0 | EU: 8 | Valor: € 15.502,86
-4.º Prémio - 4 Números + 2 Estrelas | PT: 4 | EU: 40 | Valor: € 965,75
-5.º Prémio - 4 Números + 1 Estrela | PT: 36 | EU: 615 | Valor: € 115,70
-6.º Prémio - 3 Números + 2 Estrelas | PT: 144 | EU: 1.525 | Valor: € 49,32
-7.º Prémio - 4 Números + 0 Estrelas | PT: 94 | EU: 1.317 | Valor: € 40,13
-8.º Prémio - 2 Números + 2 Estrelas | PT: 2.556 | EU: 23.344 | Valor: € 11,32
-9.º Prémio - 3 Números + 1 Estrela | PT: 2.303 | EU: 28.681 | Valor: € 10,27
-10.º Prémio - 3 Números + 0 Estrelas | PT: 4.090 | EU: 57.831 | Valor: € 9,49
-11.º Prémio - 1 Número + 2 Estrelas | PT: 13.794 | EU: 125.435 | Valor: € 5,30
-12.º Prémio - 2 Números + 1 Estrela | PT: 34.686 | EU: 412.548 | Valor: € 5,07
-13.º Prémio - 2 Números + 0 Estrelas | PT: 59.136 | EU: 810.885 | Valor: € 4,15
+2.º Prémio - 5 Números + 1 Estrela | PT: 0 | EU: 1 | Valor: € 694.559,23
+3.º Prémio - 5 Números + 0 Estrelas | PT: 1 | EU: 9 | Valor: € 18.036,65
+4.º Prémio - 4 Números + 2 Estrelas | PT: 4 | EU: 34 | Valor: € 1.487,11
+5.º Prémio - 4 Números + 1 Estrela | PT: 63 | EU: 842 | Valor: € 110,61
+6.º Prémio - 3 Números + 2 Estrelas | PT: 76 | EU: 1.497 | Valor: € 65,77
+7.º Prémio - 4 Números + 0 Estrelas | PT: 159 | EU: 2.188 | Valor: € 31,62
+8.º Prémio - 2 Números + 2 Estrelas | PT: 1.498 | EU: 21.219 | Valor: € 16,30
+9.º Prémio - 3 Números + 1 Estrela | PT: 2.699 | EU: 36.860 | Valor: € 10,46
+10.º Prémio - 3 Números + 0 Estrelas | PT: 7.765 | EU: 95.645 | Valor: € 7,51
+11.º Prémio - 1 Número + 2 Estrelas | PT: 7.370 | EU: 106.642 | Valor: € 8,15
+12.º Prémio - 2 Números + 1 Estrela | PT: 36.796 | EU: 496.931 | Valor: € 5,51
+13.º Prémio - 2 Números + 0 Estrelas | PT: 109.085 | EU: 1.279.265 | Valor: € 3,45
 ----------------------------------------
