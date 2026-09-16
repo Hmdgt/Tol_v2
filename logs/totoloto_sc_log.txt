@@ -416,3 +416,6 @@
 [2026-09-16 22:31:57] [totoloto] HTTP falhou: Prémios não encontrados. A tentar Selenium.
 [2026-09-16 22:32:01] [totoloto] Scraping via Selenium bem-sucedido
 [2026-09-16 22:32:01] [santacasa] Resultado do concurso 074/2026 adicionado ao JSON totoloto_sc_2026.
+[2026-09-16 23:19:10] [totoloto] HTTP falhou: Prémios não encontrados. A tentar Selenium.
+[2026-09-16 23:19:14] [totoloto] Scraping via Selenium bem-sucedido
+[2026-09-16 23:19:14] [santacasa] Concurso 074/2026 atualizado com novos dados!
