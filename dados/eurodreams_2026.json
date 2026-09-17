@@ -3775,6 +3775,65 @@
           "valor": "€ 2,50"
         }
       ]
+    },
+    {
+      "concurso": "075/2026",
+      "data": "17/09/2026",
+      "chave_ordenada": "8 10 13 17 20 27 + 4",
+      "chave_saida": "20 13 10 27 8 17 + 4",
+      "numeros": [
+        "08",
+        "10",
+        "13",
+        "17",
+        "20",
+        "27"
+      ],
+      "dream": "4",
+      "premios": [
+        {
+          "premio": "1.º Prémio",
+          "descricao": "6 Números + 1 Nº de Sonho",
+          "vencedores_pt": "0",
+          "vencedores_eu": "0",
+          "valor": "€ 20.000/mês x 30 anos"
+        },
+        {
+          "premio": "2.º Prémio",
+          "descricao": "6 Números",
+          "vencedores_pt": "0",
+          "vencedores_eu": "0",
+          "valor": "€ 2.000/mês x 5 anos"
+        },
+        {
+          "premio": "3.º Prémio",
+          "descricao": "5 Números",
+          "vencedores_pt": "23",
+          "vencedores_eu": "124",
+          "valor": "€ 357,47"
+        },
+        {
+          "premio": "4.º Prémio",
+          "descricao": "4 Números",
+          "vencedores_pt": "949",
+          "vencedores_eu": "5.436",
+          "valor": "€ 22,85"
+        },
+        {
+          "premio": "5.º Prémio",
+          "descricao": "3 Números",
+          "vencedores_pt": "12.191",
+          "vencedores_eu": "70.016",
+          "valor": "€ 3,72"
+        },
+        {
+          "premio": "6.º Prémio",
+          "descricao": "2 Números",
+          "vencedores_pt": "62.885",
+          "vencedores_eu": "370.579",
+          "valor": "€ 2,50"
+        }
+      ]
     }
   ]
 }
