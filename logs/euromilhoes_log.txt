@@ -216,3 +216,4 @@
 [2026-09-15 23:50:08] [euromilhoes] Concurso 074/2026 já está completo. Nada a atualizar.
 [2026-09-16 14:05:39] [euromilhoes] Concurso 074/2026 já está completo. Nada a atualizar.
 [2026-09-18 22:08:02] [euromilhoes] Resultado do concurso 075/2026 adicionado ao JSON euromilhoes_2026.
+[2026-09-18 23:07:26] [euromilhoes] Concurso 075/2026 já está completo. Nada a atualizar.
