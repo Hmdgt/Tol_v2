@@ -1,1 +1,73 @@
-[]
+[
+  {
+    "id": "euromilhoes_761-08176999-116_1",
+    "jogo": "euromilhoes",
+    "data": "2026-09-18 22:08:39",
+    "lido": false,
+    "titulo": "🎫 Novo resultado EUROMILHOES",
+    "subtitulo": "Boletim: 761-08176999-116",
+    "resumo": "2 números + 1 estrelas",
+    "detalhes": {
+      "data_verificacao": "2026-09-18 22:08:39",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "761-08176999-116",
+        "data_sorteio": "2026-09-18",
+        "concurso_sorteio": "075/2026",
+        "imagem_origem": "foto_1789716210466_ybbi1a.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "08",
+          "19",
+          "25",
+          "26",
+          "35"
+        ],
+        "estrelas": [
+          "03",
+          "07"
+        ]
+      },
+      "sorteio": {
+        "concurso": "075/2026",
+        "data": "18/09/2026",
+        "chave": "8 17 25 30 44 + 2 3",
+        "numeros": [
+          "08",
+          "17",
+          "25",
+          "30",
+          "44"
+        ],
+        "estrelas": [
+          "02",
+          "03"
+        ]
+      },
+      "acertos": {
+        "numeros": 2,
+        "estrelas": 1,
+        "descricao": "2 numero(s) e 1 estrela(s)",
+        "numeros_acertados": [
+          "08",
+          "25"
+        ],
+        "estrelas_acertadas": [
+          "03"
+        ]
+      },
+      "premio": {
+        "categoria": "12.º Prémio",
+        "descricao": "2 Números + 1 Estrela",
+        "valor": "€ 4,64",
+        "vencedores_pt": "48.146",
+        "vencedores_eu": "505.568"
+      },
+      "ganhou": true,
+      "_jogo": "euromilhoes",
+      "_id": "euromilhoes_761-08176999-116_1"
+    }
+  }
+]
