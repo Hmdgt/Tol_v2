@@ -1,13 +1,7 @@
-Concurso: 074/2026
-Data: 16/09/2026
-Números: 1 4 7 20 30
-Especial: 8
+Concurso: 075/2026
+Data: 19/09/2026
+Números: 1 2 6 31 36
+Especial: 3
 ----------------------------------------
 Prémios:
-1.� Pr�mio - 5 N�meros + N� da Sorte | Vencedores: 0 | Valor: (1)
-2.� Pr�mio - 5 N�meros | Vencedores: 1 | Valor: € 17.582,79
-3.� Pr�mio - 4 N�meros | Vencedores: 162 | Valor: € 135,66
-4.� Pr�mio - 3 N�meros | Vencedores: 5.896 | Valor: € 3,72
-5.� Pr�mio - 2 N�meros | Vencedores: 70.939 | Valor: € 1,85
-N� da Sorte - N� da Sorte | Vencedores: 78.763 | Valor: Reembolso do valor da aposta de Totoloto
 ----------------------------------------
