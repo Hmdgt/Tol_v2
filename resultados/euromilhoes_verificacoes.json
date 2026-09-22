@@ -2731,5 +2731,58 @@
       "vencedores_eu": "505.568"
     },
     "ganhou": true
+  },
+  {
+    "data_verificacao": "2026-09-22 22:39:53",
+    "metodo_validacao": "data + concurso",
+    "boletim": {
+      "referencia": "765-03890891-M1L",
+      "data_sorteio": "2026-09-22",
+      "concurso_sorteio": "076/2026",
+      "imagem_origem": "foto_1790096570138_i79xyc.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "numeros": [
+        "08",
+        "19",
+        "25",
+        "26",
+        "35"
+      ],
+      "estrelas": [
+        "03",
+        "07"
+      ]
+    },
+    "sorteio": {
+      "concurso": "076/2026",
+      "data": "22/09/2026",
+      "chave": "13 14 16 44 50 + 10 12",
+      "numeros": [
+        "13",
+        "14",
+        "16",
+        "44",
+        "50"
+      ],
+      "estrelas": [
+        "10",
+        "12"
+      ]
+    },
+    "acertos": {
+      "numeros": 0,
+      "estrelas": 0,
+      "descricao": "0 numero(s) e 0 estrela(s)",
+      "numeros_acertados": [],
+      "estrelas_acertadas": []
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem premio",
+      "descricao": "0 acertos",
+      "valor": "EUR 0,00"
+    }
   }
 ]
