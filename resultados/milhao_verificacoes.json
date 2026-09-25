@@ -1186,5 +1186,221 @@
       "descricao": "Código não premiado",
       "valor": "€ 0,00"
     }
+  },
+  {
+    "data_verificacao": "2026-09-25 23:22:31",
+    "boletim": {
+      "referencia": "744-00368351-EUR",
+      "data_sorteio": "2026-09-25",
+      "imagem_origem": "foto_1788282300354_lhfetq.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "codigo": "PFS20920",
+      "codigo_original": "PFS20920"
+    },
+    "sorteio": {
+      "concurso": "009/2026",
+      "data": "25/09/2026",
+      "codigo_premiado": "PTM09893",
+      "codigo_original": "PTM 09893",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Código não premiado",
+      "valor": "€ 0,00"
+    }
+  },
+  {
+    "data_verificacao": "2026-09-25 23:22:31",
+    "boletim": {
+      "referencia": "751-03257952-EUR",
+      "data_sorteio": "2026-09-25",
+      "imagem_origem": "foto_1788894264764_l7680q.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "codigo": "PLF39510",
+      "codigo_original": "PLF39510"
+    },
+    "sorteio": {
+      "concurso": "009/2026",
+      "data": "25/09/2026",
+      "codigo_premiado": "PTM09893",
+      "codigo_original": "PTM 09893",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Código não premiado",
+      "valor": "€ 0,00"
+    }
+  },
+  {
+    "data_verificacao": "2026-09-25 23:22:31",
+    "boletim": {
+      "referencia": "754-04682067-EUR",
+      "data_sorteio": "2026-09-25",
+      "imagem_origem": "foto_1789145852458_7mzbgl.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "codigo": "PML12992",
+      "codigo_original": "PML12992"
+    },
+    "sorteio": {
+      "concurso": "009/2026",
+      "data": "25/09/2026",
+      "codigo_premiado": "PTM09893",
+      "codigo_original": "PTM 09893",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Código não premiado",
+      "valor": "€ 0,00"
+    }
+  },
+  {
+    "data_verificacao": "2026-09-25 23:22:31",
+    "boletim": {
+      "referencia": "758-04938323-EUR",
+      "data_sorteio": "2026-09-25",
+      "imagem_origem": "foto_1789457296528_aap7hn.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "codigo": "PQC33622",
+      "codigo_original": "PQC33622"
+    },
+    "sorteio": {
+      "concurso": "009/2026",
+      "data": "25/09/2026",
+      "codigo_premiado": "PTM09893",
+      "codigo_original": "PTM 09893",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Código não premiado",
+      "valor": "€ 0,00"
+    }
+  },
+  {
+    "data_verificacao": "2026-09-25 23:22:31",
+    "boletim": {
+      "referencia": "758-03059990-EUR",
+      "data_sorteio": "2026-09-25",
+      "imagem_origem": "foto_1789630182473_k3ftkz.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "codigo": "PQW29800",
+      "codigo_original": "PQW29800"
+    },
+    "sorteio": {
+      "concurso": "009/2026",
+      "data": "25/09/2026",
+      "codigo_premiado": "PTM09893",
+      "codigo_original": "PTM 09893",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Código não premiado",
+      "valor": "€ 0,00"
+    }
+  },
+  {
+    "data_verificacao": "2026-09-25 23:22:31",
+    "boletim": {
+      "referencia": "761-08176999-EUR",
+      "data_sorteio": "2026-09-25",
+      "imagem_origem": "foto_1789716370034_uaf88h.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "codigo": "PRV32727",
+      "codigo_original": "PRV32727"
+    },
+    "sorteio": {
+      "concurso": "009/2026",
+      "data": "25/09/2026",
+      "codigo_premiado": "PTM09893",
+      "codigo_original": "PTM 09893",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Código não premiado",
+      "valor": "€ 0,00"
+    }
+  },
+  {
+    "data_verificacao": "2026-09-25 23:22:31",
+    "boletim": {
+      "referencia": "765-04873930-EUR",
+      "data_sorteio": "2026-09-25",
+      "imagem_origem": "foto_1790147478446_53eq2u.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "codigo": "PWF20639",
+      "codigo_original": "PWF20639"
+    },
+    "sorteio": {
+      "concurso": "009/2026",
+      "data": "25/09/2026",
+      "codigo_premiado": "PTM09893",
+      "codigo_original": "PTM 09893",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Código não premiado",
+      "valor": "€ 0,00"
+    }
+  },
+  {
+    "data_verificacao": "2026-09-25 23:22:31",
+    "boletim": {
+      "referencia": "768-05680772-EUR",
+      "data_sorteio": "2026-09-25",
+      "imagem_origem": "foto_1790321641125_4nyzng.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "codigo": "PXR27209",
+      "codigo_original": "PXR27209"
+    },
+    "sorteio": {
+      "concurso": "009/2026",
+      "data": "25/09/2026",
+      "codigo_premiado": "PTM09893",
+      "codigo_original": "PTM 09893",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1"
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem prémio",
+      "descricao": "Código não premiado",
+      "valor": "€ 0,00"
+    }
   }
 ]
