@@ -1,11 +1,11 @@
-Concurso: 008/2026
-Data: 28/08/2026
-Código vencedor: PCN 33999
+Concurso: 009/2026
+Data: 25/09/2026
+Código vencedor: PTM 09893
 Vencedores: 1
 ----------------------------------------
 Estatísticas:
-Receita ilíquida apostas: € 4.237.187,70
+Receita ilíquida apostas: € 4.508.228,10
 Montante para prémios: € 1.000.000,00
-Nº de Registos: 7.976.620
-Nº de Códigos atribuídos: 14.123.959
+Nº de Registos: 8.505.585
+Nº de Códigos atribuídos: 15.027.427
 ----------------------------------------
