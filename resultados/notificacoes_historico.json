@@ -8749,5 +8749,45 @@
     },
     "arquivado": true,
     "data_leitura": "2026-09-26T09:34:18.723Z"
+  },
+  {
+    "id": "milhao_751-03257952-EUR_1",
+    "jogo": "milhao",
+    "data": "2026-09-25 23:22:31",
+    "lido": true,
+    "titulo": "🎫 Novo resultado MILHAO",
+    "subtitulo": "Boletim: 751-03257952-EUR",
+    "resumo": "0 acertos",
+    "detalhes": {
+      "data_verificacao": "2026-09-25 23:22:31",
+      "boletim": {
+        "referencia": "751-03257952-EUR",
+        "data_sorteio": "2026-09-25",
+        "imagem_origem": "foto_1788894264764_l7680q.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "codigo": "PLF39510",
+        "codigo_original": "PLF39510"
+      },
+      "sorteio": {
+        "concurso": "009/2026",
+        "data": "25/09/2026",
+        "codigo_premiado": "PTM09893",
+        "codigo_original": "PTM 09893",
+        "premio_nome": "1.º Prémio",
+        "vencedores": "1"
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem prémio",
+        "descricao": "Código não premiado",
+        "valor": "€ 0,00"
+      },
+      "_jogo": "milhao",
+      "_id": "milhao_751-03257952-EUR_1"
+    },
+    "arquivado": true,
+    "data_leitura": "2026-09-26T09:34:25.785Z"
   }
 ]
