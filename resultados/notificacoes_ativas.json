@@ -1,43 +1,5 @@
 [
   {
-    "id": "milhao_754-04682067-EUR_1",
-    "jogo": "milhao",
-    "data": "2026-09-25 23:22:31",
-    "lido": false,
-    "titulo": "🎫 Novo resultado MILHAO",
-    "subtitulo": "Boletim: 754-04682067-EUR",
-    "resumo": "0 acertos",
-    "detalhes": {
-      "data_verificacao": "2026-09-25 23:22:31",
-      "boletim": {
-        "referencia": "754-04682067-EUR",
-        "data_sorteio": "2026-09-25",
-        "imagem_origem": "foto_1789145852458_7mzbgl.png"
-      },
-      "aposta": {
-        "indice": 1,
-        "codigo": "PML12992",
-        "codigo_original": "PML12992"
-      },
-      "sorteio": {
-        "concurso": "009/2026",
-        "data": "25/09/2026",
-        "codigo_premiado": "PTM09893",
-        "codigo_original": "PTM 09893",
-        "premio_nome": "1.º Prémio",
-        "vencedores": "1"
-      },
-      "ganhou": false,
-      "premio": {
-        "categoria": "Sem prémio",
-        "descricao": "Código não premiado",
-        "valor": "€ 0,00"
-      },
-      "_jogo": "milhao",
-      "_id": "milhao_754-04682067-EUR_1"
-    }
-  },
-  {
     "id": "milhao_758-04938323-EUR_1",
     "jogo": "milhao",
     "data": "2026-09-25 23:22:31",
