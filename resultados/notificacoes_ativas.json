@@ -1,43 +1,5 @@
 [
   {
-    "id": "milhao_758-04938323-EUR_1",
-    "jogo": "milhao",
-    "data": "2026-09-25 23:22:31",
-    "lido": false,
-    "titulo": "🎫 Novo resultado MILHAO",
-    "subtitulo": "Boletim: 758-04938323-EUR",
-    "resumo": "0 acertos",
-    "detalhes": {
-      "data_verificacao": "2026-09-25 23:22:31",
-      "boletim": {
-        "referencia": "758-04938323-EUR",
-        "data_sorteio": "2026-09-25",
-        "imagem_origem": "foto_1789457296528_aap7hn.png"
-      },
-      "aposta": {
-        "indice": 1,
-        "codigo": "PQC33622",
-        "codigo_original": "PQC33622"
-      },
-      "sorteio": {
-        "concurso": "009/2026",
-        "data": "25/09/2026",
-        "codigo_premiado": "PTM09893",
-        "codigo_original": "PTM 09893",
-        "premio_nome": "1.º Prémio",
-        "vencedores": "1"
-      },
-      "ganhou": false,
-      "premio": {
-        "categoria": "Sem prémio",
-        "descricao": "Código não premiado",
-        "valor": "€ 0,00"
-      },
-      "_jogo": "milhao",
-      "_id": "milhao_758-04938323-EUR_1"
-    }
-  },
-  {
     "id": "milhao_758-03059990-EUR_1",
     "jogo": "milhao",
     "data": "2026-09-25 23:22:31",
