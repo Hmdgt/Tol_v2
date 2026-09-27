@@ -1,1 +1,55 @@
-[]
+[
+  {
+    "id": "totoloto_268-03701996-182_1",
+    "jogo": "totoloto",
+    "data": "2026-09-27 00:20:03",
+    "lido": false,
+    "titulo": "🎫 Novo resultado TOTOLOTO",
+    "subtitulo": "Boletim: 268-03701996-182",
+    "resumo": "Não ganhou",
+    "detalhes": {
+      "data_verificacao": "2026-09-27 00:20:03",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "268-03701996-182",
+        "data_sorteio": "2026-09-26",
+        "concurso_sorteio": "077/2026",
+        "imagem_origem": "foto_1790320825895_oskuhe.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "15",
+          "16",
+          "24",
+          "27",
+          "36"
+        ],
+        "numero_da_sorte": "08"
+      },
+      "sorteio": {
+        "concurso": "077/2026",
+        "data": "26/09/2026",
+        "numeros": [
+          "12",
+          "13",
+          "17",
+          "38",
+          "45"
+        ],
+        "numero_da_sorte": "11"
+      },
+      "acertos": {
+        "numeros": 0,
+        "numero_da_sorte": false,
+        "descricao": "0 numero(s) sem Nº da Sorte",
+        "numeros_acertados": [],
+        "numero_da_sorte_acertado": null
+      },
+      "ganhou": false,
+      "premios": [],
+      "_jogo": "totoloto",
+      "_id": "totoloto_268-03701996-182_1"
+    }
+  }
+]
