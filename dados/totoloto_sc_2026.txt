@@ -1,13 +1,7 @@
-Concurso: 077/2026
-Data: 26/09/2026
-Números: 12 13 17 38 45
-Especial: 11
+Concurso: 078/2026
+Data: 30/09/2026
+Números: 4 9 19 22 24
+Especial: 13
 ----------------------------------------
 Prémios:
-1.� Pr�mio - 5 N�meros + N� da Sorte | Vencedores: 0 | Valor: (1)
-2.� Pr�mio - 5 N�meros | Vencedores: 0 | Valor: (2)
-3.� Pr�mio - 4 N�meros | Vencedores: 143 | Valor: € 347,68
-4.� Pr�mio - 3 N�meros | Vencedores: 6.629 | Valor: € 4,16
-5.� Pr�mio - 2 N�meros | Vencedores: 89.160 | Valor: € 1,85
-N� da Sorte - N� da Sorte | Vencedores: 69.116 | Valor: Reembolso do valor da aposta de Totoloto
 ----------------------------------------
