@@ -459,3 +459,25 @@
 [2026-09-30 23:21:47] [totoloto] HTTP falhou: Prémios não encontrados. A tentar Selenium.
 [2026-09-30 23:21:57] [totoloto] Scraping via Selenium bem-sucedido
 [2026-09-30 23:21:57] [santacasa] Resultado do concurso 078/2026 adicionado ao JSON totoloto_sc_2026.
+[2026-10-01 00:13:27] [totoloto] HTTP falhou: HTTP 404. A tentar Selenium.
+[2026-10-01 00:13:56] [totoloto] Falha total: Message: 
+Stacktrace:
+#0 0x55cf1a2629fa <unknown>
+#1 0x55cf19b985b9 <unknown>
+#2 0x55cf19beedfc <unknown>
+#3 0x55cf19bef071 <unknown>
+#4 0x55cf19c3b664 <unknown>
+#5 0x55cf19c388de <unknown>
+#6 0x55cf19be1b8b <unknown>
+#7 0x55cf19be2971 <unknown>
+#8 0x55cf1a225667 <unknown>
+#9 0x55cf1a223e95 <unknown>
+#10 0x55cf1a20ef55 <unknown>
+#11 0x55cf1a224aea <unknown>
+#12 0x55cf1a1f76c9 <unknown>
+#13 0x55cf1a24c9a8 <unknown>
+#14 0x55cf1a24cb45 <unknown>
+#15 0x55cf1a261353 <unknown>
+#16 0x7f3eaae9cb84 <unknown>
+#17 0x7f3eaaf29ecc <unknown>
+
