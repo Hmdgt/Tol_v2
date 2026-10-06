@@ -1,15 +1,15 @@
-Concurso: 079/2026
-Data: 01/10/2026
-Chave: 6 9 12 21 36 37 + 3
-Ordem de saída: 12 37 9 21 36 6 + 3
-Números: 06 09 12 21 36 37
-Dream: 3
+Concurso: 080/2026
+Data: 05/10/2026
+Chave: 3 6 16 24 29 40 + 2
+Ordem de saída: 29 3 16 6 24 40 + 2
+Números: 03 06 16 24 29 40
+Dream: 2
 ----------------------------------------
 Prémios:
-1.º Prémio - 6 Números + 1 Nº de Sonho | PT: 0 | EU: 0 | Valor: € 20.000/mês x 30 anos
+1.º Prémio - 6 Números + 1 Nº de Sonho | PT: 1 | EU: 1 | Valor: € 20.000/mês x 30 anos
 2.º Prémio - 6 Números | PT: 0 | EU: 0 | Valor: € 2.000/mês x 5 anos
-3.º Prémio - 5 Números | PT: 21 | EU: 96 | Valor: € 559,93
-4.º Prémio - 4 Números | PT: 683 | EU: 4.337 | Valor: € 34,74
-5.º Prémio - 3 Números | PT: 10.276 | EU: 61.326 | Valor: € 5,15
-6.º Prémio - 2 Números | PT: 61.230 | EU: 360.177 | Valor: € 2,50
+3.º Prémio - 5 Números | PT: 15 | EU: 103 | Valor: € 460,78
+4.º Prémio - 4 Números | PT: 711 | EU: 4.139 | Valor: € 32,14
+5.º Prémio - 3 Números | PT: 9.896 | EU: 58.093 | Valor: € 4,80
+6.º Prémio - 2 Números | PT: 58.239 | EU: 333.695 | Valor: € 2,50
 ----------------------------------------
