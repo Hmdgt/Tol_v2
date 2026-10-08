@@ -4,4 +4,10 @@ Números: 2 5 22 27 35
 Especial: 12
 ----------------------------------------
 Prémios:
+1.� Pr�mio - 5 N�meros + N� da Sorte | Vencedores: 0 | Valor: (1)
+2.� Pr�mio - 5 N�meros | Vencedores: 0 | Valor: (2)
+3.� Pr�mio - 4 N�meros | Vencedores: 98 | Valor: € 409,03
+4.� Pr�mio - 3 N�meros | Vencedores: 4.226 | Valor: € 5,26
+5.� Pr�mio - 2 N�meros | Vencedores: 63.270 | Valor: € 2,11
+N� da Sorte - N� da Sorte | Vencedores: 49.851 | Valor: Reembolso do valor da aposta de Totoloto
 ----------------------------------------
