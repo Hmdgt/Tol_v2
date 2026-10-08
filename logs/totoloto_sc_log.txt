@@ -501,3 +501,5 @@ Stacktrace:
 [2026-10-07 23:57:59] [santacasa] Resultado do concurso 080/2026 adicionado ao JSON totoloto_sc_2026.
 [2026-10-08 00:30:33] [totoloto] Scraping via HTTP bem-sucedido
 [2026-10-08 00:30:33] [santacasa] Concurso 080/2026 atualizado com novos dados!
+[2026-10-08 01:32:47] [totoloto] Scraping via HTTP bem-sucedido
+[2026-10-08 01:32:47] [santacasa] Concurso 080/2026 já está completo.
