@@ -9398,5 +9398,71 @@
     },
     "arquivado": true,
     "data_leitura": "2026-10-11T13:51:39.694Z"
+  },
+  {
+    "id": "euromilhoes_786-06544087-M1L_1",
+    "jogo": "euromilhoes",
+    "data": "2026-10-14 16:32:02",
+    "lido": true,
+    "titulo": "🎫 Novo resultado EUROMILHOES",
+    "subtitulo": "Boletim: 786-06544087-M1L",
+    "resumo": "0 números + 0 estrelas",
+    "detalhes": {
+      "data_verificacao": "2026-10-14 16:32:02",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "786-06544087-M1L",
+        "data_sorteio": "2026-10-13",
+        "concurso_sorteio": "082/2026",
+        "imagem_origem": "foto_1791994511732_djcw8d.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "12",
+          "32",
+          "33",
+          "38",
+          "46"
+        ],
+        "estrelas": [
+          "05",
+          "09"
+        ]
+      },
+      "sorteio": {
+        "concurso": "082/2026",
+        "data": "13/10/2026",
+        "chave": "21 23 39 44 49 + 4 11",
+        "numeros": [
+          "21",
+          "23",
+          "39",
+          "44",
+          "49"
+        ],
+        "estrelas": [
+          "04",
+          "11"
+        ]
+      },
+      "acertos": {
+        "numeros": 0,
+        "estrelas": 0,
+        "descricao": "0 numero(s) e 0 estrela(s)",
+        "numeros_acertados": [],
+        "estrelas_acertadas": []
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem premio",
+        "descricao": "0 acertos",
+        "valor": "EUR 0,00"
+      },
+      "_jogo": "euromilhoes",
+      "_id": "euromilhoes_786-06544087-M1L_1"
+    },
+    "arquivado": true,
+    "data_leitura": "2026-10-15T06:15:32.057Z"
   }
 ]
