@@ -245,3 +245,4 @@
 [2026-10-14 00:02:11] [euromilhoes] Concurso 082/2026 já está completo. Nada a atualizar.
 [2026-10-14 00:44:43] [euromilhoes] Concurso 082/2026 já está completo. Nada a atualizar.
 [2026-10-14 14:24:10] [euromilhoes] Concurso 082/2026 já está completo. Nada a atualizar.
+[2026-10-16 22:22:00] [euromilhoes] Resultado do concurso 083/2026 adicionado ao JSON euromilhoes_2026.
