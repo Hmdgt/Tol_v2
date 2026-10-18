@@ -1,1 +1,55 @@
-[]
+[
+  {
+    "id": "totoloto_289-06455744-003_1",
+    "jogo": "totoloto",
+    "data": "2026-10-18 13:06:03",
+    "lido": false,
+    "titulo": "🎫 Novo resultado TOTOLOTO",
+    "subtitulo": "Boletim: 289-06455744-003",
+    "resumo": "Não ganhou",
+    "detalhes": {
+      "data_verificacao": "2026-10-18 13:06:03",
+      "metodo_validacao": "apenas data",
+      "boletim": {
+        "referencia": "289-06455744-003",
+        "data_sorteio": "2026-10-17",
+        "concurso_sorteio": "083",
+        "imagem_origem": "foto_1792171667454_sgwl2x.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "25",
+          "31",
+          "32",
+          "41",
+          "48"
+        ],
+        "numero_da_sorte": "08"
+      },
+      "sorteio": {
+        "concurso": "083/2026",
+        "data": "17/10/2026",
+        "numeros": [
+          "13",
+          "26",
+          "39",
+          "44",
+          "49"
+        ],
+        "numero_da_sorte": "06"
+      },
+      "acertos": {
+        "numeros": 0,
+        "numero_da_sorte": false,
+        "descricao": "0 numero(s) sem Nº da Sorte",
+        "numeros_acertados": [],
+        "numero_da_sorte_acertado": null
+      },
+      "ganhou": false,
+      "premios": [],
+      "_jogo": "totoloto",
+      "_id": "totoloto_289-06455744-003_1"
+    }
+  }
+]
