@@ -535,3 +535,5 @@ Stacktrace:
 [2026-10-17 23:48:40] [totoloto] HTTP falhou: Prémios não encontrados. A tentar Selenium.
 [2026-10-17 23:48:43] [totoloto] Scraping via Selenium bem-sucedido
 [2026-10-17 23:48:43] [santacasa] Concurso 083/2026 atualizado com novos dados!
+[2026-10-18 13:05:18] [totoloto] Scraping via HTTP bem-sucedido
+[2026-10-18 13:05:18] [santacasa] Concurso 083/2026 atualizado com novos dados!
