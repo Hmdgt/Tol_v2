@@ -1,15 +1,15 @@
-Concurso: 083/2026
-Data: 15/10/2026
-Chave: 4 19 27 31 34 39 + 5
-Ordem de saída: 39 19 27 34 31 4 + 5
-Números: 04 19 27 31 34 39
-Dream: 5
+Concurso: 084/2026
+Data: 19/10/2026
+Chave: 1 2 10 15 23 26 + 3
+Ordem de saída: 23 10 26 2 1 15 + 3
+Números: 01 02 10 15 23 26
+Dream: 3
 ----------------------------------------
 Prémios:
 1.º Prémio - 6 Números + 1 Nº de Sonho | PT: 0 | EU: 0 | Valor: € 50.000/mês x 30 anos
-2.º Prémio - 6 Números | PT: 0 | EU: 0 | Valor: € 2.000/mês x 5 anos
-3.º Prémio - 5 Números | PT: 66 | EU: 354 | Valor: € 320,03
-4.º Prémio - 4 Números | PT: 1.545 | EU: 9.203 | Valor: € 34,50
-5.º Prémio - 3 Números | PT: 19.520 | EU: 122.138 | Valor: € 5,46
-6.º Prémio - 2 Números | PT: 112.635 | EU: 705.458 | Valor: € 2,50
+2.º Prémio - 6 Números | PT: 0 | EU: 1 | Valor: € 2.000/mês x 5 anos
+3.º Prémio - 5 Números | PT: 18 | EU: 150 | Valor: € 495,99
+4.º Prémio - 4 Números | PT: 1.120 | EU: 6.453 | Valor: € 32,32
+5.º Prémio - 3 Números | PT: 15.175 | EU: 88.272 | Valor: € 4,96
+6.º Prémio - 2 Números | PT: 88.007 | EU: 504.609 | Valor: € 2,50
 ----------------------------------------
