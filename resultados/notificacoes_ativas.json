@@ -1,1 +1,66 @@
-[]
+[
+  {
+    "id": "euromilhoes_793-05475880-M1L_1",
+    "jogo": "euromilhoes",
+    "data": "2026-10-20 22:54:22",
+    "lido": false,
+    "titulo": "🎫 Novo resultado EUROMILHOES",
+    "subtitulo": "Boletim: 793-05475880-M1L",
+    "resumo": "0 números + 0 estrelas",
+    "detalhes": {
+      "data_verificacao": "2026-10-20 22:54:22",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "793-05475880-M1L",
+        "data_sorteio": "2026-10-20",
+        "concurso_sorteio": "084/2026",
+        "imagem_origem": "foto_1792518634550_85kbie.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "21",
+          "25",
+          "31",
+          "36",
+          "48"
+        ],
+        "estrelas": [
+          "01",
+          "02"
+        ]
+      },
+      "sorteio": {
+        "concurso": "084/2026",
+        "data": "20/10/2026",
+        "chave": "9 15 16 37 43 + 7 10",
+        "numeros": [
+          "09",
+          "15",
+          "16",
+          "37",
+          "43"
+        ],
+        "estrelas": [
+          "07",
+          "10"
+        ]
+      },
+      "acertos": {
+        "numeros": 0,
+        "estrelas": 0,
+        "descricao": "0 numero(s) e 0 estrela(s)",
+        "numeros_acertados": [],
+        "estrelas_acertadas": []
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem premio",
+        "descricao": "0 acertos",
+        "valor": "EUR 0,00"
+      },
+      "_jogo": "euromilhoes",
+      "_id": "euromilhoes_793-05475880-M1L_1"
+    }
+  }
+]
