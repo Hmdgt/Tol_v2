@@ -1,13 +1,7 @@
-Concurso: 084/2026
-Data: 21/10/2026
-Números: 1 4 12 18 26
-Especial: 8
+Concurso: 085/2026
+Data: 24/10/2026
+Números: 3 7 9 25 40
+Especial: 5
 ----------------------------------------
 Prémios:
-1.� Pr�mio - 5 N�meros + N� da Sorte | Vencedores: 0 | Valor: (1)
-2.� Pr�mio - 5 N�meros | Vencedores: 0 | Valor: (2)
-3.� Pr�mio - 4 N�meros | Vencedores: 141 | Valor: € 290,81
-4.� Pr�mio - 3 N�meros | Vencedores: 5.766 | Valor: € 3,95
-5.� Pr�mio - 2 N�meros | Vencedores: 73.058 | Valor: € 1,87
-N� da Sorte - N� da Sorte | Vencedores: 80.508 | Valor: Reembolso do valor da aposta de Totoloto
 ----------------------------------------
