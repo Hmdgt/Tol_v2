@@ -1,66 +1,46 @@
-# horario: verao
+# horario: inverno
 name: Atualizar M1lhão automaticamente
-
-on:
-  schedule:
-    # Todas as sextas-feiras (21:30h, 22:30h, 23:30h PT → 20:30h, 21:30h, 22:30h UTC)
-    - cron: "30 20 * * 5"
-    - cron: "30 21 * * 5"
-    - cron: "30 22 * * 5"
-
-    # Backup no sábado às 10:30 PT → 9:30 UTC
-    - cron: "30 9 * * 6"
-
-  workflow_dispatch:
-
 concurrency:
   group: repo-write
   cancel-in-progress: false
-
 defaults:
   run:
     shell: bash
-
 jobs:
   scrape:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+    - uses: actions/checkout@v4
+    - name: Instalar Chrome
+      uses: browser-actions/setup-chrome@v1
+    - name: Instalar dependências Python
+      run: 'pip install selenium chromedriver-autoinstaller requests beautifulsoup4
 
-      - name: Instalar Chrome
-        uses: browser-actions/setup-chrome@v1
+        '
+    - name: Sincronizar com o repositório remoto
+      run: 'git config user.name "github-actions[bot]"
 
-      - name: Instalar dependências Python
-        run: |
-          pip install selenium chromedriver-autoinstaller requests beautifulsoup4
+        git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Sincronizar com o repositório remoto
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git config pull.rebase false
-          git pull origin main --rebase
+        git config pull.rebase false
 
-      - name: Rodar script de scraping
-        run: python scripts/atualizar_milhao_sc.py
+        git pull origin main --rebase
 
-      - name: Commit e push das alterações
-        run: |
-          git add dados/
-          git add logs/
-          if ! git diff --cached --quiet; then
-            git commit -m "Atualização automática M1lhão"
-            n=0
-            until git push origin main; do
-              n=$((n+1))
-              if [ "$n" -ge 5 ]; then
-                echo "❌ Push falhou após 5 tentativas"
-                exit 1
-              fi
-              sleep 15
-            done
-          else
-            echo "Nenhuma alteração, nada para commitar."
-          fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        '
+    - name: Rodar script de scraping
+      run: python scripts/atualizar_milhao_sc.py
+    - name: Commit e push das alterações
+      run: "git add dados/\ngit add logs/\nif ! git diff --cached --quiet; then\n\
+        \  git commit -m \"Atualização automática M1lhão\"\n  n=0\n  until git push\
+        \ origin main; do\n    n=$((n+1))\n    if [ \"$n\" -ge 5 ]; then\n      echo\
+        \ \"❌ Push falhou após 5 tentativas\"\n      exit 1\n    fi\n    sleep 15\n\
+        \  done\nelse\n  echo \"Nenhuma alteração, nada para commitar.\"\nfi\n"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+'on':
+  schedule:
+  - cron: 30 21 * * 5
+  - cron: 30 22 * * 5
+  - cron: 30 23 * * 5
+  - cron: 30 10 * * 6
+  workflow_dispatch: null

@@ -1,4 +1,4 @@
-# horario: verao
+# horario: inverno
 name: Apagar imagens marcadas
 jobs:
   delete_marked_folders:
@@ -18,5 +18,5 @@ jobs:
         \nfi\n"
 'on':
   schedule:
-  - cron: 30 1 * * 0
+  - cron: 30 2 * * 0
   workflow_dispatch: null

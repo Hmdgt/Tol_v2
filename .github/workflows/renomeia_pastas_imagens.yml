@@ -1,4 +1,4 @@
-# horario: verao
+# horario: inverno
 name: Marcar imagens antigas para apagar
 jobs:
   rename_old_folders:
@@ -21,5 +21,5 @@ jobs:
         \nfi\n"
 'on':
   schedule:
-  - cron: 0 1 * * 0
+  - cron: 0 2 * * 0
   workflow_dispatch: null
