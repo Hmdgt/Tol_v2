@@ -1,1 +1,55 @@
-[]
+[
+  {
+    "id": "totoloto_297-05931951-136_1",
+    "jogo": "totoloto",
+    "data": "2026-10-25 00:03:31",
+    "lido": false,
+    "titulo": "🎫 Novo resultado TOTOLOTO",
+    "subtitulo": "Boletim: 297-05931951-136",
+    "resumo": "Não ganhou",
+    "detalhes": {
+      "data_verificacao": "2026-10-25 00:03:31",
+      "metodo_validacao": "data + concurso",
+      "boletim": {
+        "referencia": "297-05931951-136",
+        "data_sorteio": "2026-10-24",
+        "concurso_sorteio": "085/2026",
+        "imagem_origem": "foto_1792867034574_athn76.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "numeros": [
+          "02",
+          "15",
+          "18",
+          "33",
+          "34"
+        ],
+        "numero_da_sorte": "10"
+      },
+      "sorteio": {
+        "concurso": "085/2026",
+        "data": "24/10/2026",
+        "numeros": [
+          "03",
+          "07",
+          "09",
+          "25",
+          "40"
+        ],
+        "numero_da_sorte": "05"
+      },
+      "acertos": {
+        "numeros": 0,
+        "numero_da_sorte": false,
+        "descricao": "0 numero(s) sem Nº da Sorte",
+        "numeros_acertados": [],
+        "numero_da_sorte_acertado": null
+      },
+      "ganhou": false,
+      "premios": [],
+      "_jogo": "totoloto",
+      "_id": "totoloto_297-05931951-136_1"
+    }
+  }
+]
