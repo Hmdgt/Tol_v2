@@ -3165,5 +3165,58 @@
       "descricao": "0 acertos",
       "valor": "EUR 0,00"
     }
+  },
+  {
+    "data_verificacao": "2026-10-31 00:33:17",
+    "metodo_validacao": "data + concurso",
+    "boletim": {
+      "referencia": "803-07043424-M1L",
+      "data_sorteio": "2026-10-30",
+      "concurso_sorteio": "087/2026",
+      "imagem_origem": "foto_1793387024082_1jotk3.png"
+    },
+    "aposta": {
+      "indice": 1,
+      "numeros": [
+        "06",
+        "10",
+        "26",
+        "36",
+        "45"
+      ],
+      "estrelas": [
+        "05",
+        "07"
+      ]
+    },
+    "sorteio": {
+      "concurso": "087/2026",
+      "data": "30/10/2026",
+      "chave": "3 12 14 17 37 + 3 12",
+      "numeros": [
+        "03",
+        "12",
+        "14",
+        "17",
+        "37"
+      ],
+      "estrelas": [
+        "03",
+        "12"
+      ]
+    },
+    "acertos": {
+      "numeros": 0,
+      "estrelas": 0,
+      "descricao": "0 numero(s) e 0 estrela(s)",
+      "numeros_acertados": [],
+      "estrelas_acertadas": []
+    },
+    "ganhou": false,
+    "premio": {
+      "categoria": "Sem premio",
+      "descricao": "0 acertos",
+      "valor": "EUR 0,00"
+    }
   }
 ]
