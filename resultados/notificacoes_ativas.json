@@ -62,5 +62,195 @@
       "_jogo": "euromilhoes",
       "_id": "euromilhoes_803-07043424-M1L_1"
     }
+  },
+  {
+    "id": "milhao_775-07349849-EUR_1",
+    "jogo": "milhao",
+    "data": "2026-10-31 00:56:53",
+    "lido": false,
+    "titulo": "🎫 Novo resultado MILHAO",
+    "subtitulo": "Boletim: 775-07349849-EUR",
+    "resumo": "0 acertos",
+    "detalhes": {
+      "data_verificacao": "2026-10-31 00:56:53",
+      "boletim": {
+        "referencia": "775-07349849-EUR",
+        "data_sorteio": "2026-10-30",
+        "imagem_origem": "foto_1790925518960_dsglib.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "codigo": "QFP10571",
+        "codigo_original": "QFP10571"
+      },
+      "sorteio": {
+        "concurso": "010/2026",
+        "data": "30/10/2026",
+        "codigo_premiado": "QRX13538",
+        "codigo_original": "QRX 13538",
+        "premio_nome": "1.º Prémio",
+        "vencedores": "1"
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem prémio",
+        "descricao": "Código não premiado",
+        "valor": "€ 0,00"
+      },
+      "_jogo": "milhao",
+      "_id": "milhao_775-07349849-EUR_1"
+    }
+  },
+  {
+    "id": "milhao_779-02643672-EUR_1",
+    "jogo": "milhao",
+    "data": "2026-10-31 00:56:53",
+    "lido": false,
+    "titulo": "🎫 Novo resultado MILHAO",
+    "subtitulo": "Boletim: 779-02643672-EUR",
+    "resumo": "0 acertos",
+    "detalhes": {
+      "data_verificacao": "2026-10-31 00:56:53",
+      "boletim": {
+        "referencia": "779-02643672-EUR",
+        "data_sorteio": "2026-10-30",
+        "imagem_origem": "foto_1791308310415_qy8wmc.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "codigo": "QJQ27709",
+        "codigo_original": "QJQ27709"
+      },
+      "sorteio": {
+        "concurso": "010/2026",
+        "data": "30/10/2026",
+        "codigo_premiado": "QRX13538",
+        "codigo_original": "QRX 13538",
+        "premio_nome": "1.º Prémio",
+        "vencedores": "1"
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem prémio",
+        "descricao": "Código não premiado",
+        "valor": "€ 0,00"
+      },
+      "_jogo": "milhao",
+      "_id": "milhao_779-02643672-EUR_1"
+    }
+  },
+  {
+    "id": "milhao_781-08018524-EUR_1",
+    "jogo": "milhao",
+    "data": "2026-10-31 00:56:53",
+    "lido": false,
+    "titulo": "🎫 Novo resultado MILHAO",
+    "subtitulo": "Boletim: 781-08018524-EUR",
+    "resumo": "0 acertos",
+    "detalhes": {
+      "data_verificacao": "2026-10-31 00:56:53",
+      "boletim": {
+        "referencia": "781-08018524-EUR",
+        "data_sorteio": "2026-10-30",
+        "imagem_origem": "foto_1791528332657_j95x3l.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "codigo": "QKK38830",
+        "codigo_original": "QKK38830"
+      },
+      "sorteio": {
+        "concurso": "010/2026",
+        "data": "30/10/2026",
+        "codigo_premiado": "QRX13538",
+        "codigo_original": "QRX 13538",
+        "premio_nome": "1.º Prémio",
+        "vencedores": "1"
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem prémio",
+        "descricao": "Código não premiado",
+        "valor": "€ 0,00"
+      },
+      "_jogo": "milhao",
+      "_id": "milhao_781-08018524-EUR_1"
+    }
+  },
+  {
+    "id": "milhao_786-01235670-EUR_1",
+    "jogo": "milhao",
+    "data": "2026-10-31 00:56:53",
+    "lido": false,
+    "titulo": "🎫 Novo resultado MILHAO",
+    "subtitulo": "Boletim: 786-01235670-EUR",
+    "resumo": "0 acertos",
+    "detalhes": {
+      "data_verificacao": "2026-10-31 00:56:53",
+      "boletim": {
+        "referencia": "786-01235670-EUR",
+        "data_sorteio": "2026-10-30",
+        "imagem_origem": "foto_1791911267301_omoh6z.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "codigo": "QNF15207",
+        "codigo_original": "QNF15207"
+      },
+      "sorteio": {
+        "concurso": "010/2026",
+        "data": "30/10/2026",
+        "codigo_premiado": "QRX13538",
+        "codigo_original": "QRX 13538",
+        "premio_nome": "1.º Prémio",
+        "vencedores": "1"
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem prémio",
+        "descricao": "Código não premiado",
+        "valor": "€ 0,00"
+      },
+      "_jogo": "milhao",
+      "_id": "milhao_786-01235670-EUR_1"
+    }
+  },
+  {
+    "id": "milhao_789-04277901-EUR_1",
+    "jogo": "milhao",
+    "data": "2026-10-31 00:56:53",
+    "lido": false,
+    "titulo": "🎫 Novo resultado MILHAO",
+    "subtitulo": "Boletim: 789-04277901-EUR",
+    "resumo": "0 acertos",
+    "detalhes": {
+      "data_verificacao": "2026-10-31 00:56:53",
+      "boletim": {
+        "referencia": "789-04277901-EUR",
+        "data_sorteio": "2026-10-30",
+        "imagem_origem": "foto_1792168592479_u5v9qn.png"
+      },
+      "aposta": {
+        "indice": 1,
+        "codigo": "QRB11667",
+        "codigo_original": "QRB11667"
+      },
+      "sorteio": {
+        "concurso": "010/2026",
+        "data": "30/10/2026",
+        "codigo_premiado": "QRX13538",
+        "codigo_original": "QRX 13538",
+        "premio_nome": "1.º Prémio",
+        "vencedores": "1"
+      },
+      "ganhou": false,
+      "premio": {
+        "categoria": "Sem prémio",
+        "descricao": "Código não premiado",
+        "valor": "€ 0,00"
+      },
+      "_jogo": "milhao",
+      "_id": "milhao_789-04277901-EUR_1"
+    }
   }
 ]
