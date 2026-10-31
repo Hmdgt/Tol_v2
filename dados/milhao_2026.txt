@@ -1,11 +1,11 @@
-Concurso: 009/2026
-Data: 25/09/2026
-Código vencedor: PTM 09893
+Concurso: 010/2026
+Data: 30/10/2026
+Código vencedor: QRX 13538
 Vencedores: 1
 ----------------------------------------
 Estatísticas:
-Receita ilíquida apostas: € 4.508.228,10
+Receita ilíquida apostas: € 5.069.753,40
 Montante para prémios: € 1.000.000,00
-Nº de Registos: 8.505.585
-Nº de Códigos atribuídos: 15.027.427
+Nº de Registos: 9.732.587
+Nº de Códigos atribuídos: 16.899.178
 ----------------------------------------
