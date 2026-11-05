@@ -1,13 +1,13 @@
-Concurso: 087/2026
-Data: 31/10/2026
-Números: 1 14 33 40 49
-Especial: 7
+Concurso: 088/2026
+Data: 04/11/2026
+Números: 4 5 14 28 42
+Especial: 9
 ----------------------------------------
 Prémios:
 1.� Pr�mio - 5 N�meros + N� da Sorte | Vencedores: 0 | Valor: (1)
-2.� Pr�mio - 5 N�meros | Vencedores: 1 | Valor: € 22.424,37
-3.� Pr�mio - 4 N�meros | Vencedores: 87 | Valor: € 322,18
-4.� Pr�mio - 3 N�meros | Vencedores: 4.825 | Valor: € 5,80
-5.� Pr�mio - 2 N�meros | Vencedores: 71.507 | Valor: € 2,35
-N� da Sorte - N� da Sorte | Vencedores: 160.715 | Valor: Reembolso do valor da aposta de Totoloto
+2.� Pr�mio - 5 N�meros | Vencedores: 0 | Valor: (2)
+3.� Pr�mio - 4 N�meros | Vencedores: 93 | Valor: € 457,28
+4.� Pr�mio - 3 N�meros | Vencedores: 4.540 | Valor: € 5,20
+5.� Pr�mio - 2 N�meros | Vencedores: 66.685 | Valor: € 2,12
+N� da Sorte - N� da Sorte | Vencedores: 79.609 | Valor: Reembolso do valor da aposta de Totoloto
 ----------------------------------------
