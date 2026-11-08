@@ -606,3 +606,6 @@ Stacktrace:
 [2026-11-05 03:04:59] [santacasa] Concurso 088/2026 já está completo.
 [2026-11-05 17:51:11] [totoloto] Scraping via HTTP bem-sucedido
 [2026-11-05 17:51:11] [santacasa] Concurso 088/2026 já está completo.
+[2026-11-08 00:04:15] [totoloto] HTTP falhou: Prémios não encontrados. A tentar Selenium.
+[2026-11-08 00:04:18] [totoloto] Scraping via Selenium bem-sucedido
+[2026-11-08 00:04:18] [santacasa] Resultado do concurso 089/2026 adicionado ao JSON totoloto_sc_2026.

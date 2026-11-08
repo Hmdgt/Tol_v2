@@ -1,13 +1,7 @@
-Concurso: 088/2026
-Data: 04/11/2026
-Números: 4 5 14 28 42
-Especial: 9
+Concurso: 089/2026
+Data: 07/11/2026
+Números: 2 3 17 21 36
+Especial: 1
 ----------------------------------------
 Prémios:
-1.� Pr�mio - 5 N�meros + N� da Sorte | Vencedores: 0 | Valor: (1)
-2.� Pr�mio - 5 N�meros | Vencedores: 0 | Valor: (2)
-3.� Pr�mio - 4 N�meros | Vencedores: 93 | Valor: € 457,28
-4.� Pr�mio - 3 N�meros | Vencedores: 4.540 | Valor: € 5,20
-5.� Pr�mio - 2 N�meros | Vencedores: 66.685 | Valor: € 2,12
-N� da Sorte - N� da Sorte | Vencedores: 79.609 | Valor: Reembolso do valor da aposta de Totoloto
 ----------------------------------------
