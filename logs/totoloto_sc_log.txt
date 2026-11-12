@@ -644,3 +644,5 @@ Stacktrace:
 #18 0x7fc1cb69cb84 <unknown>
 #19 0x7fc1cb729ecc <unknown>
 
+[2026-11-12 17:55:38] [totoloto] Scraping via HTTP bem-sucedido
+[2026-11-12 17:55:38] [santacasa] Concurso 090/2026 já está completo.
