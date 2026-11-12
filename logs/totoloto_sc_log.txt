@@ -616,3 +616,5 @@ Stacktrace:
 [2026-11-08 02:12:56] [santacasa] Concurso 089/2026 atualizado com novos dados!
 [2026-11-08 16:29:16] [totoloto] Scraping via HTTP bem-sucedido
 [2026-11-08 16:29:16] [santacasa] Concurso 089/2026 já está completo.
+[2026-11-12 02:01:59] [totoloto] Scraping via HTTP bem-sucedido
+[2026-11-12 02:01:59] [santacasa] Resultado do concurso 090/2026 adicionado ao JSON totoloto_sc_2026.
