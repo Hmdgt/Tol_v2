@@ -1,15 +1,15 @@
-Concurso: 090/2026
-Data: 09/11/2026
-Chave: 1 3 6 12 27 37 + 1
-Ordem de saída: 6 37 12 27 3 1 + 1
-Números: 01 03 06 12 27 37
+Concurso: 091/2026
+Data: 12/11/2026
+Chave: 5 10 15 18 19 37 + 1
+Ordem de saída: 15 18 10 5 19 37 + 1
+Números: 05 10 15 18 19 37
 Dream: 1
 ----------------------------------------
 Prémios:
 1.º Prémio - 6 Números + 1 Nº de Sonho | PT: 0 | EU: 0 | Valor: € 50.000/mês x 30 anos
 2.º Prémio - 6 Números | PT: 0 | EU: 1 | Valor: € 2.000/mês x 5 anos
-3.º Prémio - 5 Números | PT: 24 | EU: 125 | Valor: € 522,75
-4.º Prémio - 4 Números | PT: 1.038 | EU: 5.835 | Valor: € 31,39
-5.º Prémio - 3 Números | PT: 15.939 | EU: 83.595 | Valor: € 4,60
-6.º Prémio - 2 Números | PT: 89.514 | EU: 470.694 | Valor: € 2,50
+3.º Prémio - 5 Números | PT: 38 | EU: 146 | Valor: € 492,80
+4.º Prémio - 4 Números | PT: 1.121 | EU: 5.888 | Valor: € 34,25
+5.º Prémio - 3 Números | PT: 15.537 | EU: 86.683 | Valor: € 4,88
+6.º Prémio - 2 Números | PT: 88.246 | EU: 505.139 | Valor: € 2,50
 ----------------------------------------
