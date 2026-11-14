@@ -278,3 +278,4 @@
 [2026-11-11 17:33:46] [euromilhoes] Concurso 090/2026 já está completo. Nada a atualizar.
 [2026-11-14 01:20:27] [euromilhoes] Resultado do concurso 091/2026 adicionado ao JSON euromilhoes_2026.
 [2026-11-14 01:56:29] [euromilhoes] Concurso 091/2026 já está completo. Nada a atualizar.
+[2026-11-14 02:56:53] [euromilhoes] Concurso 091/2026 já está completo. Nada a atualizar.
