@@ -1,13 +1,7 @@
-Concurso: 090/2026
-Data: 11/11/2026
-Números: 10 14 22 25 28
-Especial: 13
+Concurso: 091/2026
+Data: 14/11/2026
+Números: 4 14 30 36 42
+Especial: 1
 ----------------------------------------
 Prémios:
-1.� Pr�mio - 5 N�meros + N� da Sorte | Vencedores: 0 | Valor: (1)
-2.� Pr�mio - 5 N�meros | Vencedores: 0 | Valor: (2)
-3.� Pr�mio - 4 N�meros | Vencedores: 173 | Valor: € 247,80
-4.� Pr�mio - 3 N�meros | Vencedores: 5.744 | Valor: € 4,14
-5.� Pr�mio - 2 N�meros | Vencedores: 71.957 | Valor: € 1,98
-N� da Sorte - N� da Sorte | Vencedores: 80.687 | Valor: Reembolso do valor da aposta de Totoloto
 ----------------------------------------
