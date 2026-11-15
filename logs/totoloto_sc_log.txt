@@ -653,3 +653,5 @@ Stacktrace:
 [2026-11-15 01:32:00] [santacasa] Concurso 091/2026 atualizado com novos dados!
 [2026-11-15 02:30:01] [totoloto] Scraping via HTTP bem-sucedido
 [2026-11-15 02:30:01] [santacasa] Concurso 091/2026 já está completo.
+[2026-11-15 16:45:06] [totoloto] Scraping via HTTP bem-sucedido
+[2026-11-15 16:45:06] [santacasa] Concurso 091/2026 já está completo.
