@@ -666,3 +666,5 @@ Stacktrace:
 [2026-11-22 00:46:57] [totoloto] HTTP falhou: Prémios não encontrados. A tentar Selenium.
 [2026-11-22 00:47:02] [totoloto] Scraping via Selenium bem-sucedido
 [2026-11-22 00:47:02] [santacasa] Resultado do concurso 093/2026 adicionado ao JSON totoloto_sc_2026.
+[2026-11-22 01:56:21] [totoloto] Scraping via HTTP bem-sucedido
+[2026-11-22 01:56:21] [santacasa] Concurso 093/2026 atualizado com novos dados!
