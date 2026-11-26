@@ -1,13 +1,13 @@
-Concurso: 093/2026
-Data: 21/11/2026
-Números: 2 3 8 19 38
-Especial: 12
+Concurso: 094/2026
+Data: 25/11/2026
+Números: 4 10 21 29 45
+Especial: 2
 ----------------------------------------
 Prémios:
 1.� Pr�mio - 5 N�meros + N� da Sorte | Vencedores: 0 | Valor: (1)
 2.� Pr�mio - 5 N�meros | Vencedores: 0 | Valor: (2)
-3.� Pr�mio - 4 N�meros | Vencedores: 130 | Valor: € 397,37
-4.� Pr�mio - 3 N�meros | Vencedores: 6.241 | Valor: € 4,59
-5.� Pr�mio - 2 N�meros | Vencedores: 85.975 | Valor: € 2,00
-N� da Sorte - N� da Sorte | Vencedores: 65.529 | Valor: Reembolso do valor da aposta de Totoloto
+3.� Pr�mio - 4 N�meros | Vencedores: 115 | Valor: € 375,23
+4.� Pr�mio - 3 N�meros | Vencedores: 4.864 | Valor: € 4,92
+5.� Pr�mio - 2 N�meros | Vencedores: 69.639 | Valor: € 2,06
+N� da Sorte - N� da Sorte | Vencedores: 54.915 | Valor: Reembolso do valor da aposta de Totoloto
 ----------------------------------------
