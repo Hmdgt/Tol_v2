@@ -674,3 +674,5 @@ Stacktrace:
 [2026-11-22 17:33:22] [santacasa] Concurso 093/2026 já está completo.
 [2026-11-26 03:15:25] [totoloto] Scraping via HTTP bem-sucedido
 [2026-11-26 03:15:25] [santacasa] Resultado do concurso 094/2026 adicionado ao JSON totoloto_sc_2026.
+[2026-11-26 03:56:15] [totoloto] Scraping via HTTP bem-sucedido
+[2026-11-26 03:56:15] [santacasa] Concurso 094/2026 já está completo.
