@@ -249,6 +249,31 @@
           "valor": "16.899.178"
         }
       ]
+    },
+    {
+      "concurso": "011/2026",
+      "data": "27/11/2026",
+      "codigo": "RWR 15405",
+      "premio_nome": "1.º Prémio",
+      "vencedores": "1",
+      "estatisticas": [
+        {
+          "nome": "Receita ilíquida apostas",
+          "valor": "€ 4.566.196,80"
+        },
+        {
+          "nome": "Montante para prémios",
+          "valor": "€ 1.000.000,00"
+        },
+        {
+          "nome": "Nº de Registos",
+          "valor": "8.655.647"
+        },
+        {
+          "nome": "Nº de Códigos atribuídos",
+          "valor": "15.220.656"
+        }
+      ]
     }
   ]
 }

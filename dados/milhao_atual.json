@@ -1,13 +1,13 @@
 {
-  "concurso": "010/2026",
-  "data": "30/10/2026",
-  "codigo": "QRX 13538",
+  "concurso": "011/2026",
+  "data": "27/11/2026",
+  "codigo": "RWR 15405",
   "premio_nome": "1.º Prémio",
   "vencedores": "1",
   "estatisticas": [
     {
       "nome": "Receita ilíquida apostas",
-      "valor": "€ 5.069.753,40"
+      "valor": "€ 4.566.196,80"
     },
     {
       "nome": "Montante para prémios",
@@ -15,11 +15,11 @@
     },
     {
       "nome": "Nº de Registos",
-      "valor": "9.732.587"
+      "valor": "8.655.647"
     },
     {
       "nome": "Nº de Códigos atribuídos",
-      "valor": "16.899.178"
+      "valor": "15.220.656"
     }
   ]
 }

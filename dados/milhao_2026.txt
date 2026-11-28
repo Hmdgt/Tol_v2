@@ -1,11 +1,11 @@
-Concurso: 010/2026
-Data: 30/10/2026
-Código vencedor: QRX 13538
+Concurso: 011/2026
+Data: 27/11/2026
+Código vencedor: RWR 15405
 Vencedores: 1
 ----------------------------------------
 Estatísticas:
-Receita ilíquida apostas: € 5.069.753,40
+Receita ilíquida apostas: € 4.566.196,80
 Montante para prémios: € 1.000.000,00
-Nº de Registos: 9.732.587
-Nº de Códigos atribuídos: 16.899.178
+Nº de Registos: 8.655.647
+Nº de Códigos atribuídos: 15.220.656
 ----------------------------------------
